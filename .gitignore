@@ -1,0 +1,5 @@
+disable.it
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.default.json
+.luarc.json

@@ -1,0 +1,27 @@
+<wisps gfxroot="gfx/familiar/wisps/">
+	<!-- Arachna's Spool and Divine Cloth-->
+	<color name="spiderWisp_color_flame" r="460" g="460" b="420"/>
+	<color name="spiderWisp_color_core" r="200" g="200" b="200"/>
+	<wisp id="0" hp="1" damage="3" layer="1" flameColor="spiderWisp_color_flame" coreColor="spiderWisp_color_core" coreGfx="spider.png" canShoot="false"/>
+    <wisp id="1" hp="1" damage="3" layer="1" flameColor="spiderWisp_color_flame" coreColor="spiderWisp_color_core" coreGfx="spider.png" canShoot="false"/>
+	<!-- Yarn Heart -->
+	<color name="yarnHeartWisp_color_flame" r="460" g="460" b="420"/>
+	<color name="yarnHeartWisp_color_core" r="200" g="200" b="200"/>
+	<color name="yarnHeartWisp_color_tear" r="383" g="510" b="510" or="40" og="50" ob="50"/>
+    <wisp id="2" hp="2" damage="3" layer="1" flameColor="yarnHeartWisp_color_flame" coreColor="yarnHeartWisp_color_core" tearColor="yarnHeartWisp_color_tear" coreGfx="heart.png" tearFlags2="3" procChance="0.3"/>	
+	<!-- BBB -->
+	<color name="BBBWisp_color_flame" r="330" g="152" b="458"/>
+	<color name="BBBWisp_color_core" r="200" g="200" b="200"/>
+	<color name="BBBWisp_color_tear" r="180" g="50" b="255" or="64" og="10" ob="128"/>
+    <wisp id="5" hp="5" damage="6" layer="1" flameColor="BBBWisp_color_flame" coreColor="BBBWisp_color_core" tearColor="BBBWisp_color_tear" coreGfx="skull.png" />
+	<!-- Testament -->
+	<color name="testamentWisp_color_flame" r="500" g="220" b="220"/>
+	<color name="testamentWisp_color_core" r="200" g="200" b="200"/>
+	<color name="testamentWisp_color_tear" r="180" g="60" b="80" or="30"/>
+    <wisp id="10" hp="20" damage="4.2" layer="1" flameColor="testamentWisp_color_flame" coreColor="testamentWisp_color_core" tearColor="testamentWisp_color_tear" coreGfx="minisaac.png" tearFlags="6" />
+	<!-- Geptameron -->
+	<color name="geptameronWisp_color_flame" r="330" g="152" b="458"/>
+	<color name="geptameronWisp_color_core" r="300" g="290" b="10"/>
+	<color name="geptameronWisp_color_tear" r="260" g="250" b="40" or="40" og="40"/>
+    <wisp id="11" hp="3" damage="3" layer="1" flameColor="geptameronWisp_color_flame" coreColor="geptameronWisp_color_core" tearColor="geptameronWisp_color_tear" coreGfx="cross.png" tearFlags2="39" procChance="0.2"/>
+</wisps>

@@ -1,0 +1,12 @@
+<players root="gfx/characters/costumes/" 
+         portraitroot="gfx/ui/stage/" 
+         nameimageroot="gfx/ui/boss/">
+	<player name="Arachna" skin="character_arachna.png" hp="4" armor="4" bombs="0"
+          nameimage="playername_arachna.png" 
+          portrait="playerportrait_arachna.png" skinColor="1" costume="7" costumeSuffix="arachna"
+		  birthright="More Web, More Friends, More Health!" />
+	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2" bombs="0"
+          nameimage="playername_arachna.png" 
+          portrait="playerportrait_arachna_b.png" skinColor="1" costume="7" costumeSuffix="arachna" bSkinParent="Arachna"
+		  birthright="Heal your friends + Radius up!" />		  
+</players>

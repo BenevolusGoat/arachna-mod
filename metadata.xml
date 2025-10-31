@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>!Arachna</name>
+    <directory>arachna</directory>
+    <description>Become the lord of the spiders with Arachna, a new character that revolves around the web and spiders. Arachna starts with a new item in her pocket - Arachna's Spool. She can throw it at enemies to create web, that slows them down and turns them into spider eggs when they die. Spider eggs burst into friendly spiders upon clearing a room or a greed mode wave. Arachna can't have red health and instead gains Web Hearts - a new heart type. They are easier to break than any kind of regular hearts, but they release spiders upon being broken and for Arachna, they increase the amount of spiders you can get from the eggs. Tainted version provides pretty similar, but yet different gameplay, with it's own advantages and disadvantages.
+
+[h1] Features [/h1] 
+- Arachna - a unique spider-based character, and her Tainted counterpart
+- New heart type: Web Hearts
+- 10+ new items
+- 3 new trinkets
+- 2 consumables
+- New shopkeeper type! 
+- A new beggar
+- 20 new friendly spider variants!
+- Tons of item costumes
+
+Information about all unlocks and their effect can be found [url=https://docs.google.com/spreadsheets/d/1iZZFLBBqV5QGxs80Hfibto56f_5d7odU2OHq6QDP2lI/edit?usp=sharing]here[/url] 
+Also if you know Russian, you can check [url=https://moddingofisaac.fandom.com/ru/wiki/Arachna]this fan-made wiki[/url]
+
+[h1] Contributors [/h1]
+- UnknownTheHero - major playtesting
+- Quartz - amazing portrait sprites
+- BrakeDude - coded in proper web heart rendering
+- [url=https://twitter.com/ShaPatSmith]ShaPatSmith[/url] - voiceover for collectibles
+- wons - playtesting, sprites for several costumes
+- SteamJek - did mod cover art as a commision
+
+[h1] Mod Compatibility [/h1]
+- Paper achievement animations and better active visuals with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2704939039]GiantBook API[/url] ([b]Highly recommended to use[/b])
+- Content desctiptions with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=836319872]EID[/url] with support of English (made by me), Chinese (made by 汐何/Saurtya), Russian (made by me) and Polish (made by wons) languages
+- Pog animations with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2490515687]POG for Good Items[/url]
+- [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2828005404]Yeah, I Read Books (Modded)[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2825955822]MORE books resprites[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2828474490]MORE unique coins[/url]
+
+PS: In case you don't want to unlock everything yourself but still want to experience all the mod's content, here are some of the commands that would help you. Just drop them into your debug console and enjoy the result.
+&quot;arachnaMod unlocktainted&quot;
+&quot;arachnaMod unlockall&quot;
+&quot;arachnaMod lockall&quot;</description>
+    <version>1.22</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+    <tag id="Items"/>
+    <tag id="Active Items"/>
+    <tag id="Trinkets"/>
+    <tag id="Cards"/>
+    <tag id="Pickups"/>
+    <tag id="Player Characters"/>
+    <tag id="Familiars"/>
+    <tag id="Babies"/>
+    <tag id="Rooms"/>
+</metadata>
