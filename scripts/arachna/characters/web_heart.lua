@@ -207,6 +207,14 @@ Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.OnPickupUpdate, WE
 
 --#region Replace Hearts
 
+local function everyoneIsKeeper()
+	return Mod.Foreach.Player(function (player, index)
+		if player:GetHealthType() == HealthType.COIN then
+			return true
+		end
+	end) or false
+end
+
 ---@param pickup EntityPickup
 function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
 	if everyoneIsKeeper() then
