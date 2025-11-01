@@ -1,12 +1,17 @@
-<players root="gfx/characters/costumes/" 
-         portraitroot="gfx/ui/stage/" 
+<players root="gfx/characters/costumes/"
+         portraitroot="gfx/ui/stage/"
          nameimageroot="gfx/ui/boss/">
-	<player name="Arachna" skin="character_arachna.png" hp="4" armor="4" bombs="0"
-          nameimage="playername_arachna.png" 
-          portrait="playerportrait_arachna.png" skinColor="1" costume="7" costumeSuffix="arachna"
+	<player name="Arachna" skin="character_arachna.png" hp="4" armor="4" healthtype="1"
+		  pocketActive="Arachna's Spool" modcostume="0"
+		  damagemodifier="-0.7" speedmodifier="0.25" luckmodifier="-0.8"
+          nameimage="playername_arachna.png"
+          portrait="playerportrait_arachna.png" skinColor="1" costumeSuffix="arachna"
 		  birthright="More Web, More Friends, More Health!" />
-	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2" bombs="0"
-          nameimage="playername_arachna.png" 
-          portrait="playerportrait_arachna_b.png" skinColor="1" costume="7" costumeSuffix="arachna" bSkinParent="Arachna"
-		  birthright="Heal your friends + Radius up!" />		  
+	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2" healthtype="1"
+		  pocketActive="Divine Cloth" modcostume="1"
+		  speedmodifier="-0.25" luckmodifier="0.8" firedelaymodifier="-2.2" damagemodifier="-2.5"
+		  achievement="The Wretched"
+          nameimage="playername_arachna.png"
+          portrait="playerportrait_arachna_b.png" skinColor="1" costumeSuffix="arachna" bSkinParent="Arachna"
+		  birthright="Heal your friends + Radius up!" />
 </players>

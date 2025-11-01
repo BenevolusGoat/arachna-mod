@@ -1,0 +1,7 @@
+local Mod = ARACHNAMOD
+
+local SOUL_OF_ARACHNA = {}
+
+ARACHNAMOD.Card.SOUL_OF_ARACHNA = SOUL_OF_ARACHNA
+
+SOUL_OF_ARACHNA.ID = Isaac.GetCardIdByName("Soul of Arachna")

@@ -1,0 +1,7 @@
+local Mod = ARACHNAMOD
+
+local DADS_NEWSPAPER = {}
+
+ARACHNAMOD.Item.DADS_NEWSPAPER = DADS_NEWSPAPER
+
+DADS_NEWSPAPER.ID = Isaac.GetItemIdByName("Dad's Newspaper")

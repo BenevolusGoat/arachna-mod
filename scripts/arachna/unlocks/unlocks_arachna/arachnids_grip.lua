@@ -1,0 +1,7 @@
+local Mod = ARACHNAMOD
+
+local ARACHNIDS_GRIP = {}
+
+ARACHNAMOD.Item.ARACHNIDS_GRIP = ARACHNIDS_GRIP
+
+ARACHNIDS_GRIP.ID = Isaac.GetItemIdByName("Arachnid's Grip")

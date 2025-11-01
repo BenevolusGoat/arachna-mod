@@ -1,0 +1,4 @@
+ARACHNAMOD.FLAGS = {}
+
+ARACHNAMOD.FLAGS.Debug = false
+ARACHNAMOD.FLAGS.Anniversary = false

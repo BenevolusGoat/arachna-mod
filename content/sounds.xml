@@ -1,8 +1,8 @@
 <sounds root="sfx/">
-	<sound name="snd_merged_card">
+	<sound name="Merged Card">
 		<sample weight="1" path="merged_card.wav"/>
 	</sound>
-	<sound name="snd_arachna_soul">
+	<sound name="Soul of Arachna">
 		<sample weight="1" path="arachna_soul.wav"/>
 	</sound>
 </sounds>

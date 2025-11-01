@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="trtv" CreatedOn="13.01.2022 0:14:33" Version="12" Fps="30"/>
+	<Info CreatedBy="trtv" CreatedOn="11/1/2025 11:58:05 AM" Version="13" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="character-arachna-b.png" Id="0"/>
+			<Spritesheet Path="charactermenu_arachna_b.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="Main" Id="0" SpritesheetId="0"/>
@@ -12,13 +12,13 @@
 		<Events/>
 	</Content>
 	<Animations DefaultAnimation="Arachna">
-		<Animation Name="Arachna" FrameNum="60" Loop="false">
+		<Animation Name="Arachna" FrameNum="1" Loop="false">
 			<RootAnimation>
 				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 			</RootAnimation>
 			<LayerAnimations>
 				<LayerAnimation LayerId="0" Visible="true">
-					<Frame XPosition="0" YPosition="0" XPivot="16" YPivot="18" XCrop="292" YCrop="302" Width="32" Height="32" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
+					<Frame XPosition="0" YPosition="0" XPivot="16" YPivot="16" XCrop="160" YCrop="64" Width="32" Height="32" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 				</LayerAnimation>
 			</LayerAnimations>
 			<NullAnimations/>

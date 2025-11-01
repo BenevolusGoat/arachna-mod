@@ -1,0 +1,7 @@
+local Mod = ARACHNAMOD
+
+local INFESTED_PENNY = {}
+
+ARACHNAMOD.Trinket.INFESTED_PENNY = INFESTED_PENNY
+
+INFESTED_PENNY.ID = Isaac.GetTrinketIdByName("Infested Penny")

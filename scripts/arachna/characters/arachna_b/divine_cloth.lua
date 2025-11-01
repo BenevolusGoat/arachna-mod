@@ -1,0 +1,7 @@
+local Mod = ARACHNAMOD
+
+local DIVINE_CLOTH = {}
+
+ARACHNAMOD.Item.DIVINE_CLOTH = DIVINE_CLOTH
+
+DIVINE_CLOTH.ID = Isaac.GetItemIdByName("Divine Cloth")

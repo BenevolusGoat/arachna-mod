@@ -1,0 +1,7 @@
+local Mod = ARACHNAMOD
+
+local ARACHNAS_SPOOL = {}
+
+ARACHNAMOD.Item.ARACHNAS_SPOOL = ARACHNAS_SPOOL
+
+ARACHNAS_SPOOL.ID = Isaac.GetItemIdByName("Arachna's Spool")
