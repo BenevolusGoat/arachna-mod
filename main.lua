@@ -142,6 +142,8 @@ local core = {
 	"custom_callbacks"
 }
 
+ARACHNAMOD.TearModifier = include("scripts/arachna/core/tear_modifier")
+
 local config = {
 }
 

@@ -19,13 +19,19 @@ General Changes/Fixes:
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
 - Fixed the Spider Egg orbital from Arachnid's Grip not having a variant assigned, which had self-assigned itself a variant of 0
+- Achievements and Geptameron's Giantbook are now displayed using REPENTOGON's own implementation instead of GiantBookAPI
+- Lil Arachna is now a more naturally integrated shooter familiar and should obey all shooter familiar interactions
+- Poison tears from Arachnid's Grip are colored green
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and respect damage/firerate multipliers
 - As a result of the above, Tainted Arachna's firerate down is now closer to how it works for the Keepers, allowing you to reach the normal cap of 5.00 tears per second
 - Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
-- Web Hearts replacing specific heart types will now only occur if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of if any single character was Arachna or Tainted Arachna.
-- The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters.
+- Web Hearts replacing specific heart types will now only occur if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of if any single character was Arachna or Tainted Arachna
+- The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
+- 3D Glasses now works for all weapon types and has better optimization for how it renders its 3D effect
+- 3D Glasses now copies the champion color of the enemy for its 3D copies
+- Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. No more magic numbers!

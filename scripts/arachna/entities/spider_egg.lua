@@ -68,8 +68,6 @@ function SPIDER_EGG:Explode(egg, rewards)
 		end
 
 		for _ = 1, spiderCount do
-			local randomX, randomY = Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)
-			local nearPos = Isaac.GetFreeNearPosition(egg.Position + Vector(randomX, randomY), 50)
 			local spiderSubtype = 0
 			if Mod.Character.ARACHNA:IsArachna(player)
 				and rng:RandomInt(2) == 1
@@ -80,7 +78,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 			then
 				spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
 			end
-			Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, egg.Position, nearPos)
+			Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, egg.Position)
 		end
 
 

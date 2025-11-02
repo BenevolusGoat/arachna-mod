@@ -1,0 +1,3 @@
+<giantbook anm2root="gfx/ui/giantbook/">
+	<entry name="Geptameron" anm2="giantbook.anm2" anim="Appear" gfx="giantbook_geptameron.png" />
+</giantbook>

@@ -65,6 +65,15 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, DIVINE_CLOTH.OnUse, DIVINE_CLOTH.ID)
 
 --#region Apply Bitten
 
+---@param npc EntityNPC
+---@param source EntityRef
+---@param duration? integer @default: `DIVINE_CLOTH.BITE_DURATION`
+function DIVINE_CLOTH:ApplyBitten(npc, source, duration)
+	local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
+	sprite:Play("Idle")
+	StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION, source, nil, {Sprite = sprite})
+end
+
 ---@param web EntityEffect
 function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 	if web.SubType ~= DIVINE_CLOTH.DIVINE_WEB_SUB then
@@ -81,9 +90,7 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 
 	Mod.Foreach.NPCInRadius(web.Position, web.Size + radiusBonus, function (npc, index)
 		if not StatusEffectLibrary:HasStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN) then
-			local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
-			sprite:Play("Idle")
-			StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration, source, nil, {Sprite = sprite})
+			DIVINE_CLOTH:ApplyBitten(npc, source, duration)
 		end
 	end, nil, nil, {UseEnemySearchParams = true})
 

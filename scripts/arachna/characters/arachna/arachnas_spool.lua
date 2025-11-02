@@ -138,7 +138,7 @@ function ARACHNAS_SPOOL:OnWebUpdate(web)
 	local source = player and EntityRef(player) or EntityRef(web)
 	Mod.Foreach.NPCInRadius(web.Position, web.Size, function (npc, index)
 		if not StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-			StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, 2, source)
+			ARACHNAS_SPOOL:ApplyWebbed(npc, source, 2)
 			npc:AddSlowing(source, 2, 0.5, StatusEffectLibrary.StatusColor.SLOW)
 		end
 	end, nil, nil, {UseEnemySearchParams = true, Dead = true})
@@ -149,6 +149,13 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, 
 --#endregion
 
 --#region Webbed status
+
+---@param npc EntityNPC
+---@param source EntityRef
+---@param duration integer
+function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
+	StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source)
+end
 
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:ShouldSpawnWebOnEnemyDeath(npc)
