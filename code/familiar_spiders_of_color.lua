@@ -1,6 +1,4 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 -- 1-5 (11-16) have effects and colors based on locusts, 6-9 (16-19) are my own ideas. there is also 10 which doesn't have special effects, it's just normal spider but big
 --set color
 function mod:colorSpiderInit(baby)
@@ -103,7 +101,7 @@ function mod:colorSpiderDamage(ent, amount, flags, src, countdown)
 				sfx:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 0, false, 1.25)
 			elseif baby.SubType == 7 then
 				ent:AddMidasFreeze(EntityRef(player), 120)
-				game:SpawnParticles(ent.Position, 98, mod:GetRandomNumber(4, 7, mod.Globals.garbageRNG), 4)
+				game:SpawnParticles(ent.Position, 98, math.random(4, 7), 4)
 				sfx:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.6, 0, false, 1)
 			elseif baby.SubType == 8 then
 				ent:AddCharmed(EntityRef(player), 120)
@@ -120,8 +118,8 @@ function mod:colorSpiderDamage(ent, amount, flags, src, countdown)
 			--additional damage
 			ent:TakeDamage(amount/2, 0, EntityRef(player), 0)
 			--spawn smoller spiders in 2 sides
-			local vecRad = mod:GetRandomNumber(75, 100, mod.Globals.garbageRNG)
-			local vecAngle = mod:GetRandomNumber(0, 360, mod.Globals.garbageRNG)
+			local vecRad = math.random(75,100)
+			local vecAngle = math.random(0,360)
 			throwSpecialSpider(player, baby.SubType - 10, baby.Position, Isaac.GetFreeNearPosition(baby.Position + Vector.FromAngle(vecAngle):Resized(vecRad), 50))
 			throwSpecialSpider(player, baby.SubType - 10, baby.Position, Isaac.GetFreeNearPosition(baby.Position + Vector.FromAngle(vecAngle-180):Resized(vecRad), 50))
 			sfx:Play(SoundEffect.SOUND_BOIL_HATCH, 0.8, 0, false, 1)
@@ -152,7 +150,7 @@ function mod:colorSpiderDamage(ent, amount, flags, src, countdown)
 				sfx:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 0, false, 1.25)
 			elseif baby.SubType == 17 then
 				ent:AddMidasFreeze(EntityRef(player), 180)
-				game:SpawnParticles(ent.Position, 98, mod:GetRandomNumber(4, 7, mod.Globals.garbageRNG), 4)
+				game:SpawnParticles(ent.Position, 98, math.random(4, 7), 4)
 				sfx:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.6, 0, false, 1)
 			elseif baby.SubType == 18 then
 				ent:AddCharmed(EntityRef(player), 180)
@@ -177,13 +175,13 @@ function mod:colorSpiderUpdate(baby)
 	if (baby.SubType == 7) or (baby.SubType == 17) then
 		--shine
 		if (baby.FrameCount % 4 == 0) then
-			for i = 1, mod:GetRandomNumber(1, 3, mod.Globals.garbageRNG) do
+			for i = 1, math.random(1, 3) do
 				local centerPos = Vector(baby.Position.X, baby.Position.Y - 5)
 				local shinePos = centerPos
-				shinePos = shinePos + Vector.FromAngle(mod:GetRandomNumber(0, 360, mod.Globals.garbageRNG)):Resized(mod:GetRandomNumber(5, 10, mod.Globals.garbageRNG))
+				shinePos = shinePos + Vector.FromAngle(math.random(0,360)):Resized(math.random(5, 10))
 				local goldenShine = Isaac.Spawn(1000, 2002, 3, shinePos, Vector(0,0), baby):ToEffect()
 				goldenShine.DepthOffset = 250
-				goldenShine.SpriteScale = goldenShine.SpriteScale*(mod:GetRandomNumber(4, 8, mod.Globals.garbageRNG)/10)
+				goldenShine.SpriteScale = goldenShine.SpriteScale*(math.random(4, 8)/10)
 				goldenShine:GetSprite().PlaybackSpeed = 1.2
 				local glow = Isaac.Spawn(1000, 121, 0, goldenShine.Position, Vector(0,0), goldenShine):ToEffect()
 				glow.SpriteScale = glow.SpriteScale/4

@@ -1,13 +1,12 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
  
 local spiderEnemyType = {303, 94, 215, 250, 207}
 local spiderEnemyVar = {0, 0, 0, 0, 1}
 
 function getSpiderItem() 
 	local spiderItemPool = {288, 171, 170, 248, 234, 266, 217, 153, 89, 211, 377, 367, 461, 575, Isaac.GetTrinketIdByName("Yarn Heart"), Isaac.GetTrinketIdByName("Arachnid's Grip")}
-	return spiderItemPool[mod.Globals.spiderboiRNG:RandomInt(#spiderItemPool)+1]
+	return spiderItemPool[math.random(1, #spiderItemPool)]
 end
 
 --update
@@ -23,14 +22,14 @@ function mod:spiderBeggarUpdate()
 		end
 		--give reward
 		if sprite:IsEventTriggered("Prize") then
-			local rewardType = mod:GetRandomNumber(66, 100, mod.Globals.spiderboiRNG)
+			local rewardType = math.random(66, 100)
 			if rewardType >= 66 and rewardType <= 78 then
-				dropvelocity = Vector.FromAngle(mod:GetRandomNumber(0, 360, mod.Globals.spiderboiRNG))*(-1)*mod:GetRandomNumber(3, 5, mod.Globals.spiderboiRNG)
+				dropvelocity = Vector.FromAngle(math.random(0,360))*(-1)*math.random(3,5)
 				local webHeart = Isaac.Spawn(5, 2000, 0, bum.Position, dropvelocity, nil)
 				
 			elseif rewardType > 77 and rewardType <= 89 then
 				local itemPos = getNearPos(bum.Position)
-				local spiderType = mod.Globals.spiderboiRNG:RandomInt(#spiderEnemyType)+1
+				local spiderType = math.random(1, #spiderEnemyType)
 				local spiderBro = Isaac.Spawn(spiderEnemyType[spiderType], spiderEnemyVar[spiderType], 0, Isaac.GetFreeNearPosition(bum.Position, 40), Vector(0,0), nil):ToNPC()
 				spiderBro:AddEntityFlags(EntityFlag.FLAG_FRIENDLY | EntityFlag.FLAG_CHARM | EntityFlag.FLAG_PERSISTENT)
 				
@@ -74,7 +73,7 @@ function mod:spiderBeggarDonate(player, beggar, low)
 	if beggar.Type == EntityType.ENTITY_SLOT and beggar.Variant == 2000 then
 		if beggar:GetSprite():IsPlaying("Idle") and player:GetNumCoins() > 0 then
 			player:AddCoins(-1)
-			if mod.Globals.spiderboiRNG:RandomInt(100)+1 > 65 then -- 35% to get a reward
+			if math.random(1,100) > 65 then -- 35% to get a reward
 				beggar:GetSprite():Play("PayPrize")
 			else
 				beggar:GetSprite():Play("PayNothing")

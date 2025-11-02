@@ -1,29 +1,79 @@
 local mod = ARACHNAMOD
 
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+local goldenDudeRoom = {}
+local goldenDudeSubType = {} 
+local goldenDudePosX = {}
+local goldenDudePosY = {}
+local goldenDudeBombedTimes = {}
+local goldenDudeBombedMax = {}
+
+mod.SavedData.goldenDudeRoom = {}
+mod.SavedData.goldenDudeSubType = {}
+mod.SavedData.goldenDudePosX = {}
+mod.SavedData.goldenDudePosY = {}
+mod.SavedData.goldenDudeBombedTimes = {}
+mod.SavedData.goldenDudeBombedMax = {}
+local json = require("json")
+
+--save-related functions
+local function loadGoldenDudeData()
+	mod.SavedData = json.decode(Isaac.LoadModData(mod))
+	for i=1, #goldenDudeRoom do	
+		if mod.SavedData.goldenDudeRoom[i] ~= nil then
+			goldenDudeRoom[i] = mod.SavedData.goldenDudeRoom[i]
+			goldenDudeSubType[i] = mod.SavedData.goldenDudeSubType[i]
+			goldenDudePosX[i] = mod.SavedData.goldenDudePosX[i]
+			goldenDudePosY[i] = mod.SavedData.goldenDudePosY[i]
+			goldenDudeBombedTimes[i] = mod.SavedData.goldenDudeBombedTimes[i]
+			goldenDudeBombedMax[i] = mod.SavedData.goldenDudeBombedMax[i]
+		end
+	end
+end
+
+local function saveGoldenDudeData()
+	for i=1, #goldenDudeRoom do	
+		if goldenDudeRoom[i] ~= nil then
+			mod.SavedData.goldenDudeRoom[i] = goldenDudeRoom[i]
+			mod.SavedData.goldenDudeSubType[i] = goldenDudeSubType[i]
+			mod.SavedData.goldenDudePosX[i] = goldenDudePosX[i]
+			mod.SavedData.goldenDudePosY[i] = goldenDudePosY[i]
+			mod.SavedData.goldenDudeBombedTimes[i] = goldenDudeBombedTimes[i]
+			mod.SavedData.goldenDudeBombedMax[i] = goldenDudeBombedMax[i]
+		end
+	end
+	mod.SaveData(mod, json.encode(mod.SavedData))
+end
+
+local function clearAllGoldenDudeData()
+	goldenDudeRoom = {}
+	goldenDudeSubType = {} 
+	goldenDudePosX = {}
+	goldenDudePosY = {}
+	goldenDudeBombedTimes = {}
+	goldenDudeBombedMax = {}
+end
 
 local function addGoldenDudeData(_dude)
-	local place = #mod.Globals.goldenDudeRoom+1
-	mod.Globals.goldenDudeRoom[place] = tostring(game:GetLevel():GetCurrentRoomDesc().SafeGridIndex)
-	mod.Globals.goldenDudeSubType[place] = _dude.SubType
-	mod.Globals.goldenDudePosX[place] = _dude.Position.X
-	mod.Globals.goldenDudePosY[place] = _dude.Position.Y
-	mod.Globals.goldenDudeBombedTimes[place] = _dude:GetData().bombedTimes
-	mod.Globals.goldenDudeBombedMax[place] = _dude:GetData().bombedMax
+	local place = #goldenDudeRoom+1
+	goldenDudeRoom[place] = tostring(game:GetLevel():GetCurrentRoomDesc().SafeGridIndex)
+	goldenDudeSubType[place] = _dude.SubType
+	goldenDudePosX[place] = _dude.Position.X
+	goldenDudePosY[place] = _dude.Position.Y
+	goldenDudeBombedTimes[place] = _dude:GetData().bombedTimes
+	goldenDudeBombedMax[place] = _dude:GetData().bombedMax
 end
 
 local function removeGoldenDudeData(_dude)
 	local i = 1
-	while i <= #mod.Globals.goldenDudeRoom do
+	while i <= #goldenDudeRoom do
 		local roomidx = tostring(game:GetLevel():GetCurrentRoomDesc().SafeGridIndex)
-		if (roomidx == mod.Globals.goldenDudeRoom[i]) and (_dude.Position.X == mod.Globals.goldenDudePosX[i]) and (_dude.Position.Y == mod.Globals.goldenDudePosY[i]) then
-			table.remove(mod.Globals.goldenDudeRoom, i)
-			table.remove(mod.Globals.goldenDudeSubType, i)
-			table.remove(mod.Globals.goldenDudePosX, i)
-			table.remove(mod.Globals.goldenDudePosY, i)
-			table.remove(mod.Globals.goldenDudeBombedTimes, i)
-			table.remove(mod.Globals.goldenDudeBombedMax, i)
+		if (roomidx == goldenDudeRoom[i]) and (_dude.Position.X == goldenDudePosX[i]) and (_dude.Position.Y == goldenDudePosY[i]) then
+			table.remove(goldenDudeRoom, i)
+			table.remove(goldenDudeSubType, i)
+			table.remove(goldenDudePosX, i)
+			table.remove(goldenDudePosY, i)
+			table.remove(goldenDudeBombedTimes, i)
+			table.remove(goldenDudeBombedMax, i)
 			break
 		else
 			i = i + 1
@@ -34,8 +84,8 @@ end
 local function dudeExistsInTable(_dude)
 	local data = _dude:GetData()
 	local roomidx = tostring(game:GetLevel():GetCurrentRoomDesc().SafeGridIndex)
-    for i=1, #mod.Globals.goldenDudeRoom do	
-        if (roomidx == mod.Globals.goldenDudeRoom[i]) and (_dude.Position.X == mod.Globals.goldenDudePosX[i]) and (_dude.Position.Y == mod.Globals.goldenDudePosY[i]) then
+    for i=1, #goldenDudeRoom do	
+        if (roomidx == goldenDudeRoom[i]) and (_dude.Position.X == goldenDudePosX[i]) and (_dude.Position.Y == goldenDudePosY[i]) then
 			return true
 		end
     end
@@ -44,33 +94,56 @@ end
 
 local function dudeUpdateBombData(_dude)
 	local roomidx = tostring(game:GetLevel():GetCurrentRoomDesc().SafeGridIndex)
-	for i=1, #mod.Globals.goldenDudeRoom do	
-		if (roomidx == mod.Globals.goldenDudeRoom[i]) and (_dude.Position.X == mod.Globals.goldenDudePosX[i]) and (_dude.Position.Y == mod.Globals.goldenDudePosY[i]) then
-			mod.Globals.goldenDudeBombedTimes[i] = _dude:GetData().bombedTimes
+	for i=1, #goldenDudeRoom do	
+		if (roomidx == goldenDudeRoom[i]) and (_dude.Position.X == goldenDudePosX[i]) and (_dude.Position.Y == goldenDudePosY[i]) then
+			goldenDudeBombedTimes[i] = _dude:GetData().bombedTimes
 		end
 	end
 end
 
---clear data on new level
+--saving
+function mod:goldenDudeGameStart(isContinued) 
+	if isContinued then
+		if mod:HasData() then
+			loadGoldenDudeData()
+		end
+	else
+		clearAllGoldenDudeData()
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.goldenDudeGameStart)
+
+function mod:goldenDudeGameExit(shouldSave) 
+	if shouldSave then
+		saveGoldenDudeData()
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.goldenDudeGameExit)
+
 function mod:goldenDudeNewLvl()
-	mod.Globals.goldenDudeRoom = {}
-	mod.Globals.goldenDudeSubType = {}
-	mod.Globals.goldenDudePosX = {}
-	mod.Globals.goldenDudePosY = {} 
-	mod.Globals.goldenDudeBombedTimes = {}
-	mod.Globals.goldenDudeBombedMax = {}
+	local level = game:GetLevel()
+	if (level:GetStage() ~= 1) and (not level:IsAltStage()) and (not level:IsAscent()) then
+		clearAllGoldenDudeData()
+		saveGoldenDudeData()
+	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.goldenDudeNewLvl)
+
+function mod:goldenDudeGameEnd(isGameOver) 
+	clearAllGoldenDudeData()
+	saveGoldenDudeData()
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_END, mod.goldenDudeGameEnd)
 
 --spawning shopkeepers
 function mod:spawnGoldenDudes()
     local roomidx = tostring(game:GetLevel():GetCurrentRoomDesc().SafeGridIndex)
-    for i=1, #mod.Globals.goldenDudeRoom do	
-        if mod.Globals.goldenDudeRoom[i] == roomidx then
-			local goldShopKeeper = Isaac.Spawn(1000, 2004, goldenDudeSubType[i], Vector(mod.Globals.goldenDudePosX[i], mod.Globals.goldenDudePosY[i]), Vector(0,0), nil):ToEffect()
+    for i=1, #goldenDudeRoom do	
+        if goldenDudeRoom[i] == roomidx then
+			local goldShopKeeper = Isaac.Spawn(1000, 2004, goldenDudeSubType[i], Vector(goldenDudePosX[i], goldenDudePosY[i]), Vector(0,0), nil):ToEffect()
 			local data = goldShopKeeper:GetData()
-			data.bombedTimes = mod.Globals.goldenDudeBombedTimes[i]
-			data.bombedMax = mod.Globals.goldenDudeBombedMax[i]
+			data.bombedTimes = goldenDudeBombedTimes[i]
+			data.bombedMax = goldenDudeBombedMax[i]
 			goldShopKeeper:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
 		end
     end
@@ -86,7 +159,7 @@ function mod:goldenShopKeeperUpd(eff)
 		--very first init
 		if eff.SubType == 0 then
 			--change subtype
-			Isaac.Spawn(1000, 2004, mod.Globals.goldenDudeRNG:RandomInt(1,16), eff.Position, Vector(0,0), eff):ClearEntityFlags(EntityFlag.FLAG_APPEAR) 
+			Isaac.Spawn(1000, 2004, math.random(1,16), eff.Position, Vector(0,0), eff):ClearEntityFlags(EntityFlag.FLAG_APPEAR) 
 			eff:Remove()
 		--after subtype changing is done
 		else
@@ -102,7 +175,7 @@ function mod:goldenShopKeeperUpd(eff)
 			--if wasn' spawned from table
 			if not dudeExistsInTable(eff) then
 				data.bombedTimes = 0
-				data.bombedMax = mod:GetRandomNumber(3, 5, mod.Globals.goldenDudeRNG)
+				data.bombedMax = math.random(3, 5)
 				addGoldenDudeData(eff)
 			end
 		end
@@ -131,11 +204,11 @@ function mod:goldenShopKeeperUpd(eff)
 				--if bombed normally
 				if data.bombedTimes < data.bombedMax then
 					--award (spawn coin)
-					local dropvelocity = Vector.FromAngle(mod:GetRandomNumber(0, 360, mod.Globals.garbageRNG))*mod:GetRandomNumber(3, 5, mod.Globals.garbageRNG)
+					local dropvelocity = Vector.FromAngle(math.random(0, 360))*math.random(3,5)
 					Isaac.Spawn(5, 20, 1, eff.Position, dropvelocity, eff)
 					--visual
 					sprite:Play("Bomb")
-					game:SpawnParticles(eff.Position, 98, mod:GetRandomNumber(7, 14, mod.Globals.garbageRNG), 4)
+					game:SpawnParticles(eff.Position, 98, math.random(7, 14), 4)
 					sfx:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8, 0, false, 1)
 					--cooldown
 					data.bombCoolDown = 20
@@ -144,15 +217,15 @@ function mod:goldenShopKeeperUpd(eff)
 					--remove itself from table
 					removeGoldenDudeData(eff)
 					--award
-					if mod.Globals.goldenDudeRNG:RandomInt(20)+1 == 1 then
+					if math.random(1, 20) == 1 then
 						--spawn golden trinket
-						Isaac.Spawn(5, 350, mod.Globals.goldenDudeRNG:RandomInt(TrinketType.NUM_TRINKETS-1) + 1 + TrinketType.TRINKET_GOLDEN_FLAG, eff.Position, Vector(0,0), eff)
+						Isaac.Spawn(5, 350, math.random(1, TrinketType.NUM_TRINKETS-1)+ TrinketType.TRINKET_GOLDEN_FLAG, eff.Position, Vector(0,0), eff)
 					else
 						--spawn coins
-						local baseAngle = mod:GetRandomNumber(0, 360, mod.Globals.garbageRNG)
-						local coinAmount = mod:GetRandomNumber(3, 5, mod.Globals.garbageRNG)
+						local baseAngle = math.random(0, 360)
+						local coinAmount = math.random(3,5)
 						for i=1, coinAmount do
-							local dropvelocity = Vector.FromAngle(baseAngle + (i*360/coinAmount))*mod:GetRandomNumber(3, 5, mod.Globals.garbageRNG)
+							local dropvelocity = Vector.FromAngle(baseAngle + (i*360/coinAmount))*math.random(3,5)
 							Isaac.Spawn(5, 20, 1, eff.Position, dropvelocity, eff)
 						end
 					end
@@ -160,7 +233,7 @@ function mod:goldenShopKeeperUpd(eff)
 					sprite:Play("Break")
 					sfx:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY, 0.8, 0, false, 1)
 					sfx:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8, 0, false, 1)	
-					game:SpawnParticles(eff.Position, 98, mod:GetRandomNumber(7, 14, mod.Globals.garbageRNG), 4)
+					game:SpawnParticles(eff.Position, 98, math.random(7, 14), 4)
 					game:ShakeScreen(8)
 					--flag
 					game:GetLevel():SetStateFlag(LevelStateFlag.STATE_SHOPKEEPER_KILLED_LVL, true)

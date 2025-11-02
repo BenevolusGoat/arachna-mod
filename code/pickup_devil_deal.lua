@@ -1,15 +1,39 @@
 local mod = ARACHNAMOD
-
 local arachnaChar = Isaac.GetPlayerTypeByName("Arachna", false)
 local arachnaChar_b = Isaac.GetPlayerTypeByName("Arachna", true)
-
-local webHeartPrice = {
-	PRICE_ONE_WEB_HEART = -2001, 
-	PRICE_WEB_AND_SOUL = -2002, 
-	PRICE_TWO_WEB_HEARTS = -2003, 
-	PRICE_SOUL_HEARTS = -2004, 
-	PRICE_YOUR_SOUL = -2005, 
-}
+--4 angel chance
+mod.SavedData.lastWebDeal = -2
+local latestWebDeal = -2
+local json = require("json")
+function mod:devilWebGameStart(isContinued) 
+	if isContinued then
+		--get data from save
+		if mod:HasData() then
+			mod.SavedData = json.decode(Isaac.LoadModData(mod))
+			latestWebDeal = mod.SavedData.lastWebDeal
+		end
+	else
+		--set values to default
+		for i=0, game:GetNumPlayers()-1 do
+			 latestWebDeal = -2
+		end
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.devilWebGameStart)
+function mod:devilWebGameExit(shouldSave) 
+	if shouldSave then
+		--save data
+		mod.SavedData.lastWebDeal = latestWebDeal
+		mod.SaveData(mod, json.encode(mod.SavedData))
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.devilWebGameExit)
+function mod:devilWebGameEnd(isGameOver) 
+	--clear data
+	mod.SavedData.lastWebDeal = 0
+	mod.SaveData(mod, json.encode(mod.SavedData))
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_END, mod.devilWebGameEnd)
 
 --render
 local function calculateArachnaDevilPrice(_itemid)
@@ -23,59 +47,64 @@ local function calculateArachnaDevilPrice(_itemid)
 		end
 	end
 	if arachnaHoldsSoul() then
-		return webHeartPrice.PRICE_YOUR_SOUL
+		return 5 --YOUR SOUL
 	elseif maxWebPrice() == 0 then
-		return webHeartPrice.PRICE_SOUL_HEARTS
+		return 4 -- THREE SOUL HEARTS
 	else
 		if price == 1 then
-			return webHeartPrice.PRICE_ONE_WEB_HEART
+			return 1 -- ONE WEB HEART
 		elseif price == 2 then
 			if maxWebPrice() == 1.5 then
-				return webHeartPrice.PRICE_WEB_AND_SOUL
+				return 2 --WEB HEART AND 2 SOUL HEARTS
 			elseif maxWebPrice() == 2 then
 				--judas tongue synergy
 				if SomeoneHasTrinket(TrinketType.TRINKET_JUDAS_TONGUE) then
-					return webHeartPrice.PRICE_ONE_WEB_HEART
+					return 1 -- ONE WEB HEART
 				else
-					return webHeartPrice.PRICE_TWO_WEB_HEARTS
+					return 3 -- TWO WEB HEARTS
 				end
 			end
 		end
 	end
 end
 
---spawn
-function mod.arachnaDevilDealSpawn(_, pickup)
-	if (someoneIsArachna()) and (pickup.Price < 0) then
-		local newPrice = calculateArachnaDevilPrice(pickup.SubType)
-		if pickup.Price ~= newPrice then
-			pickup.Price = newPrice
-		end
-	end
-end
-mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.arachnaDevilDealSpawn, 100)
-
---render price
 local webPrice = Sprite()
 webPrice:Load("gfx/price_web.anm2")
-webPrice:LoadGraphics()
 function mod:webHeartsDevilPedestal(pickup)
-	if pickup.Price <= webHeartPrice.PRICE_ONE_WEB_HEART then
+	if pickup.Price < 0 then
 		--choose frame
-		local renderFrame = 0
-		if pickup.Price == webHeartPrice.PRICE_ONE_WEB_HEART then
-			renderFrame = 5
-		elseif pickup.Price == webHeartPrice.PRICE_WEB_AND_SOUL then 
-			renderFrame = 6
-		elseif pickup.Price == webHeartPrice.PRICE_TWO_WEB_HEARTS then 
-			renderFrame = 7
-		elseif pickup.Price == webHeartPrice.PRICE_SOUL_HEARTS then 
-			renderFrame = 3
-		elseif pickup.Price == webHeartPrice.PRICE_YOUR_SOUL then 
-			renderFrame = 8
+		local data = pickup:GetData()
+		data.itemPrice = calculateArachnaDevilPrice(pickup.SubType)
+		data.renderFrame = 0
+		if someoneIsArachna() then -- FOR ARACHNA
+			if data.itemPrice == 1 then --ONE WEB HEART
+				data.renderFrame = 5
+			elseif data.itemPrice == 2 then -- WEB HEART AND 2 SOUL HEARTS
+				data.renderFrame = 6
+			elseif data.itemPrice == 3 then -- TWO WEB HEARTS
+				data.renderFrame = 7
+			elseif data.itemPrice == 4 then -- THREE SOUL HEARTS
+				data.renderFrame = 3
+			elseif data.itemPrice == 5 then --YOUR SOUL
+				data.renderFrame = 8
+			end
+		else -- FOR EVERYONE
+			if pickup.Price == -1 then --1 RED HEART
+				data.renderFrame = 0
+			elseif pickup.Price == -2 then --2 RED HEARTS
+				data.renderFrame = 1
+			elseif pickup.Price == -3 then --3 SOUL HEARTS
+				data.renderFrame = 3
+			elseif pickup.Price == -4 then --1 RED AND 2 SOUL HEARTS
+				data.renderFrame = 4
+			elseif pickup.Price == -6 then --YOUR SOUL
+				data.renderFrame = 8
+			elseif pickup.Price == -7 then --1 SOUL HEART
+				data.renderFrame = 2
+			end
 		end
 		--render
-		webPrice:SetFrame("Hearts", renderFrame)
+		webPrice:SetFrame("Hearts", data.renderFrame)
 		webPrice:RenderLayer(0, Isaac.WorldToRenderPosition(pickup.Position, true) + Game():GetRoom():GetRenderScrollOffset())
 	end
 end
@@ -84,20 +113,56 @@ mod:AddCallback(ModCallbacks.MC_POST_PICKUP_RENDER, mod.webHeartsDevilPedestal, 
 --picking item up
 function mod:arachnaDevilCollide(pickup,collider)
 	local player = collider:ToPlayer()
-	if (pickup.Price <= webHeartPrice.PRICE_ONE_WEB_HEART) and (player) and ((player:GetPlayerType() == arachnaChar) or (player:GetPlayerType() == arachnaChar_b)) then
+	if (pickup.Price < 0) and (player) and ((player:GetPlayerType() == arachnaChar) or (player:GetPlayerType() == arachnaChar_b)) and ((mod:GetData(player).webHearts) and (mod:GetData(player).webHearts > 0)) then
 		local data = pickup:GetData()
-		if pickup.Price == webHeartPrice.PRICE_ONE_WEB_HEART then
+		if data.itemPrice == 1 then -- ONE WEB HEART
 			addWebHearts(-1, player)
-		elseif pickup.Price == webHeartPrice.PRICE_WEB_AND_SOUL then 
+		elseif data.itemPrice == 2 then --WEB HEART AND 2 SOUL HEARTS
 			addWebHearts(-1, player)
 			player:AddSoulHearts(-4)
-		elseif pickup.Price == webHeartPrice.PRICE_TWO_WEB_HEARTS then 
+		elseif data.itemPrice == 3 then -- TWO WEB HEARTS
 			addWebHearts(-2, player)
-		elseif pickup.Price == webHeartPrice.PRICE_SOUL_HEARTS then 
+		elseif data.itemPrice == 4 then -- THREE SOUL HEARTS
 			player:AddSoulHearts(-6)
-		elseif pickup.Price == webHeartPrice.PRICE_YOUR_SOUL then 
+		elseif data.itemPrice == 5 then --YOUR SOUL
 			lose1Soul()
 		end
+		local item = Isaac.GetItemConfig():GetCollectible(pickup.SubType)
+		if item.Type == ItemType.ITEM_ACTIVE then
+			--if active item
+			local playerActive = player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
+			if playerActive ~= 0 then
+				--if player already has an active, drop it down
+				local oldActive = Isaac.Spawn(5, 100, playerActive, pickup.Position, Vector(0,0), player):ToPickup()
+				oldActive.Charge = player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY)
+				player:RemoveCollectible(playerActive)
+			end
+			--player:AddCollectible(pickup.SubType)
+			--player:SetActiveCharge(item.MaxCharges, ActiveSlot.SLOT_PRIMARY )
+		end
+		--always 
+		player:QueueItem(item, item.MaxCharges, true)
+		player:AddCoins(item.AddCoins)
+		player:AddBombs(item.AddBombs)
+		player:AddKeys(item.AddKeys)
+		player:AnimateCollectible(pickup.SubType, "Pickup", "PlayerPickupSparkle")
+		sfx:Play(SoundEffect.SOUND_DEVILROOM_DEAL, 1, 0, false, 1)
+		game:GetHUD():ShowItemText(player, item)
+		if (game:GetRoom():GetType() == RoomType.ROOM_DEVIL) then
+			latestWebDeal = game:GetLevel():GetStage()
+		end
+		pickup:Remove()		
 	end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, mod.arachnaDevilCollide, 100)
+
+--no angel if deal was picked
+function mod:onNewRoom()
+	local level = game:GetLevel()
+	if (level:GetStage() == latestWebDeal + 1) and (game:GetRoom():IsCurrentRoomLastBoss()) then
+		if (not SomeoneHasItem(CollectibleType.COLLECTIBLE_DUALITY)) and (not SomeoneHasItem(CollectibleType.COLLECTIBLE_EUCHARIST)) and (not SomeoneHasItem(CollectibleType.COLLECTIBLE_ACT_OF_CONTRITION)) then
+			level:InitializeDevilAngelRoom(false, true)
+		end
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.onNewRoom)

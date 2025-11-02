@@ -1,6 +1,4 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 
 local function CanOnlyHaveSoulHearts(player)
 	if player:GetPlayerType() == PlayerType.PLAYER_BLUEBABY
@@ -22,11 +20,10 @@ function mod.ImmortalHearts(_player)
 end
 
 function addWebHearts(_num, _player)
-	CustomHealthAPI.Library.AddHealth(_player,"HEART_WEB",_num*2)
-end
-
-function getWebHearts(_player)
-	return CustomHealthAPI.Library.GetHPOfKey(_player,"HEART_WEB")
+	local data = mod:GetData(_player)
+	if not data.webHearts then data.webHearts = 0 end
+	data.webHearts = data.webHearts + _num
+	_player:AddSoulHearts(_num*2)
 end
 
 function getRedContainers(_player)
@@ -34,7 +31,26 @@ function getRedContainers(_player)
 end
 
 function canPickWebHearts(_player)
-	return CustomHealthAPI.Library.CanPickKey(_player,"HEART_WEB")
+	local playerType = _player:GetPlayerType()
+	if (playerType == PlayerType.PLAYER_KEEPER or playerType == PlayerType.PLAYER_KEEPER_B or playerType == PlayerType.PLAYER_LOST or playerType == PlayerType.PLAYER_LOST_B) 
+	or (not _player:CanPickSoulHearts()) then
+		return false
+	end
+	_player = playerType == PlayerType.PLAYER_THESOUL_B and _player:GetMainTwin() or _player
+	--[[if playerType == PlayerType.PLAYER_MAGDALENA and _player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT) then
+		maxHP = 18
+	end]]
+	local webHeartAmount = mod:GetData(_player).webHearts
+	_player = playerType == PlayerType.PLAYER_THEFORGOTTEN and _player:GetSubPlayer() or _player
+	local maxHP = _player:GetHeartLimit()
+	local healthAmount = maxHP
+	if webHeartAmount then
+		healthAmount = _player:GetSoulHearts() + getRedContainers(_player)
+	end
+	if healthAmount < maxHP then 
+		return true
+	end
+	return false
 end
 
 function isMaxHP(_player)
@@ -42,7 +58,7 @@ function isMaxHP(_player)
 	--[[if playerType == PlayerType.PLAYER_MAGDALENA and _player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT) then
 		maxHP = 18
 	end]]
-	local webHeartAmount = getWebHearts(_player)
+	local webHeartAmount = mod:GetData(_player).webHearts
 	local healthAmount = maxHP
 	if webHeartAmount then
 		healthAmount = _player:GetSoulHearts() + getRedContainers(_player)
@@ -85,19 +101,19 @@ end
 
 function hasOnlyWebHP(_player)
 	local healthAmount = _player:GetSoulHearts() + getRedContainers(_player)
-	if (healthAmount <= 0) and (getWebHearts(_player) > 0) then 
+	if (healthAmount <= 0) and (mod:GetData(_player).webHearts > 0) then 
 		return true
 	end
 	return false
 end
 
 function myMaxWebPrice(_player)
-	local webhearts = getWebHearts(_player)/2
+	local webhearts = mod:GetData(_player).webHearts
 	if not webhearts then webhearts = 0 end
 	if webhearts >= 2 then 
 		return 2
 	elseif webhearts == 1 then
-		if math.ceil((_player:GetSoulHearts()-getWebHearts(_player))/2) >= 2 then
+		if math.ceil(_player:GetSoulHearts()/2) >= 2 then
 			return 1.5
 		else
 			return 1
@@ -189,7 +205,7 @@ function arachnaClearStrength(_player)
 	local data = mod:GetData(_player)
 	if ((_player:GetPlayerType() == arachnaChar) or (_player:GetPlayerType() == arachnaChar_b)) and (data.usedStrength ~= nil) then
 		while data.usedStrength > 0 do
-			if not (hasOnlyWebHP(_player) and getWebHearts(_player) == 1) then
+			if not (hasOnlyWebHP(_player) and data.webHearts == 1) then
 				addWebHearts(-1, _player)
 			end			
 			data.usedStrength = data.usedStrength - 1
@@ -208,9 +224,7 @@ function everyoneIsKeeper()
 end
 
 function getNearPos(_pos)
-	local rng = RNG()
-	rng:SetSeed((_pos.X+_pos.Y)*35, 35)
-	return Isaac.GetFreeNearPosition(_pos + Vector(mod:GetRandomNumber(-50, 50, rng), mod:GetRandomNumber(-50, 50, rng)), 50)
+	return Isaac.GetFreeNearPosition(_pos + Vector(math.random(-50, 50), math.random(-50, 50)), 50)
 end
 
 function displayRoomType(_roomtype) --modified version of agent cucco's function
@@ -347,6 +361,8 @@ local function returnElementWithChance(_stuff, _chances, _chance)
 	for i = 1, #_stuff do
 		maxVal = maxVal + _chances[i]
 	end
+	--if chance wasn't given, create it
+	if not _chance then _chance = math.random(0, maxVal) end
 	--if it's equal to max value, return last element
 	if _chance == maxVal then
 		return _stuff[#_stuff] 
@@ -362,7 +378,7 @@ local function returnElementWithChance(_stuff, _chances, _chance)
 		curMin = curMin + _chances[i]
 	end
 	--in case something goes wrong return nil so I could see it in debug console
-	--Isaac.ConsoleOutput("[ERR]: CHANCE OUT OF BOUNDS!\n")
+	Isaac.ConsoleOutput("[ERR]: CHANCE OUT OF BOUNDS!\n")
 	return nil
 end
 
@@ -380,13 +396,27 @@ function returnRandomSpiderSubType(_bigColorful, _onlyColor)
 	for i = 1, #spiderChances do
 		maxVal = maxVal + spiderChances[i]
 	end
-	local rng = Isaac.GetPlayer(0):GetCollectibleRNG(Isaac.GetItemIdByName("Mutagen"))
-	local chance = mod:GetRandomNumber(0, maxVal, rng)
+	local chance = math.random(0, maxVal)
 	if _onlyColor then
-		chance = mod:GetRandomNumber(spiderChances[1]+1, maxVal, rng) -- big blue spider doesn't count as non-colored btw
+		chance = math.random(spiderChances[1]+1, maxVal) -- big blue spider doesn't count as non-colored btw
 	end
 	return returnElementWithChance(spiderTypes, spiderChances, chance)
 end
+
+--box of friends
+--clear on new room and on start
+function mod:friendboxNewRoom()
+	for i=0, game:GetNumPlayers()-1 do
+		local player = Isaac.GetPlayer(i) 
+		mod:GetData(player).friendboxUses = 0
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.friendboxNewRoom)
+--on use, increase
+function mod:useFriendbox(item, rng, player)
+	mod:GetData(player).friendboxUses = mod:GetData(player).friendboxUses + 1
+end
+mod:AddCallback(ModCallbacks.MC_USE_ITEM, mod.useFriendbox, CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) 
 
 function GetNearestEnemy(_pos)
 	local distance = 9999999
@@ -493,8 +523,7 @@ function rerollMechEyeActive(_player)
 		end
 	end	
 	--set it to random item from the list
-	local rng = _player:GetCollectibleRNG(Isaac.GetItemIdByName("Mechanical Eye"))
-	data.mechEyeItem = items[mod:GetRandomNumber(1, #items, rng)]
+	data.mechEyeItem = items[math.random(1, #items)]
 end
 
 function triggeredShootButton(_player)
@@ -545,8 +574,7 @@ function getRandomItemByTypeAndQuality(_quality, _itemtype)
 		end
 	end
 	if (#items > 0) then
-		local rng = Isaac.GetPlayer(0):GetCollectibleRNG(Isaac.GetItemIdByName("Mechanical Eye"))
-		return items[mod:GetRandomNumber(1, #items, rng)]
+		return items[math.random(1, #items)]
 	else
 		return 36 -- poopoo
 	end
@@ -633,8 +661,7 @@ function tryAddGoldMark()
 	end
 	--actually apply shit
 	if #enemies > 0 then
-		local rng = Isaac.GetPlayer(0):GetCollectibleRNG(Isaac.GetItemIdByName("Geptameron"))
-		local npc = enemies[mod:GetRandomNumber(1, #enemies, rng)]
+		local npc = enemies[math.random(1, #enemies)]
 		npc:GetData().shouldDropCoin = true
 		local poof = Isaac.Spawn(1000, 16, 2, Vector(npc.Position.X, npc.Position.Y-15), Vector(0,0), npc):ToEffect()
 		poof.Color = Color(0.9, 0.7, 0.3, 1, 0.2, 0.3, 0) 

@@ -1,6 +1,4 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 local actionAngle = {[ButtonAction.ACTION_SHOOTUP] = 180, [ButtonAction.ACTION_SHOOTDOWN] = 0, [ButtonAction.ACTION_SHOOTLEFT] = 90, [ButtonAction.ACTION_SHOOTRIGHT] = 270}
 local dirAngle = {[Direction.NO_DIRECTION] = 0, [Direction.UP] = 180, [Direction.DOWN] = 0, [Direction.LEFT] = 90, [Direction.RIGHT] = 270}
 local newsPaperItem = Isaac.GetItemIdByName("Dad's Newspaper")
@@ -122,7 +120,7 @@ function mod:paperSwingUpdate(knife)
 			if collider:IsVulnerableEnemy() then
 				--kill insect enemies
 				if isInsectEnemy(collider) then
-					game:SpawnParticles(collider.Position, 5, mod:GetRandomNumber(6, 10, mod.Globals.garbageRNG), 7)	
+					game:SpawnParticles(collider.Position, 5, math.random(6, 10), 7)	
 					sfx:Play(SoundEffect.SOUND_PUNCH, 1, 0, false, 1)
 					sfx:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
 					collider:Die()
@@ -142,12 +140,12 @@ function mod:paperSwingUpdate(knife)
 			end
 			--throw bombs
 			if collider.Type == 4 then
-				collider.Velocity = collider.Velocity + Vector.FromAngle((player.Position - collider.Position):GetAngleDegrees())*(-1)*mod:GetRandomNumber(3, 5, mod.Globals.garbageRNG)
+				collider.Velocity = collider.Velocity + Vector.FromAngle((player.Position - collider.Position):GetAngleDegrees())*(-1)*math.random(3,5)
 			end
 		end
 		--throw pickups
 		for _, pickup in ipairs(Isaac.FindInRadius(knife.Position, knife.Size, EntityPartition.PICKUP)) do
-			pickup.Velocity = pickup.Velocity + Vector.FromAngle((player.Position - pickup.Position):GetAngleDegrees())*(-1)*mod:GetRandomNumber(3, 5, mod.Globals.garbageRNG)
+			pickup.Velocity = pickup.Velocity + Vector.FromAngle((player.Position - pickup.Position):GetAngleDegrees())*(-1)*math.random(3,5)
 		end
 		--kill projectiles
 		for _, proj in ipairs(Isaac.FindInRadius(knife.Position, knife.Size, EntityPartition.BULLET)) do

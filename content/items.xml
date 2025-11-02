@@ -1,25 +1,19 @@
 <items gfxroot="gfx/items/" version="1" deathanm2="gfx/arachna_death_items.anm2">
 	<!--ITEMS-->
-	<active id="0" name="Arachna's Spool" description="Web design tool" gfx="spool.png" maxcharges="90" chargetype="timed" cooldown="5" quality="3"/>
-	<active id="1" name="Divine Cloth" description="Enemy infestation" gfx="divine-cloth.png" maxcharges="90" chargetype="timed" cooldown="5" quality="3"/>
-	<active id="2" name="Yarn Heart" description="Reusable web protection" gfx="yarn-heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
-	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." gfx="mutagen.png" cache="damage" tags="nogreed" quality="2"/>
-	<familiar id="4" name="Lil Arachna" description="Spider friend" gfx="lil-arachna.png" tags="baby" quality="3"/>
-	<active id="5" name="Best Bud Ball" description="Find your very best friend!" gfx="best-bud-ball.png" maxcharges="0" tags="nochallenge noeden" quality="4"/>
-	<familiar id="6" name="The Yarn" description="Static shock!" gfx="the-yarn.png" tags="baby" quality="2"/>
-	<passive id="7" name="Mechanical Eye" description="Active expansion" gfx="mechanical-eye.png" cache="familiars" tags="tech" quality="3"/>
-	<passive id="8" name="Arachnid's Grip" description="Infested!" gfx="arachnid-grips.png" tags="spider" quality="3"/> <!-- ::::) -->
-	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" gfx="dads-newspaper.png" tags="" quality="3"/>
-	<active id="10" name="Testament" description="Leave the inheritance for your descendants" gfx="lastwill.png" maxcharges="0" tags="nogreed nochallenge noeden" quality="4"/>
-	<active id="11" name="Geptameron" description="Ever changing holy tome" gfx="geptameron.png" maxcharges="4" tags="book" quality="3"/>
-	<passive id="12" name="3D Glasses" description="I'm seeing double..." gfx="3dglasses.png" quality="2"/>
-	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" tags="hidden quest noeden" cache="all" quality="4"/>
-
-	<passive id="14" name=" Spider Donut " description="HP Up?" gfx="spider-donut.png" cache="damage" quality="2"/>
-	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." gfx="candy-floss.png" cache="all" quality="2"/>
-	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" gfx="gummy-spiders.png" cache="firedelay" quality="2"/>
-	<passive id="17" name="Old Shoebox" description="What could be inside?" gfx="old-box.png" cache="firedelay speed" quality="2"/>
-	<!--TRINKETS-->
+	<active quality="3" name="Arachna's Spool" description="Web design tool" gfx="spool.png" maxcharges="90" chargetype="timed" cooldown="5" id="0"/>
+	<active quality="3" name="Divine Cloth" description="Enemy infestation" gfx="divine-cloth.png" maxcharges="90" chargetype="timed" cooldown="5" id="1"/>
+	<active quality="2" name="Yarn Heart" description="Reusable web protection" gfx="yarn-heart.png" maxcharges="4" tags="spider, nokeeper, nolostbr" id="2"/>
+	<!--NEEDS COSTUME--> <passive quality="2" name="Mutagen" description="DMG UP. Mutated buddies." gfx="mutagen.png" cache="damage" tags="nogreed" id="3"/>
+	<familiar quality="3" name="Lil Arachna" description="Spider friend" gfx="lil-arachna.png" tags="baby" id="4"/>
+	<active quality="4" name="Best Bud Ball" description="Find your very best friend!" gfx="best-bud-ball-1.png" maxcharges="0" tags="nochallenge, noeden" id="5"/>
+	<familiar quality="2" name="The Yarn" description="Static shock!" gfx="the-yarn.png" tags="baby" id="6"/>
+	<passive quality="3" name="Mechanical Eye" description="Active expansion" gfx="mechanical-eye.png" cache="familiars" tags="tech" id="7"/>
+	<!--NEEDS COSTUME--> <passive quality="3" name="Arachnid's Grip" description="Infested!" gfx="arachnid-grips.png" tags="spider" id="8"/> <!-- ::::) -->
+	<passive quality="3" name="Dad's Newspaper" description="Double-tap bonk" gfx="dads-newspaper.png" tags="" id="9"/>
+	<active quality="4" name="Testament" description="Leave the inheritance for your descendants" gfx="lastwill.png" maxcharges="0" tags="nogreed, nochallenge, noeden" id="10"/>
+	<active quality="3" name="Geptameron" description="Ever changing holy tome" gfx="geptameron.png" maxcharges="4" tags="book" id="11"/>
+	<passive quality="2" name="3D Glasses" description="I'm seeing double..." gfx="3dglasses.png" id="12"/>
+	<!--TRINKETS--> 
 	<trinket name="White String" description="Spider's little gift" gfx="white-string.png" />
 	<trinket name="Sprindle" description="Ouch!" gfx="sprindle.png"/>
 	<trinket name="Infested Penny" description="Wealth of spiders" gfx="infested-penny.png"/>

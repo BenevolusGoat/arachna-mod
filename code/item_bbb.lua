@@ -1,6 +1,77 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
+--saving caught boss data
+mod.SavedData.caughtBossType = {}
+mod.SavedData.caughtBossVariant = {}
+mod.SavedData.caughtBossSubType = {}
+local json = require("json")
+function mod:bbbGameStart(isContinued) 
+	if isContinued then
+		--get data from save
+		if mod:HasData() then
+			mod.SavedData = json.decode(Isaac.LoadModData(mod))
+			for i=0, game:GetNumPlayers()-1 do
+				local player = Isaac.GetPlayer(i)
+				local data = mod:GetData(player)
+				data.caughtBossType = mod.SavedData.caughtBossType[tostring(i)]
+				data.caughtBossVariant = mod.SavedData.caughtBossVariant[tostring(i)]
+				data.caughtBossSubType = mod.SavedData.caughtBossSubType[tostring(i)]
+			end
+			--Isaac.ConsoleOutput("GOT DATA FROM SAVE! \n")
+		end
+	else
+		--set values to default
+		for i=0, game:GetNumPlayers()-1 do
+			local player = Isaac.GetPlayer(i)
+			local data = mod:GetData(Isaac.GetPlayer(i))
+			data.caughtBossType = -1
+			data.caughtBossVariant = -1
+			data.caughtBossSubType = -1
+			--Isaac.ConsoleOutput("VALUES SET TO DEFAULT! \n")
+		end
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.bbbGameStart)
+function mod:bbbGameExit(shouldSave)
+	--save data
+	if shouldSave then
+		for i=0, game:GetNumPlayers()-1 do
+			local player = Isaac.GetPlayer(i)
+			local data = mod:GetData(Isaac.GetPlayer(i))
+			mod.SavedData.caughtBossType[tostring(i)] = data.caughtBossType
+			mod.SavedData.caughtBossVariant[tostring(i)] = data.caughtBossVariant
+			mod.SavedData.caughtBossSubType[tostring(i)] = data.caughtBossSubType
+		end
+		mod.SaveData(mod, json.encode(mod.SavedData))
+		--Isaac.ConsoleOutput("DATA SAVED! \n")
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.bbbGameExit)
+function mod:bbbNewLvl()
+	local level = game:GetLevel()
+	if (level:GetStage() ~= 1) and (not level:IsAltStage()) and (not level:IsAscent()) then
+		--save data
+		for i=0, game:GetNumPlayers()-1 do
+			local player = Isaac.GetPlayer(i)
+			local data = mod:GetData(Isaac.GetPlayer(i))
+			mod.SavedData.caughtBossType[tostring(i)] = data.caughtBossType
+			mod.SavedData.caughtBossVariant[tostring(i)] = data.caughtBossVariant
+			mod.SavedData.caughtBossSubType[tostring(i)] = data.caughtBossSubType
+		end
+		mod.SaveData(mod, json.encode(mod.SavedData))
+		--Isaac.ConsoleOutput("DATA SAVED! \n")
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.bbbNewLvl)
+function mod:bbbGameEnd(isGameOver) 
+	--clear data
+	mod.SavedData.caughtBossType = {}
+	mod.SavedData.caughtBossVariant = {}
+	mod.SavedData.caughtBossSubType = {}
+	mod.SaveData(mod, json.encode(mod.SavedData))
+	--Isaac.ConsoleOutput("DATA CLEARED! \n")
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_END, mod.bbbGameEnd)
 
 --item
 local bestBudBall = Isaac.GetItemIdByName("Best Bud Ball")
@@ -114,8 +185,7 @@ function mod:bbbEffectUpdate(eff)
 					game:ShowHallucination(3, 0)
 					local bossTypes = {20, 43, 43, 36, 46, 46, 52, 52, 46, 50, 50, 47, 47, 48, 48, 49, 49, 51, 51, 65, 63, 64, 65, 66, 67, 67, 68, 68, 69, 69, 74, 71, 71, 79, 79, 79, 81, 81, 82, 84, 99, 100, 100, 102, 102, 237, 237, 260, 261, 261, 262, 263, 264, 265, 267, 268, 270, 269, 269, 271, 271, 272, 272, 401, 402, 403, 404, 405, 409, 413, 901, 902, 904, 905, 908, 909, 910, 913, 914, 915, 916, 917, 920}
 					local bossVariants = {0, 0, 1, 0, 0, 1, 0, 1, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 2, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-					local rng = Isaac.GetPlayer(0):GetCollectibleRNG(bestBudBall)
-					local bossChoice = rng:RandomInt(#bossTypes)+1
+					local bossChoice = math.random(1, #bossTypes)
 					local boss = Isaac.Spawn(bossTypes[bossChoice], bossVariants[bossChoice], 0, eff.Position, Vector(0,0), player):ToNPC()
 					boss:AddEntityFlags(EntityFlag.FLAG_FRIENDLY | EntityFlag.FLAG_CHARM | EntityFlag.FLAG_PERSISTENT)
 					boss:ClearEntityFlags(EntityFlag.FLAG_APPEAR)

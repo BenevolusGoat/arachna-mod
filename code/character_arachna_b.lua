@@ -2,8 +2,6 @@ local mod = ARACHNAMOD
 local divineCloth = Isaac.GetItemIdByName("Divine Cloth")
 local arachnaHair_b = 'gfx/characters/costumes/arachna-head-b-2.png'
 local arachnaChar_b = Isaac.GetPlayerTypeByName("Arachna", true)
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 --on game continue
 function mod:arachnaBPocketItem(isContinued) 
 	if isContinued then
@@ -31,8 +29,12 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.arachnaBPocketItem)
 function mod:arachnaBInit(player)
 	if (player:GetPlayerType() == arachnaChar_b) then
 		--hearts
-		--addWebHearts(3, player)
-		--player:AddSoulHearts(-2*mod:GetData(player).webHearts)
+		addWebHearts(3, player)
+		player:AddSoulHearts(-2*mod:GetData(player).webHearts)
+		--divine cloth
+		if (player:GetActiveItem(ActiveSlot.SLOT_POCKET) ~= divineCloth) then
+			player:SetPocketActiveItem(divineCloth)
+		end
 		--quad shot
 		if not hasInnateItem(player, CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then
 			addInnateItem(player, CollectibleType.COLLECTIBLE_MUTANT_SPIDER)
@@ -45,9 +47,6 @@ function mod:arachnaBInit(player)
 			local pogCostume = Isaac.GetCostumeIdByPath("gfx/characters/arachna_pog_b.anm2")
 			Poglite:AddPogCostume("ArachnaBPog", arachnaChar_b, pogCostume)
 		end
-		--divine cloth
-		if game:GetFrameCount() > 0 then return end
-		player:SetPocketActiveItem(divineCloth)
 	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.arachnaBInit)

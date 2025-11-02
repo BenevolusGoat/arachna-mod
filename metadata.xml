@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>!Arachna</name>
-    <directory>arachna</directory>
+    <name>[REP] Arachna (20+ Unlocks)</name>
+    <directory>arachnamod</directory>
+    <id>2801120315</id>
     <description>Become the lord of the spiders with Arachna, a new character that revolves around the web and spiders. Arachna starts with a new item in her pocket - Arachna's Spool. She can throw it at enemies to create web, that slows them down and turns them into spider eggs when they die. Spider eggs burst into friendly spiders upon clearing a room or a greed mode wave. Arachna can't have red health and instead gains Web Hearts - a new heart type. They are easier to break than any kind of regular hearts, but they release spiders upon being broken and for Arachna, they increase the amount of spiders you can get from the eggs. Tainted version provides pretty similar, but yet different gameplay, with it's own advantages and disadvantages.
 
 [h1] Features [/h1] 

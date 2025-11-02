@@ -1,8 +1,74 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 local mechEyeItem = Isaac.GetItemIdByName("Mechanical Eye")
 local mechEyeOrbital = Isaac.GetEntityVariantByName("Mechanical Eye (orbital)")
+
+mod.SavedData.mechEyeItem = {}
+local json = require("json")
+
+--applying hearts
+function mod:mechEyeDataGameStart(isContinued) 
+	if isContinued then
+		--get data from save
+		if mod:HasData() then
+			mod.SavedData = json.decode(Isaac.LoadModData(mod))
+			for i=0, game:GetNumPlayers()-1 do
+				local player = Isaac.GetPlayer(i)
+				local data = mod:GetData(player)
+				data.mechEyeItem = mod.SavedData.mechEyeItem[tostring(i)]
+			end
+			--Isaac.ConsoleOutput("GOT DATA FROM SAVE! \n")
+		end
+	else
+		--set values to default
+		for i=0, game:GetNumPlayers()-1 do
+			local player = Isaac.GetPlayer(i)
+			local data = mod:GetData(Isaac.GetPlayer(i))
+			rerollMechEyeActive(player)
+			--Isaac.ConsoleOutput("VALUES SET TO DEFAULT! \n")
+		end
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.mechEyeDataGameStart)
+function mod:mechEyeDataGameExit(shouldSave) 
+	--save data
+	if shouldSave then
+		for i=0, game:GetNumPlayers()-1 do
+			local player = Isaac.GetPlayer(i)
+			local data = mod:GetData(Isaac.GetPlayer(i))
+			mod.SavedData.mechEyeItem[tostring(i)] = data.mechEyeItem
+		end
+		mod.SaveData(mod, json.encode(mod.SavedData))
+		--Isaac.ConsoleOutput("DATA SAVED! \n")
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.mechEyeDataGameExit)
+function mod:mechEyeDataNewLvl()
+	local level = game:GetLevel()
+	if (level:GetStage() ~= 1) and (not level:IsAltStage()) and (not level:IsAscent()) then
+		--save data
+		for i=0, game:GetNumPlayers()-1 do
+			local player = Isaac.GetPlayer(i)
+			local data = mod:GetData(Isaac.GetPlayer(i))
+			local level = game:GetLevel()
+			--if player doesn't have a trinket reroll item before saving
+			if (not player:HasCollectible(mechEyeItem)) then
+				rerollMechEyeActive(player)
+			end
+			--save
+			mod.SavedData.mechEyeItem[tostring(i)] = data.mechEyeItem
+		end
+		mod.SaveData(mod, json.encode(mod.SavedData))
+		--Isaac.ConsoleOutput("DATA SAVED! \n")
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.mechEyeDataNewLvl)
+function mod:mechEyeDataGameEnd(isGameOver) 
+	--clear data
+	mod.SavedData.mechEyeItem = {}
+	--Isaac.ConsoleOutput("DATA CLEARED! \n")
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_END, mod.mechEyeDataGameEnd)
 
 --actual effect
 --update
@@ -23,6 +89,7 @@ mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, mod.mechEyeItemPause)
 function mod:mechEyeUseActive(item, rng, player)
 	local data = mod:GetData(player)
 	if (item == player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)) and (player:HasCollectible(mechEyeItem)) and (data.activeItemPause == nil or data.activeItemPause <= 0) and (not eyeAndHandAreMismatched(player)) and (not isInfUseActive(item)) then
+		local randNum = math.random(1, 100)
 		--use item
 		data.activeItemPause = 1
 		player:UseActiveItem(data.mechEyeItem, false, false, true, true, -1)

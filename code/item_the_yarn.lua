@@ -1,6 +1,5 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 local bffItem = CollectibleType.COLLECTIBLE_BFFS
 local sirenLullaby = TrinketType.TRINKET_FORGOTTEN_LULLABY
 
@@ -12,7 +11,7 @@ function mod:theYarnCache(player, cacheFlag)
     if (cacheFlag == CacheFlag.CACHE_FAMILIARS) and (player:GetCollectibleNum(itemTheYarn) >= 0) and (mod:GetData(player).friendboxUses ~= nil) then
 		local yarnAmount = 0
 		if player:GetCollectibleNum(itemTheYarn) > 0 then
-			yarnAmount = player:GetCollectibleNum(itemTheYarn) * (player:GetEffects():GetCollectibleEffectNum(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) + 1)
+			yarnAmount = player:GetCollectibleNum(itemTheYarn) + mod:GetData(player).friendboxUses
 		end
 		player:CheckFamiliar(babyTheYarn, yarnAmount, RNG())
 	end
@@ -76,17 +75,13 @@ function mod:theYarnUpd(baby)
 		end
 	end
 	--give hearts
-	
-	if (data.heartState ~= nil) and (data.heartState == 4) then
-		local rng = player:GetCollectibleRNG(itemTheYarn)
-		if (rng:RandomInt(100)+1 <= data.heartChance) then
-			if (not sprite:IsPlaying("SpawnHeart")) then
-				sprite:Play("SpawnHeart", true)
-				Isaac.Spawn(5, 2000, 0, Isaac.GetFreeNearPosition(baby.Position, 25), Vector(0, 0), baby)
-				sfx:Play(SoundEffect.SOUND_THUMBSUP, 0.8, 0, false, 1)
-			end
-			data.heartState = 0
+	if (data.heartState ~= nil) and (data.heartState == 4) and (math.random(1, 100) <= data.heartChance) then
+		if (not sprite:IsPlaying("SpawnHeart")) then
+			sprite:Play("SpawnHeart", true)
+			Isaac.Spawn(5, 2000, 0, Isaac.GetFreeNearPosition(baby.Position, 25), Vector(0, 0), baby)
+			sfx:Play(SoundEffect.SOUND_THUMBSUP, 0.8, 0, false, 1)
 		end
+		data.heartState = 0
 	end
 	if sprite:IsFinished("SpawnHeart") then
 		sprite:Play("Idle", true)

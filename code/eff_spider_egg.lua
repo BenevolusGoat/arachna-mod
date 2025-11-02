@@ -1,10 +1,6 @@
 local mod = ARACHNAMOD
 local arachnaChar = Isaac.GetPlayerTypeByName("Arachna", false)
 local arachnaChar_b = Isaac.GetPlayerTypeByName("Arachna", true)
-
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
-
 --spider egg
 function mod:spiderEggUpdate(eff)
 	local sprite = eff:GetSprite()
@@ -45,7 +41,7 @@ function mod:spiderEggUpdate(eff)
 		--more web hearts = more spiders
 		local spiderCount = 0
 		local spawnerType = eff.SpawnerEntity:ToPlayer():GetPlayerType()
-		local playerWebHearts = getWebHearts(eff.SpawnerEntity:ToPlayer())--mod:GetData(eff.SpawnerEntity).webHearts
+		local playerWebHearts = mod:GetData(eff.SpawnerEntity).webHearts
 		if playerWebHearts == nil then playerWebHearts = 0 end
 		if ((spawnerType == arachnaChar) and (eff.SpawnerEntity:ToPlayer():HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT))) or (spawnerType == arachnaChar_b) then
 			--spiderCount = math.random(3, 5) + (mod:GetData(eff.SpawnerEntity).webHearts*2)

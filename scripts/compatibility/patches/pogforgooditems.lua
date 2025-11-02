@@ -1,9 +1,0 @@
-local Mod = ARACHNAMOD
-
-if Poglite then
-	local pogCostume = Isaac.GetCostumeIdByPath("gfx/characters/arachna_pog.anm2")
-	Poglite:AddPogCostume("ArachnaPog", Mod.PlayerType.ARACHNA, pogCostume)
-
-	local pogCostume_B = Isaac.GetCostumeIdByPath("gfx/characters/arachna_pog_b.anm2")
-	Poglite:AddPogCostume("ArachnaBPog", Mod.PlayerType.ARACHNA_B, pogCostume_B)
-end

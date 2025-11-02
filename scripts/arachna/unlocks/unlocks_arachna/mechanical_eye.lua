@@ -1,7 +1,0 @@
-local Mod = ARACHNAMOD
-
-local MECHANICAL_EYE = {}
-
-ARACHNAMOD.Item.MECHANICAL_EYE = MECHANICAL_EYE
-
-MECHANICAL_EYE.ID = Isaac.GetItemIdByName("Mechanical Eye")

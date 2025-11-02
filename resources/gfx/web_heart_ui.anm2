@@ -1,5 +1,5 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="09.02.2023 20:27:42" Version="159" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="22.03.2022 12:40:26" Version="157" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="ui\webheart.png" Id="0"/>

@@ -1,6 +1,4 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 local arachnaSpool = Isaac.GetItemIdByName("Arachna's Spool")
 local arachnaChar = Isaac.GetPlayerTypeByName("Arachna", false)
 --web floor
@@ -15,12 +13,8 @@ function mod:webFloorUpdate(eff)
 	local sprite = eff:GetSprite()
 	local data = eff:GetData()
 	if not data.init then
-		local rng = RNG()
-		rng:SetSeed(eff.InitSeed, 35)
-		sprite:ReplaceSpritesheet(0, "gfx/backdrop/web_" .. tostring(rng:RandomInt(4)+1) .. ".png")
+		sprite:ReplaceSpritesheet(0, "gfx/backdrop/web_" .. tostring(math.random(1,4)) .. ".png")
 		sprite:LoadGraphics()
-		if rng:RandomInt(2) == 0 then sprite.FlipX = true end
-		if rng:RandomInt(2) == 0 then sprite.FlipY = true end
 		data.init = true
 	end
 	if sprite:IsFinished("Appear") then
@@ -127,7 +121,7 @@ local function spoolBreak(_tear)
 	if not data.wasBroken then
 	    sfx:Play(SoundEffect.SOUND_WOOD_PLANK_BREAK, 1, 7, false, 3)
 		sfx:Play(SoundEffect.SOUND_SUMMON_POOF, 0.8, 1, false, 1)
-		game:SpawnParticles(_tear.Position, 27, mod:GetRandomNumber(5, 10, mod.Globals.garbageRNG), 4)
+		game:SpawnParticles(_tear.Position, 27, math.random(5, 10), 4)
 		--remove webs
 		local maxWebCount = 0
 		--if player has birthright then 2x time
@@ -186,7 +180,7 @@ function mod:spiderWispsDeath(ent, amount, flags, src, countdown)
 			if (ent.HitPoints <= amount) then
 				--drop spider
 				local player = ent:ToFamiliar().Player
-				local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG)), 50)
+				local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(math.random(-100, 100), math.random(-100, 100)), 50)
 				player:ThrowBlueSpider(player.Position, nearPos)
 			end
 		end

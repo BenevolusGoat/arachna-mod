@@ -1,7 +1,0 @@
-local Mod = ARACHNAMOD
-
-local GEPTAMERON = {}
-
-ARACHNAMOD.Item.GEPTAMERON = GEPTAMERON
-
-GEPTAMERON.ID = Isaac.GetItemIdByName("Geptameron")

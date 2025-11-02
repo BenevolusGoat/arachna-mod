@@ -1,7 +1,5 @@
 local mod = ARACHNAMOD
 local arachnaChar_b = Isaac.GetPlayerTypeByName("Arachna", true)
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 --EFFECT
 function mod:spiderFloorEffectUpdate(eff)
 	local sprite = eff:GetSprite()
@@ -168,8 +166,7 @@ function mod:useArachnaSoul(card, player)
 			local swirlEffect = Isaac.Spawn(1000, 2002, 1, Vector(npc.Position.X, npc.Position.Y-10), Vector(0,0), npc):ToEffect()
 			swirlEffect.DepthOffset = 250
 			swirlEffect:Update()
-			local rng = player:GetCardRNG(arachnaSoul)
-			game:SpawnParticles(npc.Position, 5, rng:RandomInt(15)+7, 4, Color(1, 1, 1, 1, 1, 1, 1))
+			game:SpawnParticles(npc.Position, 5, math.random(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
 		end
 	end
 	--visual effect

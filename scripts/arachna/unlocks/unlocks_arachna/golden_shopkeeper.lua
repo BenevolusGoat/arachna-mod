@@ -1,7 +1,0 @@
-local Mod = ARACHNAMOD
-
-local GOLDEN_SHOPKEEPER = {}
-
-ARACHNAMOD.Misc.GOLDEN_SHOPKEEPER = GOLDEN_SHOPKEEPER
-
-GOLDEN_SHOPKEEPER.ID = Isaac.GetEntityVariantByName("Golden Shopkeeper")

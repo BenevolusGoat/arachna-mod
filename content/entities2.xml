@@ -1,145 +1,98 @@
 <entities anm2root="gfx/" version="5">
-	<!-- Tears -->
-	<entity id="2" variant="2000" name="Spool Tear" anm2path="tear_spool.anm2" collisionMass="16" collisionRadius="8" friction="1" numGridCollisionPoints="8" shadowSize="16" stageHP="0">
+	<!--WEB HEART-->
+	<entity anm2path="web_heart_pickup.anm2" baseHP="0" boss="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Web Heart" numGridCollisionPoints="24" shadowSize="17" stageHP="0" variant="2000">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<entity anm2path="web_heart_pickup_double.anm2" baseHP="0" boss="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Web Heart (Double)" numGridCollisionPoints="24" shadowSize="17" stageHP="0" variant="2002">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<!--TEARS-->
+	<entity anm2path="tear_spool.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="16" collisionRadius="8" friction="1" id="2" name="Spool Tear" numGridCollisionPoints="8" shadowSize="16" stageHP="0" variant="2000">
 		<gibs amount="1" blood="0" bone="1" eye="0" gut="0" large="0" />
 	</entity>
-
-	<!-- Familiars -->
-	<entity id="3" variant="238" name="Web Heart Baby" anm2path="web_heart_clot.anm2" subtype="2000" tags="cansacrifice"
-		baseHP="18" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="10">
-	</entity>
-	<entity id="3" variant="2000" name="Lil Arachna" anm2path="familiar_lil_arachna.anm2" tags="cansacrifice"
-		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" >
-	</entity>
-    <entity id="3" variant="2001" name="The Yarn (follower)" anm2path="familiar_yarn.anm2"
-		collisionMass="3" collisionRadius="13" friction="1"  numGridCollisionPoints="12" shadowSize="11">
-	</entity>
-	<entity id="3" variant="2002" name="Spider Egg (orbital)" anm2path="spider_egg_orbital.anm2" cansacrifice="false"
-		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="10">
-    </entity>
-	<entity id="3" variant="2003" name="Mechanical Eye (orbital)" anm2path="mechanical_eye_orbital.anm2" cansacrifice="false"
-		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="10">
-    </entity>
-
-	<!-- Colored Spiders -->
-	<entity id="3" variant="73" subtype="1" name="Arachna Spider (Wrath)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="2" name="Arachna Spider (Pestilence)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="3" name="Arachna Spider (Famine)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="4" name="Arachna Spider (Death)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="5" name="Arachna Spider (Conquest)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="6" name="Arachna Spider (Rainbow)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="7" name="Arachna Spider (Golden)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="8" name="Arachna Spider (Love)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="9" name="Arachna Spider (Ice)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<!-- Big Spiders -->
-	<entity id="3" variant="73" subtype="10" name="Arachna Spider (Big)" anm2path="familiars/colorspiders/bluespider_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="11" name="Arachna Spider (Wrath Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="12" name="Arachna Spider (Pestilence Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="13" name="Arachna Spider (Famine Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="14" name="Arachna Spider (Death Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="15" name="Arachna Spider (Conquest Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="16" name="Arachna Spider (Rainbow Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="17" name="Arachna Spider (Golden Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="18" name="Arachna Spider (Love Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-	<entity id="3" variant="73" subtype="19" name="Arachna Spider (Ice Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
-    </entity>
-
-	<!-- Pickups -->
-	<entity id="5" variant="2000" name="Web Heart" anm2path="web_heart_pickup.anm2"
-		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
-	</entity>
-	<entity id="5" variant="2002" name="Web Heart (Double)" anm2path="web_heart_pickup_double.anm2"
-		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
-	</entity>
-	<entity id="5" variant="300" name="Soul of Arachna" anm2path="arachna_soul.anm2" subtype="2000"
-		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="16">
-	</entity>
-	<entity id="5" variant="300" name="Merged Card" anm2path="card_merged.anm2" subtype="2001"
-		collisionMass="3" collisionRadius="12" friction="1"  numGridCollisionPoints="24" shadowSize="16">
-	</entity>
-	<entity id="5" variant="2003" name="Spider Egg (pickup)" anm2path="spider_egg_pickup.anm2"
-		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
-	</entity>
-
-	<!-- Slots -->
-	<entity id="6" variant="2000" name="Spiderboi (beggar)" anm2path="spider_beggar.anm2"
-		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="15">
-        <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
-    </entity>
-
-	<!-- Effects -->
-	<entity id="1000" variant="81" name="Best Bud Ball" anm2path="best_bud_ball.anm2" subtype="2000"
-		collisionMass="1" collisionRadius="8" friction="1" numGridCollisionPoints="8" shadowSize="8">
-	</entity>
-	<entity id="1000" variant="2000" name="Spider Web" anm2path="web_floor.anm2"
-		collisionRadius="60" friction="0" numGridCollisionPoints="12" >
-	</entity>
-	<entity id="1000" variant="2001" name="Spider Egg" anm2path="spider_egg.anm2"
-		friction="0" numGridCollisionPoints="12" collisionRadius="20">
-	</entity>
-	<entity id="1000" variant="2002" name="Divine Web" anm2path="web_effect.anm2" subtype="0"
-		collisionRadius="90" friction="0" numGridCollisionPoints="12">
-	</entity>
-	<entity id="1000" variant="2002" name="Mechanical Eye Effect" anm2path="mechanical_eye_poof.anm2" subtype="2"
-		collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12">
+	<!--FLOOR WEB-->
+	<entity id="1000" variant="2000" name="Spider Web" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="web_floor.anm2" bestiary="false" shutdoors="false">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
-	<entity id="1000" variant="2002" name="Golden Spider shine" anm2path="effect_goldspider_shine.anm2" subtype="3"
-		friction="1">
-	</entity>
-    <entity id="1000" variant="2003" name="Newspaper (swing)" anm2path="knife_newspaper_swing.anm2"
-		collisionMass="3" collisionRadius="16" friction="1">
+	<!--SPIDER EGG-->
+	<entity id="1000" variant="2001" name="Spider Egg" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="spider_egg.anm2" bestiary="false" shutdoors="false">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
-    <entity id="1000" variant="2004" name="Golden Shopkeeper" anm2path="shopkeeper_gold.anm2"
-		collisionMass="100" collisionRadius="1" friction="0" shadowSize="24">
+	<!--SOUL-->
+	<entity anm2path="arachna_soul.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Soul of Arachna" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="2000">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	    <preload-snd id="8" />
+    </entity>
+	<!--WEB EFFECT-->
+	<entity id="1000" variant="2002" subtype="0" name="Divine Web" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="web_effect.anm2" bestiary="false" shutdoors="false">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--WEB REPAIR EFFECT-->
+    <entity anm2path="effect_upgrade.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Spider Egg Upgrade" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="48" subtype="2000">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--WEB POOF-->
+ 	<entity id="1000" variant="2002" subtype="1" name="Spider Poof Effect" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="effect_webpoof.anm2" bestiary="false" shutdoors="false">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--SUMPTORIUM BLOB GUY-->
+	<entity anm2path="web_heart_clot.anm2" baseHP="18" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Web Heart Baby" numGridCollisionPoints="12" shadowSize="10" stageHP="0" tags="cansacrifice" variant="238" subtype="2000"/>
+	<!-- MERGED CARD -->
+	<entity anm2path="card_merged.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Merged Card" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="2001">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	    <preload-snd id="8" />
+    </entity>
+	<!--SPIDER BEGGAR-->
+    <entity anm2path="spider_beggar.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="6" name="Spiderboi (beggar)" numGridCollisionPoints="24" shadowSize="15" stageHP="0" variant="2000">
+        <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
+    </entity>
+	<!--LIL ARACHNA-->
+    <entity anm2path="familiar_lil_arachna.anm2" tags="cansacrifice" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Lil Arachna" numGridCollisionPoints="12" shadowSize="11" stageHP="0" variant="2000">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!-- BBB -->
+	<entity anm2path="best_bud_ball.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="1" collisionRadius="8" friction="1" id="1000" name="Best Bud Ball" numGridCollisionPoints="8" shadowSize="8" stageHP="0" variant="81" subtype="2000">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--YARN FAMILIAR-->
+    <entity anm2path="familiar_yarn.anm2" baseHP="0" boss="0" cansacrifice="false" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="The Yarn (follower)" numGridCollisionPoints="12" shadowSize="11" stageHP="0" variant="2001">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--ARACHNID GRIPS RELATED STUFF-->
+	<entity anm2path="spider_egg_pickup.anm2" baseHP="0" boss="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Spider Egg (pickup)" numGridCollisionPoints="24" shadowSize="17" stageHP="0" variant="2003">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>	
+	<entity anm2path="spider_egg_orbital.anm2" cansacrifice="false" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Spider Egg (orbital)" numGridCollisionPoints="12" shadowSize="10" stageHP="0" >
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--MECHANICAL EYE-->
+	<entity anm2path="mechanical_eye_orbital.anm2" cansacrifice="false" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Mechanical Eye (orbital)" numGridCollisionPoints="12" shadowSize="10" stageHP="0" variant="2003">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+ 	<entity id="1000" variant="2002" subtype="2" name="Mechanical Eye Effect" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="mechanical_eye_poof.anm2" bestiary="false" shutdoors="false">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--NEWSPAPER SWING-->
+    <entity anm2path="knife_newspaper_swing.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="16" friction="1" id="1000" name="Newspaper (swing)" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="2003">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--GOLDEN SHOPKEEPER-->
+    <entity anm2path="shopkeeper_gold.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="100" collisionRadius="1" friction="0" id="1000" name="Golden Shopkeeper" numGridCollisionPoints="0" shadowSize="24" shutdoors="false" stageHP="0" variant="2004">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
-    <entity id="1000" variant="2005" name="Door (last will)" anm2path="lastwill_door.anm2"
-		collisionMass="100" collisionRadius="1" friction="0" >
+	<!--LAST WILL RELATED STUFF-->
+    <entity anm2path="lastwill_door.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="100" collisionRadius="1" friction="0" id="1000" name="Door (last will)" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0" variant="2005">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
-    <entity id="1000" variant="2006" name="Item Pedestal (last will)" anm2path="lastwill_pedestal.anm2" collisionMass="3" collisionRadius="12" friction="0">
+    <entity anm2path="lastwill_pedestal.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="0" id="1000" name="Item Pedestal (last will)" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0" variant="2006">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
-    <entity id="1000" variant="2007" name="Holy Shot Target (Geptameron)" anm2path="holytarget.anm2"
-		collisionMass="3" collisionRadius="12" friction="0">
+	<!--GOLDEN PARTICLE-->
+ 	<entity id="1000" variant="2002" subtype="3" name="Golden Spider shine" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="effect_goldspider_shine.anm2" bestiary="false" shutdoors="false">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<!--GEPTAMERON HOLY LIGHT MARK-->
+    <entity anm2path="holytarget.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="0" id="1000" name="Holy Shot Target (Geptameron)" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0" variant="2007">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
 </entities>

@@ -1,6 +1,5 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 local floatDir = {[Direction.NO_DIRECTION] = "FloatDown", [Direction.UP] = "FloatUp", [Direction.DOWN] = "FloatDown", [Direction.LEFT] = "FloatSide2", [Direction.RIGHT] = "FloatSide"}
 local shootDir = {[Direction.NO_DIRECTION] = "FloatShootDown", [Direction.UP] = "FloatShootUp", [Direction.DOWN] = "FloatShootDown", [Direction.LEFT] = "FloatShootSide2", [Direction.RIGHT] = "FloatShootSide"}
 local vecDir = {[Direction.NO_DIRECTION] = Vector(0, 0), [Direction.UP] = Vector(0, -1), [Direction.DOWN] = Vector(0, 1), [Direction.LEFT] = Vector(-1, 0),[Direction.RIGHT] = Vector(1, 0)}
@@ -16,10 +15,10 @@ local itemLilArachna = Isaac.GetItemIdByName("Lil Arachna")
 
 --add familiar
 function mod:lilArachnaCache(player, cacheFlag)
-    if (cacheFlag == CacheFlag.CACHE_FAMILIARS) and (player:GetCollectibleNum(itemLilArachna) >= 0) then
+    if (cacheFlag == CacheFlag.CACHE_FAMILIARS) and (player:GetCollectibleNum(itemLilArachna) >= 0) and (mod:GetData(player).friendboxUses ~= nil) then
 		local arachnaAmount = 0
 		if player:GetCollectibleNum(itemLilArachna) > 0 then
-			arachnaAmount = player:GetCollectibleNum(itemLilArachna) * (player:GetEffects():GetCollectibleEffectNum(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) + 1)
+			arachnaAmount = player:GetCollectibleNum(itemLilArachna) + mod:GetData(player).friendboxUses
 		end
 		player:CheckFamiliar(babyLilArachna, arachnaAmount, RNG())
 	end
@@ -74,8 +73,7 @@ function mod:lilArachnaUpd(baby)
 				tear.Velocity = tearTrajectory*9
 			end
 			tear:AddTearFlags(TearFlags.TEAR_SLOW | TearFlags.TEAR_QUADSPLIT) 
-			local rng = player:GetCollectibleRNG(itemLilArachna)
-			if (rng:RandomInt(4)+1 == 1) then
+			if (math.random(1, 4) == 1) then
 				tear:GetData().spiderBiteOnHit = true
 			end
 			tear.Color = Color(2, 2, 2, 1, 0.196, 0.196, 0.196) 

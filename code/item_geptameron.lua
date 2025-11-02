@@ -1,7 +1,48 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 local geptameronItem = Isaac.GetItemIdByName("Geptameron")
+
+local geptameronDay = 1
+mod.SavedData.geptameronDay = 1
+local json = require("json")
+
+--save
+function mod:geptameronGameStart(isContinued) 
+	if isContinued then
+		--get data from save
+		if mod:HasData() then
+			mod.SavedData = json.decode(Isaac.LoadModData(mod))
+			geptameronDay = mod.SavedData.geptameronDay
+		end
+	else
+		--set values to default
+		geptameronDay = 1
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.geptameronGameStart)
+function mod:geptameronGameExit(shouldSave) 
+	--save data
+	if shouldSave then
+		mod.SavedData.geptameronDay = geptameronDay
+		mod.SaveData(mod, json.encode(mod.SavedData))
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.geptameronGameExit)
+function mod:geptameronNewLvl()
+	local level = game:GetLevel()
+	if (level:GetStage() ~= 1) and (not level:IsAltStage()) and (not level:IsAscent()) then
+		--save data
+		mod.SavedData.geptameronDay = geptameronDay
+		mod.SaveData(mod, json.encode(mod.SavedData))
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.geptameronNewLvl)
+function mod:geptameronGameEnd(isGameOver) 
+	--clear data
+	mod.SavedData.geptameronDay = 1
+	mod.SaveData(mod, json.encode(mod.SavedData))
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_END, mod.geptameronGameEnd)
 
 --render
 local geptameronUI = Sprite()
@@ -26,21 +67,21 @@ function mod.geptameronUIRender()
 			geptameronUIPos = Vector(38, 54) + (Options.HUDOffset * Vector(20, 12))
 			--day name 
 			local geptameronDayNames = {"Mighty Monday", "Terrific Tuesday", "Wise Wednesday", "Torrid Thursday", "Fleeting Friday", "Sanguineous Saturday", "Stingy Sunday"}
-			geptameronDayText:DrawString(geptameronDayNames[mod.Globals.geptameronDay], geptameronUIPos.X + game.ScreenShakeOffset.X - 5, geptameronUIPos.Y + game.ScreenShakeOffset.Y + 2, KColor(1, 1, 1, 1), 0, true)	
+			geptameronDayText:DrawString(geptameronDayNames[geptameronDay], geptameronUIPos.X + game.ScreenShakeOffset.X - 5, geptameronUIPos.Y + game.ScreenShakeOffset.Y + 2, KColor(1, 1, 1, 1), 0, true)	
 		end
 		geptameronUI:Render(geptameronUIPos + game.ScreenShakeOffset*0.1, Vector(0,0), Vector(0,0))
 		--day number
-		geptameronUIText:DrawString("[" .. tostring(mod.Globals.geptameronDay) .. "/7]", geptameronUIPos.X + game.ScreenShakeOffset.X + 9, geptameronUIPos.Y + game.ScreenShakeOffset.Y - 8, KColor(1, 1, 1, 1), 0, true)	
+		geptameronUIText:DrawString("[" .. tostring(geptameronDay) .. "/7]", geptameronUIPos.X + game.ScreenShakeOffset.X + 9, geptameronUIPos.Y + game.ScreenShakeOffset.Y - 8, KColor(1, 1, 1, 1), 0, true)	
 	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.geptameronUIRender)
 
 --increase day
 local function geptameronChangeDay()
-	if mod.Globals.geptameronDay == 7 then
-		mod.Globals.geptameronDay = 1
+	if geptameronDay == 7 then
+		geptameronDay = 1
 	else
-		mod.Globals.geptameronDay = mod.Globals.geptameronDay + 1
+		geptameronDay = geptameronDay + 1
 	end
 end
 --normal
@@ -195,7 +236,7 @@ function mod:useGeptameron(item, rng, player)
 		player:UseCard(Card.CARD_HANGED_MAN, UseFlag.USE_NOCOSTUME | UseFlag.USE_NOANIM | UseFlag.USE_NOANNOUNCER)
 	end
 	--action
-	if mod.Globals.geptameronDay == 1 then
+	if geptameronDay == 1 then
 		--stats
 		data.geptameronSpeed = data.geptameronUses*0.10
 		data.geptameronShotSpeed = data.geptameronUses*0.50
@@ -207,15 +248,15 @@ function mod:useGeptameron(item, rng, player)
 		--give wisps
 		local angelItems = {162, 185, 331, 156, 173, 182, 142, 101, 333, 335, 108, 243, 387, 423, 415, 374, 400, 392, 528, 533, 634, 643, 696} 
 		for i=1, 2 do
-			local choice = rng:RandomInt(#angelItems)+1
+			local choice = math.random(1, #angelItems)
 			player:AddItemWisp(angelItems[choice], player.Position)
 			tempWispItem[#tempWispItem+1] = angelItems[choice]
 			tempWispPlayer[#tempWispPlayer+1] = player.Index
 			table.remove(angelItems, choice)
 		end
-	elseif mod.Globals.geptameronDay == 2 then
+	elseif geptameronDay == 2 then
 		spawnHolyMarks = true
-	elseif mod.Globals.geptameronDay == 3 then
+	elseif geptameronDay == 3 then
 		local enemies = Isaac.GetRoomEntities()
 		for i=1, #enemies do
 			local enemy = enemies[i]
@@ -229,22 +270,22 @@ function mod:useGeptameron(item, rng, player)
 			displayRoomType(i)
 		end
 		player:UseActiveItem(CollectibleType.COLLECTIBLE_DADS_KEY, false, false, true, false, -1)
-	elseif mod.Globals.geptameronDay == 4 then
+	elseif geptameronDay == 4 then
 		local angelFamiliars = {112, 390, 363, 543}
 		for i=1, 2 do
-			local choice = rng:RandomInt(#angelFamiliars)+1
+			local choice = math.random(1, #angelFamiliars)
 			player:GetEffects():AddCollectibleEffect(angelFamiliars[choice], true, 1)
 			table.remove(angelFamiliars, choice)
 		end
 		player:UseCard(Card.CARD_HOLY, UseFlag.USE_NOANIM | UseFlag.USE_NOANNOUNCER)
-	elseif mod.Globals.geptameronDay == 5 then
+	elseif geptameronDay == 5 then
 		tryAddGoldMark()
-	elseif mod.Globals.geptameronDay == 6 then
+	elseif geptameronDay == 6 then
 		for dir = 0, 360, 45 do
 			local laser = EntityLaser.ShootAngle(5, player.Position, dir, 20, Vector(0,0), player):ToLaser()
 			laser.CollisionDamage = clamp(player.Damage*1.2, 1.5, 8.5)
 		end
-	elseif mod.Globals.geptameronDay == 7 then
+	elseif geptameronDay == 7 then
 		local enemies = Isaac.GetRoomEntities()
 		for i=1, #enemies do
 			local ent = enemies[i]
@@ -294,22 +335,20 @@ function mod:geptameronPickupDeath(npc)
 			local coinAmount = clamp(math.ceil(npc.MaxHitPoints/20), 1, 4)
 			local i = 1
 				while i <= coinAmount do
-				local dropvelocity = Vector.FromAngle(mod:GetRandomNumber(0, 360, mod.Globals.garbageRNG))*(-1)*mod:GetRandomNumber(5, 8, mod.Globals.garbageRNG)
+				local dropvelocity = Vector.FromAngle(math.random(0,360))*(-1)*math.random(5,8)
 				local pickup = Isaac.Spawn(5, 20, 1, npc.Position, dropvelocity, npc):ToPickup()
 				pickup.Timeout = 45	
 				i = i+1
 			end
-			game:SpawnParticles(npc.Position, 98, mod:GetRandomNumber(4, 7, mod.Globals.garbageRNG), 4)
+			game:SpawnParticles(npc.Position, 98, math.random(4, 7), 4)
 			sfx:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.6, 0, false, 1)
 			tryAddGoldMark()
 		end
 		--random pickup
 		if data.dropRandomPickup then
-			local dropvelocity = Vector.FromAngle(mod:GetRandomNumber(0, 360, mod.Globals.garbageRNG))*(-1)*mod:GetRandomNumber(3, 5, mod.Globals.garbageRNG)
+			local dropvelocity = Vector.FromAngle(math.random(0,360))*(-1)*math.random(3,5)
 			local pickupVariants = {20, 30, 40, 70, 300}
-			local rng = RNG()
-			rng:SetSeed(npc.InitSeed, 35)
-			local pickup = Isaac.Spawn(5, pickupVariants[rng:RandomInt(#pickupVariants)+1], 0, npc.Position, dropvelocity, npc):ToPickup()
+			local pickup = Isaac.Spawn(5, pickupVariants[math.random(1, #pickupVariants)], 0, npc.Position, dropvelocity, npc):ToPickup()
 			pickup.Timeout = 50			
 		end
 	end
@@ -317,13 +356,11 @@ end
 mod:AddCallback(ModCallbacks.MC_NPC_UPDATE, mod.geptameronPickupDeath)
 
 --debug
---[[
 function mod:geptameronDayCmd(cmd, text)
 	local command = tostring(cmd)
 	local amount = tonumber(text)
 	if (command == "geptaday") and (amount) then
-		mod.Globals.geptameronDay = clamp(amount, 1, 7)
+		geptameronDay = clamp(amount, 1, 7)
 	end
 end
 mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, mod.geptameronDayCmd)
-]]

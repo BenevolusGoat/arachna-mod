@@ -1,6 +1,5 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 --YARN HEART
 local yarnHeart = Isaac.GetItemIdByName("Yarn Heart")
 function mod:useYarnHeart(item, rng, player)
@@ -35,15 +34,12 @@ local mutagenItem = Isaac.GetItemIdByName("Mutagen")
 local function doMutagenEffect()
 	for i=0, game:GetNumPlayers()-1 do
 		local player = Isaac.GetPlayer(i)
-		if (player:HasCollectible(mutagenItem)) then
-		local rng = player:GetCollectibleRNG(mutagenItem)
-			if (rng:RandomInt(5)+1 == 1) then
-				for i=1, mod:GetRandomNumber(3, 5, rng) do
-					local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100)), 75)
-					throwSpecialSpider(player, returnRandomSpiderSubType(false, true), player.Position, nearPos)
-				end
-				sfx:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8, 0, false, 1)
+		if (player:HasCollectible(mutagenItem)) and (math.random(1,5) == 1) then
+			for i=1, math.random(3,5) do
+				local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(math.random(-100, 100), math.random(-100, 100)), 75)
+				throwSpecialSpider(player, returnRandomSpiderSubType(false, true), player.Position, nearPos)
 			end
+			sfx:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8, 0, false, 1)
 		end
 	end
 end
@@ -89,16 +85,15 @@ function mod:infestPennyTouch(pickup, collider, _)
 	if player and pickup.Variant == 20 and pickup.SubType ~= 6 then
 		if player:HasTrinket(infestPenny) then
 			--spider
-			local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG)), 75)
+			local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(math.random(-100, 100), math.random(-100, 100)), 75)
 			if (player:HasCollectible(mutagenItem)) then
 				throwSpecialSpider(player, returnRandomSpiderSubType(false), player.Position, nearPos) --synergy with mutagen
 			else
 				throwSpecialSpider(player, 0, player.Position, nearPos)
 			end
 			--heart
-			local rng = player:GetTrinketRNG(infestPenny)
-			if rng:RandomInt(100)+1 <= 5 then
-				nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG)), 50)
+			if math.random(1,100) <= 5 then
+				nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(math.random(-100, 100), math.random(-100, 100)), 50)
 				Isaac.Spawn(5, 2000, 0, nearPos, Vector(0,0), player)
 			end
 		end
@@ -137,12 +132,11 @@ function mod:useMergedCard(card, player)
 	if player:HasCollectible(CollectibleType.COLLECTIBLE_TAROT_CLOTH) then
 		amount = 3
 	end
-	local rng = player:GetCardRNG(mergedCard)
 	--actual effect
 	sfx:Play(Isaac.GetSoundIdByName("snd_merged_card"), 3.5, 0, false, 1)
 	for i=1, amount do
 		--pick the effect
-		local curEffect = rng:RandomInt(#effects)+1
+		local curEffect = math.random(1, #effects)
 		--add it's name to the text that will be withdrawn later
 		if i == 1 then
 			effectName = effects[curEffect]
@@ -212,7 +206,7 @@ function mod:useMergedCard(card, player)
 		elseif effects[curEffect] == "JUSTICE" then
 			local pickupVars = {10, 20, 30, 40} --heart, penny, key, bomb
 			for i=1, 2 do
-				local pickupChoice = rng:RandomInt(#pickupVars)+1
+				local pickupChoice = math.random(1, #pickupVars)
 				Isaac.Spawn(5, pickupVars[pickupChoice], 1, getNearPos(player.Position), Vector(0,0), player)
 				table.remove(pickupVars, pickupChoice)
 			end
@@ -224,7 +218,7 @@ function mod:useMergedCard(card, player)
 			--action
 			for i=1, 5 do
 				if player:GetNumCoins() > 0 then
-					local chance = rng:RandomInt(100)+1
+					local chance = math.random(1, 100)
 					if (chance >= 1) and (chance <= 3) then
 						player:AddPrettyFly()
 					elseif (chance > 3) and (chance <= 6) then -- 3%
@@ -283,7 +277,7 @@ function mod:useMergedCard(card, player)
 			
 		elseif effects[curEffect] == "TEMPERANCE" then
 			--action
-			local pos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-150, 150, mod.Globals.garbageRNG), mod:GetRandomNumber(-150, 150, mod.Globals.garbageRNG)), 50)
+			local pos = Isaac.GetFreeNearPosition(player.Position + Vector(math.random(-150, 150), math.random(-150, 150)), 50)
 			local boi = Isaac.Spawn(6, 5, 0, pos, Vector(0,0), player)
 			--visual
 			local poof = Isaac.Spawn(1000, 15, 0, boi.Position, Vector(0,0), nil)
@@ -352,107 +346,3 @@ function mod:useMergedCard(card, player)
 	return true
 end
 mod:AddCallback(ModCallbacks.MC_USE_CARD, mod.useMergedCard, mergedCard)
-
--- BOSS ITEMS
-local bossItem = {
-	SPIDER_DONUT = Isaac.GetItemIdByName(" Spider Donut "), 
-	OLD_SHOEBOX = Isaac.GetItemIdByName("Old Shoebox"), 
-	GUMMY_SPIDERS = Isaac.GetItemIdByName("Gummy Spiders"), 
-	CANDY_FLOSS = Isaac.GetItemIdByName("Candy Floss"), 
-}
-
--- SPIDER DONUT
-function mod:cacheSpiderDonut(player, cacheFlag)
-    if player:HasCollectible(bossItem.SPIDER_DONUT) then
-        if cacheFlag == CacheFlag.CACHE_DAMAGE then
-            player.Damage = player.Damage + (1*player:GetCollectibleNum(bossItem.SPIDER_DONUT))
-        end
-    end
-end
-mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.cacheSpiderDonut)
-
-local function collectingSpiderDonut(player, item)
-	addWebHearts(1, player)
-	local rng = player:GetCollectibleRNG(bossItem.SPIDER_DONUT)
-	for i=1, mod:GetRandomNumber(2, 3, rng) do
-		local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG)), 50)
-		throwSpecialSpider(player, 10, player.Position, nearPos)
-	end
-end
-ARACHNAMOD:addPostItemGetFunction(collectingSpiderDonut, bossItem.SPIDER_DONUT)
-
--- OLD SHOEBOX
-function mod:cacheOldShoebox(player, cacheFlag)
-    if player:HasCollectible(bossItem.OLD_SHOEBOX) then
-		local shoeboxCount = player:GetCollectibleNum(bossItem.OLD_SHOEBOX)
-        if cacheFlag == CacheFlag.CACHE_FIREDELAY then
-            player.MaxFireDelay = player.MaxFireDelay - (1.2*shoeboxCount)
-        end
-        if shoeboxCount == CacheFlag.CACHE_SPEED then
-            player.MoveSpeed = player.MoveSpeed + (0.15*shoeboxCount)
-        end
-    end
-end
-mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.cacheOldShoebox)
-
-local function collectingOldShoebox(player, item)
-	Isaac.Spawn(5, 2000, 0, Isaac.GetFreeNearPosition(player.Position, 25), Vector(0,0), player)
-	local rng = player:GetCollectibleRNG(bossItem.OLD_SHOEBOX)
-	for i=1, mod:GetRandomNumber(7, 14, rng) do
-		local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG)), 50)
-		throwSpecialSpider(player, 0, player.Position, nearPos)
-	end	
-end
-ARACHNAMOD:addPostItemGetFunction(collectingOldShoebox, bossItem.OLD_SHOEBOX)
-
--- GUMMY SPIDERS
-function mod:cacheGummySpiders(player, cacheFlag)
-    if player:HasCollectible(bossItem.GUMMY_SPIDERS) then
-        if cacheFlag == CacheFlag.CACHE_FIREDELAY then
-            player.MaxFireDelay = player.MaxFireDelay - (2*player:GetCollectibleNum(bossItem.GUMMY_SPIDERS))
-        end
-    end
-end
-mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.cacheGummySpiders)
-
-local function collectingGummySpiders(player, item)
-	addWebHearts(2, player)
-	local rng = player:GetCollectibleRNG(bossItem.GUMMY_SPIDERS)
-	for i=1, mod:GetRandomNumber(4, 8, rng) do
-		local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG), mod:GetRandomNumber(-100, 100, mod.Globals.garbageRNG)), 50)
-		local spider = returnRandomSpiderSubType(false, true)
-		throwSpecialSpider(player, spider, player.Position, nearPos)
-	end	
-end
-ARACHNAMOD:addPostItemGetFunction(collectingGummySpiders, bossItem.GUMMY_SPIDERS)
-
--- CANDY FLOSS
-function mod:candyFlossTearEffect(tear)
-	local player = tear.Parent:ToPlayer()
-	if player then
-		if (player:HasCollectible(bossItem.CANDY_FLOSS, true)) then
-			local rng = player:GetCollectibleRNG(bossItem.CANDY_FLOSS)
-			if (rng:RandomInt(100)+1 <= (5 + (5*player:GetCollectibleNum(bossItem.CANDY_FLOSS)) + player.Luck)) then
-				tear:GetData().spiderBiteOnHit = true
-				tear:AddTearFlags(TearFlags.TEAR_SLOW | TearFlags.TEAR_QUADSPLIT) 
-				tear.Color = Color(2, 2, 2, 1, 0.196, 0.196, 0.196) 
-			end
-		end
-	end
-end
-mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, mod.candyFlossTearEffect)
-
-local function collectingCandyFloss(player, item)
-	local heartCount = 0
-	if player:GetHearts() > 1 then
-		heartCount = math.ceil((player:GetHearts()-1)/2)
-		player:AddHearts(-1*(player:GetHearts()-1))
-	end
-	if heartCount < 3 then heartCount = 3 end
-	
-	for i=1, heartCount do
-		local nearPos = Isaac.GetFreeNearPosition(player.Position, 25)
-		Isaac.Spawn(5, 2000, 0, nearPos, Vector(0,0), player)
-	end
-end
-ARACHNAMOD:addPostItemGetFunction(collectingCandyFloss, bossItem.CANDY_FLOSS)

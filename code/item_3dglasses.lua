@@ -1,7 +1,6 @@
 local mod = ARACHNAMOD
 local item3DGlasses = Isaac.GetItemIdByName("3D Glasses")
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 --god I feel so fucking sick rn. this shit probably gonna suck so much
 
 --chance to shoot out tear
@@ -9,11 +8,8 @@ function mod:_3dGlassesOnTear(tear)
 	local player = tear.Parent:ToPlayer()
 	if (player ~= nil) then
 		--replace tear
-		if (player:HasCollectible(item3DGlasses)) then
-			local rng = player:GetCollectibleRNG(item3DGlasses)
-			if (rng:RandomInt(100)+1 <= (5 + player.Luck)) then
-				tear:GetData().specialType = "3dtear"
-			end
+		if (player:HasCollectible(item3DGlasses)) and (math.random(100) <= (5 + player.Luck)) then
+			tear:GetData().specialType = "3dtear"
 		end
 	end
 end

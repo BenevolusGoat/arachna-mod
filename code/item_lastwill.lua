@@ -1,26 +1,57 @@
 local mod = ARACHNAMOD
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
+
 local lastWillPreUseRoomIdx = -999 --responsible for player positioning
 local lastWillWalkDir = "TP" --responsible for player positioning
 local lastWillPlayerInvertory = {} --player's inventory
---variables related to spawning in item (except Global ID)
+--variables related to spawning in item
 local lastWillPos = 1 
 local lastWillRoomItems = {}
+local lastWillChosenID = 0 --chosen item ID
 
---spawn item
+--saving
+mod.SavedData.lastWillChosenID = 0
+local json = require("json")
 function mod:lastWillGameStart(isContinued) 
+	--get data from save
+	if mod:HasData() then
+		mod.SavedData = json.decode(Isaac.LoadModData(mod))
+		if (mod.SavedData.lastWillChosenID) and (mod.SavedData.lastWillChosenID ~= 0) then
+			lastWillChosenID = mod.SavedData.lastWillChosenID
+		end
+		--Isaac.ConsoleOutput("GOT DATA FROM SAVE! \n")
+	end
+	--spawn item
 	if (not isContinued) and (not game:IsGreedMode()) then
-		if (mod.Globals.lastWillChosenID) and (mod.Globals.lastWillChosenID ~= 0) then
-			local item = game:Spawn(5, 100, Vector(120, 200), Vector(0,0), nil, mod.Globals.lastWillChosenID, 4442004):ToPickup() --using different spawn function for custom init seed 
+		if (lastWillChosenID) and (lastWillChosenID ~= 0) then
+			local item = game:Spawn(5, 100, Vector(120, 200), Vector(0,0), nil, lastWillChosenID, 4442004):ToPickup() --using different spawn function for custom init seed 
 			Isaac.Spawn(1000, 15, 0, item.Position, Vector(0,0), nil)
-			mod.Globals.lastWillChosenID = 0
-			mod.SavedData.lastWillChosenID = mod.Globals.lastWillChosenID
-			ARACHNAMOD.saveData()
+			lastWillChosenID = 0
+			mod.SavedData.lastWillChosenID = lastWillChosenID
+			mod.SaveData(mod, json.encode(mod.SavedData))
 		end
 	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.lastWillGameStart)
+
+function mod:lastWillGameExit(shouldSave) 
+	--save data
+	if shouldSave then
+		mod.SavedData.lastWillChosenID = lastWillChosenID
+		mod.SaveData(mod, json.encode(mod.SavedData))
+		--Isaac.ConsoleOutput("DATA SAVED! \n")
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.lastWillGameExit)
+function mod:lastWillNewLvl()
+	local level = game:GetLevel()
+	if (level:GetStage() ~= 1) and (not level:IsAltStage()) and (not level:IsAscent()) then
+		--save data
+		mod.SavedData.lastWillChosenID = lastWillChosenID
+		mod.SaveData(mod, json.encode(mod.SavedData))
+		--Isaac.ConsoleOutput("DATA SAVED! \n")
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.lastWillNewLvl)
 
 --functions
 local function reinitLastWillRoomItems()
@@ -63,7 +94,7 @@ local function lastWillTransition(_dir)
 	--always
 	lastWillWalkDir = _dir
 	reinitLastWillRoomItems()
-	Isaac.ExecuteCommand("goto s.shop.20000")
+	Isaac.ExecuteCommand("goto s.shop.2000")
 end
 --cooldowns
 local lastWillControlsCooldown = -1
@@ -243,7 +274,7 @@ function mod:lastWillTouchEffects(player)
 				Isaac.Spawn(1000, 15, 0, pedestal.Position, Vector(0,0), pedestal)
 			end
 			--set variable
-			mod.Globals.lastWillChosenID = eff.SubType
+			lastWillChosenID = eff.SubType
 			--close doors
 			for _, door in pairs(Isaac.FindByType(1000, 2005, 0, false, false)) do
 				door:GetSprite():Play("Close")

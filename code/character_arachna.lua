@@ -4,8 +4,6 @@ local arachnaHair = 'gfx/characters/costumes/arachna-head-2.png'
 local arachnaChar = Isaac.GetPlayerTypeByName("Arachna", false)
 local arachnaChar_b = Isaac.GetPlayerTypeByName("Arachna", true)
 local arachnaBlackList = { CollectibleType.COLLECTIBLE_GLASS_CANNON, CollectibleType.COLLECTIBLE_YUCK_HEART, CollectibleType.COLLECTIBLE_MAGIC_SKIN, CollectibleType.COLLECTIBLE_GENESIS, CollectibleType.COLLECTIBLE_BRITTLE_BONES }
-local game = ARACHNAMOD.game
-local sfx = ARACHNAMOD.sfx
 --on game start
 function mod:arachnaPocketItem(isContinued) 
 	if not isContinued then
@@ -30,8 +28,12 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.arachnaPocketItem)
 function mod:arachnaInit(player)
 	if (player:GetPlayerType() == arachnaChar) then
 		--hearts
-		--addWebHearts(2, player)
-		--player:AddSoulHearts(-2*mod:GetData(player).webHearts)
+		addWebHearts(2, player)
+		player:AddSoulHearts(-2*mod:GetData(player).webHearts)
+		--spool
+		if (player:GetActiveItem(ActiveSlot.SLOT_POCKET) ~= arachnaSpool) then
+			player:SetPocketActiveItem(arachnaSpool)
+		end
 		--hair
 		player:ReplaceCostumeSprite(Isaac.GetItemConfig():GetNullItem(7), arachnaHair, 0)
 		--pog
@@ -39,9 +41,6 @@ function mod:arachnaInit(player)
 			local pogCostume = Isaac.GetCostumeIdByPath("gfx/characters/arachna_pog.anm2")
 			Poglite:AddPogCostume("ArachnaPog", arachnaChar, pogCostume)
 		end
-		--spool
-		if game:GetFrameCount() > 0 then return end
-		player:SetPocketActiveItem(arachnaSpool)
 	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.arachnaInit)

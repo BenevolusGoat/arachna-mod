@@ -13,14 +13,6 @@
 		<Item Name="Testament" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Geptameron" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="3D Glasses" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="boss">
-		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name=" Spider Donut " Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Old Shoebox" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
     <Pool Name="angel">
 		<Item Name="Geptameron" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -46,12 +38,6 @@
 		<Item Name="Mutagen" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
-    <Pool Name="greedBoss">
-		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name=" Spider Donut " Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Old Shoebox" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
     <Pool Name="greedTreasure">
 		<Item Name="Arachna's Spool" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Divine Cloth" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -62,8 +48,6 @@
 		<Item Name="Mechanical Eye" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Newspaper" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
     <Pool Name="greedShop">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
