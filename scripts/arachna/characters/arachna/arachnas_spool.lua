@@ -12,7 +12,7 @@ ARACHNAS_SPOOL.TEAR = Isaac.GetEntityVariantByName("Spool Tear")
 ARACHNAS_SPOOL.WEB_EFFECT = Isaac.GetEntityVariantByName("Spider Web")
 
 local identifier = "ARACHNA_WEBBED"
-StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
+StatusEffectLibrary.RegisterStatusEffect(identifier, nil, nil, EntityFlag.FLAG_SLOW, true)
 ARACHNAS_SPOOL.STATUS_WEBBED = StatusEffectLibrary.StatusFlag[identifier]
 
 ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS = {
@@ -139,6 +139,7 @@ function ARACHNAS_SPOOL:OnWebUpdate(web)
 	Mod.Foreach.NPCInRadius(web.Position, web.Size, function (npc, index)
 		if not StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
 			StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, 2, source)
+			npc:AddSlowing(source, 2, 0.5, StatusEffectLibrary.StatusColor.SLOW)
 		end
 	end, nil, nil, {UseEnemySearchParams = true, Dead = true})
 end
@@ -169,15 +170,6 @@ end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PreAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
 
----@param ent Entity
-function ARACHNAS_SPOOL:WebbedStatusUpdate(ent)
-	local statusData = StatusEffectLibrary:GetStatusEffectData(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
-	---@cast statusData StatusEffectData
-	ent:AddSlowing(statusData.Source, 2, 0.5, statusData.Color)
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE, ARACHNAS_SPOOL.WebbedStatusUpdate, ARACHNAS_SPOOL.STATUS_WEBBED)
-
 ---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
 ---
 ---Save the information that the enemy has the status effect to our own custom data which does save for POST_NPC_DEATH.
@@ -193,7 +185,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:OnNPCDeath(npc)
 	if Mod:GetData(npc).QueueSpiderEgg then
-		ARACHNAS_SPOOL:SpawnEgg(npc.Position, npc)
+		Mod.Entities.SPIDER_EGG:SpawnEgg(npc.Position, npc)
 	end
 end
 

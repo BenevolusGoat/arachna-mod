@@ -12,11 +12,11 @@ WEB_HEART.CLOT_FAMILIAR = Isaac.GetEntitySubTypeByName("Web Heart Baby")
 WEB_HEART.PICKUP_SFX = SoundEffect.SOUND_SPIDER_SPIT_ROAR
 WEB_HEART.KEY = "WEB_HEART"
 
-WEB_HEART.HeartsToReplace = {
-	[HeartSubType.HEART_ETERNAL] = true,
-	[HeartSubType.HEART_BONE] = true,
-	[HeartSubType.HEART_ROTTEN] = true
-}
+WEB_HEART.HeartsToReplace = Mod:Set({
+	HeartSubType.HEART_ETERNAL,
+	HeartSubType.HEART_BONE,
+	HeartSubType.HEART_ROTTEN
+})
 
 local webHeartUI = Sprite()
 webHeartUI:Load("gfx/web_heart_ui.anm2", true)
@@ -116,7 +116,7 @@ CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callback
 				for i = 1, Mod:RandomNum(2, 6, rng) do
 					local randomX, randomY = Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)
 					local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(randomX, randomY), 50)
-					throwSpecialSpider(player, spiderType, player.Position, nearPos)
+					Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderType, player.Position, nearPos)
 				end
 				--visual/sound effects
 				local poof02 = Mod.Spawn.Poof02(0, player.Position, player)
@@ -208,11 +208,25 @@ Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.OnPickupUpdate, WE
 --#region Replace Hearts
 
 local function everyoneIsKeeper()
+	local foundKeeper = false
 	return Mod.Foreach.Player(function (player, index)
 		if player:GetHealthType() == HealthType.COIN then
-			return true
+			foundKeeper = true
+		elseif not player.Parent then
+			return false
 		end
-	end) or false
+	end) or foundKeeper
+end
+
+local function everyoneIsArachna()
+	local foundArachna = false
+	return Mod.Foreach.Player(function (player, index)
+		if Mod.Character.ARACHNA:IsAnyArachna(player) then
+			foundArachna = true
+		elseif not player.Parent then
+			return false
+		end
+	end) or foundArachna
 end
 
 ---@param pickup EntityPickup
@@ -232,7 +246,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, WEB_HEART.ReplaceWebHeartsForK
 
 ---@param pickup EntityPickup
 function WEB_HEART:ReplaceHearts(pickup)
-	if WEB_HEART.HeartsToReplace[pickup.SubType] then
+	if WEB_HEART.HeartsToReplace[pickup.SubType] and everyoneIsArachna() then
 		local rng = RNG()
 		rng:SetSeed(pickup.InitSeed, 35)
 		if rng:RandomFloat() < 0.05 then

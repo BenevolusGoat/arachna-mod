@@ -16,11 +16,14 @@ General Changes/Fixes:
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
 - The "Bitten" status from Divine Cloth now utilizes StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
-- Fixed golden shines from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
+- Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
+- Rainbow and Golden Spiders now change the color of their glow to match their own color
 
 Gameplay Changes:
-- Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and should respect damage/firerate multipliers
+- Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and respect damage/firerate multipliers
 - Arachna and Tainted Arachna now no longer get slowed from cobwebs on the ground
+- Web Hearts replacing specific heart types will now only occur if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of if any single character was Arachna or Tainted Arachna.
+- The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters.
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. No more magic numbers!
