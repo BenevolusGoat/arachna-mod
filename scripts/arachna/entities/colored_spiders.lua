@@ -214,7 +214,7 @@ function COLORED_SPIDERS:PreTakeDamageFromSpider(ent, amount, flags, source, cou
 
 		if result == false or type(result) == "table" or returnTable.Damage then
 			if type(result) == "table" then
-				result.Damage = (result.Damage or 0) + returnTable.Damage
+				result.Damage = (result.Damage or 0) + (returnTable.Damage or 0)
 			end
 			return result
 		end

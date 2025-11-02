@@ -14,7 +14,7 @@ function ARACHNA_B:IsArachnaB(player)
 end
 
 ---@param player EntityPlayer
-function ARACHNA_B:ArachnaHasBirthright(player)
+function ARACHNA_B:ArachnaBHasBirthright(player)
 	return ARACHNA_B:IsArachnaB(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
 

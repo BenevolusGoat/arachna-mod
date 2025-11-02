@@ -14,11 +14,11 @@ Don't want to use REPENTOGON? A legacy version that contains the worskhop versio
 General Changes/Fixes:
 - The amount of bugs fixed as a direct result of the switch to REPENTOGON is difficult to account for, but hopefully there should generally be less bugs and more improvements across the whole mod!
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
-- The "Bitten" status from Divine Cloth now utilizes StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
 - Tainted Arachna no longer uses a manually handled item wisp of Mutant Spider, now instead having a natural integration of the multishot. This also allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
+- Fixed the Spider Egg orbital from Arachnid's Grip not having a variant assigned, which had self-assigned itself a variant of 0
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and respect damage/firerate multipliers
