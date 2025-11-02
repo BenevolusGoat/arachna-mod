@@ -26,8 +26,12 @@ local NUM_ADDED_TEARS = 3
 ---@param multiShotParams MultiShotParams
 ---@param weaponType WeaponType
 function ARACHNA_B:BaseMultishot(player, multiShotParams, weaponType)
-	multiShotParams:SetSpreadAngle(weaponType, multiShotParams:GetSpreadAngle(weaponType) + SPREAD_ANGLE_MULT * NUM_ADDED_TEARS)
-	multiShotParams:SetNumTears(multiShotParams:GetNumTears() + NUM_ADDED_TEARS)
+	local tearsToAdd = NUM_ADDED_TEARS
+	if player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then
+		tearsToAdd = tearsToAdd - 1
+	end
+	multiShotParams:SetSpreadAngle(weaponType, multiShotParams:GetSpreadAngle(weaponType) + SPREAD_ANGLE_MULT * tearsToAdd)
+	multiShotParams:SetNumTears(multiShotParams:GetNumTears() + tearsToAdd)
 	local expectedAmount = multiShotParams:GetNumTears() / multiShotParams:GetNumEyesActive()
 	multiShotParams:SetNumLanesPerEye(expectedAmount)
 	return multiShotParams
@@ -35,3 +39,15 @@ end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_MULTI_SHOT_PARAMS, CallbackPriority.IMPORTANT, ARACHNA_B.BaseMultishot, Mod.PlayerType.ARACHNA_B)
 
+local ARACHNA_FIRERATE_MODIFIER = -1.5793064832687
+
+---@param player EntityPlayer
+---@param stage EvaluateStatStage
+---@param value number
+function ARACHNA_B:NegateFirerateWithGlasses(player, stage, value)
+	if ARACHNA_B:IsArachnaB(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then
+		return value + math.abs(ARACHNA_FIRERATE_MODIFIER)
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_STAT, CallbackPriority.IMPORTANT, ARACHNA_B.NegateFirerateWithGlasses, EvaluateStatStage.TEARS_UP)

@@ -16,12 +16,14 @@ General Changes/Fixes:
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
 - The "Bitten" status from Divine Cloth now utilizes StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
+- Tainted Arachna no longer uses a manually handled item wisp of Mutant Spider, now instead having a natural integration of the multishot. This also allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and respect damage/firerate multipliers
-- Arachna and Tainted Arachna now no longer get slowed from cobwebs on the ground
+- As a result of the above, Tainted Arachna's firerate down is now closer to how it works for the Keepers, allowing you to reach the normal cap of 5.00 tears per second
+- Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 - Web Hearts replacing specific heart types will now only occur if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of if any single character was Arachna or Tainted Arachna.
 - The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters.
 

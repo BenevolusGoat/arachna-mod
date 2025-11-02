@@ -9,7 +9,7 @@
 		  birthright="More Web, More Friends, More Health!" />
 	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2" healthtype="1"
 		  pocketActive="Divine Cloth" modcostume="1"
-		  speedmodifier="-0.25" luckmodifier="0.8" firedelaymodifier="-2.2" damagemodifier="-2.5"
+		  speedmodifier="-0.25" luckmodifier="0.8" firedelaymodifier="-2.3" damagemodifier="-2.5"
 		  achievement="The Wretched"
           nameimage="playername_arachna.png"
           portrait="playerportrait_arachna_b.png" skinColor="1" costumeSuffix="arachna" bSkinParent="Arachna"
