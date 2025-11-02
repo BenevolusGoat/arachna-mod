@@ -175,7 +175,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, pickupReplacement)
 ---@param variant integer
 ---@param subtype integer
 ---@param seed integer
-local function entityReplacement(_, entType, variant, subtype, seed)
+local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 	if not allowedRoomSpawnTypes[entType] then
 		return
 	end

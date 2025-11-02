@@ -11,13 +11,9 @@
 		<gibs amount="1" blood="0" bone="1" eye="0" gut="0" large="0" />
 	</entity>
 	<!--FLOOR WEB-->
-	<entity id="1000" variant="2000" name="Spider Web" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="web_floor.anm2" bestiary="false" shutdoors="false">
-        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-    </entity>
+	<entity id="1000" variant="2000" name="Spider Web" collisionRadius="60" friction="1" numGridCollisionPoints="12" anm2path="web_floor.anm2"></entity>
 	<!--SPIDER EGG-->
-	<entity id="1000" variant="2001" name="Spider Egg" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="spider_egg.anm2" bestiary="false" shutdoors="false">
-        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-    </entity>
+	<entity id="1000" variant="2001" name="Spider Egg" friction="0" numGridCollisionPoints="12" anm2path="spider_egg.anm2"></entity>
 	<!--SOUL-->
 	<entity anm2path="arachna_soul.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Soul of Arachna" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="2000">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
@@ -88,11 +84,69 @@
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
 	<!--GOLDEN PARTICLE-->
- 	<entity id="1000" variant="2002" subtype="3" name="Golden Spider shine" reroll="false" baseHP="40" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="0" anm2path="effect_goldspider_shine.anm2" bestiary="false" shutdoors="false">
-        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-    </entity>
+ 	<entity id="1000" variant="2002" subtype="3" name="Golden Spider shine" friction="1" anm2path="effect_goldspider_shine.anm2"></entity>
 	<!--GEPTAMERON HOLY LIGHT MARK-->
     <entity anm2path="holytarget.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="0" id="1000" name="Holy Shot Target (Geptameron)" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0" variant="2007">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
+    </entity>
+
+	<!-- Finally, spider definitions -->
+	<entity id="3" variant="73" subtype="1" name="Arachna Spider (Wrath)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="2" name="Arachna Spider (Pestilence)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="3" name="Arachna Spider (Famine)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="4" name="Arachna Spider (Death)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="5" name="Arachna Spider (Conquest)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="6" name="Arachna Spider (Rainbow)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="7" name="Arachna Spider (Golden)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="8" name="Arachna Spider (Love)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="9" name="Arachna Spider (Ice)" anm2path="familiars/colorspiders/familiar_soc.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<!-- BIG Spiders -->
+	<entity id="3" variant="73" subtype="10" name="Arachna Spider (Big)" anm2path="familiars/colorspiders/bluespider_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="11" name="Arachna Spider (Wrath Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="12" name="Arachna Spider (Pestilence Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="13" name="Arachna Spider (Famine Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="14" name="Arachna Spider (Death Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="15" name="Arachna Spider (Conquest Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="16" name="Arachna Spider (Rainbow Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="17" name="Arachna Spider (Golden Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="18" name="Arachna Spider (Love Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
+	<entity id="3" variant="73" subtype="19" name="Arachna Spider (Ice Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" tags="cansacrifice spider">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
     </entity>
 </entities>

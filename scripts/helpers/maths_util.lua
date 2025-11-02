@@ -7,13 +7,15 @@ ARACHNAMOD.RandomRNG:SetSeed(max(Random(), 1))
 
 ---@param lower? integer
 ---@param upper? integer
-function ARACHNAMOD:RandomNum(lower, upper)
+---@param rng? RNG
+function ARACHNAMOD:RandomNum(lower, upper, rng)
+	rng = rng or ARACHNAMOD.RandomRNG
 	if upper then
-		return ARACHNAMOD.RandomRNG:RandomInt((upper - lower) + 1) + lower
+		return rng:RandomInt((upper - lower) + 1) + lower
 	elseif lower then
-		return ARACHNAMOD.RandomRNG:RandomInt(lower) + 1
+		return rng:RandomInt(lower) + 1
 	else
-		return ARACHNAMOD.RandomRNG:RandomFloat()
+		return rng:RandomFloat()
 	end
 end
 

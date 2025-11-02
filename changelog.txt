@@ -1,0 +1,26 @@
+An Arachna update? At this time of year at this time of day in this section of the Isaac Workshop, made ENTIRELY by some goat?
+...Yes!
+...May I see it?
+Yes, yes you may!
+
+Hello, this is Benny/Sanio. You might recognize that name from my work on the Eevee character mod, Epiphany, or other projects. Arachna had a lot of charm to them and clearly caught the attention of many people during the early days of Repentance, but unfortuantely has been weighed down from its lack of updates and increasing amounts of bugs. I'm a sucker for abandoned character-related mods so I left a comment and was able to get in contact with rvsty for permission to revive the mod!
+
+**PLEASE READ!**
+Now, an important note regarding this update: Arachna now requires REPENTOGON on Repentance+. This decision was OKAY'd by rvsty and is honestly the best route for continued support on the mod. The biggest reason for this is for an easier time rebuilding the mod's codebase, fixing countless bugs through more natural implementation of various mechanics, and less upkeep required with only one version (RGON+) to maintain.
+
+What's REPENTOGON/How to get it? See here: link
+Don't want to use REPENTOGON? A legacy version that contains the worskhop version EXACTLY how it was can be found here, bugs and all: link
+
+General Changes/Fixes:
+- The amount of bugs fixed as a direct result of the switch to REPENTOGON is difficult to account for, but hopefully there should generally be less bugs and more improvements across the whole mod!
+- The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
+- The "Bitten" status from Divine Cloth now utilizes StatusEffectLibrary for general improvements and cross-MOD compatibility
+- Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
+- Fixed golden shines from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
+
+Gameplay Changes:
+- Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and should respect damage/firerate multipliers
+- Arachna and Tainted Arachna now no longer get slowed from cobwebs on the ground
+
+API Changes:
+- Everything realted to the mod is now exposed through the ARACHNAMOD global. No more magic numbers!

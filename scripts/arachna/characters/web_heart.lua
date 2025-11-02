@@ -10,7 +10,7 @@ WEB_HEART.ID = Isaac.GetEntityVariantByName("Web Heart")
 WEB_HEART.ID_DOUBLE = Isaac.GetEntityVariantByName("Web Heart")
 WEB_HEART.CLOT_FAMILIAR = Isaac.GetEntitySubTypeByName("Web Heart Baby")
 WEB_HEART.PICKUP_SFX = SoundEffect.SOUND_SPIDER_SPIT_ROAR
-WEB_HEART.KEY = "HEART_WEB"
+WEB_HEART.KEY = "WEB_HEART"
 
 WEB_HEART.HeartsToReplace = {
 	[HeartSubType.HEART_ETERNAL] = true,
@@ -82,7 +82,7 @@ CustomHealthAPI.Library.RegisterSoulHealth(
 
 --#region CustomHealthAPI
 
-CustomHealthAPI.Library.RegisterHealthOverlay("GOLDEN_HEART_WEB",
+CustomHealthAPI.Library.RegisterHealthOverlay("GOLDEN_WEB_HEART",
                                       {AnimationFilename = "gfx/web_heart_ui.anm2",
                                        AnimationName = "UI_Gold",
                                        IgnoreBleeding = true})
@@ -106,14 +106,14 @@ end)
 CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
 	---@param player EntityPlayer
 	function(player, flags, key, hpDamaged, wasDepleted, wasLastDamaged)
-		if key == "HEART_WEB" then
+		if key == WEB_HEART.KEY then
 			if wasDepleted then
 				local spiderType = 0
 				if player:GetGoldenHearts() > 0 then
 					spiderType = 7
 				end
 				local rng = player:GetCollectibleRNG(Mod.Item.YARN_HEART.ID)
-				for i = 1, rng:RandomInt(5) + 2 do -- 2-6, since RandomInt gives 0-4
+				for i = 1, Mod:RandomNum(2, 6, rng) do
 					local randomX, randomY = Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)
 					local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(randomX, randomY), 50)
 					throwSpecialSpider(player, spiderType, player.Position, nearPos)

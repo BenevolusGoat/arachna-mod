@@ -131,12 +131,15 @@ local helpers = {
 
 local tools = {
 	"debug_tools",
-	"pickups_tools"
+	"pickups_tools",
+	"status_effect_library",
+	"throwable_item_lib"
 }
 
 local core = {
 	"customhealthapi.core",
-	"entity_replacements"
+	"entity_replacements",
+	"custom_callbacks"
 }
 
 local config = {
@@ -165,7 +168,15 @@ ARACHNAMOD.Card = {}
 ARACHNAMOD.Trinket = {}
 ARACHNAMOD.Slot = {}
 ARACHNAMOD.Misc = {}
+ARACHNAMOD.Entities = {}
 include("flags")
+
+local entities = {
+	"spider_egg",
+	"colored_spiders"
+}
+
+Mod.LoopInclude(entities, "scripts.arachna.entities")
 
 local characters = {
 	"web_heart",

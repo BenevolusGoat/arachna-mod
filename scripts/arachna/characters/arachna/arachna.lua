@@ -18,14 +18,11 @@ end
 
 CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
 
---[[ function ARACHNA:WebHeartsAreMaxHealth(player, amount, healthType, arg, ispre)
-	if ARACHNA:IsArachna(player) or Mod.Character.ARACHNA_B:IsArachnaB(player) then
-		print(ispre and "pre" or "post", "healthtype", healthType, "amount", amount)
-	end
+---@param player EntityPlayer
+function ARACHNA:IsAnyArachna(player)
+	local playerType = player:GetPlayerType()
+	return playerType == Mod.PlayerType.ARACHNA or playerType == Mod.PlayerType.ARACHNA_B
 end
-
-Mod:AddCallback(ModCallbacks.MC_PRE_PLAYER_ADD_HEARTS, function(_, player, amount, healthType, arg) ARACHNA:WebHeartsAreMaxHealth(player, amount, healthType, arg, true) end)
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_ADD_HEARTS, ARACHNA.WebHeartsAreMaxHealth) ]]
 
 ARACHNA.TearVariantSpritesheetPath = "gfx/projectiles/"
 ARACHNA.TearVariantToSpritesheet = {
@@ -43,7 +40,7 @@ ARACHNA.TearVariantToSpritesheet = {
 function ARACHNA:SetArachnaTearSprite(tear)
 	local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
 	if player
-		and (ARACHNA:IsArachna(player) or Mod.Character.ARACHNA_B:IsArachnaB(player))
+		and ARACHNA:IsAnyArachna(player)
 		and tear.CanTriggerStreakEnd
 	then
 		local sprite = tear:GetSprite()
@@ -57,25 +54,39 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, ARACHNA.SetArachnaTearSprite)
 
---tears on grid collision
-function ARACHNA:tearTouchGrid(tear)
+---Tear splash on grid collision
+---@param tear EntityTear
+function ARACHNA:TearTouchGrid(tear)
 	local data = tear:GetData()
 	if (tear:IsDead()) and (data.spiderTear) then
 		tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, ARACHNA.tearTouchGrid)
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, ARACHNA.TearTouchGrid)
 
---tears on enemy collision
-function ARACHNA:tearTouchMob(tear, collider)
+---Tear splash on enemy collision
+---@param tear EntityTear
+---@param collider Entity
+function ARACHNA:TearTouchEnemy(tear, collider)
 	local data = tear:GetData()
-	if (data.spiderTear) then
-		local npc = collider:ToNPC()
-		if (not ((collider:ToNPC()) and (collider:ToNPC():HasEntityFlags(EntityFlag.FLAG_FRIENDLY)))) and (not (tear:HasTearFlags(TearFlags.TEAR_PIERCING) or tear:HasTearFlags(TearFlags.TEAR_PERSISTENT))) then
-			tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
-		end
+	if data.spiderTear and tear:IsDead() then
+		tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, ARACHNA.tearTouchMob)
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_COLLISION, ARACHNA.TearTouchEnemy)
+
+---@param ent Entity
+---@param source EntityRef
+function ARACHNA:IgnoreCobwebSlow(statusID, ent, source, duration)
+	local player = ent:ToPlayer()
+	if player
+		and ARACHNA:IsAnyArachna(player)
+		and source.Type == 0 --If it came from nothing, best we can assume is cobweb. Otherwise...oh well!
+	then
+		return false
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_STATUS_EFFECT_APPLY, ARACHNA.IgnoreCobwebSlow, StatusEffect.SLOWING)
