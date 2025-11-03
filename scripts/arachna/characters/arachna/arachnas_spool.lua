@@ -17,7 +17,12 @@ ARACHNAS_SPOOL.STATUS_WEBBED = StatusEffectLibrary.StatusFlag[identifier]
 
 ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS = {
 	TearFlags.TEAR_SPECTRAL,
-	TearFlags.TEAR_PIERCING
+	TearFlags.TEAR_HOMING,
+	TearFlags.TEAR_WIGGLE,
+	TearFlags.TEAR_TURN_HORIZONTAL,
+	TearFlags.TEAR_SHIELDED,
+	TearFlags.TEAR_CONTINUUM,
+	TearFlags.TEAR_TRACTOR_BEAM
 }
 
 --#endregion

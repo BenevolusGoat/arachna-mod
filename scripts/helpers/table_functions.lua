@@ -515,7 +515,7 @@ function ARACHNAMOD:CopyTable(tab)
 
 	local final = setmetatable({}, getmetatable(tab))
 	for i, v in pairs(tab) do
-		final[i] = ARACHNAMOD:CopyTable(tab)
+		final[i] = ARACHNAMOD:CopyTable(v)
 	end
 
 	return final

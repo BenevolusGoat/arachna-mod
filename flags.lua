@@ -1,4 +1,4 @@
 ARACHNAMOD.FLAGS = {}
 
-ARACHNAMOD.FLAGS.Debug = false
+ARACHNAMOD.FLAGS.Debug = true
 ARACHNAMOD.FLAGS.Anniversary = false

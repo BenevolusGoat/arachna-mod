@@ -29,7 +29,7 @@ ARACHNAMOD.Item.GLASSES_3D.ACHIEVEMENT = achievement("3D Glasses")
 ARACHNAMOD.Item.MECHANICAL_EYE.ACHIEVEMENT = achievement("Mechanical Eye")
 ARACHNAMOD.Trinket.INFESTED_PENNY.ACHIEVEMENT = achievement("Infested Penny")
 ARACHNAMOD.Item.ARACHNIDS_GRIP.ACHIEVEMENT = achievement("Arachnid's Grip")
-ARACHNAMOD.Misc.GOLDEN_SHOPKEEPER.ACHIEVEMENT = achievement("Golden Shopkeepers")
+ARACHNAMOD.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT = achievement("Golden Shopkeepers")
 ARACHNAMOD.Item.MUTAGEN.ACHIEVEMENT = achievement("Mutagen")
 ARACHNAMOD.Item.YARN_HEART.ACHIEVEMENT = achievement("Yarn Heart")
 ARACHNAMOD.Item.TESTAMENT.ACHIEVEMENT = achievement("Testament")
@@ -46,7 +46,7 @@ ARACHNAMOD.CompletionMarkToAchievement.ARACHNA = {
 	[CompletionType.MEGA_SATAN] = Mod.Item.MECHANICAL_EYE.ACHIEVEMENT,
 	[CompletionType.ULTRA_GREED] = Mod.Trinket.INFESTED_PENNY.ACHIEVEMENT,
 	[CompletionType.HUSH] = Mod.Item.ARACHNIDS_GRIP.ACHIEVEMENT,
-	[CompletionType.ULTRA_GREEDIER] = Mod.Misc.GOLDEN_SHOPKEEPER.ACHIEVEMENT,
+	[CompletionType.ULTRA_GREEDIER] = Mod.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT,
 	[CompletionType.DELIRIUM] = Mod.Item.MUTAGEN.ACHIEVEMENT,
 	[CompletionType.MOTHER] = Mod.Item.YARN_HEART.ACHIEVEMENT,
 	[CompletionType.BEAST] = Mod.Item.TESTAMENT.ACHIEVEMENT,
@@ -81,6 +81,45 @@ ARACHNAMOD.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA_B] = Mod.Completio
 --#endregion
 
 --#region Entity replacements
+
+Mod:RegisterReplacementEntity({
+	OldType = {EntityType.ENTITY_SLOT},
+	OldVariant = {SlotVariant.BEGGAR, SlotVariant.KEY_MASTER},
+	NewType = EntityType.ENTITY_SLOT,
+	NewVariant = Mod.Slot.SPIDER_BEGGAR.ID,
+	ReplacementChance = 0.2,
+	Achievement = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT
+})
+
+Mod:RegisterReplacementEntity({
+	OldType = {EntityType.ENTITY_SHOPKEEPER},
+	OldVariant = {1, 2, 3, 4}, --Normal/Hanging Keepers and their Special variants
+	NewType = EntityType.ENTITY_SHOPKEEPER,
+	NewVariant = Mod.Entities.GOLDEN_SHOPKEEPER.ID,
+	ReplacementChance = 0.2,
+	Achievement = Mod.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT
+})
+
+Mod:RegisterReplacementPickup({
+	OldVariant = {PickupVariant.PICKUP_HEART},
+	OldSubtype = {HeartSubType.HEART_BLACK, HeartSubType.HEART_BLENDED, HeartSubType.HEART_BONE, HeartSubType.HEART_ROTTEN},
+	NewVariant = PickupVariant.PICKUP_HEART,
+	NewSubtype = function (rng, subtype)
+		if rng:RandomFloat() < 0.05 then
+			return Mod.Pickup.WEB_HEART.ID_DOUBLE
+		else
+			return Mod.Pickup.WEB_HEART.ID
+		end
+	end,
+	ReplacementChance = function ()
+		if PlayerManager.AnyoneHasTrinket(Mod.Trinket.SPRINDLE.ID) then
+			return 0.3
+		else
+			return 0.2
+		end
+	end,
+	Achievement = Mod.Pickup.WEB_HEART.ACHIEVEMENT
+})
 
 --#endregion
 

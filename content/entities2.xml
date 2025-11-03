@@ -82,10 +82,10 @@
     </entity>
 
 	<!-- Pickups -->
-	<entity id="5" variant="2000" name="Web Heart" anm2path="web_heart_pickup.anm2"
+	<entity id="5" variant="10" name="Web Heart" anm2path="web_heart_pickup.anm2" subtype="2000"
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
 	</entity>
-	<entity id="5" variant="2002" name="Web Heart (Double)" anm2path="web_heart_pickup_double.anm2"
+	<entity id="5" variant="10" name="Web Heart (Double)" anm2path="web_heart_pickup_double.anm2" subtype="2001"
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
 	</entity>
 	<entity id="5" variant="300" name="Soul of Arachna" anm2path="arachna_soul.anm2" subtype="2000"
@@ -127,19 +127,21 @@
     <entity id="1000" variant="2003" name="Newspaper (swing)" anm2path="knife_newspaper_swing.anm2"
 		collisionMass="3" collisionRadius="16" friction="1">
     </entity>
-    <entity id="1000" variant="2004" name="Golden Shopkeeper" anm2path="shopkeeper_gold.anm2"
-		collisionMass="100" collisionRadius="1" friction="0" shadowSize="24">
-        <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
-    </entity>
     <entity id="1000" variant="2005" name="Door (last will)" anm2path="lastwill_door.anm2"
 		collisionMass="100" collisionRadius="1" friction="0" >
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
-    <entity id="1000" variant="2006" name="Item Pedestal (last will)" anm2path="lastwill_pedestal.anm2" collisionMass="3" collisionRadius="12" friction="0">
+    <entity id="1000" variant="2006" name="Item Pedestal (last will)" anm2path="lastwill_pedestal.anm2"
+		collisionMass="3" collisionRadius="12" friction="0">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
     <entity id="1000" variant="2007" name="Holy Shot Target (Geptameron)" anm2path="holytarget.anm2"
 		collisionMass="3" collisionRadius="12" friction="0">
         <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
     </entity>
+
+	<!-- Golden Shopkeeper -->
+	<entity id="17" variant="2000" name="Golden Shopkeeper" anm2path="shopkeeper_gold.anm2"
+		friction="1" baseHP="20" collisionMass="100" collisionRadius="1" shadowSize="24" bestiary="false" bestiaryOverlay="Head" shutdoors="false">
+	</entity>
 </entities>

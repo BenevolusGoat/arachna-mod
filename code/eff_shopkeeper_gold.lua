@@ -181,4 +181,4 @@ function mod:goldenShopKeeperUpd(eff)
 		eff:AddEntityFlags(EntityFlag.FLAG_RENDER_FLOOR)
 	end
 end
-mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.goldenShopKeeperUpd, 2004) 
+mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.goldenShopKeeperUpd, 2004)

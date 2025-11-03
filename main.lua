@@ -7,6 +7,9 @@ ARACHNAMOD.Version = "INDEV_REWRITE"
 
 local Mod = ARACHNAMOD
 
+ARACHNAMOD.SaveManager = include("scripts.tools.save_manager")
+ARACHNAMOD.SaveManager.Init(Mod)
+
 ARACHNAMOD.sfxman = SFXManager()
 ARACHNAMOD.Game = Game()
 ARACHNAMOD.PersistGameData = Isaac.GetPersistentGameData()
@@ -169,7 +172,6 @@ ARACHNAMOD.Pickup = {}
 ARACHNAMOD.Card = {}
 ARACHNAMOD.Trinket = {}
 ARACHNAMOD.Slot = {}
-ARACHNAMOD.Misc = {}
 ARACHNAMOD.Entities = {}
 include("flags")
 

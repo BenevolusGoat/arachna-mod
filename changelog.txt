@@ -13,8 +13,6 @@ Don't want to use REPENTOGON? A legacy version that contains the worskhop versio
 
 General Changes/Fixes:
 - The amount of bugs fixed as a direct result of the switch to REPENTOGON is difficult to account for, but hopefully there should generally be less bugs and more improvements across the whole mod!
-- The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
-- Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
 - Tainted Arachna no longer uses a manually handled item wisp of Mutant Spider, now instead having a natural integration of the multishot. This also allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
@@ -22,9 +20,11 @@ General Changes/Fixes:
 - Achievements and Geptameron's Giantbook are now displayed using REPENTOGON's own implementation instead of GiantBookAPI
 - Lil Arachna is now a more naturally integrated shooter familiar and should obey all shooter familiar interactions
 - Poison tears from Arachnid's Grip are colored green
+- Fixed Golden Shopkeeper not using the trinket pool for its rarely dropped golden trinket, meaning it can now spawn modded golden trinkets
+- Changed how Web Hearts, Spider Beggars, and Golden Shopkeepers randomly replace entities. Web Hearts are now better integrated into the "pickup pool" to have spawn rules that better match the vanilla game. Spider Beggars and Golden Shopkeepers only replace their respective replacements when part of a newly entered room
 
 Gameplay Changes:
-- Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to vanilla and respect damage/firerate multipliers
+- Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
 - As a result of the above, Tainted Arachna's firerate down is now closer to how it works for the Keepers, allowing you to reach the normal cap of 5.00 tears per second
 - Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 - Web Hearts replacing specific heart types will now only occur if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of if any single character was Arachna or Tainted Arachna
@@ -32,6 +32,11 @@ Gameplay Changes:
 - 3D Glasses now works for all weapon types and has better optimization for how it renders its 3D effect
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
+- Arachna's Spool's tear originally intended to copy specific tear effects, but the list of effects to copy was improperly setup and copied arbitrary combinations of them. It now looks for and copies the following effects: Spectral, Homing, Wiggle Worm, Brain Worm, Lost Contact, Continuum, and Tractor Beam
 
 API Changes:
-- Everything realted to the mod is now exposed through the ARACHNAMOD global. No more magic numbers!
+- Everything realted to the mod is now exposed through the ARACHNAMOD global. Functions, IDs, and more. No more magic numbers!
+- The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
+- Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
+- Golden Shopkeeper's type is now EntityType.ENTITY_SHOPKEEPER instead of EntityType.ENTITY_EFFECT
+- Web Heart's variant is now PickupVariant.PICKUP_HEART rather than their own unique variant

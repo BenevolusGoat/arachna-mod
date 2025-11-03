@@ -6,8 +6,8 @@ local WEB_HEART = {}
 
 ARACHNAMOD.Pickup.WEB_HEART = WEB_HEART
 
-WEB_HEART.ID = Isaac.GetEntityVariantByName("Web Heart")
-WEB_HEART.ID_DOUBLE = Isaac.GetEntityVariantByName("Web Heart")
+WEB_HEART.ID = Isaac.GetEntitySubTypeByName("Web Heart")
+WEB_HEART.ID_DOUBLE = Isaac.GetEntitySubTypeByName("Web Heart (Double)")
 WEB_HEART.CLOT_FAMILIAR = Isaac.GetEntitySubTypeByName("Web Heart Baby")
 WEB_HEART.PICKUP_SFX = SoundEffect.SOUND_SPIDER_SPIT_ROAR
 WEB_HEART.KEY = "WEB_HEART"
@@ -61,8 +61,8 @@ CustomHealthAPI.Library.RegisterSoulHealth(
         MaxHP = 2,
         PrioritizeHealing = false,
         PickupEntities = {
-            {ID = EntityType.ENTITY_PICKUP, Var = WEB_HEART.ID},
-            {ID = EntityType.ENTITY_PICKUP, Var = WEB_HEART.ID_DOUBLE}
+            {ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID},
+            {ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID_DOUBLE}
         },
         SumptoriumSubType = WEB_HEART.CLOT_FAMILIAR,
         SumptoriumSplatColor = Color(1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00),
@@ -152,36 +152,31 @@ CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callback
 ---@param collider Entity
 function WEB_HEART:CollectWebHeart(pickup, collider)
 	local player = collider:ToPlayer()
-	if player then
-		if WEB_HEART:CanPickup(player) then
-			if pickup:IsShopItem() then
-				if not Mod:CanPlayerBuyShopItem(player, pickup) then
-					return pickup:IsShopItem()
-				end
-				Mod:PayPickupPrice(player, pickup)
-				Mod:PickupShopKill(player, pickup, WEB_HEART.PICKUP_SFX)
-			else
-				pickup:GetSprite():Play("Collect", true)
-				Mod.sfxman:Play(WEB_HEART.PICKUP_SFX, 1, 0, false)
-				pickup:Die()
-			end
-			local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
-			WEB_HEART:AddWebHearts(player, heartWorth)
-			CustomHealthAPI.Library.IncrementImmaculateConception(player, 1, pickup.InitSeed)
-			pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-			pickup.Friction = 0
+	if not (player and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE)) then
+		return
+	end
+	if not WEB_HEART:CanPickup(player) then
+		return pickup:IsShopItem()
+	end
 
-			if pickup.OptionsPickupIndex > 0 then
-				pickup:TriggerTheresOptionsPickup()
-			end
-		else
+	if pickup:IsShopItem() then
+		if not Mod:CanPlayerBuyShopItem(player, pickup) then
 			return pickup:IsShopItem()
 		end
+		Mod:PayPickupPrice(player, pickup)
+		Mod:PickupShopKill(player, pickup, WEB_HEART.PICKUP_SFX)
+	else
+		pickup:GetSprite():Play("Collect", true)
+		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX, 1, 0, false)
+		pickup:Die()
 	end
+	local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
+	WEB_HEART:AddWebHearts(player, heartWorth)
+	pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+	pickup.Friction = 0
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, WEB_HEART.ID)
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, WEB_HEART.ID_DOUBLE)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, PickupVariant.PICKUP_HEART)
 
 --#endregion
 
@@ -189,19 +184,20 @@ Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.L
 
 ---@param pickup EntityPickup
 function WEB_HEART:OnPickupUpdate(pickup)
-	local sprite = pickup:GetSprite()
+	if pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE then
+		local sprite = pickup:GetSprite()
 
-	if sprite:IsEventTriggered("DropSound") then
-		Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 1, 0, false, 3)
-	end
+		if sprite:IsEventTriggered("DropSound") then
+			Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 1, 0, false, 3)
+		end
 
-	if sprite:IsFinished("Collect") then
-		pickup:Remove()
+		if sprite:IsFinished("Collect") then
+			pickup:Remove()
+		end
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.OnPickupUpdate, WEB_HEART.ID)
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.OnPickupUpdate, WEB_HEART.ID_DOUBLE)
+Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.OnPickupUpdate, PickupVariant.PICKUP_HEART)
 
 --#endregion
 
@@ -231,8 +227,8 @@ end
 
 ---@param pickup EntityPickup
 function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
-	if everyoneIsKeeper() then
-		local amount = pickup.Variant == WEB_HEART.ID_DOUBLE and 4 or 2
+	if everyoneIsKeeper() and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE) then
+		local amount = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
 		for _ = 1, amount do
 			local spider = Mod.Spawn.Familiar(FamiliarVariant.BLUE_SPIDER, 0, pickup.Position, nil, pickup)
 			spider:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
@@ -241,14 +237,12 @@ function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, WEB_HEART.ReplaceWebHeartsForKeeper, WEB_HEART.ID)
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, WEB_HEART.ReplaceWebHeartsForKeeper, WEB_HEART.ID_DOUBLE)
+Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, WEB_HEART.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
 
 ---@param pickup EntityPickup
-function WEB_HEART:ReplaceHearts(pickup)
+function WEB_HEART:ForceReplaceHearts(pickup)
 	if WEB_HEART.HeartsToReplace[pickup.SubType] and everyoneIsArachna() then
-		local rng = RNG()
-		rng:SetSeed(pickup.InitSeed, 35)
+		local rng = pickup:GetDropRNG()
 		if rng:RandomFloat() < 0.05 then
 			pickup:Morph(pickup.Type, pickup.Variant, WEB_HEART.ID_DOUBLE, true, true)
 		else
@@ -257,7 +251,7 @@ function WEB_HEART:ReplaceHearts(pickup)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ReplaceHearts, PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts, PickupVariant.PICKUP_HEART)
 
 --#endregion
 
