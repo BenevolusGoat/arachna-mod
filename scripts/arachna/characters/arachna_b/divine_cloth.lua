@@ -23,7 +23,21 @@ DIVINE_CLOTH.STATUS_BITTEN = StatusEffectLibrary.StatusFlag[identifier]
 
 --#endregion
 
---#region On use
+--#region Helpers
+
+---@param pos Vector
+---@param spawner? Entity
+function DIVINE_CLOTH:SpawnSwirl(pos, spawner)
+	local swirl = Mod.Spawn.Poof02(0, pos, spawner)
+	swirl:GetSprite():Load("gfx/effect_webpoof.anm2", true)
+	swirl:GetSprite():Play("Poof")
+	swirl.SpriteScale = swirl.SpriteScale * 0.8
+	return swirl
+end
+
+--#endregion
+
+--#region On Use
 
 ---@param player EntityPlayer
 function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
@@ -46,9 +60,7 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 		end
 	end
 	Mod.Game:ShakeScreen(8)
-	local swirl = Mod.Spawn.Poof02(0, player.Position, player)
-	swirl:GetSprite():Load("gfx/effect_webpoof.anm2", true)
-	swirl:GetSprite():Play("Poof")
+	DIVINE_CLOTH:SpawnSwirl(player.Position, player)
 
 	local floorWeb = Mod.Spawn.Effect(DIVINE_CLOTH.DIVINE_WEB_VAR, DIVINE_CLOTH.DIVINE_WEB_SUB, player.Position, nil, player)
 	floorWeb.Color = Color(1, 1, 1, 0.45, 0, 0, 0)
@@ -71,7 +83,7 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, DIVINE_CLOTH.OnUse, DIVINE_CLOTH.ID)
 function DIVINE_CLOTH:ApplyBitten(npc, source, duration)
 	local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
 	sprite:Play("Idle")
-	StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION, source, nil, {Sprite = sprite})
+	return StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION, source, nil, {Sprite = sprite})
 end
 
 ---@param web EntityEffect
@@ -116,6 +128,12 @@ function DIVINE_CLOTH:PreAddBite(ent, statusEffect, customData)
 end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, DIVINE_CLOTH.PreAddBite, DIVINE_CLOTH.STATUS_BITTEN)
+
+function DIVINE_CLOTH:OnAddBite(ent)
+	DIVINE_CLOTH:SpawnSwirl(ent.Position, ent)
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, DIVINE_CLOTH.OnAddBite, DIVINE_CLOTH.STATUS_BITTEN)
 
 ---@param ent Entity
 ---@param statusEffects StatusEffects

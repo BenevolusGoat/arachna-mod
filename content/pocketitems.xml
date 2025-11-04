@@ -1,4 +1,4 @@
 <pocketitems>
-	<card type="rune" pickup="2000" mimiccharge="6" description="Mass infestation" name="Soul of Arachna" hud="Soul of Arachna" /> 
-	<card type="tarot" pickup="2001" mimiccharge="6" description="The power of unity" name="Merged Card" hud="Merged Card" /> 
+	<card type="rune" pickup="2000" mimiccharge="6" description="Mass infestation" name="Soul of Arachna" hud="Soul of Arachna" announcerdelay="15" />
+	<card type="tarot" pickup="2001" mimiccharge="6" description="The power of unity" name="Merged Card" hud="Merged Card" announcerdelay="30" />
 </pocketitems>

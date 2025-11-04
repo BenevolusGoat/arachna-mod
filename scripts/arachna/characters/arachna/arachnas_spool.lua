@@ -168,6 +168,9 @@ function ARACHNAS_SPOOL:ShouldSpawnWebOnEnemyDeath(npc)
 		and npc.SpawnerType == 0
 		and npc.MaxHitPoints >= 10
 		and not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
+		and npc:IsActiveEnemy(false)
+		and npc:IsVulnerableEnemy()
 end
 
 ---@param ent Entity

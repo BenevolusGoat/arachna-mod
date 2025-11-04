@@ -146,7 +146,7 @@ eggTimerSprite:LoadGraphics()
 function SPIDER_EGG:RenderTimer(effect, offset)
 	local renderPos = Mod:GetEntityRenderPosition(effect, offset)
 	local nullFrame = effect:GetSprite():GetNullFrame("timer")
-	if nullFrame and effect.Timeout > 0 then
+	if nullFrame and nullFrame:IsVisible() and effect.Timeout > 0 then
 		renderPos = renderPos + nullFrame:GetPos()
 		local frameNum = Mod.math.floor(effect.Timeout / SPIDER_EGG.MAX_EGG_TIMEOUT * 100) - 1
 		eggTimerSprite:SetFrame("Charging", frameNum)

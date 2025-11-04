@@ -3,7 +3,7 @@
 	<active id="0" name="Arachna's Spool" description="Web design tool" gfx="spool.png" maxcharges="90" chargetype="timed" cooldown="5" quality="3"/>
 	<active id="1" name="Divine Cloth" description="Enemy infestation" gfx="divine-cloth.png" maxcharges="90" chargetype="timed" cooldown="5" quality="3"/>
 	<active id="2" name="Yarn Heart" description="Reusable web protection" gfx="yarn-heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
-	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." gfx="mutagen.png" cache="damage" tags="nogreed" quality="2"/>
+	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." gfx="mutagen.png" flatdamage="1" tags="nogreed" quality="2"/>
 	<familiar id="4" name="Lil Arachna" description="Spider friend" gfx="lil-arachna.png" tags="baby" quality="3"/>
 	<active id="5" name="Best Bud Ball" description="Find your very best friend!" gfx="best-bud-ball.png" maxcharges="0" tags="nochallenge noeden" quality="4"/>
 	<familiar id="6" name="The Yarn" description="Static shock!" gfx="the-yarn.png" tags="baby" quality="2"/>
