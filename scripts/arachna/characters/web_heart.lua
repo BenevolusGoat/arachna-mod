@@ -58,7 +58,7 @@ CustomHealthAPI.Library.RegisterSoulHealth(
         HealFlashRO = 240/255,
         HealFlashGO = 240/255,
         HealFlashBO = 240/255,
-        MaxHP = 2,
+        MaxHP = 1,
         PrioritizeHealing = false,
         PickupEntities = {
             {ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID},
