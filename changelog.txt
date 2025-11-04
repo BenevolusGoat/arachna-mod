@@ -25,6 +25,8 @@ General Changes/Fixes:
 - Soul of Arachna and Merged Card now respect announcer settings (50% if random, never is off or if the use of the pocket item doesn't allow it)
 - Added slight delays to Soul of Arachna and Merged Card's announcer sfx
 - The Yarn is now categorized as a defensive familiar, being closer to the player in the follower line
+- Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
+- Updated Mechanical Eye's blacklist to account for any items that use a timed or special charge instead of manually listing them, inclding modded actives
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
@@ -36,6 +38,10 @@ Gameplay Changes:
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
 - Arachna's Spool's tear originally intended to copy specific tear effects, but the list of effects to copy was improperly setup and copied arbitrary combinations of them. It now looks for and copies the following effects: Spectral, Homing, Wiggle Worm, Brain Worm, Lost Contact, Continuum, and Tractor Beam
+- Reduced collision size of Mechanical Eye, The Yarn, and Arachnid Grip's Spider Egg orbitals
+- Mechanical Eye now respects unlocks for what active items can be used
+- Mechanical Eye can now be used with throwable actives, such as Bob's Rotten Head and Black Hole, and activates when the actives are discharged
+- Added D4 and D100 to Mechanical Eye's blacklist
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. Functions, IDs, and more. No more magic numbers!

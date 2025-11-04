@@ -12,13 +12,13 @@
 		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" >
 	</entity>
     <entity id="3" variant="2001" name="The Yarn (follower)" anm2path="familiar_yarn.anm2" customtags="familiarblockprojectiles"
-		collisionMass="3" collisionRadius="13" friction="1"  numGridCollisionPoints="12" shadowSize="11">
+		collisionMass="3" collisionRadius="8" friction="1"  numGridCollisionPoints="12" shadowSize="11">
 	</entity>
 	<entity id="3" variant="2002" name="Spider Egg (orbital)" anm2path="spider_egg_orbital.anm2" cansacrifice="false"
-		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="10">
+		collisionMass="3" collisionRadius="6" friction="1" numGridCollisionPoints="12" shadowSize="10">
     </entity>
-	<entity id="3" variant="2003" name="Mechanical Eye (orbital)" anm2path="mechanical_eye_orbital.anm2" cansacrifice="false"
-		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="10">
+	<entity id="3" variant="2003" name="Mechanical Eye (orbital)" anm2path="mechanical_eye_orbital.anm2" cansacrifice="false" customtags="familiarblockprojectiles"
+		collisionMass="3" collisionRadius="6" friction="1" numGridCollisionPoints="12" collisionDamage="1.5" shadowSize="10">
     </entity>
 
 	<!-- Colored Spiders -->
