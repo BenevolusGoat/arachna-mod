@@ -39,7 +39,9 @@ end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_MULTI_SHOT_PARAMS, CallbackPriority.IMPORTANT, ARACHNA_B.BaseMultishot, Mod.PlayerType.ARACHNA_B)
 
-local ARACHNA_FIRERATE_MODIFIER = -1.5793064832687
+--For character base stat negative tears modifiers specifically, they are multiplied by this number to dampen their effect
+local NEGATIVE_FIRERATE_MULT = 0.686655
+local ARACHNA_FIRERATE_MODIFIER = -2.3 * NEGATIVE_FIRERATE_MULT
 
 ---@param player EntityPlayer
 ---@param stage EvaluateStatStage
