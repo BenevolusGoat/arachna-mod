@@ -11,7 +11,7 @@
 	<entity id="3" variant="2000" name="Lil Arachna" anm2path="familiar_lil_arachna.anm2" tags="cansacrifice"
 		collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11" >
 	</entity>
-    <entity id="3" variant="2001" name="The Yarn (follower)" anm2path="familiar_yarn.anm2"
+    <entity id="3" variant="2001" name="The Yarn (follower)" anm2path="familiar_yarn.anm2" customtags="familiarblockprojectiles"
 		collisionMass="3" collisionRadius="13" friction="1"  numGridCollisionPoints="12" shadowSize="11">
 	</entity>
 	<entity id="3" variant="2002" name="Spider Egg (orbital)" anm2path="spider_egg_orbital.anm2" cansacrifice="false"

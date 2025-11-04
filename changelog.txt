@@ -24,6 +24,7 @@ General Changes/Fixes:
 - Changed how Web Hearts, Spider Beggars, and Golden Shopkeepers randomly replace entities. Web Hearts are now better integrated into the "pickup pool" to have spawn rules that better match the vanilla game. Spider Beggars and Golden Shopkeepers only replace their respective replacements when part of a newly entered room
 - Soul of Arachna and Merged Card now respect announcer settings (50% if random, never is off or if the use of the pocket item doesn't allow it)
 - Added slight delays to Soul of Arachna and Merged Card's announcer sfx
+- The Yarn is now categorized as a defensive familiar, being closer to the player in the follower line
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
