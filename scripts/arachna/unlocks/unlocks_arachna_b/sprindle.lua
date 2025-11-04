@@ -12,8 +12,9 @@ SPRINDLE.ID = Isaac.GetTrinketIdByName("Sprindle")
 ---@param source EntityRef
 ---@param countdown integer
 function SPRINDLE:OnTakeDamage(ent, damage, flags, source, countdown)
+	local player = ent:ToPlayer()
 	local sourceEnt = source and source.Entity
-	if sourceEnt then
+	if sourceEnt and player and player:HasTrinket(SPRINDLE.ID) then
 		local npc = sourceEnt:ToNPC()
 		if npc then --Status effect automatically does the rest of the checks for if the effect can be applied
 			Mod.Item.DIVINE_CLOTH:ApplyBitten(npc, EntityRef(ent:ToPlayer()))
