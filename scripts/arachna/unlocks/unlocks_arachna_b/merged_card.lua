@@ -165,7 +165,8 @@ MERGED_CARD.CARD_EFFECTS = {
 		Mod.sfxman:Play(SoundEffect.SOUND_SATAN_BLAST)
 	end,
 	[Card.CARD_TOWER] = function (player, rng)
-		local nearPos = Isaac.GetRandomPosition()
+		local room = Mod.Room()
+		local nearPos = room:FindFreePickupSpawnPosition(room:GetRandomPosition(40))
 		Mod.Spawn.Bomb(BombSubType.BOMB_TROLL, nearPos, nil, player, rng:Next())
 	end,
 	[Card.CARD_STARS] = function (player, rng)

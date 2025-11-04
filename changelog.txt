@@ -26,6 +26,7 @@ General Changes/Fixes:
 - Added slight delays to Soul of Arachna and Merged Card's announcer sfx
 - Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
 - Updated Mechanical Eye's blacklist to account for any items that use a timed or special charge instead of manually listing them, inclding modded actives
+- Changed how orbitals are added to the player, so they will have differing speeds/distances compared to before, but also occupy the same space as other orbitals that use the layer
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
@@ -43,6 +44,7 @@ Gameplay Changes:
 - Added D4 and D100 to Mechanical Eye's blacklist
 - The Yarn no longer inherits the player's tear effects
 - The Yarn is now categorized as a defensive familiar, being closer to the player in the follower line
+- Spider Beggar no longer drops pickups upon death, instead spawning 2 spiders similar to Devil Beggar
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. Functions, IDs, and more. No more magic numbers!
@@ -50,3 +52,4 @@ API Changes:
 - Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
 - Golden Shopkeeper's type is now EntityType.ENTITY_SHOPKEEPER instead of EntityType.ENTITY_EFFECT
 - Web Heart's variant is now PickupVariant.PICKUP_HEART rather than their own unique variant
+- The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON

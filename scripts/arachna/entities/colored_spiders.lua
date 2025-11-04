@@ -137,8 +137,7 @@ end
 ---@param targetPos? Vector
 function COLORED_SPIDERS:ThrowColoredSpider(player, subtype, pos, targetPos)
 	if not targetPos then
-		local randomX, randomY = Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)
-		targetPos = Isaac.GetFreeNearPosition(pos + Vector(randomX, randomY), 50)
+		targetPos = Isaac.GetFreeNearPosition(pos, 50)
 	end
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
 	---@cast spider EntityFamiliar

@@ -86,4 +86,36 @@
 		<Item Name="Mechanical Eye" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="The Yarn" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
+	<Pool Name="spiderBeggar">
+		<!-- Box of Spiders -->
+		<Item Id="288" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Spider Butt -->
+		<Item Id="171" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Daddy Longlegs -->
+		<Item Id="170" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Hive Mind -->
+		<Item Id="248" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Infestation 2 -->
+		<Item Id="234" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Juicy Sack -->
+		<Item Id="266" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Mom's Wig -->
+		<Item Id="217" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Mutant Spider -->
+		<Item Id="153" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Spider Bite -->
+		<Item Id="89" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Spiderbaby -->
+		<Item Id="211" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Bursting Sack -->
+		<Item Id="377" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Sticky Bombs -->
+		<Item Id="367" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Parasatoid -->
+		<Item Id="461" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!-- Intruder -->
+		<Item Id="575" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
 </ItemPools>
