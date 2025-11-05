@@ -47,7 +47,7 @@ function GOLDEN_SHOPKEEPER:OnDamageEffect(npc)
 	Mod.Spawn.Coin(CoinSubType.COIN_PENNY, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, npc:GetDropRNG(), 0))
 	npc:GetSprite():Play("Bomb", true)
 	Mod.Game:SpawnParticles(npc.Position, EffectVariant.COIN_PARTICLE, Mod:RandomNum(7, 14), 4)
-	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8, 0, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8)
 end
 
 ---@param ent Entity
@@ -79,8 +79,8 @@ function GOLDEN_SHOPKEEPER:ShopkeeperTakeDamage(ent, amount, flags, source, coun
 				end
 			end
 			npc:GetSprite():Play("Break")
-			Mod.sfxman:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY, 0.8, 0, false, 1)
-			Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8, 0, false, 1)
+			Mod.sfxman:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY, 0.8)
+			Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8)
 			Mod.Game:SpawnParticles(npc.Position, EffectVariant.COIN_PARTICLE, Mod:RandomNum(7, 14), 4)
 			Mod.Game:ShakeScreen(8)
 			Mod.Game:GetLevel():SetStateFlag(LevelStateFlag.STATE_SHOPKEEPER_KILLED_LVL, true)

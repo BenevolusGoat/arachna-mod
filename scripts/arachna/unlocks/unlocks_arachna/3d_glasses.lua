@@ -52,7 +52,7 @@ end
 
 function GLASSES_3D.MODIFIER:PostNpcHit(hitter, npc)
 	if not npc:IsBoss() then
-		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 0, false, 3)
+		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 2, false, 3)
 		GLASSES_3D:SpawnEnemyCopy(npc, Vector(-15, 0), Color(0.5, 0.3, 0.3, 0.8, 0.3, 0, 0))
 		GLASSES_3D:SpawnEnemyCopy(npc, Vector(15, 0), Color(0.3, 0.3, 0.5, 0.8, 0, 0, 0.3))
 		npc:Remove()
@@ -66,8 +66,8 @@ function GLASSES_3D:DisappearOnRoomClear(npc)
 		local smoke = Mod.Spawn.Poof02(2, npc.Position + Vector(0, -30))
 		smoke.Color = npc:GetSprite().Color
 		smoke.SpriteScale = smoke.SpriteScale / 1.5
-		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 0, false, 1.5)
-		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 0, false, 0.8)
+		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 2, false, 1.5)
+		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 2, false, 0.8)
 		npc:Remove()
 	end
 end

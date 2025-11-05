@@ -15,7 +15,7 @@ GEPTAMERON.OVERLAY = Isaac.GetGiantBookIdByName("Geptameron")
 ---@param customVarData any
 function GEPTAMERON:OnUse(itemId, rng, player, useFlags, slot, customVarData)
 	ItemOverlay.Show(GEPTAMERON.OVERLAY, 3, player)
-	Mod.sfxman:Play(SoundEffect.SOUND_SUPERHOLY, 1, 0, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_SUPERHOLY)
 	return true
 end
 

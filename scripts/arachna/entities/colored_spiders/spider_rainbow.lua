@@ -17,7 +17,7 @@ local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdow
 	glow:GetSprite().Color = spider:GetSprite().Color
 	glow.SpriteScale = glow.SpriteScale / 2
 	glow:SetTimeout(18)
-	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
+	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 
 	local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 	local div = isBig and BOSS_HEALTH_DIV_BIG or BOSS_HEALTH_DIV

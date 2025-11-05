@@ -18,7 +18,7 @@ function SOUL_OF_ARACHNA:OnUse(card, player, useFlags)
 		Mod.Game:SpawnParticles(npc.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
 	end, nil, nil, nil, {UseEnemySearchParams = true})
 
-	Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8, 0, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8)
 
 	if not Mod:HasBitFlags(useFlags, UseFlag.USE_NOANNOUNCER)
 		and (

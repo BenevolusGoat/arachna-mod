@@ -87,7 +87,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 		end
 	end
 	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
-	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 0, false, 1.25)
+	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 2, false, 1.25)
 	egg:Remove()
 end
 

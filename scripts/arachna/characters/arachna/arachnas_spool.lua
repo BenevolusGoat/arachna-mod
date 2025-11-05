@@ -38,7 +38,7 @@ function ARACHNAS_SPOOL:FireSpool(pos, vel, spawner)
 	spoolTear.CollisionDamage = 4.2
 	spoolTear.FallingSpeed = -5.5
 	spoolTear.FallingAcceleration = 0.5
-	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8, 0, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
 	local player = spawner and spawner:ToPlayer()
 	if player then
 		local weapon = player:GetWeapon(1)
@@ -85,7 +85,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, ARACHNAS_SPOOL.OnTearUpdate, A
 ---@param tear EntityTear
 function ARACHNAS_SPOOL:OnTearDeath(tear)
 	Mod.sfxman:Play(SoundEffect.SOUND_WOOD_PLANK_BREAK, 1, 7, false, 3)
-	Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.8, 1, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.8)
 	Mod.Game:SpawnParticles(tear.Position, EffectVariant.WOOD_PARTICLE, Mod:RandomNum(5, 10), 4)
 	local maxWebCount = 1
 	local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()

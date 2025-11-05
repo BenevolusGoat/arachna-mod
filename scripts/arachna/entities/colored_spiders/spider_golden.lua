@@ -17,7 +17,7 @@ local function postEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdo
 	local duration = isBig and MIDAS_DURATION_BIG or MIDAS_DURATION
 	ent:AddMidasFreeze(EntityRef(player), duration)
 	Mod.Game:SpawnParticles(ent.Position, EffectVariant.COIN_PARTICLE, Mod:RandomNum(4, 7), PARTICLE_SPEED)
-	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.6, 0, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.6)
 end
 
 Mod:AddCallback(Mod.ModCallbacks.POST_ENEMY_TAKE_DMG_FROM_SPIDER, postEnemyTakeDmgFromSpider, COLORED_SPIDERS.SpiderSubtype.GOLDEN)

@@ -14,7 +14,7 @@ function MUTAGEN:SpawnColoredSpiders()
 				for i = 1, Mod:RandomNum(3, 5, rng) do
 					Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(false, true), player.Position)
 				end
-				Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8, 0, false, 1)
+				Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8)
 			end
 		end
 	end)

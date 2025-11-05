@@ -98,7 +98,7 @@ function SPIDER_BEGGAR:SpawnPrize(beggar)
 	local eventKey = WOP:PickOutcome(rng)
 	local event = SPIDER_BEGGAR.PAYOUT_EVENTS[eventKey].Func
 	event(beggar, rng)
-	Mod.sfxman:Play(SoundEffect.SOUND_SLOTSPAWN, 1.0, 0, false, 1.0)
+	Mod.sfxman:Play(SoundEffect.SOUND_SLOTSPAWN)
 end
 
 ---@param beggar EntitySlot
@@ -171,7 +171,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_SLOT_COLLISION, SPIDER_BEGGAR.OnBeggarColli
 ---@param beggar EntitySlot
 function SPIDER_BEGGAR:BeggarDrops(beggar)
 	if beggar:GetState() == SlotState.BOMBED then
-		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 0, false, 1.25)
+		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8)
 		beggar:BloodExplode()
 		Mod.Level():SetStateFlag(LevelStateFlag.STATE_BUM_KILLED, true)
 		Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLOOD_EXPLOSION, 0, beggar.Position, Vector.Zero, beggar)

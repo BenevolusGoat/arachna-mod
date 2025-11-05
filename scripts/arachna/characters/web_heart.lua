@@ -130,7 +130,7 @@ CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callback
 				Mod.Game:SpawnParticles(player.Position, 5, Mod:RandomNum(5, 10), 4, Color(1, 1, 1, 1, 1, 1, 1))
 				Mod.Game:ShakeScreen(16)
 				Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
-				Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH, 1, 0, false, 1)
+				Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 				--blood bombds
 				if player:HasCollectible(CollectibleType.COLLECTIBLE_BLOOD_BOMBS) then
 					if flags == DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_ISSAC_HEART | DamageFlag.DAMAGE_INVINCIBLE | DamageFlag.DAMAGE_IV_BAG then
@@ -167,13 +167,13 @@ function WEB_HEART:CollectWebHeart(pickup, collider)
 		Mod:PickupShopKill(player, pickup, WEB_HEART.PICKUP_SFX)
 	else
 		pickup:GetSprite():Play("Collect", true)
-		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX, 1, 0, false)
+		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
 		pickup:Die()
 	end
 	local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
 	WEB_HEART:AddWebHearts(player, heartWorth)
 	pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-	pickup.Friction = 0
+	pickup:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK | EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, PickupVariant.PICKUP_HEART)

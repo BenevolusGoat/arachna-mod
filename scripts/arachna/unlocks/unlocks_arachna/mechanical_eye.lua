@@ -132,11 +132,11 @@ function MECHANICAL_EYE:OnFamiliarUpdate(familiar)
 
 	if isValid and sprite:IsPlaying("Closed") then
 		sprite:Play("Opening")
-		Mod.sfxman:Play(SoundEffect.SOUND_MIRROR_ENTER, 0.6, 0, false, 1.8)
+		Mod.sfxman:Play(SoundEffect.SOUND_MIRROR_ENTER, 0.6, 2, false, 1.8)
 	elseif not isValid and sprite:IsPlaying("Opened") then
 		MECHANICAL_EYE:UpdateActiveGraphic(familiar, "")
 		sprite:Play("Closing")
-		Mod.sfxman:Play(SoundEffect.SOUND_MIRROR_EXIT, 0.6, 0, false, 1.8)
+		Mod.sfxman:Play(SoundEffect.SOUND_MIRROR_EXIT, 0.6, 2, false, 1.8)
 	end
 
 	if sprite:IsFinished("Opening") or sprite:IsPlaying("Opened") and (data.MechEyeCurReferenceActive or 0) ~= player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) then
@@ -175,7 +175,7 @@ function MECHANICAL_EYE:PostDischarge(itemId, removed, player, slot)
 		poof:FollowParent(familiar)
 
 		Mod.Game:GetHUD():ShowItemText(player, Mod.ItemConfig:GetCollectible(generatedItem))
-		Mod.sfxman:Play(SoundEffect.SOUND_LASERRING, 0.8, 0, false, 1)
+		Mod.sfxman:Play(SoundEffect.SOUND_LASERRING, 0.8)
 		MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	end, MECHANICAL_EYE.FAMILIAR)
 end

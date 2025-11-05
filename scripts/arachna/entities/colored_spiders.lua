@@ -246,7 +246,7 @@ function COLORED_SPIDERS:PostTakeDamageFromSpider(ent, amount, flags, source, co
 				Isaac.GetFreeNearPosition(pos + Vector.FromAngle(vecAngle):Resized(vecRad), 50))
 			COLORED_SPIDERS:ThrowColoredSpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
 				Isaac.GetFreeNearPosition(pos + Vector.FromAngle(vecAngle - 180):Resized(vecRad), 50))
-			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH, 0.8, 0, false, 1)
+			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH, 0.8)
 		end
 	end
 end

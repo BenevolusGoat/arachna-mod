@@ -56,7 +56,7 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 		end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
 
 		if shouldPlayGood then
-			Mod.sfxman:Play(SoundEffect.SOUND_THUMBSUP, 0.8, 0, false, 1)
+			Mod.sfxman:Play(SoundEffect.SOUND_THUMBSUP, 0.8)
 		end
 	end
 	Mod.Game:ShakeScreen(8)
@@ -66,8 +66,8 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 	floorWeb.Color = Color(1, 1, 1, 0.45, 0, 0, 0)
 	floorWeb.SpriteScale = floorWeb.SpriteScale * size
 
-	Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8, 0, false, 1)
-	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8, 0, false, 1)
+	Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8)
+	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
 	return true
 end
 
