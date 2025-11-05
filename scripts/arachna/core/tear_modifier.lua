@@ -87,18 +87,6 @@ function TearModifier:PostExplode(bomb)
 
 end
 
----Whenever EntityPlayer:GetTearHitParams is called through the API or by the game. Useful
----@param player EntityPlayer
----@param params TearParams
----@param weaponType WeaponType
----@param damageScale number
----@param tearDisplacement number
----@param source? Entity
----@return TearParams?
-function TearModifier:ApplyTearHitParams(player, params, weaponType, damageScale, tearDisplacement, source)
-
-end
-
 ---Returns the RNG object for the item or trinket that causes this TearModifier to activate.
 ---Returns nil if the player doesn't have any items or trinkets that contribute to the tear modifier.
 ---@param player EntityPlayer

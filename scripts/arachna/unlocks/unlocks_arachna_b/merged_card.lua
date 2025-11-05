@@ -154,7 +154,7 @@ MERGED_CARD.CARD_EFFECTS = {
 		poof2.SpriteScale = poof2.SpriteScale*0.7
 	end,
 	[Card.CARD_TEMPERANCE] = function (player, rng)
-		local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40, true)
+		local pos = Isaac.GetFreeNearPosition(player.Position, 40)
 		local beggar = Mod.Spawn.Slot(SlotVariant.DEVIL_BEGGAR, pos, player, rng:Next())
 		Mod.Spawn.Poof01(0, beggar.Position)
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMONSOUND, 0.8, 0, false, 1)
@@ -166,11 +166,11 @@ MERGED_CARD.CARD_EFFECTS = {
 	end,
 	[Card.CARD_TOWER] = function (player, rng)
 		local room = Mod.Room()
-		local nearPos = room:FindFreePickupSpawnPosition(room:GetRandomPosition(40))
+		local nearPos = Isaac.GetFreeNearPosition(room:GetRandomPosition(40), 0)
 		Mod.Spawn.Bomb(BombSubType.BOMB_TROLL, nearPos, nil, player, rng:Next())
 	end,
 	[Card.CARD_STARS] = function (player, rng)
-		local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
+		local pos = Isaac.GetFreeNearPosition(player.Position, 40)
 		local chest = Mod.Spawn.Pickup(PickupVariant.PICKUP_LOCKEDCHEST, 0, pos, nil, player, rng:Next())
 		Mod.Spawn.Poof01(0, chest.Position)
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMONSOUND, 0.8, 0, false, 1)

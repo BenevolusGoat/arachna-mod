@@ -9,16 +9,18 @@
 	<familiar id="6" name="The Yarn" description="Static shock!" gfx="the-yarn.png" tags="baby" quality="2"/>
 	<passive id="7" name="Mechanical Eye" description="Active expansion" gfx="mechanical-eye.png" cache="familiars" tags="tech" quality="3"/>
 	<passive id="8" name="Arachnid's Grip" description="Infested!" gfx="arachnid-grips.png" tags="spider" quality="3"/> <!-- ::::) -->
-	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" gfx="dads-newspaper.png" tags="" quality="3"/>
+	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" gfx="dads-newspaper.png" quality="3"/>
 	<active id="10" name="Testament" description="Leave the inheritance for your descendants" gfx="lastwill.png" maxcharges="0" tags="nogreed nochallenge noeden" quality="4"/>
 	<active id="11" name="Geptameron" description="Ever changing holy tome" gfx="geptameron.png" maxcharges="4" tags="book" quality="3"/>
 	<passive id="12" name="3D Glasses" description="I'm seeing double..." gfx="3dglasses.png" quality="2"/>
-	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" tags="hidden quest noeden" cache="all" quality="4"/>
+	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4"
+		effectspeed="0.12" effecttears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1"
+	/>
 
-	<passive id="14" name=" Spider Donut " description="HP Up?" gfx="spider-donut.png" cache="damage" quality="2"/>
+	<passive id="14" name="Spider Donut" description="HP Up?" gfx="spider-donut.png" damage="0.69" quality="2"/>
 	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." gfx="candy-floss.png" cache="all" quality="2"/>
-	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" gfx="gummy-spiders.png" cache="firedelay" quality="2"/>
-	<passive id="17" name="Old Shoebox" description="What could be inside?" gfx="old-box.png" cache="firedelay speed" quality="2"/>
+	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" gfx="gummy-spiders.png" tears="0.61" quality="2"/>
+	<passive id="17" name="Old Shoebox" description="What could be inside?" gfx="old-box.png" tears="0.33" speed="0.15" quality="2"/>
 
 	<!--TRINKETS-->
 	<trinket name="White String" description="Spider's little gift" gfx="white-string.png" />

@@ -53,7 +53,6 @@ WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.RAINBOW, 4)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN, 2)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE, 4)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 2)
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
 COLORED_SPIDERS.WOP = WOP
 
 local WOP_BIG = WeightedOutcomePicker()
@@ -62,6 +61,7 @@ for _, wopOutcome in ipairs(WOP:GetOutcomes()) do
 		WOP_BIG:AddOutcomeWeight(wopOutcome.Value, wopOutcome.Weight)
 	end
 end
+WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
 WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
 WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
 WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
@@ -123,8 +123,14 @@ function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor)
 	local randomSpiderSubtype = 0
 	if onlyColor then
 		wop:RemoveOutcome(0)
+		if bigSpider then
+			wop:RemoveOutcome(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG)
+		end
 		randomSpiderSubtype = wop:PickOutcome(rng)
 		wop:AddOutcomeWeight(0, 25)
+		if bigSpider then
+			wop:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
+		end
 	else
 		randomSpiderSubtype = wop:PickOutcome(rng)
 	end
@@ -137,7 +143,7 @@ end
 ---@param targetPos? Vector
 function COLORED_SPIDERS:ThrowColoredSpider(player, subtype, pos, targetPos)
 	if not targetPos then
-		targetPos = Isaac.GetFreeNearPosition(pos, 50)
+		targetPos = Isaac.GetFreeNearPosition(pos + Vector(Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)), 50)
 	end
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
 	---@cast spider EntityFamiliar

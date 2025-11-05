@@ -191,7 +191,15 @@ local characters = {
 
 Mod.LoopInclude(characters, "scripts.arachna.characters")
 
-Mod.Include("scripts.arachna.unlocks.unlock_loader")
+local miscItems = {
+	"candy_floss",
+	"gummy_spiders",
+	"old_shoebox",
+	"spider_cake",
+	"spider_donut"
+}
+
+Mod.LoopInclude(miscItems, "scripts.arachna.misc_items")
 
 --!End of file
 
