@@ -19,9 +19,13 @@
 	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." gfx="candy-floss.png" cache="all" quality="2"/>
 	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" gfx="gummy-spiders.png" cache="firedelay" quality="2"/>
 	<passive id="17" name="Old Shoebox" description="What could be inside?" gfx="old-box.png" cache="firedelay speed" quality="2"/>
+
 	<!--TRINKETS-->
 	<trinket name="White String" description="Spider's little gift" gfx="white-string.png" />
 	<trinket name="Sprindle" description="Ouch!" gfx="sprindle.png"/>
 	<trinket name="Infested Penny" description="Wealth of spiders" gfx="infested-penny.png"/>
+
+	<!-- NULL ITEMS -->
+	<null name="arachnids grip orbitals" persistent="true" cache="familiars"/>
 </items>
 

@@ -27,6 +27,7 @@ General Changes/Fixes:
 - Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
 - Updated Mechanical Eye's blacklist to account for any items that use a timed or special charge instead of manually listing them, inclding modded actives
 - Changed how orbitals are added to the player, so they will have differing speeds/distances compared to before, but also occupy the same space as other orbitals that use the layer
+- Changed Arachnid's Grip to detect the "fly" tag on enemies for having a chance to heal the player instead of a manual list, allowing it to be compatible with modded enemies
 
 Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
