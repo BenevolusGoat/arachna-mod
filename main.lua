@@ -201,6 +201,8 @@ local miscItems = {
 
 Mod.LoopInclude(miscItems, "scripts.arachna.misc_items")
 
+Mod.Include("scripts.arachna.unlocks.unlock_loader")
+
 --!End of file
 
 --Mod.Include("scripts.compatibility.patches.eid.eid_support")

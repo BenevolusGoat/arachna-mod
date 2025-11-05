@@ -113,7 +113,11 @@ Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, ARACHNIDS_GRIP.OnPickupUpdat
 
 ---@param npc EntityNPC
 function ARACHNIDS_GRIP:OnEnemyKill(npc)
-	if npc:IsActiveEnemy(true) and not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN) and npc.SpawnerType == EntityType.ENTITY_NULL then
+	if npc:IsActiveEnemy(true)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
+		and npc.SpawnerType == EntityType.ENTITY_NULL
+		and PlayerManager.AnyoneHasCollectible(ARACHNIDS_GRIP.ID)
+	then
 		local rng = npc:GetDropRNG()
 		local roll = rng:RandomFloat()
 

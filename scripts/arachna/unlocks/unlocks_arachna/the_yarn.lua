@@ -11,9 +11,6 @@ YARN.ROOM_CLEAR_THRESHOLD = 4
 
 YARN.FIRE_DISTANCE = 80
 
-YARN.WEB_HEART_CHANCE = 0.25
-YARN.WEB_HEART_CHANCE_BFFS = 0.3
-
 YARN.FIRE_COOLDOWN = 48
 YARN.FIRE_COOLDOWN_LULLABY = 32
 
@@ -70,19 +67,13 @@ Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, YARN.OnFamiliarUpdate, YARN.FAM
 
 ---@param player EntityPlayer
 function YARN:OnRoomClear(player)
-	local heartChance = YARN.WEB_HEART_CHANCE
-	if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-		heartChance = YARN.WEB_HEART_CHANCE_BFFS
-	end
 	Mod.Foreach.Familiar(function (familiar, index)
 		if (familiar.RoomClearCount + 1) % YARN.ROOM_CLEAR_THRESHOLD == 0
 			and GetPtrHash(player) == GetPtrHash(familiar.Player)
 		then
 			local rng = player:GetCollectibleRNG(YARN.ID)
-			if rng:RandomFloat() < heartChance then
-				local pos = Mod.Room():FindFreePickupSpawnPosition(familiar.Position)
-				Mod.Spawn.Pickup(PickupVariant.PICKUP_HEART, Mod.Pickup.WEB_HEART.ID, pos, nil, familiar, rng:Next())
-			end
+			local pos = Mod.Room():FindFreePickupSpawnPosition(familiar.Position)
+			Mod.Spawn.Pickup(PickupVariant.PICKUP_HEART, Mod.Pickup.WEB_HEART.ID, pos, nil, familiar, rng:Next())
 		end
 	end, YARN.FAMILIAR)
 end

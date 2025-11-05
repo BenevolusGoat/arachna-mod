@@ -48,22 +48,19 @@ SPIDER_BEGGAR.PAYOUT_EVENTS = {
 	SPIDER_BEGGAR.PayoutEvent("Web Heart", 0.35, function (beggar, rng)
 		local vel = EntityPickup.GetRandomPickupVelocity(beggar.Position, rng, 1)
 		Mod.Spawn.Heart(Mod.Pickup.WEB_HEART.ID, beggar.Position, vel, beggar, rng:Next())
-		Mod:DebugLog("Web Heart")
 	end),
 	SPIDER_BEGGAR.PayoutEvent("Friendly Spiders", 0.32, function (beggar, rng)
 		local randomSpider = rng:RandomInt(#SPIDER_BEGGAR.SPIDERS) + 1
 		local spiderType = SPIDER_BEGGAR.SPIDERS[randomSpider]
 		local spider = Mod.Game:Spawn(spiderType[1], spiderType[2], Isaac.GetFreeNearPosition(beggar.Position, 40), Vector.Zero, beggar, 0, rng:Next())
 		spider:AddCharmed(EntityRef(beggar), -1)
-		Mod:DebugLog("Random spunder")
 	end),
 	SPIDER_BEGGAR.PayoutEvent("Collectible", 0.29, function (beggar, rng)
 		local itemId = Mod.Game:GetItemPool():GetCollectible(SPIDER_BEGGAR.POOL, true, rng:Next())
 		local pos = Mod.Room():FindFreePickupSpawnPosition(beggar.Position, 0, true)
 		Mod.Spawn.Collectible(itemId, pos, beggar, rng:Next())
-		beggar:GetSprite():Play("Teleport")
+		beggar:GetSprite():Play("Teleport", true)
 		beggar:SetState(SlotState.PAYOUT)
-		Mod:DebugLog("COLLECTIBLE WOOOO no more beggar")
 	end),
 }
 
@@ -77,20 +74,46 @@ SPIDER_BEGGAR.PAYOUT_WOP = WOP
 
 --#region Should Payout
 
----@param donations integer
----@param payouts integer
----@param rng RNG
-function SPIDER_BEGGAR:ShouldPayout(donations, payouts, rng)
-	--TODO: Should be more detailed, but just recreating beggar for now.
+---Credit to Guantol for the exact details on beggar payouts!
+---@param beggar EntitySlot
+---@param player EntityPlayer
+function SPIDER_BEGGAR:TryPayout(beggar, player)
+	local donationValue = beggar:GetDonationValue() + 1
+	local rng = beggar:GetDropRNG()
+	local sprite = beggar:GetSprite()
+
+	local successValue = 0
+	successValue = rng:RandomInt(4) + rng:RandomInt(4) + rng:RandomInt(2)
 	if Mod.Game.Difficulty == Difficulty.DIFFICULTY_HARD then
-	else
+		successValue = math.max(successValue, 5)
 	end
-	return rng:RandomFloat() < 0.35
+
+	if donationValue > successValue then
+		donationValue = rng:RandomInt(2) + 2
+		if player:HasCollectible(CollectibleType.COLLECTIBLE_LUCKY_FOOT) then
+			donationValue = donationValue + 1
+		end
+
+		beggar:SetState(SlotState.REWARD)
+		sprite:Play("PayPrize", true)
+	else
+		sprite:Play("PayNothing", true)
+	end
+
+	beggar:SetDonationValue(donationValue)
 end
 
 --#endregion
 
 --#region Animations/Give Prize
+
+---Just a feature of vanilla beggars I guess?
+---@param slot EntitySlot
+function SPIDER_BEGGAR:OnInit(slot)
+	slot.PositionOffset = Vector(0, 8)
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_SLOT_INIT, SPIDER_BEGGAR.OnInit, SPIDER_BEGGAR.ID)
 
 ---@param beggar EntitySlot
 function SPIDER_BEGGAR:SpawnPrize(beggar)
@@ -104,9 +127,6 @@ end
 ---@param beggar EntitySlot
 function SPIDER_BEGGAR:OnSlotUpdate(beggar)
 	local sprite = beggar:GetSprite()
-	local slot_save = Mod.SaveManager.GetRoomSave(beggar)
-
-	slot_save.SpiderBeggarPayouts = slot_save.SpiderBeggarPayouts or 0
 
 	if sprite:IsFinished("PayPrize") then
 		sprite:Play("Prize")
@@ -126,40 +146,26 @@ Mod:AddCallback(ModCallbacks.MC_POST_SLOT_UPDATE, SPIDER_BEGGAR.OnSlotUpdate, SP
 
 --#region Slot Collision
 
+--Specificiations of what a beggar uses to allow paying it according to decomp
+---@param beggar EntitySlot
+---@param player EntityPlayer
+function SPIDER_BEGGAR:ShouldTakeMoney(beggar, player)
+	local sprite = beggar:GetSprite()
+	return player:GetNumCoins() > 0
+		and beggar:GetState() == SlotState.IDLE
+		and (sprite:IsFinished() or sprite:GetCurrentAnimationData():IsLoopingAnimation())
+		and beggar:GetTimeout() <= 0
+end
+
 ---@param beggar EntitySlot
 ---@param ent Entity
 function SPIDER_BEGGAR:OnBeggarCollision(beggar, ent)
-	local sprite = beggar:GetSprite()
 	local player = ent:ToPlayer()
-
-	if not (
-		player
-		and player:GetNumCoins() > 0
-		and beggar:GetState() == SlotState.IDLE
-		and sprite:IsPlaying("Idle")
-	)
-	then
-		return
+	if player and SPIDER_BEGGAR:ShouldTakeMoney(beggar, player) then
+		player:AddCoins(-1)
+		SPIDER_BEGGAR:TryPayout(beggar, player)
+		Mod.sfxman:Play(SoundEffect.SOUND_ANIMAL_SQUISH)
 	end
-	local slot_save = Mod.SaveManager.GetRoomSave(beggar)
-
-	player:AddCoins(-1)
-	beggar:SetDonationValue(beggar:GetDonationValue() + 1)
-	Mod.sfxman:Play(SoundEffect.SOUND_SCAMPER)
-
-	if SPIDER_BEGGAR:ShouldPayout(beggar:GetDonationValue(), slot_save.SpiderBeggarPayouts, beggar:GetDropRNG()) then
-		beggar:SetDonationValue(0)
-		slot_save.SpiderBeggarPayouts = (slot_save.SpiderBeggarPayouts or 0) + 1
-		sprite:Play("PayPrize")
-		beggar:GetData().EP_ConverterBeggarPlayer = player
-		beggar:SetState(SlotState.REWARD)
-		Mod:DebugLog("Howway!!!!")
-	else
-		Mod:DebugLog("You get NOTHING. Try again.")
-		sprite:Play("PayNothing")
-	end
-
-	Mod.sfxman:Play(SoundEffect.SOUND_ANIMAL_SQUISH)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_SLOT_COLLISION, SPIDER_BEGGAR.OnBeggarCollision, SPIDER_BEGGAR.ID)
