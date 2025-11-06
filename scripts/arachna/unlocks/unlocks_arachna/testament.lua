@@ -383,7 +383,8 @@ function TESTAMENT:PreventConsumingItem(pedestal)
 		if pedestal.OptionsPickupIndex == 1
 			and not Mod.Room():GetEffects():HasCollectibleEffect(TESTAMENT.ID)
 		then
-			--This should hopefully prevent it from being targeted by literally anything as game thinks its about to disappear
+			--This should hopefully prevent it from being targeted by literally anything as game thinks its about to disappear.
+			--This is before I decided "wait, the curse mist could solve all my problems" but this is a precautionary measure just in case.
 			pedestal.Timeout = 2
 		elseif pedestal.SubType == 0 then
 			pedestal.Timeout = 0

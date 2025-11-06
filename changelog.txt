@@ -32,6 +32,7 @@ General Changes/Fixes:
 - Changed the number display for Geptameron to be on the active item instead of next to the key counter
 - Fixed Testament crashing the game
 - Separated shadow from Testament pedestal sprite
+- Improved handling of Dad's Newspaper's "club"
 
 Gameplay Changes:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders

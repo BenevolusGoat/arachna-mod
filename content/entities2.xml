@@ -125,7 +125,7 @@
 	<entity id="1000" variant="2002" name="Golden Spider shine" anm2path="effect_goldspider_shine.anm2" subtype="3"
 		friction="1">
 	</entity>
-    <entity id="1000" variant="2003" name="Newspaper (swing)" anm2path="knife_newspaper_swing.anm2"
+    <entity id="1000" variant="2003" name="Newspaper (swing)" anm2path="knife_dads_newspaper.anm2"
 		collisionMass="3" collisionRadius="16" friction="1">
     </entity>
     <entity id="1000" variant="2007" name="Holy Shot Target (Geptameron)" anm2path="holytarget.anm2"
