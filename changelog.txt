@@ -12,7 +12,7 @@ What's REPENTOGON/How to get it? See here: link
 Don't want to use REPENTOGON? A legacy version that contains the worskhop version EXACTLY how it was can be found here, bugs and all: link
 
 General Changes/Fixes:
-- The amount of bugs fixed as a direct result of the switch to REPENTOGON is difficult to account for, but hopefully there should generally be less bugs and more improvements across the whole mod!
+- The amount of bugs fixed as a direct result of the switch to REPENTOGON or the rewritten code is difficult to account for, but hopefully there should generally be improvements across the whole mod!
 - Tainted Arachna no longer uses a manually handled item wisp of Mutant Spider, now instead having a natural integration of the multishot. This also allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
@@ -30,6 +30,7 @@ General Changes/Fixes:
 - Changed Arachnid's Grip to detect the "fly" tag on enemies for having a chance to heal the player instead of a manual list, allowing it to be compatible with modded enemies
 - Fixed the odd small delay The Yarn had to drop a Web Heart when clearing a room
 - Changed the number display for Geptameron to be on the active item instead of next to the key counter
+- Fixed Testament crashing the game
 
 Gameplay Changes:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
@@ -37,9 +38,9 @@ Gameplay Changes:
 - Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
 - As a result of the above, Tainted Arachna's firerate down is now closer to how it works for the Keepers, allowing you to reach the normal cap of 5.00 tears per second
 - Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
-- Web Hearts replacing specific heart types will now only occur if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of if any single character was Arachna or Tainted Arachna
+- Changed Web Hearts replacing specific heart types to trigger if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of just one character being Arachna or Tainted Arachna
 - The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
-- 3D Glasses now works for all weapon types and has better optimization for how it renders its 3D effect
+- 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
 - Arachna's Spool's tear originally intended to copy specific tear effects, but the list of effects to copy was improperly setup and copied arbitrary combinations of them. It now looks for and copies the following effects: Spectral, Homing, Wiggle Worm, Brain Worm, Lost Contact, Continuum, and Tractor Beam
@@ -52,7 +53,7 @@ Gameplay Changes:
 - The Yarn and Geptameron's per-room effects now trigger for challenge and boss rush waves
 - Spider Beggar no longer drops pickups upon death, instead spawning 2 spiders similar to Devil Beggar
 - Spider Beggar now follows the same rules and chances to reward the player as vanilla beggars
-- Geptameron's day of the week effect is now per-copy of the item instead of a global counter
+- Added the curse mist effect to Testament's special room
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. Functions, IDs, and more. No more magic numbers!

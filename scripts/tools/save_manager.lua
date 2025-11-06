@@ -2113,7 +2113,7 @@ function SaveManager.GetSettingsSave()
 	end
 end
 
----Gets the "type" save data within the file save. Basically just a table you can put anything it.
+---Gets the "other" save data within the file save. Can be used for any arbitrary purpose for file-specific saves.
 ---@return table? @Can return nil if data has not been loaded, or the manager has not been initialized.
 function SaveManager.GetPersistentSave()
 	if SaveManager.Utility.IsDataInitialized() then

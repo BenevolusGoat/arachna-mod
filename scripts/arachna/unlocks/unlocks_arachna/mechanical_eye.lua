@@ -47,7 +47,11 @@ function MECHANICAL_EYE:GenerateActiveChargeList()
 	local numCollectibles = #Mod.ItemConfig:GetCollectibles()
 	for itemId = 1, numCollectibles do
 		local itemConfig = Mod.ItemConfig:GetCollectible(itemId)
-		if MECHANICAL_EYE:IsValidItem(itemConfig) and not MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST[itemId] then
+		if MECHANICAL_EYE:IsValidItem(itemConfig)
+			and not MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST[itemId]
+			and not itemConfig.Hidden
+			and not itemConfig:HasTags(ItemConfig.TAG_QUEST)
+		then
 			local maxCharges = itemConfig.MaxCharges
 			activeList[maxCharges] = (activeList[maxCharges] or {})
 			Mod.Insert(activeList[maxCharges], itemId)

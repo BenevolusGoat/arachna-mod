@@ -159,21 +159,14 @@ function WEB_HEART:CollectWebHeart(pickup, collider)
 		return pickup:IsShopItem()
 	end
 
-	if pickup:IsShopItem() then
-		if not Mod:CanPlayerBuyShopItem(player, pickup) then
-			return pickup:IsShopItem()
-		end
-		Mod:PayPickupPrice(player, pickup)
-		Mod:PickupShopKill(player, pickup, WEB_HEART.PICKUP_SFX)
-	else
+	if ARACHNAMOD:PricedPickup(player, pickup) then
 		pickup:GetSprite():Play("Collect", true)
 		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
-		pickup:Die()
+		local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
+		WEB_HEART:AddWebHearts(player, heartWorth)
+		pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+		pickup:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK | EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
 	end
-	local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
-	WEB_HEART:AddWebHearts(player, heartWorth)
-	pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-	pickup:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK | EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, PickupVariant.PICKUP_HEART)
