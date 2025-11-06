@@ -17,6 +17,8 @@ TESTAMENT.REPLACER_SUB = Isaac.GetEntityVariantByName("Testament Replacer")
 
 TESTAMENT.ITEMS_PER_ROOM = 6
 
+TESTAMENT.MAX_NEXT_RUN_ITEMS = 2
+
 --Duration of initial on-use effect and threshold when you start teleporting back.
 --Is multiplied by 2 for controls cooldown as it updates 60fps as opposed to 30fps
 TESTAMENT.IMMOBILE_DURATION = 20
@@ -36,10 +38,33 @@ TESTAMENT.PEDESTAL_POSITIONS = {
 local inTheRoom = false
 local testamentRoomIndex = 0
 local lastDir = Direction.NO_DIRECTION
+local doNotTeleport = false
 
 --#endregion
 
 --#region Helpers
+
+---@param player EntityPlayer
+function TESTAMENT:CanUseItem(player)
+	if Mod.Game:AchievementUnlocksDisallowed() then
+		return false
+	end
+	local game_save = Mod.SaveManager.GetPersistentSave()
+	local blacklist = {}
+	if game_save and game_save.TestamentItems then
+		if #game_save.TestamentItems >= TESTAMENT.MAX_NEXT_RUN_ITEMS then
+			return false
+		end
+		blacklist = Mod:Set({game_save.TestamentItems})
+	end
+	blacklist[TESTAMENT.ID] = true
+	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
+		if not historyItem:IsTrinket() and not blacklist[historyItem:GetItemID()] then
+			return true
+		end
+	end
+	return false
+end
 
 function TESTAMENT:IsInTestamentRoom()
 	return inTheRoom
@@ -64,6 +89,13 @@ function TESTAMENT:CopyPlayerInventory(player)
 	end
 	Mod.SaveManager.GetFloorSave().TestamentInventory = item_list
 	Mod:DebugLog("Copied", #item_list, "items for Testament")
+end
+
+---@param player EntityPlayer
+function TESTAMENT:AnimateTestamentTeleport(player)
+	player:AddControlsCooldown(TESTAMENT.IMMOBILE_DURATION * 2)
+	player:PlayExtraAnimation("DeathTeleport")
+	player.Velocity = Vector.Zero
 end
 
 function TESTAMENT:GetNumItemsToSpawn()
@@ -104,14 +136,8 @@ end
 ---@param itemId CollectibleType
 ---@param useFlags UseFlag
 function TESTAMENT:PreUseItem(itemId, rng, player, useFlags, slot)
-	local hasValidItem = false
-	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
-		if not historyItem:IsTrinket() and historyItem:GetItemID() ~= itemId then
-			hasValidItem = true
-			break
-		end
-	end
-	if not hasValidItem or Mod.Game:AchievementUnlocksDisallowed() then
+	--[[ local canUse = TESTAMENT:CanUseItem(player)
+	if not canUse then
 		if not Mod:HasBitFlags(useFlags, UseFlag.USE_NOANIM) then
 			player:AnimateCollectible(itemId, "UseItem", "PlayerPickup")
 		end
@@ -122,23 +148,29 @@ function TESTAMENT:PreUseItem(itemId, rng, player, useFlags, slot)
 			Mod.Spawn.Poof01(0, player.Position)
 		end
 		return true
-	end
+	end ]]
 end
 
-Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, TESTAMENT.PreUseItem)
+--Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, TESTAMENT.PreUseItem)
 
 ---@param itemId CollectibleType
 ---@param rng RNG
 ---@param player EntityPlayer
 function TESTAMENT:OnUse(itemId, rng, player)
-	Mod.Foreach.Player(function (_player, index)
-		_player:AddControlsCooldown(TESTAMENT.IMMOBILE_DURATION * 2)
-		_player:PlayExtraAnimation("DeathTeleport")
-	end)
-	TESTAMENT:CopyPlayerInventory(player)
-	lastDir = Direction.NO_DIRECTION
-	local floor_save = Mod.SaveManager.GetFloorSave()
-	floor_save.TestamentRoomIndex = Mod.Level():GetCurrentRoomIndex()
+	local canUse = TESTAMENT:CanUseItem(player)
+	if not canUse then
+		local spawnPos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
+		Mod.Spawn.Collectible(CollectibleType.COLLECTIBLE_EDENS_BLESSING, spawnPos, player, rng:Next())
+		player:AnimateHappy()
+		doNotTeleport = true
+		player:GetEffects():RemoveCollectibleEffect(itemId, -1)
+	else
+		Mod.Foreach.Player(function (_player, index)
+			TESTAMENT:AnimateTestamentTeleport(_player)
+		end)
+		TESTAMENT:CopyPlayerInventory(player)
+		lastDir = Direction.NO_DIRECTION
+	end
 	return {Discharge = true, Remove = true, ShowAnim = false}
 end
 
@@ -151,7 +183,13 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, TESTAMENT.OnUse, TESTAMENT.ID)
 ---@param player EntityPlayer
 ---@param itemConfigItem ItemConfigItem
 function TESTAMENT:TeleportOnPlayerEffectEnd(player, itemConfigItem)
+	if doNotTeleport then
+		doNotTeleport = false
+		return
+	end
 	if itemConfigItem:IsCollectible() and itemConfigItem.ID == TESTAMENT.ID then
+		local floor_save = Mod.SaveManager.GetFloorSave()
+		floor_save.TestamentRoomIndex = Mod.Level():GetCurrentRoomIndex()
 		TESTAMENT:TeleportToTestamentRoom()
 	end
 end
@@ -179,12 +217,21 @@ function TESTAMENT:SetupRoom(entType, variant, subtype, gridIndex, seed)
 		local itemsToSpawn = TESTAMENT:GetNumItemsToSpawn()
 		local spawnPositions = TESTAMENT.PEDESTAL_POSITIONS[itemsToSpawn]
 		Mod:DebugLog("Testament: Expecting to spawn", itemsToSpawn, "items")
+		local game_save = Mod.SaveManager.GetPersistentSave() ---@cast game_save table
+		local blacklist = {}
+		if game_save.TestamentItems then
+			blacklist = Mod:Set(game_save.TestamentItems)
+		end
 		for i = 0, itemsToSpawn - 1 do
 			local itemId = inventory[curInventoryIndex + i]
 			Mod:DebugLog("Testament: Spawning ID", tostring(itemId))
 			local pedestal = Mod.Spawn.Collectible(itemId, spawnPositions[i + 1])
-			pedestal.OptionsPickupIndex = 1
-			pedestal:Morph(pedestal.Type, pedestal.Variant, pedestal.SubType, true, true, true)
+			if blacklist[itemId] then
+				pedestal:TryRemoveCollectible()
+			else
+				pedestal.OptionsPickupIndex = 1
+				pedestal:Morph(pedestal.Type, pedestal.Variant, pedestal.SubType, true, true, true)
+			end
 		end
 		Mod.Room():SetBackdropType(BackdropType.SACRIFICE, 1)
 		local roomDesc = Mod.Level():GetRoomByIdx(GridRooms.ROOM_DEBUG_IDX, -1)
@@ -292,8 +339,7 @@ function TESTAMENT:SleepPlayersNearEndOfEffect()
 		local effect = effects:GetCollectibleEffect(TESTAMENT.ID)
 		if effect and effect.Cooldown == TESTAMENT.IMMOBILE_DURATION then
 			Mod.Foreach.Player(function (player, index)
-				player:AddControlsCooldown(TESTAMENT.IMMOBILE_DURATION * 2)
-				player:PlayExtraAnimation("DeathTeleport")
+				TESTAMENT:AnimateTestamentTeleport(player)
 			end)
 		end
 	end

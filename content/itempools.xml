@@ -64,11 +64,15 @@
 		<Item Name="Dad's Newspaper" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Testament" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
     <Pool Name="greedShop">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="The Yarn" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Newspaper" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+    </Pool>
+    <Pool Name="greedSecret">
+		<Item Name="Testament" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
     </Pool>
     <Pool Name="greedCurse">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>

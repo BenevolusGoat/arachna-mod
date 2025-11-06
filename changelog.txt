@@ -31,6 +31,7 @@ General Changes/Fixes:
 - Fixed the odd small delay The Yarn had to drop a Web Heart when clearing a room
 - Changed the number display for Geptameron to be on the active item instead of next to the key counter
 - Fixed Testament crashing the game
+- Separated shadow from Testament pedestal sprite
 
 Gameplay Changes:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
@@ -54,6 +55,10 @@ Gameplay Changes:
 - Spider Beggar no longer drops pickups upon death, instead spawning 2 spiders similar to Devil Beggar
 - Spider Beggar now follows the same rules and chances to reward the player as vanilla beggars
 - Added the curse mist effect to Testament's special room
+- Testament can now be found and used in Greed Mode
+- Testament can no longer be used in runs that do not allow achievements, instead spawns Eden's Blessing
+- Testament pedestals for the next run no longer spawn in runs that do not allow achievements
+- Added support for multiple uses of Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before Testament instead spawns Eden's Blessing
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. Functions, IDs, and more. No more magic numbers!
