@@ -24,19 +24,17 @@ local function startedAsArachna()
 	return playerType == arachna or playerType == arachnab
 end
 
-local function detectNicalisSkillIssue(timer)
-	if (Mod.FLAGS and Mod.FLAGS.Debug) or (REPENTOGON and REPENTANCE_PLUS) or not startedAsArachna() or killWarning then return end
+local function detectNicalisSkillIssue()
+	if Mod.FLAGS.Debug or (REPENTOGON and REPENTANCE_PLUS) or not startedAsArachna() or killWarning then return end
 	showedWarning = true
 	local centerX, centerY = Isaac.GetScreenWidth() / 2, Isaac.GetScreenHeight() / 2
 	local titlePos = Vector(centerX - 30, centerY - 80)
 	local messagePos = Vector(centerX - 120, titlePos.Y + 10)
 
-	if type(timer) == "boolean" then
-		if killWarningTimer > 0 then
-			killWarningTimer = killWarningTimer - 1
-		else
-			killWarning = true
-		end
+	if killWarningTimer > 0 then
+		killWarningTimer = killWarningTimer - 1
+	else
+		killWarning = true
 	end
 
 	Isaac.RenderText(title, titlePos.X, titlePos.Y, 1, 0.2, 0.2, 1)
@@ -44,9 +42,7 @@ local function detectNicalisSkillIssue(timer)
 		Isaac.RenderText(str, messagePos.X, messagePos.Y + 15 * i, 1, 1, 1, 1)
 	end
 end
-Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function() detectNicalisSkillIssue(true) end)
-Mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, detectNicalisSkillIssue)
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, detectNicalisSkillIssue)
+Mod:AddCallback(ModCallbacks.MC_POST_RENDER, detectNicalisSkillIssue)
 
 local function stopWarning()
 	if showedWarning and not killWarning and Game():GetFrameCount() > 0 then
