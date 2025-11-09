@@ -176,6 +176,7 @@ ARACHNAMOD.Slot = {}
 ARACHNAMOD.Entities = {}
 include("flags")
 include("scripts.arachna.core.detect_repentogon")
+include("scripts.arachna.core.save_upgrade")
 if not REPENTOGON or not REPENTANCE_PLUS then
 	return
 end
