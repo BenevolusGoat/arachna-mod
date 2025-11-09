@@ -13,7 +13,7 @@ ARACHNAMOD.SettingTypes = {
 ---@param value any
 ---@function
 function ARACHNAMOD.SaveSetting(settingKey, value)
-	local game_save = ARACHNAMOD.SaveManager.GetPersistentSave()
+	local game_save = ARACHNAMOD.SaveManager.GetSettingsSave()
 	---@cast game_save table
 
 	if not game_save.ArachnaSettings then
@@ -31,7 +31,7 @@ end
 ---@return any?
 ---@function
 function ARACHNAMOD.GetSetting(settingKey)
-	local game_save = ARACHNAMOD.SaveManager.GetPersistentSave()
+	local game_save = ARACHNAMOD.SaveManager.GetSettingsSave()
 	---@cast game_save table
 
 	if not game_save.ArachnaSettings then
