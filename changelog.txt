@@ -68,3 +68,6 @@ API Changes:
 - Golden Shopkeeper's type is now EntityType.ENTITY_SHOPKEEPER instead of EntityType.ENTITY_EFFECT
 - Web Heart's variant is now PickupVariant.PICKUP_HEART rather than their own unique variant
 - The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON
+
+Mod Compatibility:
+- Added MinimapAPI compatibility

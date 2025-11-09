@@ -101,6 +101,10 @@ function EID:ItemReminderCanAddMoreToView() end
 -- default values: leftOffset= -1 , topOffset = 0
 function EID:addIcon(shortcut, animationName, animationFrame, width, height, leftOffset, topOffset, spriteObject)end
 
+---@param trinketId TrinketType
+---@param trinketTable {t: number[], mult: number[] | nil} @`t` is a table of numbers in the description to multiply by the trinket multiplier. `mult` is to override the default multipliers of 2 and 3
+function EID:addGoldenTrinketTable(trinketId, trinketTable) end
+
 -- Add text to a pedestal's description when you own a different item
 --
 -- Example usage: EID:addCondition(myDevilishItemID, EID.IsGreedMode, "{{GreedMode}} Reduces shop prices by 1 for each optional Nightmare wave completed")

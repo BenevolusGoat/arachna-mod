@@ -40,7 +40,8 @@ function loader:ApplyPatches()
 end
 
 local patches = {
-	"pogforgooditems"
+	"pogforgooditems",
+	"minimapapi"
 }
 
 for _, fileName in ipairs(patches) do

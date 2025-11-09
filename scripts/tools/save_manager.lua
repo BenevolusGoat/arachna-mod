@@ -1872,12 +1872,15 @@ end
 ---@param minimapAPI table @Reference to MinimapAPI.
 ---@param branchVersion table @The version of the branch you are using for MinimapAPI.
 function SaveManager.InitMinimapAPI(minimapAPI, branchVersion)
-	if not SaveManager.Utility.IsDataInitialized() then return end
 	if minimapAPI.BranchVersion == branchVersion then
 		minimapAPI.DisableSaving = true
 		minimapAPIReference = minimapAPI
 		modReference:AddPriorityCallback(ModCallbacks.MC_POST_GAME_STARTED, SaveManager.Utility.CallbackPriority.IMPORTANT, function(_, isContinue)
 			if modReference:HasData() and MinimapAPI.BranchVersion == branchVersion then
+				local minimapSave = SaveManager.GetMinimapAPISave()
+				if not minimapSave or not next(minimapSave) then
+					dataCache.file.minimapAPI = minimapAPIReference:GetSaveTable(true)
+				end
 				MinimapAPI:LoadSaveTable(SaveManager.GetMinimapAPISave(), isContinue)
 			end
 		end)
