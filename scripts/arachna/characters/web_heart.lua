@@ -36,15 +36,6 @@ end
 ---@param player EntityPlayer
 ---@return integer
 function WEB_HEART:GetWebHearts(player)
-	if CustomHealthAPI.Helper.PlayerIsIgnored(player) then
-		return 0
-	end
-	if player:GetPlayerType() == PlayerType.PLAYER_THEFORGOTTEN then
-		if player:GetSubPlayer() == nil then
-			return 0
-		end
-		return CustomHealthAPI.Library.GetHPOfKey(player:GetSubPlayer(), WEB_HEART.KEY, nil, nil, true)
-	end
 	return CustomHealthAPI.Library.GetHPOfKey(player, WEB_HEART.KEY, nil, nil, true)
 end
 
@@ -82,65 +73,60 @@ CustomHealthAPI.Library.RegisterSoulHealth(
 
 --#region CustomHealthAPI
 
-CustomHealthAPI.Library.RegisterHealthOverlay("GOLDEN_WEB_HEART",
-                                      {AnimationFilename = "gfx/web_heart_ui.anm2",
-                                       AnimationName = "UI_Gold",
-                                       IgnoreBleeding = true})
-
-
-
-CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0, function (player,index,health)
-    if health.Key == "HEART_WEB" then
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0, function (player,index,health)
+    if health.Key == WEB_HEART.KEY then
         if CustomHealthAPI.Helper.GetGoldenRenderMask(player)[index+1] then
             return {AnimationFilename = "gfx/web_heart_ui.anm2", AnimationName = "UI_Gold"}
         end
     end
 end)
 
-CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED, 0, function(player, flags, key, hpDamaged, otherKey, otherHPDamaged, amountToRemove)
-	if otherKey == "HEART_WEB" then
-		return 2
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED, CustomHealthAPI.Enums.CallbackPriorities.LATE,
+	function (player, flags, _, _, key, hp, hpToRemove)
+		if key == WEB_HEART.KEY and hpToRemove >= hp then
+			local numGoldens = CustomHealthAPI.Library.GetHPOfKey(player, "GOLDEN_HEART", nil, nil, true)
+			local data = Mod:GetData(player)
+			if numGoldens > 0 and not data.GoldenHeartsPreDamage then
+				data.GoldenHeartsPreDamage = Mod.math.min(numGoldens, WEB_HEART:GetWebHearts(player))
+				Isaac.CreateTimer(function() Mod:GetData(player).GoldenHeartsPreDamage = nil end, 1, 1, true)
+			end
+		end
 	end
-end)
+)
 
-CustomHealthAPI.Library.AddCallback("ArachnaMOD", CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
 	---@param player EntityPlayer
 	function(player, flags, key, hpDamaged, wasDepleted, wasLastDamaged)
-		if key == WEB_HEART.KEY then
-			if wasDepleted then
-				local spiderType = 0
-				if player:GetGoldenHearts() > 0 then
-					spiderType = 7
+		if key == WEB_HEART.KEY and wasDepleted then
+			local spiderType = 0
+			local data = Mod:GetData(player)
+			if data.GoldenHeartsPreDamage then
+				spiderType = Mod.Entities.COLORED_SPIDERS.SpiderSubtype.GOLDEN
+				data.GoldenHeartsPreDamage = data.GoldenHeartsPreDamage - 1
+				if data.GoldenHeartsPreDamage <= 0 then
+					data.GoldenHeartsPreDamage = nil
 				end
-				local rng = player:GetCollectibleRNG(Mod.Item.YARN_HEART.ID)
-				for i = 1, Mod:RandomNum(2, 6, rng) do
-					local randomX, randomY = Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)
-					local nearPos = Isaac.GetFreeNearPosition(player.Position + Vector(randomX, randomY), 50)
-					Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderType, player.Position, nearPos)
-				end
-				--visual/sound effects
-				local poof02 = Mod.Spawn.Poof02(0, player.Position, player)
-				poof02:GetSprite().Color = Color(0, 1, 1, 0.5, 1, 1, 1)
-				poof02.DepthOffset = 250
-				poof02:Update()
-				local splat = Mod.Spawn.Effect(EffectVariant.BLOOD_EXPLOSION, 0, player.Position, nil, player)
-				splat:GetSprite().Color = Color(0, 1, 1, 0.5, 1, 1, 1)
-				splat.DepthOffset = 250
-				splat:Update()
-				Mod.Game:SpawnParticles(player.Position, 5, Mod:RandomNum(5, 10), 4, Color(1, 1, 1, 1, 1, 1, 1))
-				Mod.Game:ShakeScreen(16)
-				Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
-				Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
-				--blood bombds
-				if player:HasCollectible(CollectibleType.COLLECTIBLE_BLOOD_BOMBS) then
-					if flags == DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_ISSAC_HEART | DamageFlag.DAMAGE_INVINCIBLE | DamageFlag.DAMAGE_IV_BAG then
-						player:FireBomb(player.Position, Vector(0, 0), player)
-					end
-				end
-				--fake damage
-				Mod.Level():SetStateFlag(LevelStateFlag.STATE_DAMAGED, true) --for perfection
-				player:SetMinDamageCooldown(60)
 			end
+			local rng = player:GetCollectibleRNG(Mod.Item.YARN_HEART.ID)
+			for i = 1, Mod:RandomNum(2, 6, rng) do
+				Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderType, player.Position)
+			end
+			--visual/sound effects
+			local poof02 = Mod.Spawn.Poof02(0, player.Position, player)
+			poof02:GetSprite().Color = Color(0, 1, 1, 0.5, 1, 1, 1)
+			poof02.DepthOffset = 250
+			poof02:Update()
+			local splat = Mod.Spawn.Effect(EffectVariant.BLOOD_EXPLOSION, 0, player.Position, nil, player)
+			splat:GetSprite().Color = Color(0, 1, 1, 0.5, 1, 1, 1)
+			splat.DepthOffset = 250
+			splat:Update()
+			Mod.Game:SpawnParticles(player.Position, 5, Mod:RandomNum(5, 10), 4, Color(1, 1, 1, 1, 1, 1, 1))
+			Mod.Game:ShakeScreen(16)
+			Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
+			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
+			--fake damage
+			Mod.Level():SetStateFlag(LevelStateFlag.STATE_DAMAGED, true) --for perfection
+			player:SetMinDamageCooldown(60)
 		end
 	end)
 

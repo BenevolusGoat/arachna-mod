@@ -161,8 +161,9 @@ Mod.LoopInclude(core, "scripts.arachna.core")
 Mod.LoopInclude(config, "scripts.arachna.config")
 --Mod.Include("scripts.ARACHNAMOD.api")
 
+ARACHNAMOD.CHAPI_ID = "ArachnaMOD"
 if CustomHealthAPI and CustomHealthAPI.Library and CustomHealthAPI.Library.UnregisterCallbacks then
-	CustomHealthAPI.Library.UnregisterCallbacks("ArachnaMOD")
+	CustomHealthAPI.Library.UnregisterCallbacks(ARACHNAMOD.CHAPI_ID)
 end
 
 ARACHNAMOD.TearModifier = include("scripts/arachna/core/tear_modifier")
