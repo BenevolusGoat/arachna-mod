@@ -432,11 +432,11 @@ end
 ---@return boolean
 function ARACHNAMOD:ActiveUsesCarBattery(player, slot)
 	local useCarBattery = player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY)
-	if Epiphany then
-		if Epiphany.API.HasGoldenItem then
-			useCarBattery = useCarBattery or Epiphany.API:HasGoldenItem(player:GetActiveItem(slot), player, slot)
+	if ARACHNAMOD then
+		if ARACHNAMOD.API.HasGoldenItem then
+			useCarBattery = useCarBattery or ARACHNAMOD.API:HasGoldenItem(player:GetActiveItem(slot), player, slot)
 		else
-			useCarBattery = useCarBattery or Epiphany.API:IsGoldenItem(player:GetActiveItem(slot))
+			useCarBattery = useCarBattery or ARACHNAMOD.API:IsGoldenItem(player:GetActiveItem(slot))
 		end
 	end
 	return useCarBattery

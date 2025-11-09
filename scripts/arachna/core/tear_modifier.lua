@@ -162,7 +162,8 @@ function TearModifier:GetChance(player, ignoreTeardrop, baseChanceMult)
 	luck = Mod:Clamp(luck, self.MinLuck, self.MaxLuck)
 	baseChanceMult = baseChanceMult or 1
 	local deltaX = self.MaxLuck - self.MinLuck
-	local rngRequirement = ((self.MaxChance - self.MinChance) / deltaX) * luck + (self.MaxLuck * self.MinChance - self.MinLuck * self.MaxChance) / deltaX
+	local rngRequirement = ((self.MaxChance - self.MinChance) / deltaX) * luck +
+	(self.MaxLuck * self.MinChance - self.MinLuck * self.MaxChance) / deltaX
 	rngRequirement = rngRequirement + (self.MinChance * (baseChanceMult - 1))
 
 	return rngRequirement
@@ -296,7 +297,8 @@ function TearModifier.New(params)
 
 		local data = ent and getData(ent)
 		if data and data[modInitial .. self.Name] and not data[modInitial .. self.Name .. "_Disabled"] then
-			self:PostNpcHit(ent, npc, ent:ToKnife() and (ent:GetIsSwinging() or ent:GetIsSpinAttack()) or false, false, false)
+			self:PostNpcHit(ent, npc, ent:ToKnife() and (ent:GetIsSwinging() or ent:GetIsSpinAttack()) or false, false,
+				false)
 		end
 	end)
 
@@ -620,12 +622,13 @@ function TearModifier.New(params)
 		--#endregion
 
 		--#region Cain Bag code
-		Epiphany:AddExtraCallback(Epiphany.ExtraCallbacks.CAIN_POST_SWING_HIT, function(_, bag, entity, player, SbData, dmgDealt)
-			local npc = entity:ToNPC()
-			if player and npc and TearModifier:IsValidEnemyTarget(npc) and self:CheckTearAffected(player) then
-				self:PostNpcHit(bag, npc, nil, nil, true)
-			end
-		end)
+		Epiphany:AddExtraCallback(Epiphany.ExtraCallbacks.CAIN_POST_SWING_HIT,
+			function(_, bag, entity, player, SbData, dmgDealt)
+				local npc = entity:ToNPC()
+				if player and npc and TearModifier:IsValidEnemyTarget(npc) and self:CheckTearAffected(player) then
+					self:PostNpcHit(bag, npc, nil, nil, true)
+				end
+			end)
 
 		Epiphany:AddExtraCallback(Epiphany.ExtraCallbacks.CAIN_POST_BAG_THROW, function(_, bag, TbData)
 			if not TbData.PlayerOwner or TbData[modInitial .. self.Name .. "_Disabled"] then
@@ -644,14 +647,15 @@ function TearModifier.New(params)
 			end
 		end)
 
-		Epiphany:AddExtraCallback(Epiphany.ExtraCallbacks.CAIN_POST_BAG_HIT, function(_, bag, entity, TbData, dmgDealt)
-			if TbData[modInitial .. self.Name] and not TbData[modInitial .. self.Name .. "_Disabled"] then
-				local npc = entity:ToNPC()
-				if npc and TearModifier:IsValidEnemyTarget(npc) then
-					self:PostNpcHit(bag, entity:ToNPC(), nil, nil, true)
+		Epiphany:AddExtraCallback(Epiphany.ExtraCallbacks.CAIN_POST_BAG_HIT,
+			function(_, bag, entity, TbData, dmgDealt)
+				if TbData[modInitial .. self.Name] and not TbData[modInitial .. self.Name .. "_Disabled"] then
+					local npc = entity:ToNPC()
+					if npc and TearModifier:IsValidEnemyTarget(npc) then
+						self:PostNpcHit(bag, entity:ToNPC(), nil, nil, true)
+					end
 				end
-			end
-		end)
+			end)
 		--#endregion
 	end
 

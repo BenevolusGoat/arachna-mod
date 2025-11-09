@@ -13,6 +13,8 @@ Don't want to use REPENTOGON? A legacy version that contains the worskhop versio
 
 General Changes/Fixes:
 - The amount of bugs fixed as a direct result of the switch to REPENTOGON or the rewritten code is difficult to account for, but hopefully there should generally be improvements across the whole mod!
+- Added a Dead Sea Scrolls menu where you can check settings, achievements, and credits
+- New mod settings are also available in Mod Config Menu
 - Tainted Arachna no longer uses a manually handled item wisp of Mutant Spider, now instead having a natural integration of the multishot. This also allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color

@@ -27,7 +27,7 @@
 		Beast
 	-->
 	<!-- Arachna Unlocks -->
-	<achievement name="Web Heart" gfx="achievement_web_heart.png" />
+	<achievement name="Web Hearts" gfx="achievement_web_hearts.png" />
 	<achievement name="Arachna's Spool" gfx="achievement_arachnas_spool.png" />
 	<achievement name="The Yarn" gfx="achievement_yarn.png" />
 	<achievement name="Geptameron" gfx="achievement_geptameron.png" />

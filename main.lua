@@ -1,9 +1,9 @@
+InputHelper = include("scripts/helpers/vendor/inputhelper")
+
 ---@class ModReference
 _G.ARACHNAMOD = RegisterMod("Arachna Mod", 1)
 
 ARACHNAMOD.Version = "INDEV_REWRITE"
-
---TODO: Add some kind of warning regarding the new RGON/Rep+ requirement. Could be through a DSS popup?
 
 local Mod = ARACHNAMOD
 
@@ -12,7 +12,7 @@ ARACHNAMOD.SaveManager.Init(Mod)
 
 ARACHNAMOD.sfxman = SFXManager()
 ARACHNAMOD.Game = Game()
-ARACHNAMOD.PersistGameData = Isaac.GetPersistentGameData()
+ARACHNAMOD.PersistGameData = REPENTOGON and Isaac.GetPersistentGameData() or nil
 ARACHNAMOD.Room = function() return Mod.Game:GetRoom() end
 ARACHNAMOD.Level = function() return Mod.Game:GetLevel() end
 ARACHNAMOD.ItemConfig = Isaac.GetItemConfig()
@@ -21,7 +21,7 @@ ARACHNAMOD.GENERIC_RNG = RNG()
 
 ARACHNAMOD:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	local seed = ARACHNAMOD.Game:GetSeeds():GetStartSeed()
-	ARACHNAMOD.GENERIC_RNG:SetSeed(seed)
+	ARACHNAMOD.GENERIC_RNG:SetSeed(seed, 35)
 end)
 
 ARACHNAMOD.RANGE_BASE_MULT = 40
@@ -145,26 +145,27 @@ local core = {
 	"custom_callbacks"
 }
 
-ARACHNAMOD.TearModifier = include("scripts/arachna/core/tear_modifier")
-
 local config = {
+	"settings_enum",
+	"settings_helper",
+	"settings_setup",
+	"mcm_setup",
 }
 
 ARACHNAMOD.Spawn = include("scripts.helpers.spawn")
 ARACHNAMOD.Foreach = include("scripts.helpers.for_each")
 
---Mod.LoopInclude(tables, "scripts.tables")
 Mod.LoopInclude(tools, "scripts.tools")
 Mod.LoopInclude(helpers, "scripts.helpers")
 Mod.LoopInclude(core, "scripts.arachna.core")
---Mod.LoopInclude(config, "scripts.ARACHNAMOD.config")
+Mod.LoopInclude(config, "scripts.arachna.config")
 --Mod.Include("scripts.ARACHNAMOD.api")
 
 if CustomHealthAPI and CustomHealthAPI.Library and CustomHealthAPI.Library.UnregisterCallbacks then
 	CustomHealthAPI.Library.UnregisterCallbacks("ArachnaMOD")
 end
 
---ARACHNAMOD.TearModifier = include("scripts.ARACHNAMOD.core.tear_modifiers")
+ARACHNAMOD.TearModifier = include("scripts/arachna/core/tear_modifier")
 
 ARACHNAMOD.Character = {}
 ARACHNAMOD.Item = {}
@@ -174,6 +175,10 @@ ARACHNAMOD.Trinket = {}
 ARACHNAMOD.Slot = {}
 ARACHNAMOD.Entities = {}
 include("flags")
+include("scripts.arachna.core.detect_repentogon")
+if not REPENTOGON or not REPENTANCE_PLUS then
+	return
+end
 
 local entities = {
 	"spider_egg",
@@ -205,6 +210,8 @@ Mod.Include("scripts.arachna.unlocks.unlock_loader")
 
 --!End of file
 
+include("scripts/dead_sea_scrolls/deadseascrolls")
+--include("scripts/compatibility/patches/map_api/minimap_compat")
 --Mod.Include("scripts.compatibility.patches.eid.eid_support")
 Mod.Include("scripts.compatibility.patches_loader")
 

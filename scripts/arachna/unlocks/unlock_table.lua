@@ -20,7 +20,7 @@ ARACHNAMOD.CompletionType = {
 
 --#region Arachna
 
-ARACHNAMOD.Pickup.WEB_HEART.ACHIEVEMENT = achievement("Web Heart")
+ARACHNAMOD.Pickup.WEB_HEART.ACHIEVEMENT = achievement("Web Hearts")
 ARACHNAMOD.Item.ARACHNAS_SPOOL.ACHIEVEMENT = achievement("Arachna's Spool")
 ARACHNAMOD.Item.YARN.ACHIEVEMENT = achievement("The Yarn")
 ARACHNAMOD.Item.GEPTAMERON.ACHIEVEMENT = achievement("Geptameron")
@@ -72,7 +72,7 @@ ARACHNAMOD.CompletionMarkToAchievement.ARACHNA_B = {
 	[TaintedMarksGroup.POLAROID_NEGATIVE] = Mod.Trinket.SPRINDLE.ACHIEVEMENT,
 	[CompletionType.MEGA_SATAN] = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT,
 	[CompletionType.ULTRA_GREEDIER] = Mod.Card.MERGED_CARD.ACHIEVEMENT,
-	[CompletionType.DELIRIUM] = Mod.Item.DIVINE_CLOTH.ID,
+	[CompletionType.DELIRIUM] = Mod.Item.DIVINE_CLOTH.ACHIEVEMENT,
 	[CompletionType.MOTHER] = Mod.Item.DADS_NEWSPAPER.ACHIEVEMENT,
 	[CompletionType.BEAST] = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT
 }
@@ -126,7 +126,7 @@ Mod:RegisterReplacementPickup({
 --#region Achievement commands
 
 local function manageAchievements(shouldUnlock)
-	local startAch = Mod.Item.SECRET_DIARY.ACHIEVEMENT
+	local startAch = Mod.Pickup.WEB_HEART.ACHIEVEMENT
 	local endAch = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT
 
 	for i = startAch, endAch do
@@ -138,14 +138,33 @@ local function manageAchievements(shouldUnlock)
 	end
 end
 
---TODO: Make a basic system myself for commands and rgon autocomplete
---[[
-Mod.ConsoleCommandHelper:Create("unlockall", "Unlocks all achievements", {}, function()
-	manageAchievements(true)
+local rootCommand = "arachnaMod"
+
+local commands = {
+	{"unlocktainted", "Unlocks Tainted Arachna", function() Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT, true) end},
+	{"unlockall", "Unlocks all mod achievements", function() manageAchievements(true) end},
+	{"lockall", "Locks all mod achievements", function() manageAchievements(false) end},
+}
+
+Console.RegisterCommand(
+	rootCommand,
+	"Debug commands for the Arachna MOD",
+	"Serves as a hub for all commands under the Arachna mod",
+	true,
+	AutocompleteType.CUSTOM
+)
+
+Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
+	if cmd ~= rootCommand then
+		return
+	end
+	for _, commandTable in ipairs(commands) do
+		if params == commandTable[1] then
+			commandTable[3]()
+		end
+	end
 end)
 
-Mod.ConsoleCommandHelper:Create("lockall", "Locks all achievements", {}, function()
-	manageAchievements(false)
-end) ]]
-
---#endregion
+Mod:AddCallback(ModCallbacks.MC_CONSOLE_AUTOCOMPLETE, function (command, params)
+	return commands
+end, rootCommand)

@@ -29,5 +29,6 @@
 
 	<!-- NULL ITEMS -->
 	<null name="arachnids grip orbitals" persistent="true" cache="familiars"/>
+	<null name="geptameron day" persistent="true"/>
 </items>
 

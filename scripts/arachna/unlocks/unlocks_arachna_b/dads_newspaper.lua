@@ -11,7 +11,6 @@ DADS_NEWSPAPER.EFFECT = Isaac.GetEntityVariantByName("Newspaper (swing)")
 
 DADS_NEWSPAPER.SWING_COOLDOWN = 120
 DADS_NEWSPAPER.RADIUS = 36
-DADS_NEWSPAPER.TAP_FRAME_WINDOW = 20
 
 DADS_NEWSPAPER.CONFUSION_DURATION = 30 * 3
 DADS_NEWSPAPER.MIN_DAMAGE = 4
@@ -55,7 +54,7 @@ function DADS_NEWSPAPER:HasDoubleTapped(player)
 	if (firedLeft or firedRight or firedUp or firedDown) then
 		if not data.NewspaperTapWindow or (data.NewspaperLastDirection ~= fireDir) then
 			data.NewspaperLastDirection = fireDir
-			data.NewspaperTapWindow = DADS_NEWSPAPER.TAP_FRAME_WINDOW
+			data.NewspaperTapWindow = Mod.GetSetting(Mod.Setting.DadsNewspaperDoubletap) + 5
 		elseif data.NewspaperTapWindow then
 			data.NewspaperTapWindow = nil
 			return true

@@ -33,6 +33,7 @@ function SPIDER_CAKE:OnGameStart(isContinued)
 	local player = Isaac.GetPlayer()
 	if not isContinued
 		and Mod.Character.ARACHNA:IsAnyArachna(player)
+		and SPIDER_CAKE:ShouldSpawnCake()
 	then
 		local itemPos = Mod.Room():FindFreePickupSpawnPosition(Vector(140, 240))
 		Mod.Spawn.Collectible(SPIDER_CAKE.ID, itemPos, player, player:GetCollectibleRNG(SPIDER_CAKE.ID):Next())

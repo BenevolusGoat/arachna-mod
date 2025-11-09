@@ -3,7 +3,7 @@ local max = ARACHNAMOD.math.max
 local floor = ARACHNAMOD.math.floor
 
 ARACHNAMOD.RandomRNG = RNG()
-ARACHNAMOD.RandomRNG:SetSeed(max(Random(), 1))
+ARACHNAMOD.RandomRNG:SetSeed(max(Random(), 1), 35)
 
 ---@param lower? integer
 ---@param upper? integer
