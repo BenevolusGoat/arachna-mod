@@ -4,7 +4,7 @@ local SPIDER_DONUT = {}
 
 ARACHNAMOD.Item.SPIDER_DONUT = SPIDER_DONUT
 
-SPIDER_DONUT.ID = Isaac.GetItemIdByName("Old Shoebox")
+SPIDER_DONUT.ID = Isaac.GetItemIdByName(" Spider Donut ")
 
 ---@param player EntityPlayer
 ---@param itemId CollectibleType

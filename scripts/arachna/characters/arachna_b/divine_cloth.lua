@@ -14,8 +14,7 @@ DIVINE_CLOTH.DIVINE_WEB_SUB = Isaac.GetEntitySubTypeByName("Divine Web")
 DIVINE_CLOTH.BITE_DURATION = 200
 DIVINE_CLOTH.BITE_DURATION_BIRTHRIGHT = 250
 DIVINE_CLOTH.TIMER_HEAL = 100
-DIVINE_CLOTH.HEAL_RADIUS = 120
-DIVINE_CLOTH.RADIUS_EXTENTION = 30
+DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT = 30
 
 local identifier = "ARACHNA_BITTEN"
 DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
@@ -41,13 +40,15 @@ end
 
 ---@param player EntityPlayer
 function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
-	local size = 1
+	local spriteSize = 1
+	local size = 90
 
 	if Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
-		size = 1.2
+		spriteSize = 1.2
+		size = size + DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT
 		local shouldPlayGood = false
 
-		Mod.Foreach.EffectInRadius(player.Position, DIVINE_CLOTH.HEAL_RADIUS, function (egg, index)
+		Mod.Foreach.EffectInRadius(player.Position, size, function (egg, index)
 			shouldPlayGood = true
 			if egg.Timeout > 0 then
 				egg:SetTimeout(Mod.math.min(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT, egg.Timeout + DIVINE_CLOTH.TIMER_HEAL))
@@ -64,7 +65,8 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 
 	local floorWeb = Mod.Spawn.Effect(DIVINE_CLOTH.DIVINE_WEB_VAR, DIVINE_CLOTH.DIVINE_WEB_SUB, player.Position, nil, player)
 	floorWeb.Color = Color(1, 1, 1, 0.45, 0, 0, 0)
-	floorWeb.SpriteScale = floorWeb.SpriteScale * size
+	floorWeb.SpriteScale = floorWeb.SpriteScale * spriteSize
+	floorWeb:SetSize(size, Vector.One, 8)
 
 	Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8)
 	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
@@ -91,16 +93,11 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 	if web.SubType ~= DIVINE_CLOTH.DIVINE_WEB_SUB then
 		return
 	end
-	local radiusBonus = 0
 	local duration = DIVINE_CLOTH.BITE_DURATION
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
-	if player and Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
-		radiusBonus = radiusBonus + DIVINE_CLOTH.RADIUS_EXTENTION
-		duration = DIVINE_CLOTH.BITE_DURATION_BIRTHRIGHT
-	end
 	local source = player and EntityRef(player) or EntityRef(web)
 
-	Mod.Foreach.NPCInRadius(web.Position, web.Size + radiusBonus, function (npc, index)
+	Mod.Foreach.NPCInRadius(web.Position, web.Size, function (npc, index)
 		if not StatusEffectLibrary:HasStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN) then
 			DIVINE_CLOTH:ApplyBitten(npc, source, duration)
 		end

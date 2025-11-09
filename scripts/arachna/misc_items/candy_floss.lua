@@ -12,15 +12,43 @@ CANDY_FLOSS.MODIFIER = Mod.TearModifier.New({
 	Name = "CandyFloss",
 	Items = {CANDY_FLOSS.ID},
 	MinLuck = 0,
-	MaxLuck = 100,
+	MaxLuck = 20,
 	MinChance = 0.05,
 	MaxChance = 1,
 	Color = Color(2, 2, 2, 1, 0.196, 0.196, 0.196)
 })
 
-function CANDY_FLOSS.MODIFIER:PostFire(object)
-	object:AddTearFlags(TearFlags.TEAR_QUADSPLIT | TearFlags.TEAR_SLOW)
+local knifeLaserWeaponTypes = Mod:Set({
+	WeaponType.WEAPON_BRIMSTONE,
+	WeaponType.WEAPON_KNIFE,
+	WeaponType.WEAPON_SPIRIT_SWORD,
+	WeaponType.WEAPON_BONE,
+	WeaponType.WEAPON_NOTCHED_AXE,
+	WeaponType.WEAPON_TECH_X,
+	WeaponType.WEAPON_LASER,
+	WeaponType.WEAPON_LUDOVICO_TECHNIQUE
+})
+
+---@param player EntityPlayer
+---@param params TearParams
+---@param weaponType WeaponType
+---@param scale number
+---@param displacement integer
+---@param source Entity
+function CANDY_FLOSS:ApplyTearHitParams(player, params, weaponType, scale, displacement, source)
+	if not player:HasCollectible(CANDY_FLOSS.ID) then
+		return
+	end
+	if knifeLaserWeaponTypes[weaponType] and CANDY_FLOSS.MODIFIER:CheckKnifeLaserAffected(player, nil, false)
+		or not knifeLaserWeaponTypes[weaponType] and CANDY_FLOSS.MODIFIER:CheckTearAffected(player, false)
+	then
+		params.TearColor = CANDY_FLOSS.MODIFIER.Color
+		params.TearFlags = Mod:AddBitFlags(params.TearFlags, TearFlags.TEAR_QUADSPLIT | TearFlags.TEAR_SLOW)
+		return params
+	end
 end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, CANDY_FLOSS.ApplyTearHitParams)
 
 ---@param player EntityPlayer
 ---@param itemId CollectibleType

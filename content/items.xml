@@ -17,7 +17,7 @@
 		effectspeed="0.12" effecttears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1"
 	/>
 
-	<passive id="14" name="Spider Donut" description="HP Up?" gfx="spider-donut.png" damage="0.69" quality="2"/>
+	<passive id="14" name=" Spider Donut " description="HP Up?" gfx="spider-donut.png" damage="0.69" quality="2"/>
 	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." gfx="candy-floss.png" cache="all" quality="2"/>
 	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" gfx="gummy-spiders.png" tears="0.61" quality="2"/>
 	<passive id="17" name="Old Shoebox" description="What could be inside?" gfx="old-box.png" tears="0.33" speed="0.15" quality="2"/>
