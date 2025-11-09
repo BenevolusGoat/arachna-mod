@@ -14,7 +14,7 @@ end
 COLORED_SPIDERS.SpiderSubtype = {
 	WRATH = getSub("Wrath"),
 	PESTILENCE = getSub("Pestilence"),
-	FAMINE = getSub("Famile"),
+	FAMINE = getSub("Famine"),
 	DEATH = getSub("Death"),
 	CONQUEST = getSub("Conquest"),
 	RAINBOW = getSub("Rainbow"),
@@ -155,7 +155,7 @@ end
 ---@param spider EntityFamiliar
 function COLORED_SPIDERS:TrySpawnGlow(spider)
 	if COLORED_SPIDERS.SHINY_SUBTYPES[spider.SubType % 10] then
-	local isBig = COLORED_SPIDERS:IsBigSpider(spider)
+		local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 		local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, spider.Position, nil, spider)
 		glow:FollowParent(spider)
 		Mod:GetData(spider).SpiderGlow = EntityPtr(glow)
@@ -183,7 +183,9 @@ function COLORED_SPIDERS:OnSpiderInit(spider)
 	end
 	local spiderColor = spider.SubType % 10
 	local color = COLORED_SPIDERS.SPIDER_COLORS[spiderColor]
-	spider.Color = color
+	if color then
+		spider.Color = color
+	end
 	COLORED_SPIDERS:TrySpawnGlow(spider)
 end
 

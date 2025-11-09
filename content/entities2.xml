@@ -51,34 +51,34 @@
     </entity>
 	<!-- Big Spiders -->
 	<entity id="3" variant="73" subtype="10" name="Arachna Spider (Big)" anm2path="familiars/colorspiders/bluespider_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="11" name="Arachna Spider (Wrath Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="12" name="Arachna Spider (Pestilence Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="13" name="Arachna Spider (Famine Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="14" name="Arachna Spider (Death Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="15" name="Arachna Spider (Conquest Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="16" name="Arachna Spider (Rainbow Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="17" name="Arachna Spider (Golden Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="18" name="Arachna Spider (Love Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="19" name="Arachna Spider (Ice Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
-		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
+		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 
 	<!-- Pickups -->
