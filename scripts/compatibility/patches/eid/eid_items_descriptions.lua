@@ -6,7 +6,7 @@ local Item = Mod.Item
 ---@type {[CollectibleType]: {_modifier: fun(descObj: EID_DescObj, ...: any): any}}
 local modifiers = {
 	[Item.SPIDER_CAKE.ID] = {
-		_modifier = function (descObj, ...)
+		_modifier = function ()
 			local yearDiff = Item.SPIDER_CAKE:GetYearDifference()
 			local stats = {
 				Damage = 1,
@@ -28,6 +28,14 @@ local modifiers = {
 			return stats
 		end
 	},
+	[Item.ARACHNIDS_GRIP.ID] = {
+		_modifier = function (descObj, desc)
+			local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
+			if player:HasCollectible(Item.MUTAGEN.ID) then
+				return desc
+			end
+		end
+	}
 }
 local descriptions = {
 	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_items.items_en_us")(modifiers),

@@ -69,3 +69,5 @@ API Changes:
 
 Mod Compatibility:
 - Added MinimapAPI compatibility
+- Updated all English EID descriptions
+- Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect

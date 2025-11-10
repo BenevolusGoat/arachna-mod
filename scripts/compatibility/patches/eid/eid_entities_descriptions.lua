@@ -30,9 +30,6 @@ for lang, desc in pairs(descriptions) do
 	end
 end
 
-allDescData[EntityType.ENTITY_PICKUP][PickupVariant.PICKUP_HEART][Mod.Pickup.WEB_HEART.ID_DOUBLE] = allDescData
-	[EntityType.ENTITY_PICKUP][PickupVariant.PICKUP_HEART][Mod.Pickup.WEB_HEART.ID]
-
 for id, variantDescData in pairs(allDescData) do
 	for variant, subtypeDescData in pairs(variantDescData) do
 		for subtype, entityDescData in pairs(subtypeDescData) do

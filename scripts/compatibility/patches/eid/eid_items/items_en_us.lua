@@ -61,6 +61,117 @@ return function(modifiers)
 				"#{{Slow}} 5% chance to shoot slowing and quad-splitting tears",
 				"#{{Luck}} 100% chance at 20 luck"
 			}
-		}
+		},
+		[Item.ARACHNAS_SPOOL.ID] = {
+			Name = "Arachna's Spool",
+			Description = {
+				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
+				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders. Some can be {{ColorRainbow}}special{{CR}}",
+				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
+			}
+		},
+		[Item.DIVINE_CLOTH.ID] = {
+			Name = "Divine Cloth",
+			Description = {
+				"{{StatusBitten}} Inflicts Bitten on nearby enemies, {{Slow}} slowing and causing them to drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders. Some can be {{ColorRainbow}}special{{CR}} and/or larger",
+				"#{{Timer}} Spider Eggs break on their own after 16 seconds, spawning nothing",
+				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
+			}
+		},
+		[Item.YARN.ID] = {
+			Name = "The Yarn",
+			Description = {
+				"Blocks projectiles",
+				"#Zaps nearby enemies with electricity",
+				"#{{WebHeart}} Spawns 1 Web Heart every 4 rooms"
+			}
+		},
+		[Item.ARACHNIDS_GRIP.ID] = {
+			Name = "Arachnid's Grip",
+			Description = {
+				ARC_EID.GetFallbackDescription,
+				function(descObj)
+					return modifiers[Item.ARACHNIDS_GRIP.ID]._modifier(descObj,
+						"#{{Collectible" .. Item.MUTAGEN.ID .. "}} Spiders can be {{ColorRainbow}}special{{CR}} and/or larger"
+					)
+				end
+			},
+			FallbackDescription = {
+				"{{Poison}} 25% chance to shoot poison tears",
+				"#Enemies may drop a spider egg pickup on death that grant a fragile orbital on pickup",
+				"#Orbital may break when blocking projectiles or dealing damage, spawning a {{AracBlueSpider}} Blue Spider",
+			}
+		},
+		[Item.YARN_HEART.ID] = {
+			Name = "Yarn Heart",
+			Description = {
+				"{{WebHeart}} +1 Web Heart"
+			}
+		},
+		[Item.MECHANICAL_EYE.ID] = {
+			Name = "Mechanical Eye",
+			Description = {
+				"Orbital",
+				"#Displays a random active item with the same amount of charges as Isaac's current active item",
+				"#Using an active item will also use the displayed item",
+				"#Displayed item rerolls when entering a new room or using an active item"
+			}
+		},
+		[Item.GEPTAMERON.ID] = {
+			Name = "Getameron",
+			Description = {
+				"???"
+			}
+		},
+		[Item.GLASSES_3D.ID] = {
+			Name = "3D Glasses",
+			Description = {
+				"5% chance to shoot \"3D\" tears, which split an enemy into 2 friendly versions of itself on hit",
+				"#{{Luck}} 25% chance at 20 luck",
+				"#These friendly enemies take no damage, but disappear on room clear",
+			}
+		},
+		[Item.MUTAGEN.ID] = {
+			Name = "Mutagen",
+			Description = {
+				"↑ {{Damage}} +1 Damage",
+				"#{{AracBlueSpider}} 20% chance to spawn 3-5 {{ColorRainbow}}special{{CR}} friendly spiders when entering a new room"
+			}
+		},
+		[Item.TESTAMENT.ID] = {
+			Name = "Testament",
+			Description = {
+				"Teleports Isaac to a floor that contains all his current items",
+				"#Choosing an item from this floor teleports Isaac back to the room he came from",
+				"#The chosen item will appear at the start of the next run",
+				"#Having no items will spawn {{Collectible" .. CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} Eden's Blessing instead"
+			}
+		},
+		[Item.LIL_ARACHNA.ID] = {
+			Name = "Lil Arachna",
+			Description = {
+				"{{Slow}} Shoots slowing and quad-split tears",
+				"#Deals 3.5 damage per tear",
+				"#{{StatusBitten}} 25% chance for tears to inflict Bitten, having enemies drop Spider Eggs on death",
+				"#{{Timer}} Spider Eggs drop nothing after 16 seconds or {{ColorRainbow}}special{{CR}} friendly spiders on room clear"
+			}
+		},
+		[Item.DADS_NEWSPAPER.ID] = {
+			Name = "Dad's Newspaper",
+			Description = {
+				"Isaac holds a newspaper in front of him",
+				"#Double-tap shoot to swing",
+				"#{{Confusion}} Deals moderate damage and inflicts confusion on hit",
+				"#Instantly kills fly enemies"
+			}
+		},
+		[Item.BEST_BUD_BALL.ID] = {
+			Name = "Best Bud Ball",
+			Description = {
+				"???"
+			}
+		},
 	}
 end
