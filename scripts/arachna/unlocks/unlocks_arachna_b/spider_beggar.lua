@@ -164,6 +164,10 @@ function SPIDER_BEGGAR:OnBeggarCollision(beggar, ent)
 	if player and SPIDER_BEGGAR:ShouldTakeMoney(beggar, player) then
 		player:AddCoins(-1)
 		SPIDER_BEGGAR:TryPayout(beggar, player)
+		if EID then
+			--Disables description after donating
+			beggar.SubType = 10
+		end
 		Mod.sfxman:Play(SoundEffect.SOUND_ANIMAL_SQUISH)
 	end
 end

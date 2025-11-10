@@ -13,7 +13,7 @@ local function getWebHeartChance(coinWorth, trinketMult)
 	if coinWorth > 99 then
 		coinWorth = 1
 	end
-	return 1-Mod.math.pow(0.95 * trinketMult, coinWorth)
+	return 1-(0.95 * trinketMult ^ coinWorth)
 end
 
 ---@param coin EntityPickup
@@ -29,7 +29,8 @@ function INFESTED_PENNY:OnCoinCollision(coin, collider)
 		Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, coin.Position)
 
 		local rng = player:GetTrinketRNG(INFESTED_PENNY.ID)
-		if rng:RandomFloat() < getWebHeartChance(coin:GetCoinValue(), player:GetTrinketMultiplier(INFESTED_PENNY.ID)) then
+		local chance = getWebHeartChance(coin:GetCoinValue(), player:GetTrinketMultiplier(INFESTED_PENNY.ID))
+		if rng:RandomFloat() < chance then
 			Mod.Spawn.Pickup(Mod.Pickup.WEB_HEART.ID, 0, Mod.Room():FindFreePickupSpawnPosition(coin.Position))
 		end
 	end
