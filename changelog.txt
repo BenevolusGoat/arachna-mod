@@ -1,51 +1,49 @@
 An Arachna update? At this time of year at this time of day in this section of the Isaac Workshop, made ENTIRELY by some goat?
 ...Yes!
 
-Hello, this is Benny/Sanio. You might recognize that name from my work on the Eevee character mod, Epiphany, or other projects. Arachna had a lot of charm to them and clearly caught the attention of many people during the early days of Repentance, but unfortuantely has been weighed down from its lack of updates and increasing amounts of bugs. I'm a sucker for   character-related mods so I left a comment and was able to get in contact with rvsty for permission to revive the mod!
+**IMPORTANT NOTICE**
+Hello, this is Benny. This update involves the entire mod's code being rewritten from scratch using the latest features introduced by REPENTOGON's Repentance+ update. This means **Arachna now requires REPENTOGON on Repentance+ to function**. You can find out how to download and install repentogon at https://repentogon.com.
 
-**PLEASE READ!**
-Now, an important note regarding this update: Arachna now requires REPENTOGON on Repentance+. This decision was OKAY'd by rvsty and is honestly the best route for continued support on the mod. The biggest reason for this is for an easier time rebuilding the mod's codebase, fixing countless bugs through more natural implementation of various mechanics, and less upkeep required with only one version (RGON+) to maintain.
-
-What's REPENTOGON/How to get it? See here: link
-Don't want to use REPENTOGON? A legacy version that contains the worskhop version EXACTLY how it was can be found here, bugs and all: link
+Still want to play Arachna without REPENTOGON? The old workshop version is available as a separate upload. See here: (hasn't been uploaded yet!). It does come with a few fixes out the gate, but not on the same level as this rewrite.
 
 General Changes/Fixes:
-- The amount of bugs fixed as a direct result of the switch to REPENTOGON or the rewritten code is difficult to account for, but hopefully there should generally be improvements across the whole mod!
+- The amount of bugs fixed as a direct result of the switch to REPENTOGON or the rewritten code is difficult to account for, but there should generally be improvements across the whole mod!
 - Added a Dead Sea Scrolls menu where you can check settings, achievements, and credits
-- New mod settings are also available in Mod Config Menu
-- Tainted Arachna no longer uses a manually handled item wisp of Mutant Spider, now instead having a natural integration of the multishot. This also allows their multishot to be utilized in the Mines chase sequence
+- The mod settings are also available in Mod Config Menu
+- Changed how the status effects that cause enemies to drop spider eggs are displayed. The "webbed" sprite from Divine Cloth is now also present on Arachna's Spool. Divine Cloth now has a unique status icon
+- Changed Tainted Arachna's multishot to use REPENTOGON instead of an item wisp. Among other things, this allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
 - Fixed the Spider Egg orbital from Arachnid's Grip not having a variant assigned, which had self-assigned itself a variant of 0
-- Achievements and Geptameron's Giantbook are now displayed using REPENTOGON's own implementation instead of GiantBookAPI
-- Lil Arachna is now a more naturally integrated shooter familiar and should obey all shooter familiar interactions
-- Poison tears from Arachnid's Grip are colored green
+- Removed GiantBookAPI utility in favor of REPENTOGON implementation
+- Changed how Lil Arachna functions to be a more naturally integrated shooter familiar. They now obey all shooter familiar interactions (Lilith birthrights, shooter priority, etc.)
+- Changed poison tears from Arachnid's Grip to be colored green
 - Fixed Golden Shopkeeper not using the trinket pool for its rarely dropped golden trinket, meaning it can now spawn modded golden trinkets
 - Changed how Web Hearts, Spider Beggars, and Golden Shopkeepers randomly replace entities. Web Hearts are now better integrated into the "pickup pool" to have spawn rules that better match the vanilla game. Spider Beggars and Golden Shopkeepers only replace their respective replacements when part of a newly entered room
-- Soul of Arachna and Merged Card now respect announcer settings (50% if random, never is off or if the use of the pocket item doesn't allow it)
-- Added slight delays to Soul of Arachna and Merged Card's announcer sfx
+- Changed Soul of Arachna and Merged Card announcer sfx to respect user's announcer settings instead of playing 100% of the time
+- Added slight delays to when the aforementioned announcer sfx plays
 - Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
-- Updated Mechanical Eye's blacklist to account for any items that use a timed or special charge instead of manually listing them, inclding modded actives
-- Changed how orbitals are added to the player, so they will have differing speeds/distances compared to before, but also occupy the same space as other orbitals that use the layer
+- Changed Mechanical Eye's blacklist to account for any items that use a timed or special charge instead of manually listing them, inclding modded actives
+- Changed how orbitals are added to the player. They will have differing speeds/distances compared to before, but now occupy the same layers as other orbitals
 - Changed Arachnid's Grip to detect the "fly" tag on enemies for having a chance to heal the player instead of a manual list, allowing it to be compatible with modded enemies
-- Fixed the odd small delay The Yarn had to drop a Web Heart when clearing a room
+- Removed the small delay The Yarn had dropping a Web Heart upon clearing 4 rooms
 - Changed the number display for Geptameron to be on the active item instead of next to the key counter
 - Fixed Testament crashing the game
-- Separated shadow from Testament pedestal sprite
+- Fixed the item shadow from Testament pedestals not disappearing when items were taken off them
 - Improved handling of Dad's Newspaper's "club"
 
 Gameplay Changes:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
-- Arachna and Tainted Arachna's base stats are now properly integrated as base stats similar to the vanilla game and respect damage/firerate multipliers
-- As a result of the above, Tainted Arachna's firerate down is now closer to how it works for the Keepers, allowing you to reach the normal cap of 5.00 tears per second
+- All stat changes present for the mod's characters and items now respect damage and firerate multipliers
+- Changed Tainted Arachna's soft tears cap to the default 5.00
 - Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 - Changed Web Hearts replacing specific heart types to trigger if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of just one character being Arachna or Tainted Arachna
 - The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
 - 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
-- Arachna's Spool's tear originally intended to copy specific tear effects, but the list of effects to copy was improperly setup and copied arbitrary combinations of them. It now looks for and copies the following effects: Spectral, Homing, Wiggle Worm, Brain Worm, Lost Contact, Continuum, and Tractor Beam
+- Arachna's Spool now copies the following tear effects from the player: Spectral, Homing, Wiggle Worm, Brain Worm, Lost Contact, Continuum, and Tractor Beam
 - Reduced collision size of Mechanical Eye, The Yarn, and Arachnid Grip's Spider Egg orbitals
 - Mechanical Eye now respects unlocks for what active items can be used
 - Mechanical Eye can now be used with throwable actives, such as Bob's Rotten Head and Black Hole, and activates when the actives are discharged
@@ -57,7 +55,7 @@ Gameplay Changes:
 - Spider Beggar now follows the same rules and chances to reward the player as vanilla beggars
 - Added the curse mist effect to Testament's special room
 - Testament can now be found and used in Greed Mode
-- Testament can no longer be used in runs that do not allow achievements, instead spawns Eden's Blessing
+- Testament can no longer be used in runs that do not allow achievements, instead spawning Eden's Blessing
 - Testament pedestals for the next run no longer spawn in runs that do not allow achievements
 - Added support for multiple uses of Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before Testament instead spawns Eden's Blessing
 
