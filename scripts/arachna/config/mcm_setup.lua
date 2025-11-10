@@ -4,10 +4,6 @@ local SettingsHelper = Mod.SettingsHelper
 if ModConfigMenu and not ModConfigMenu.GetCategoryIDByName("Arachna") then
 	ModConfigMenu.SetCategoryInfo("Arachna", "Arachna config settings")
 
-	for i = 1, #SettingsHelper.Categories do
-		ModConfigMenu.AddSpace("Arachna", SettingsHelper.Categories[i])
-	end
-
 	for _, info in ipairs(SettingsHelper.GetAllSettings()) do
 		local constructedArgs = {}
 
