@@ -1,7 +1,7 @@
 local Mod = ARACHNAMOD
 
 return function(modifiers)
-	--No unique attributes specific to Arachna or T. Arachna.
+	--No unique attributes specific to Arachna or T. Arachna that are notable to list
 	return {
 		--[[ [Mod.PlayerType.ARACHNA] = {
 			Name = "Arachna",

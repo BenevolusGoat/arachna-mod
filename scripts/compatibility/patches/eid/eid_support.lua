@@ -58,6 +58,7 @@ EID:addIcon("AracBlueSpider", "Blue Spider", 0, 7, 6, 0, 1, eid_icons)
 EID:addIcon("StatusWebbed", "StatusWebbed", 0, 8, 8, 1, 2, eid_icons)
 EID:addIcon("StatusBitten", "StatusBitten", 0, 10, 10, 2, 1, eid_icons)
 EID:addIcon("ItemPoolSpiderBeggar", "ItemPoolSpiderBeggar", 0, 11, 11, 0, 0, eid_icons)
+EID:addIcon("SpiderBeggar", "Spider Beggar", 0, 11, 11, 0, 0, eid_icons)
 
 --#endregion
 
