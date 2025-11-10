@@ -20,7 +20,14 @@ local ends = {
 }
 
 function SPIDER_CAKE:ShouldSpawnCake()
-	return os.date("%d.%m") == "29.04"
+	local anniversarySetting = Mod.GetSetting(Mod.Setting.AnniversaryOverride)
+	if anniversarySetting == 3 then
+		return true
+	elseif anniversarySetting == 2 then
+		return false
+	else
+		return ARACHNAMOD.FLAGS.Anniversary
+	end
 end
 
 function SPIDER_CAKE:GetYearDifference()
