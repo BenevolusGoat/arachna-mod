@@ -8,7 +8,7 @@ return function(modifiers)
 			Description = {
 				"{{Collectible" .. Item.ARACHNAS_SPOOL.ID .. "}} Can have up to 2 webs active at a time",
 				"#↑ +1 {{AracBlueSpider}} Blue Spider from Spider Eggs",
-				"#5% chance for Spider Eggs to drop a {{WebHeart}} Web Heart upon breaking"
+				"#{{WebHeart}} 5% chance for Spider Eggs to drop a Web Heart upon breaking"
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
