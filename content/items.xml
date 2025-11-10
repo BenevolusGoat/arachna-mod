@@ -14,7 +14,7 @@
 	<active id="11" name="Geptameron" description="Ever changing holy tome" gfx="geptameron.png" maxcharges="4" tags="book" quality="3" activegfx="hud_geptameron.png"/>
 	<passive id="12" name="3D Glasses" description="I'm seeing double..." gfx="3dglasses.png" quality="2"/>
 	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4"
-		effectspeed="0.12" effecttears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1"
+		effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1"
 	/>
 
 	<passive id="14" name=" Spider Donut " description="HP Up?" gfx="spider-donut.png" damage="0.69" quality="2"/>
