@@ -17,7 +17,9 @@ DIVINE_CLOTH.TIMER_HEAL = 100
 DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT = 30
 
 local identifier = "ARACHNA_BITTEN"
-DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
+local statusSprite = Sprite("gfx/indicator_arachna_b.anm2", false)
+statusSprite:Play("Float")
+DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, statusSprite, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
 DIVINE_CLOTH.STATUS_BITTEN = StatusEffectLibrary.StatusFlag[identifier]
 
 --#endregion
@@ -83,9 +85,7 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, DIVINE_CLOTH.OnUse, DIVINE_CLOTH.ID)
 ---@param source EntityRef
 ---@param duration? integer @default: `DIVINE_CLOTH.BITE_DURATION`
 function DIVINE_CLOTH:ApplyBitten(npc, source, duration)
-	local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
-	sprite:Play("Idle")
-	return StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION, source, nil, {Sprite = sprite})
+	return StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION, source, nil)
 end
 
 ---@param web EntityEffect
@@ -128,23 +128,15 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_A
 
 function DIVINE_CLOTH:OnAddBite(ent)
 	DIVINE_CLOTH:SpawnSwirl(ent.Position, ent)
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, DIVINE_CLOTH.OnAddBite, DIVINE_CLOTH.STATUS_BITTEN)
-
----@param ent Entity
----@param statusEffects StatusEffects
-function DIVINE_CLOTH:SlowWhileBitten(ent, statusEffects)
-	local statusData = StatusEffectLibrary:GetStatusEffectData(ent, DIVINE_CLOTH.STATUS_BITTEN)
-	---@cast statusData StatusEffectData
-	if ent:GetSlowingCountdown() < 2 then
-		ent:AddSlowing(statusData.Source, 2, 0.5, statusData.Color)
-	else
-		ent:SetSlowingCountdown(ent:GetSlowingCountdown() + 1)
+	local data = Mod:GetData(ent)
+	if not data.WebbedStatusSprite then
+		local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
+		sprite:Play("Idle")
+		data.WebbedStatusSprite = sprite
 	end
 end
 
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE, DIVINE_CLOTH.SlowWhileBitten, DIVINE_CLOTH.STATUS_BITTEN)
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, DIVINE_CLOTH.OnAddBite, DIVINE_CLOTH.STATUS_BITTEN)
 
 ---@param ent Entity
 function DIVINE_CLOTH:OnNPCKill(ent)
@@ -164,23 +156,5 @@ function DIVINE_CLOTH:OnNPCDeath(npc)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, DIVINE_CLOTH.OnNPCDeath)
-
----@param npc EntityNPC
----@param offset Vector
-function DIVINE_CLOTH:RenderWebOnBitten(npc, offset)
-	local renderPos = Mod:GetEntityRenderPosition(npc, offset)
-	local statusData = StatusEffectLibrary:GetStatusEffectData(npc, DIVINE_CLOTH.STATUS_BITTEN)
-	if statusData and statusData.CustomData.Sprite then
-		---@type Sprite
-		local sprite = statusData.CustomData.Sprite
-		sprite.Scale = npc.SpriteScale
-		sprite:Render(renderPos)
-		if Mod:ShouldUpdateSprite() then
-			sprite:Update()
-		end
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, DIVINE_CLOTH.RenderWebOnBitten)
 
 --#endregion
