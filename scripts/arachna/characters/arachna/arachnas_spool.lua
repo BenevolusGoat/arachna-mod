@@ -167,6 +167,7 @@ end
 function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
 	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
 		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
 		and npc:IsActiveEnemy(false)
 		and npc:IsVulnerableEnemy()
 end
