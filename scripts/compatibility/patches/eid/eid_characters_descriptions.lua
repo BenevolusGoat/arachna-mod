@@ -6,6 +6,9 @@ local modifiers = {}
 
 local descriptions = {
 	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_en_us")(modifiers),
+	pl = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_en_us")(modifiers),
+	ru = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_en_us")(modifiers),
+	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_en_us")(modifiers),
 }
 
 local allDescData = {}
