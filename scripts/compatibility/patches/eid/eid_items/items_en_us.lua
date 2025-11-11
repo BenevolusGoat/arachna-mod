@@ -5,7 +5,7 @@ local Item = Mod.Item
 return function(modifiers)
 	return {
 		[Item.SPIDER_CAKE.ID] = {
-			Name = "Arachna's Spool",
+			Name = "Spider Cake",
 			Description = {
 				"{{WebHeart}} Spawns 1 Web Heart",
 				"#Grants {{Collectible" .. CollectibleType.COLLECTIBLE_MYSTERY_GIFT .. "}} Mystery Gift",
