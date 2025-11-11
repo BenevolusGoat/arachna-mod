@@ -33,11 +33,12 @@ local BREAK_LINE = { str = "", fsize = 1, nosel = true }
 local arachnaDssDirectory = {
 	DSSMOD = dssmod,
 	main = {
-		title = 'andromeda',
+		title = 'arachna',
 
 		buttons = {
 			{str = 'resume game', action = 'resume'},
-			{str = 'unlocks', dest = 'unlocks', GenerateTooltip("browse and inspect unlockables")},
+			{str = 'achievements', dest = 'achievementviewer', GenerateTooltip("view your achievements")},
+			dssmod.changelogsButton,
 			{str = 'settings', dest = 'settings', tooltip = GenerateTooltip("edit various settings")},
 			{str = 'credits', dest = 'credits', tooltip = GenerateTooltip("view the credits")},
 		},
@@ -112,22 +113,17 @@ local arachnaDssDirectory = {
 			end
 		end,
 	},
-	unlocks = {
-		title = "unlocks",
-		buttons = {
-			{ str = "achievements", dest = "achievementviewer", tooltip = GenerateTooltip("view your achievements.") },
-		},
-	},
 	credits = {
 		title = "arachna credits",
 		buttons = {
+			{str = "rvsty", fsize = 2, tooltip = GenerateTooltip("v1.0 coder, majority of sprites, designer")},
 			{str = "unknownthehero", fsize = 2, tooltip = GenerateTooltip("major playtesting")},
 			{str = "quartz", fsize = 2, tooltip = GenerateTooltip("amazing portrait sprites")},
-			{str = "brakedude", fsize = 2, tooltip = GenerateTooltip("coded in proper web heart rendering pre-rewrite")},
+			{str = "brakedude", fsize = 2, tooltip = GenerateTooltip("coded in proper web heart rendering for v1.0")},
 			{str = "shapatsmith", fsize = 2, tooltip = GenerateTooltip("voiceover for pocket items")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("playtesting, sprites for several costumes")},
 			{str = "steamjek", fsize = 2, tooltip = GenerateTooltip("mod thumbnail art as a commission")},
-			{str = "benevolusgoat", fsize = 2, tooltip = GenerateTooltip("mod code rewrite for repentogon+")}
+			{str = "benevolusgoat", fsize = 2, tooltip = GenerateTooltip("v2.0 code rewrite for repentogon+")}
 		},
 	},
 }
@@ -173,3 +169,5 @@ DeadSeaScrollsMenu.AddMenu("Arachna", {
 	Directory = arachnaDssDirectory,
 	DirectoryKey = exampledirectorykey
 })
+
+include("scripts.dead_sea_scrolls.changelogs")
