@@ -17,10 +17,23 @@ SPIDER_EGG.MAX_EGG_TIMEOUT = 500
 
 --#region Helpers
 
+---@param spawner Entity
+function SPIDER_EGG:ShouldSpawnSmallEgg(spawner)
+	return spawner.MaxHitPoints <= 10
+		or spawner.SpawnerType ~= EntityType.ENTITY_NULL
+		or spawner:IsBoss()
+end
+
+---Enemies spawned by other enemies will have a 50/50 chance to not spawn a Spider Egg, and in such case this function will return nothing
 ---@param pos Vector
 ---@param spawner? Entity
-function SPIDER_EGG:SpawnEgg(pos, spawner)
-	return Mod.Spawn.Effect(SPIDER_EGG.ID, 0, pos, nil, spawner)
+function SPIDER_EGG:TrySpawnEgg(pos, spawner)
+	local smallEgg = spawner and SPIDER_EGG:ShouldSpawnSmallEgg(spawner) or false
+	local subtype = smallEgg and 1 or 0
+	if spawner and spawner.SpawnerType ~= EntityType.ENTITY_NULL and spawner:GetDropRNG():RandomFloat() < 0.5 then
+		return
+	end
+	return Mod.Spawn.Effect(SPIDER_EGG.ID, subtype, pos, nil, spawner)
 end
 
 --#endregion
@@ -31,11 +44,12 @@ end
 function SPIDER_EGG:OnInit(egg)
 	local rng = egg:GetDropRNG()
 	local sprite = egg:GetSprite()
+	local eggName = egg.SubType == 1 and "spider_egg_small" or "spider_egg"
 
 	if rng:RandomFloat() < 0.001 then
-		sprite:ReplaceSpritesheet(0, "gfx/familiars/spider_egg_snowman.png") --rare
+		sprite:ReplaceSpritesheet(0, "gfx/familiars/" .. eggName .. "_rare.png")
 	else
-		sprite:ReplaceSpritesheet(0, "gfx/familiars/spider_egg_" .. tostring(rng:RandomInt(4) + 1) .. ".png")
+		sprite:ReplaceSpritesheet(0, "gfx/familiars/" .. eggName .. "_" .. tostring(rng:RandomInt(4) + 1) .. ".png")
 	end
 	sprite:LoadGraphics()
 	sprite:Play("Appear", true)
@@ -59,13 +73,18 @@ function SPIDER_EGG:Explode(egg, rewards)
 		local spiderCount = 0
 		local rng = egg:GetDropRNG()
 		local webHearts = Mod.Pickup.WEB_HEART:GetWebHearts(player)
-		local stageModifier = ceil((stageNum+1)/2)*0.5
+		local stageModifier = ceil((stageNum + 1) / 2) * 0.5
+		local minSpiders, maxSpiders = 2, 4
 
 		if Mod.Character.ARACHNA:ArachnaHasBirthright(player) or Mod.Character.ARACHNA_B:IsArachnaB(player) then
-			spiderCount = ceil(stageModifier * (Mod:RandomNum(3, 5, rng) + webHearts))
-		else
-			spiderCount = ceil(stageModifier * Mod:RandomNum(2, 4 + webHearts, rng))
+			minSpiders = minSpiders + 1
+			maxSpiders = maxSpiders + 1
 		end
+		if egg.SubType == 1 then
+			minSpiders = minSpiders - 1
+			maxSpiders = maxSpiders - 2
+		end
+		spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
 
 		for _ = 1, spiderCount do
 			local spiderSubtype = 0
@@ -86,8 +105,9 @@ function SPIDER_EGG:Explode(egg, rewards)
 			Mod.Spawn.Pickup(Mod.Pickup.WEB_HEART.ID, 0, egg.Position, nil, egg)
 		end
 	end
-	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
-	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 2, false, 1.25)
+	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4,
+		Color(1, 1, 1, 1, 1, 1, 1))
+	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 	egg:Remove()
 end
 
@@ -122,7 +142,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, SPIDER_EGG.OnUpdate, SPIDER_
 --#region Greed Mode
 
 function SPIDER_EGG:ExplodeOnGreedWave()
-	Mod.Foreach.Effect(function (effect, index)
+	Mod.Foreach.Effect(function(effect, index)
 		local sprite = effect:GetSprite()
 		if not sprite:IsPlaying("ExplodeEmpty") then
 			sprite:Play("Explode")

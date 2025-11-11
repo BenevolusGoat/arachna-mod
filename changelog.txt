@@ -11,6 +11,7 @@ General Changes/Fixes:
 - Added a Dead Sea Scrolls menu where you can check settings, achievements, and credits
 - The mod settings are also available in Mod Config Menu
 - Changed how the status effects that cause enemies to drop spider eggs are displayed. The "webbed" sprite from Divine Cloth is now also present on Arachna's Spool. Divine Cloth now has a unique status icon
+- Size of web on enemies now scale with the enemy's size
 - Changed Tainted Arachna's multishot to use REPENTOGON instead of an item wisp. Among other things, this allows their multishot to be utilized in the Mines chase sequence
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
@@ -36,8 +37,13 @@ Gameplay Changes:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
 - All stat changes present for the mod's characters and items now respect damage and firerate multipliers
+- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Changed Tainted Arachna's soft tears cap to the default 5.00
 - Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
+- Changed logic of Web Heart interaction with Spider Eggs on Arachna + Birthright and Tainted Arachna to match non-Arachna players, where it increases the potential maximum amount of spiders to be spawned instead of guaranteeing an additional amount of spiders to spawn
+- Enemies below 10 HP or those spawned by other enemies now spawn small versions of Spider Eggs on death, which will spawn less spiders. Enemies spawned by other enemies only have a 50% chance to spawn a small egg
+- Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
+- Shooting bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into friendly spiders
 - Changed Web Hearts replacing specific heart types to trigger if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of just one character being Arachna or Tainted Arachna
 - The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
 - 3D Glasses now works for all weapon types
@@ -52,7 +58,7 @@ Gameplay Changes:
 - The Yarn is now categorized as a defensive familiar, being closer to the player in the follower line
 - The Yarn and Geptameron's per-room effects now trigger for challenge and boss rush waves
 - Spider Beggar no longer drops pickups upon death, instead spawning 2 spiders similar to Devil Beggar
-- Spider Beggar now follows the same rules and chances to reward the player as vanilla beggars
+- Spider Beggar now follows the same rules and chances to reward the player as a regular beggar
 - Added the curse mist effect to Testament's special room
 - Testament can now be found and used in Greed Mode
 - Testament can no longer be used in runs that do not allow achievements, instead spawning Eden's Blessing
@@ -61,8 +67,10 @@ Gameplay Changes:
 
 API Changes:
 - Everything realted to the mod is now exposed through the ARACHNAMOD global. Functions, IDs, and more. No more magic numbers!
+- Save data is now handled through IsaacSaveManager. Previous save data on completion marks should be automatically transferred to REPENTOGON's own save data for completion marks and achievements
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
 - Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
+- Status effects now utilize StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Golden Shopkeeper's type is now EntityType.ENTITY_SHOPKEEPER instead of EntityType.ENTITY_EFFECT
 - Web Heart's variant is now PickupVariant.PICKUP_HEART rather than their own unique variant
 - The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON

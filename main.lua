@@ -3,7 +3,7 @@ InputHelper = include("scripts/helpers/vendor/inputhelper")
 ---@class ModReference
 _G.ARACHNAMOD = RegisterMod("Arachna Mod", 1)
 
-ARACHNAMOD.Version = "INDEV_REWRITE"
+ARACHNAMOD.Version = "2.0.0"
 
 local Mod = ARACHNAMOD
 

@@ -19,7 +19,8 @@ DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT = 30
 local identifier = "ARACHNA_BITTEN"
 local statusSprite = Sprite("gfx/indicator_arachna_b.anm2", false)
 statusSprite:Play("Float")
-DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, statusSprite, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
+DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, statusSprite,
+	StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
 DIVINE_CLOTH.STATUS_BITTEN = StatusEffectLibrary.StatusFlag[identifier]
 
 --#endregion
@@ -50,10 +51,11 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 		size = size + DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT
 		local shouldPlayGood = false
 
-		Mod.Foreach.EffectInRadius(player.Position, size, function (egg, index)
+		Mod.Foreach.EffectInRadius(player.Position, size, function(egg, index)
 			shouldPlayGood = true
 			if egg.Timeout > 0 then
-				egg:SetTimeout(Mod.math.min(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT, egg.Timeout + DIVINE_CLOTH.TIMER_HEAL))
+				egg:SetTimeout(Mod.math.min(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT,
+					egg.Timeout + DIVINE_CLOTH.TIMER_HEAL))
 			end
 			Mod.Spawn.Notification(egg.Position, 0)
 		end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
@@ -65,7 +67,8 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 	Mod.Game:ShakeScreen(8)
 	DIVINE_CLOTH:SpawnSwirl(player.Position, player)
 
-	local floorWeb = Mod.Spawn.Effect(DIVINE_CLOTH.DIVINE_WEB_VAR, DIVINE_CLOTH.DIVINE_WEB_SUB, player.Position, nil, player)
+	local floorWeb = Mod.Spawn.Effect(DIVINE_CLOTH.DIVINE_WEB_VAR, DIVINE_CLOTH.DIVINE_WEB_SUB, player.Position, nil,
+		player)
 	floorWeb.Color = Color(1, 1, 1, 0.45, 0, 0, 0)
 	floorWeb.SpriteScale = floorWeb.SpriteScale * spriteSize
 	floorWeb:SetSize(size, Vector.One, 8)
@@ -85,7 +88,8 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, DIVINE_CLOTH.OnUse, DIVINE_CLOTH.ID)
 ---@param source EntityRef
 ---@param duration? integer @default: `DIVINE_CLOTH.BITE_DURATION`
 function DIVINE_CLOTH:ApplyBitten(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION, source, nil)
+	return StatusEffectLibrary:AddStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN, duration or DIVINE_CLOTH.BITE_DURATION,
+		source, nil)
 end
 
 ---@param web EntityEffect
@@ -97,11 +101,11 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
 	local source = player and EntityRef(player) or EntityRef(web)
 
-	Mod.Foreach.NPCInRadius(web.Position, web.Size, function (npc, index)
+	Mod.Foreach.NPCInRadius(web.Position, web.Size, function(npc, index)
 		if not StatusEffectLibrary:HasStatusEffect(npc, DIVINE_CLOTH.STATUS_BITTEN) then
 			DIVINE_CLOTH:ApplyBitten(npc, source, duration)
 		end
-	end, nil, nil, {UseEnemySearchParams = true})
+	end, nil, nil, { UseEnemySearchParams = true })
 
 	if web:GetSprite():IsFinished("Poof") then
 		web:Remove()
@@ -112,31 +116,14 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, DIVINE_CLOTH.BiteEnemiesInEf
 
 --#endregion
 
---#region Bitten status
-
----@param ent Entity
----@param statusEffect StatusFlag
----@param customData table
-function DIVINE_CLOTH:PreAddBite(ent, statusEffect, customData)
-	local npc = ent:ToNPC()
-	if not npc or not Mod.Item.ARACHNAS_SPOOL:ShouldSpawnWebOnEnemyDeath(npc) then
-		return true
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, DIVINE_CLOTH.PreAddBite, DIVINE_CLOTH.STATUS_BITTEN)
+--#region Bitten status (Most already handled in Arachna's Spool code since they share many similarities)
 
 function DIVINE_CLOTH:OnAddBite(ent)
 	DIVINE_CLOTH:SpawnSwirl(ent.Position, ent)
-	local data = Mod:GetData(ent)
-	if not data.WebbedStatusSprite then
-		local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
-		sprite:Play("Idle")
-		data.WebbedStatusSprite = sprite
-	end
 end
 
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, DIVINE_CLOTH.OnAddBite, DIVINE_CLOTH.STATUS_BITTEN)
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
+	DIVINE_CLOTH.OnAddBite, DIVINE_CLOTH.STATUS_BITTEN)
 
 ---@param ent Entity
 function DIVINE_CLOTH:OnNPCKill(ent)
@@ -149,9 +136,11 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, DIVINE_CLOTH.OnNPCKill)
 
 ---@param npc EntityNPC
 function DIVINE_CLOTH:OnNPCDeath(npc)
-	if Mod:GetData(npc).QueueTimedSpiderEgg then
-		local egg = Mod.Entities.SPIDER_EGG:SpawnEgg(npc.Position, npc)
-		egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
+	if Mod:GetData(npc).QueueTimedSpiderEgg and not npc:IsBoss() then
+		local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
+		if egg then
+			egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
+		end
 	end
 end
 

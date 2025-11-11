@@ -12,7 +12,8 @@ ARACHNAS_SPOOL.TEAR = Isaac.GetEntityVariantByName("Spool Tear")
 ARACHNAS_SPOOL.WEB_EFFECT = Isaac.GetEntityVariantByName("Spider Web")
 
 local identifier = "ARACHNA_WEBBED"
-StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
+StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW,
+	true)
 ARACHNAS_SPOOL.STATUS_WEBBED = StatusEffectLibrary.StatusFlag[identifier]
 
 ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS = {
@@ -42,7 +43,8 @@ function ARACHNAS_SPOOL:FireSpool(pos, vel, spawner)
 	local player = spawner and spawner:ToPlayer()
 	if player then
 		local weapon = player:GetWeapon(1)
-		local playerFlags = player:GetTearHitParams(weapon and weapon:GetWeaponType() or WeaponType.WEAPON_TEARS, 1, 1, spoolTear).TearFlags
+		local playerFlags = player:GetTearHitParams(weapon and weapon:GetWeaponType() or WeaponType.WEAPON_TEARS, 1, 1,
+			spoolTear).TearFlags
 		for _, tearFlag in ipairs(ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS) do
 			if Mod:HasBitFlags(playerFlags, tearFlag) then
 				spoolTear:AddTearFlags(tearFlag)
@@ -65,7 +67,7 @@ ThrowableItemLib:RegisterThrowableItem({
 	Type = ThrowableItemLib.Type.ACTIVE,
 	ID = ARACHNAS_SPOOL.ID,
 	Identifier = "Arachna",
-	ThrowFn = function (player, vect, slot, mimic)
+	ThrowFn = function(player, vect, slot, mimic)
 		ARACHNAS_SPOOL:FireSpool(player.Position, Mod:AddTearVelocity(vect, 12, player), player)
 	end
 })
@@ -73,9 +75,9 @@ ThrowableItemLib:RegisterThrowableItem({
 ---@param tear EntityTear
 function ARACHNAS_SPOOL:OnTearUpdate(tear)
 	if tear.FrameCount % 2 == 0 then
-		local pos =  Vector(tear.Position.X, tear.Position.Y + 1.1 + tear.Height)
+		local pos = Vector(tear.Position.X, tear.Position.Y + 1.1 + tear.Height)
 		local trail = Mod.Spawn.Effect(EffectVariant.HAEMO_TRAIL, 0, pos, nil, tear)
-		trail:GetSprite().Color = Color(1,1,1,1,1,1,1)
+		trail:GetSprite().Color = Color(1, 1, 1, 1, 1, 1, 1)
 		trail:Update()
 	end
 end
@@ -93,13 +95,13 @@ function ARACHNAS_SPOOL:OnTearDeath(tear)
 		maxWebCount = 2
 	end
 	local ownedWebs = {}
-	Mod.Foreach.Effect(function (web, index)
+	Mod.Foreach.Effect(function(web, index)
 		if web.SpawnerEntity and Mod:IsSameEntity(web.SpawnerEntity, tear.SpawnerEntity) then
 			Mod.Insert(ownedWebs, web)
 		end
 	end, ARACHNAS_SPOOL.WEB_EFFECT)
 	--Oldest webs get removed first
-	table.sort(ownedWebs, function (web1, web2)
+	table.sort(ownedWebs, function(web1, web2)
 		return web1.FrameCount > web2.FrameCount
 	end)
 
@@ -141,77 +143,33 @@ function ARACHNAS_SPOOL:OnWebUpdate(web)
 	end
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
 	local source = player and EntityRef(player) or EntityRef(web)
-	Mod.Foreach.NPCInRadius(web.Position, web.Size, function (npc, index)
+	Mod.Foreach.NPCInRadius(web.Position, web.Size, function(npc, index)
 		if not StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
 			ARACHNAS_SPOOL:ApplyWebbed(npc, source, 2)
 		end
-	end, nil, nil, {UseEnemySearchParams = true, Dead = true})
+	end, nil, nil, { UseEnemySearchParams = true, Dead = true })
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, ARACHNAS_SPOOL.WEB_EFFECT)
 
 --#endregion
 
---#region Webbed status
+--#region Webbed Status
 
 ---@param npc EntityNPC
 ---@param source EntityRef
 ---@param duration integer
 function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil)
+	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil, {UndoKnockback = not npc:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)})
 end
 
 ---@param npc EntityNPC
-function ARACHNAS_SPOOL:ShouldSpawnWebOnEnemyDeath(npc)
-	return not npc:IsBoss()
-		and npc.SpawnerType == 0
-		and npc.MaxHitPoints >= 10
-		and not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
+function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
+	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
 		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
 		and npc:IsActiveEnemy(false)
 		and npc:IsVulnerableEnemy()
 end
-
----@param ent Entity
----@param statusEffect StatusFlag
----@param customData table
-function ARACHNAS_SPOOL:PreAddWeb(ent, statusEffect, customData)
-	local npc = ent:ToNPC()
-	if not npc or not ARACHNAS_SPOOL:ShouldSpawnWebOnEnemyDeath(npc) then
-		return true
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PreAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
-
----@param ent Entity
-function ARACHNAS_SPOOL:PostAddWeb(ent, statusEffect, statusEffectData)
-	local data = Mod:GetData(ent)
-	if not data.WebbedStatusSprite then
-		local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
-		sprite:Play("Idle")
-		data.WebbedStatusSprite = sprite
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
-
----@param ent Entity
----@param statusEffects StatusFlag
-function ARACHNAS_SPOOL:SlowWhileWebbedOrBitten(ent, statusEffects)
-	if Mod:HasBitFlags(statusEffects, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffects, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-		local status = Mod:HasBitFlags(statusEffects, ARACHNAS_SPOOL.STATUS_WEBBED) and ARACHNAS_SPOOL.STATUS_WEBBED or Mod.Item.DIVINE_CLOTH.STATUS_BITTEN
-		local statusData = StatusEffectLibrary:GetStatusEffectData(ent, status)
-		---@cast statusData StatusEffectData
-		if ent:GetSlowingCountdown() < 2 then
-			ent:AddSlowing(statusData.Source, 2, 0.5, statusData.Color)
-		else
-			ent:SetSlowingCountdown(ent:GetSlowingCountdown() + 1)
-		end
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE, ARACHNAS_SPOOL.SlowWhileWebbedOrBitten)
 
 ---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
 ---
@@ -227,31 +185,136 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
 
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:OnNPCDeath(npc)
-	if Mod:GetData(npc).QueueSpiderEgg then
-		Mod.Entities.SPIDER_EGG:SpawnEgg(npc.Position, npc)
+	if Mod:GetData(npc).QueueSpiderEgg and not npc:IsBoss() then
+		Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
 	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNAS_SPOOL.OnNPCDeath)
 
+--Experiemntal thing of removing knockback while webbed. Dunno if it should be kept
+--[[
+---@param ent Entity
+function ARACHNAS_SPOOL:PostAddWebbed(ent, statusEffect, statusEffectData)
+	ent:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostAddWebbed, ARACHNAS_SPOOL.STATUS_WEBBED)
+
+---@param ent Entity
+---@param statusEffectData StatusEffectData
+function ARACHNAS_SPOOL:PostRemoveWebbed(ent, statusEffect, statusEffectData)
+	if statusEffectData.CustomData.UndoKnockback then
+		ent:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+	end
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_REMOVE_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostRemoveWebbed, ARACHNAS_SPOOL.STATUS_WEBBED) ]]
+
+--#endregion
+
+--#region Webbed & Spider Bite
+
+--Webbed and Spider Bite statuses share several similarities so the code is stored here
+
+---@param ent Entity
+---@param statusEffect StatusFlag
+---@param customData table
+function ARACHNAS_SPOOL:PreAddWebOrBitten(ent, statusEffect, customData)
+	if Mod:HasBitFlags(statusEffect, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffect, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
+		local npc = ent:ToNPC()
+		if not npc or not ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc) then
+			return true
+		end
+	end
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PreAddWebOrBitten)
+
+---@param ent Entity
+function ARACHNAS_SPOOL:PostAddWebOrBitten(ent, statusEffect, statusEffectData)
+	if Mod:HasBitFlags(statusEffect, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffect, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
+		local data = Mod:GetData(ent)
+		if not data.WebbedStatusSprite then
+			local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
+			sprite:Play("Idle")
+			data.WebbedStatusSprite = sprite
+		end
+	end
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostAddWebOrBitten)
+
+---@param ent Entity
+---@param statusEffects StatusFlag
+function ARACHNAS_SPOOL:SlowWhileWebbedOrBitten(ent, statusEffects)
+	if Mod:HasBitFlags(statusEffects, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffects, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
+		local speed = ent:IsBoss() and 0.75 or 0.5
+		if ent:GetSpeedMultiplier() < speed then return end
+		ent:SetSpeedMultiplier(speed)
+	end
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE, ARACHNAS_SPOOL.SlowWhileWebbedOrBitten)
+
+---@param ent Entity
+---@param amount number
+---@param flags DamageFlag
+---@param source EntityRef
+---@param countdown integer
+function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
+	local npc = ent:ToNPC()
+	if npc and npc:IsBoss() then
+		local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
+		local hasSpiderBite = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
+
+		if hasWebbed or hasSpiderBite then
+			local data = Mod:GetData(npc)
+			if not data.SpiderBossChargeSprite then
+				data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
+			end
+
+			--TODO: Temporary! Might be adjusted based on player damage or stage or something.
+			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
+
+			if data.SpiderBossCharge > 100 then
+				data.SpiderBossCharge = 0
+				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, npc)
+			end
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, ARACHNAS_SPOOL.BossChargebar)
+
 ---@param npc EntityNPC
 ---@param offset Vector
-function ARACHNAS_SPOOL:RenderWebOnBitten(npc, offset)
-	local renderPos = Mod:GetEntityRenderPosition(npc, offset)
+function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
 	local data = Mod:TryGetData(npc)
-	local statusDataWeb = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
-	local statusDataBitten = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
-	if (statusDataWeb or statusDataBitten) and data and data.WebbedStatusSprite then
+	local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
+	local hasSpiderBite = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
+	local renderPos = Mod:GetEntityRenderPosition(npc, offset)
+	if (hasWebbed or hasSpiderBite) and data and data.WebbedStatusSprite then
 		---@type Sprite
 		local sprite = data.WebbedStatusSprite
-		sprite.Scale = npc.SpriteScale
+		sprite.Scale = (npc.Size / 15) * npc.SpriteScale
 		sprite:Render(renderPos)
 		if Mod:ShouldUpdateSprite() then
 			sprite:Update()
 		end
 	end
+	if data and data.SpiderBossCharge and data.SpiderBossChargeSprite then
+		local nullFrame = npc:GetSprite():GetNullFrame("OverlayEffect")
+		if nullFrame and nullFrame:IsVisible() then
+			renderPos = renderPos + nullFrame:GetPos() + Vector(15, 10)
+			local frameNum = Mod:Clamp(Mod.math.floor(data.SpiderBossCharge) - 1, 0, 99)
+			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A, (hasWebbed or hasSpiderBite) and 1 or 0.5, 0.2)
+			data.SpiderBossChargeSprite:SetFrame("Charging", frameNum)
+			data.SpiderBossChargeSprite:Render(renderPos)
+		end
+	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderWebOnBitten)
+Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderWebOnWebbedOrBitten)
 
 --#endregion

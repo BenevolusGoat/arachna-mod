@@ -363,12 +363,7 @@ end
 ---@param ent Entity
 ---@param offset Vector
 function ARACHNAMOD:GetEntityRenderPosition(ent, offset)
-	local renderMode = ARACHNAMOD.Room():GetRenderMode()
-	if renderMode == RenderMode.RENDER_WATER_REFLECT then
-		return Isaac.WorldToRenderPosition(ent.Position + ent.PositionOffset) + offset
-	else
-		return Isaac.WorldToScreen(ent.Position + ent.PositionOffset)
-	end
+	return Isaac.WorldToRenderPosition(ent.Position + ent.PositionOffset) + offset
 end
 
 ---@param laser EntityLaser
