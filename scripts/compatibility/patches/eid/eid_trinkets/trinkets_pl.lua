@@ -19,7 +19,7 @@ return function(modifiers)
 		[Trinket.SPRINDLE.ID] = {
 			Name = "Sprindle",
 			Description = {
-				"{{StatusBitten}} Touching enemies inflicts them with Bitten, spawning Spider Eggs on death",
+				"{{StatusSpiderBite}} Touching enemies inflicts them with Spider Bite, spawning Spider Eggs on death",
 				"#{{Timer}} Spider Eggs drop nothing after 16 seconds or {{ColorRainbow}}special{{CR}} friendly spiders on room clear",
 				"#{{WebHeart}} Increases spawn chance of Web Hearts by +10%"
 			}

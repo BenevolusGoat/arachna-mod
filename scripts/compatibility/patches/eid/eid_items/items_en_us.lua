@@ -74,7 +74,7 @@ return function(modifiers)
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusBitten}} Inflicts Bitten on nearby enemies, {{Slow}} slowing and causing them to drop a Spider Egg on death",
+				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies, {{Slow}} slowing and causing them to drop a Spider Egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders. Some can be {{ColorRainbow}}special{{CR}} and/or larger",
 				"#{{Timer}} Spider Eggs break on their own after 16 seconds, spawning nothing",
 				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
@@ -94,7 +94,8 @@ return function(modifiers)
 				ARC_EID.GetFallbackDescription,
 				function(descObj)
 					return modifiers[Item.ARACHNIDS_GRIP.ID]._modifier(descObj,
-						"#{{Collectible" .. Item.MUTAGEN.ID .. "}} Spiders can be {{ColorRainbow}}special{{CR}} and/or larger"
+						"#{{Collectible" ..
+						Item.MUTAGEN.ID .. "}} Spiders can be {{ColorRainbow}}special{{CR}} and/or larger"
 					)
 				end
 			},
@@ -146,7 +147,8 @@ return function(modifiers)
 				"Teleports Isaac to a floor that contains all his current items",
 				"#Choosing an item from this floor teleports Isaac back to the room he came from",
 				"#The chosen item will appear at the start of the next run",
-				"#Having no items will spawn {{Collectible" .. CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} Eden's Blessing instead"
+				"#Having no items will spawn {{Collectible" ..
+				CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} Eden's Blessing instead"
 			}
 		},
 		[Item.LIL_ARACHNA.ID] = {
@@ -154,7 +156,7 @@ return function(modifiers)
 			Description = {
 				"{{Slow}} Shoots slowing and quad-split tears",
 				"#Deals 3.5 damage per tear",
-				"#{{StatusBitten}} 25% chance for tears to inflict Bitten, having enemies drop Spider Eggs on death",
+				"#{{StatusSpiderBite}} 25% chance for tears to inflict Spider Bite, having enemies drop Spider Eggs on death",
 				"#{{Timer}} Spider Eggs drop nothing after 16 seconds or {{ColorRainbow}}special{{CR}} friendly spiders on room clear"
 			}
 		},
