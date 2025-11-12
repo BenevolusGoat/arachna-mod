@@ -78,8 +78,9 @@ function SPIDER_EGG:Explode(egg, rewards)
 		local webHearts = Mod.Pickup.WEB_HEART:GetWebHearts(player)
 		local stageModifier = ceil((stageNum + 1) / 2) * 0.5
 		local minSpiders, maxSpiders = 2, 4
+		local shouldIncreaseSpider = Mod.Character.ARACHNA:ArachnaHasBirthright(player) or Mod.Character.ARACHNA_B:IsArachnaB(player)
 
-		if Mod.Character.ARACHNA:ArachnaHasBirthright(player) or Mod.Character.ARACHNA_B:IsArachnaB(player) then
+		if shouldIncreaseSpider then
 			minSpiders = minSpiders + 1
 			maxSpiders = maxSpiders + 1
 		end
@@ -87,7 +88,12 @@ function SPIDER_EGG:Explode(egg, rewards)
 			minSpiders = minSpiders - 1
 			maxSpiders = maxSpiders - 2
 		end
-		spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
+
+		if shouldIncreaseSpider and ARACHNAMOD:IsLegacyGameplay() then
+			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders, rng) + webHearts)
+		else
+			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
+		end
 
 		for _ = 1, spiderCount do
 			local spiderSubtype = 0
