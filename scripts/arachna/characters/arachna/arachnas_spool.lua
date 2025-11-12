@@ -26,6 +26,9 @@ ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS = {
 	TearFlags.TEAR_TRACTOR_BEAM
 }
 
+ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD = 50
+ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE = 10
+
 --#endregion
 
 --#region Helpers
@@ -57,6 +60,19 @@ end
 ---@param spawner? Entity
 function ARACHNAS_SPOOL:SpawnWeb(pos, spawner)
 	return Mod.Spawn.Effect(ARACHNAS_SPOOL.WEB_EFFECT, 0, pos, nil, spawner)
+end
+
+---Returns the middle of three values
+local function math_bound(low, high, value)
+	return Mod.math.max(low, Mod.math.min(high, value))
+end
+
+---How much damage is required in order to fill the chargebar on a boss to spawn a Spider Egg
+---...this is literally just the Stage HP formula don't @ me
+function ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
+	local stage = Mod.Level():GetStage()
+	local stageModifier = Mod.math.min(4, stage) + 0.8 * math_bound(0,stage - 5, 5)
+	return ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD + stageModifier *ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE
 end
 
 --#endregion
@@ -170,6 +186,7 @@ function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
 		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
 		and npc:IsActiveEnemy(false)
 		and npc:IsVulnerableEnemy()
+		and (not ARACHNAMOD:IsLegacyGameplay() or not npc:IsBoss())
 end
 
 ---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
@@ -264,23 +281,30 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTIT
 ---@param source EntityRef
 ---@param countdown integer
 function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
+	if ARACHNAMOD:IsLegacyGameplay() then
+		return
+	end
 	local npc = ent:ToNPC()
 	if npc and npc:IsBoss() then
+		local player = Mod:TryGetPlayer(source, {LoopSpawnerEnt = true})
 		local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
 		local hasSpiderBite = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
 
 		if hasWebbed or hasSpiderBite then
-			local data = Mod:GetData(npc)
+			local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
+			local data = Mod:GetData(parent)
 			if not data.SpiderBossChargeSprite then
 				data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
 			end
+			if not data.SpiderBossChargeDMGNeeded then
+				data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
+			end
 
-			--TODO: Temporary! Might be adjusted based on player damage or stage or something.
 			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
 
-			if data.SpiderBossCharge > 100 then
+			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
 				data.SpiderBossCharge = 0
-				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, npc)
+				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, player)
 			end
 		end
 	end
@@ -304,11 +328,13 @@ function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
 			sprite:Update()
 		end
 	end
-	if data and data.SpiderBossCharge and data.SpiderBossChargeSprite then
+	if data and data.SpiderBossCharge and data.SpiderBossChargeSprite and data.SpiderBossChargeDMGNeeded then
 		local nullFrame = npc:GetSprite():GetNullFrame("OverlayEffect")
 		if nullFrame and nullFrame:IsVisible() then
 			renderPos = renderPos + nullFrame:GetPos() + Vector(15, 10)
-			local frameNum = Mod:Clamp(Mod.math.floor(data.SpiderBossCharge) - 1, 0, 99)
+			local progress = data.SpiderBossCharge / data.SpiderBossChargeDMGNeeded
+			local percent = Mod.math.floor(progress * 100)
+			local frameNum = Mod:Clamp(percent - 1, 0, 99)
 			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A, (hasWebbed or hasSpiderBite) and 1 or 0.5, 0.2)
 			data.SpiderBossChargeSprite:SetFrame("Charging", frameNum)
 			data.SpiderBossChargeSprite:Render(renderPos)

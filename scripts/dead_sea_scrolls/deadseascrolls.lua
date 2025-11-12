@@ -37,7 +37,7 @@ local arachnaDssDirectory = {
 
 		buttons = {
 			{str = 'resume game', action = 'resume'},
-			{str = 'achievements', dest = 'achievementviewer', GenerateTooltip("view your achievements")},
+			{str = 'achievements', dest = 'achievementviewer', tooltip = GenerateTooltip("view your achievements")},
 			dssmod.changelogsButton,
 			{str = 'settings', dest = 'settings', tooltip = GenerateTooltip("edit various settings")},
 			{str = 'credits', dest = 'credits', tooltip = GenerateTooltip("view the credits")},
@@ -116,10 +116,10 @@ local arachnaDssDirectory = {
 	credits = {
 		title = "arachna credits",
 		buttons = {
-			{str = "rvsty", fsize = 2, tooltip = GenerateTooltip("v1.0 coder, majority of sprites, designer")},
+			{str = "rvsty", fsize = 2, tooltip = GenerateTooltip("pre-v2.0 coder, majority of sprites, designer")},
 			{str = "unknownthehero", fsize = 2, tooltip = GenerateTooltip("major playtesting")},
 			{str = "quartz", fsize = 2, tooltip = GenerateTooltip("amazing portrait sprites")},
-			{str = "brakedude", fsize = 2, tooltip = GenerateTooltip("coded in proper web heart rendering for v1.0")},
+			{str = "brakedude", fsize = 2, tooltip = GenerateTooltip("coded in proper web heart rendering for pre-v2.0")},
 			{str = "shapatsmith", fsize = 2, tooltip = GenerateTooltip("voiceover for pocket items")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("playtesting, sprites for several costumes")},
 			{str = "steamjek", fsize = 2, tooltip = GenerateTooltip("mod thumbnail art as a commission")},

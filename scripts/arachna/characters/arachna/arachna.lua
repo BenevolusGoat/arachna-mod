@@ -6,6 +6,8 @@ ARACHNAMOD.Character.ARACHNA = ARACHNA
 
 Mod.Include("scripts.arachna.characters.arachna.arachnas_spool")
 
+ARACHNA.POISON_CHANCE = 0.25
+
 ---@param player EntityPlayer
 function ARACHNA:IsArachna(player)
 	return player:GetPlayerType() == Mod.PlayerType.ARACHNA
@@ -23,6 +25,20 @@ function ARACHNA:IsAnyArachna(player)
 	local playerType = player:GetPlayerType()
 	return playerType == Mod.PlayerType.ARACHNA or playerType == Mod.PlayerType.ARACHNA_B
 end
+
+function ARACHNAMOD:IsLegacyGameplay()
+	return Mod.SaveManager.GetRunSave().ArachnaLegacyGameplay or false
+end
+
+---@param isContinued boolean
+function ARACHNA:UpdateLegacyGameplay(isContinued)
+	if not isContinued then
+		local run_save = Mod.SaveManager.GetRunSave()
+		run_save.ArachnaLegacyGameplay = Mod.GetSetting(Mod.Setting.LegacyGameplay)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ARACHNA.UpdateLegacyGameplay)
 
 ARACHNA.TearVariantSpritesheetPath = "gfx/projectiles/"
 ARACHNA.TearVariantToSpritesheet = {
@@ -53,6 +69,22 @@ function ARACHNA:SetArachnaTearSprite(tear)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, ARACHNA.SetArachnaTearSprite)
+
+--Poison Tears
+
+---@param player EntityPlayer
+---@param tearParams TearParams
+function ARACHNA:PosionTears(player, tearParams, weaponType, damageScale, tearDisplacement, source)
+	if ARACHNA:IsAnyArachna(player)
+		and player:GetCollectibleRNG(Mod.Item.ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNA.POISON_CHANCE
+	then
+		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
+		tearParams.TearColor = Color.TearCommonCold
+		return tearParams
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, ARACHNA.PosionTears)
 
 ---Tear splash on grid collision
 ---@param tear EntityTear

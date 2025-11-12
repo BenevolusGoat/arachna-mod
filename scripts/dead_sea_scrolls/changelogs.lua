@@ -42,60 +42,67 @@ local function WrapPatchNotes(str)
 
 	return finalStr
 end
---luacheck: push no max line length
---[[ Template here.
---= GENERAL ADJUSTMENTS/BUG FIXES =--
---= GAMEPLAY CHANGES =--
---= VISUAL CHANGES =--
---= MOD COMPATIBILITY =--
---= EID FIXES + COMMUNITY =--
---= CUSTOM HEALTH API ENHANCEMENTS =--
---= ARACHNA API CHANGES =--]]
 
 DeadSeaScrollsMenu.AddChangelog(
 "Arachna",
-"2.0",
+"Version 2",
 WrapPatchNotes([[MM/DD/YYYY
 
 #2.0.0 (??/??/2025)
 
-The mod has been entirely rewritten from the ground up. There
+## Major Mod Rewrite
 
---= GENERAL ADJUSTMENTS/BUG FIXES =--
-- The amount of bugs fixed as a direct result of the switch to REPENTOGON or the rewritten code is difficult to account for, but there should generally be improvements across the whole mod!
+The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! The mod now requires REPENTOGON+ to function, a large quantity of bugs have been fixed, some new content has been added, and balancing adjustments have been made across the mod.
+
+## GENERAL ADJUSTMENTS
 - Added a Dead Sea Scrolls menu where you can check settings, achievements, current and past changelogs, and credits
-- The mod settings are also available in Mod Config Menu
+- Added new mod settings. Available in the DSS menu
 - Changed Tainted Arachna's multishot to use REPENTOGON instead of an item wisp. Among other things, this allows their multishot to be utilized in the Mines chase sequence
-- Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
-- Fixed the Spider Egg orbital from Arachnid's Grip not having a variant assigned, which had self-assigned itself a variant of 0
 - Removed GiantBookAPI utility in favor of REPENTOGON implementation
 - Changed how Lil Arachna functions to be a more naturally integrated shooter familiar. They now obey all shooter familiar interactions (Lilith birthrights, shooter priority, etc.)
-- Fixed Golden Shopkeeper not using the trinket pool for its rarely dropped golden trinket, meaning it can now spawn modded golden trinkets
 - Changed how Web Hearts, Spider Beggars, and Golden Shopkeepers randomly replace entities. Web Hearts are now better integrated into the "pickup pool" to have spawn rules that better match the vanilla game. Spider Beggars and Golden Shopkeepers only replace their respective replacements when part of a newly entered room
 - Changed Soul of Arachna and Merged Card announcer sfx to respect user's announcer settings instead of playing 100% of the time
 - Added slight delays to when the aforementioned announcer sfx plays
 - Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
-- Changed Mechanical Eye's blacklist to account for any items that use a timed or special charge instead of manually listing them, inclding modded actives
 - Changed how orbitals are added to the player. They will have differing speeds/distances compared to before, but now occupy the same layers as other orbitals
-- Changed Arachnid's Grip to detect the "fly" tag on enemies for having a chance to heal the player instead of a manual list, allowing it to be compatible with modded enemies
-- Removed the small delay The Yarn had dropping a Web Heart upon clearing 4 rooms
-- Changed the number display for Geptameron to be on the active item instead of next to the key counter
-- Fixed Testament crashing the game
-- Fixed the item shadow from Testament pedestals not disappearing when items were taken off them
+- Removed the small delay The Yarn had dropping its Web Heart
 - Improved handling of Dad's Newspaper's "club"
 
---= GAMEPLAY CHANGES =--
+## BUG FIXES
+- Fixed Testament crashing the game
+- Fixed the item shadow from Testament pedestals not disappearing when items were taken off them
+- Fixed mod incompatibility with Golden Shopkeeper's rarely dropped golden trinket
+- Fixed mod incompatibility with Mechanical Eye's blacklist
+- Fixed mod incompatibility with Arachnid's Grip effect of instakilling fly enemies
+- Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
+- Fixed the Spider Egg orbital from Arachnid's Grip not having a variant assigned, which had self-assigned itself a variant of 0
+
+## GAMEPLAY CHANGES
+New Content:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
-- All stat changes present for the mod's characters and items now respect damage and firerate multipliers
-- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
-- Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
+
+Arachna:
+These changes can be reverted by enabling "Legacy Gameplay" in the settings.
+- List changes here
+
+Tainted Arachna:
+These changes can be reverted by enabling "Legacy Gameplay" in the settings.
+- List changes here
+
+Both Arachnas:
+Most of these changes can be reverted by enabling "Legacy Gameplay" in the settings. Those that aren't will be labelled with an additional bullet point.
 - Changed logic of Web Heart interaction with Spider Eggs on Arachna + Birthright and Tainted Arachna to match non-Arachna players, where it increases the potential maximum amount of spiders to be spawned instead of guaranteeing an additional amount of spiders to spawn
+- Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 - Enemies below 10 HP or those spawned by other enemies now spawn small versions of Spider Eggs on death, which will spawn less spiders. Enemies spawned by other enemies only have a 50% chance to spawn a small egg
 - Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
 - Shooting bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into friendly spiders
-- Changed Web Hearts replacing specific heart types to trigger if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of just one character being Arachna or Tainted Arachna
-- The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
+-- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
+-- Changed Web Hearts replacing specific heart types to trigger if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of just one character being Arachna or Tainted Arachna
+-- The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
+
+Items:
+- Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
 - 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
@@ -115,21 +122,21 @@ The mod has been entirely rewritten from the ground up. There
 - Testament pedestals for the next run no longer spawn in runs that do not allow achievements
 - Added support for multiple uses of Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before Testament instead spawns Eden's Blessing
 
---= VISUAL CHANGES =--
+## VISUAL CHANGES
 - The "webbed" sprite from Divine Cloth has been moved to enemies webbed by Arachna's Spool. Divine Cloth's "Spider Bite" status has a new icon to compensate
 - Size of web on enemies now scale with the enemy's size
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
-- Changed poison tears from Arachnid's Grip to be colored green
+- Changed poison tears from Arachna, Tainted Arachna, and Arachnid's Grip to be colored green
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
 
---= MOD COMPATIBILITY =--
+## MOD COMPATIBILITY
 - Added MinimapAPI compatibility
 - Updated all English EID descriptions
 - Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect
 - Added mod icon for EID
 
---= INTERNAL CHANGES =--
-Arachna didn't really have an API before, which is where I would put this down, but these changes are important to note for any mods with mod compatibility with Arachna
+## INTERNAL CHANGES
+Arachna didn't really have an API before, which is where I would put this down, but these changes are important to note for any mods with mod compatibility with Arachna.
 - Arachna now requires REPENTOGON on Repentance+ to function. REPENTOGON on regular Repentance will not work
 - The entire mod's code was rewritten from the ground up. Everything on the mod is now properly attached to the "ARACHNAMOD" global
 - Save data is now handled through IsaacSaveManager. Previous save data on completion marks should be automatically transferred to REPENTOGON's own save data for completion marks and achievements
@@ -143,7 +150,7 @@ Arachna didn't really have an API before, which is where I would put this down, 
 
 DeadSeaScrollsMenu.AddChangelog(
 "Arachna",
-"1.0",
+"Version 1",
 WrapPatchNotes([[MM/DD/YYYY
 
 #1.5.3 (08/03/2022)

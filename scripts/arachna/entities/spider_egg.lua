@@ -29,6 +29,9 @@ end
 ---@param spawner? Entity
 function SPIDER_EGG:TrySpawnEgg(pos, spawner)
 	local smallEgg = spawner and SPIDER_EGG:ShouldSpawnSmallEgg(spawner) or false
+	if smallEgg and ARACHNAMOD:IsLegacyGameplay() then
+		return
+	end
 	local subtype = smallEgg and 1 or 0
 	if spawner and spawner.SpawnerType ~= EntityType.ENTITY_NULL and spawner:GetDropRNG():RandomFloat() < 0.5 then
 		return
