@@ -211,7 +211,7 @@ function ARACHNIDS_GRIP:PosionTears(player, tearParams, weaponType, damageScale,
 		and player:GetCollectibleRNG(ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNIDS_GRIP.POISON_CHANCE
 	then
 		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
-		tearParams.TearColor = Color.TearCommonCold
+		tearParams.TearColor = ARACHNAMOD:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
 		return tearParams
 	end
 end

@@ -377,3 +377,13 @@ function ARACHNAMOD:GetLaserEndPoint(laser)
 		return samples:Get(#samples - 1)
 	end
 end
+
+local laserWeaponType = ARACHNAMOD:Set({
+	WeaponType.WEAPON_BRIMSTONE,
+	WeaponType.WEAPON_LASER,
+	WeaponType.WEAPON_TECH_X
+})
+
+function ARACHNAMOD:IsLaserWeaponType(weaponType)
+	return laserWeaponType[weaponType]
+end
