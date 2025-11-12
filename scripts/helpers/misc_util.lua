@@ -360,10 +360,27 @@ function ARACHNAMOD:GetMinimapPath()
 	return not MinimapAPI and "gfx/ui/minimap_icons.anm2" or "gfx/ui/minimapapi_icons.anm2"
 end
 
----@param ent Entity
+---@param ent Entity | Vector
 ---@param offset Vector
-function ARACHNAMOD:GetEntityRenderPosition(ent, offset)
-	return Isaac.WorldToRenderPosition(ent.Position + ent.PositionOffset) + offset
+---@param ignoreShake? boolean
+function ARACHNAMOD:GetEntityRenderPosition(ent, offset, ignoreShake)
+	local pos
+	if getmetatable(ent).__type == "Vector" then
+		---@cast ent Vector
+		pos = ent
+	else
+		---@cast ent Entity
+		pos = ent.Position + ent.PositionOffset
+		if ent:ToPlayer() and ARACHNAMOD.Room():GetRenderMode() ~= RenderMode.RENDER_WATER_REFLECT then
+			---@cast ent EntityPlayer
+			pos = pos + ent:GetFlyingOffset()
+		end
+	end
+	local renderPos = Isaac.WorldToRenderPosition(pos) + offset
+	if ignoreShake then
+		renderPos = renderPos - ARACHNAMOD.Game.ScreenShakeOffset
+	end
+	return renderPos
 end
 
 ---@param laser EntityLaser
