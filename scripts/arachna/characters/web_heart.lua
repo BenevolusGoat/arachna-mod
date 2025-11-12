@@ -18,6 +18,9 @@ WEB_HEART.HeartsToReplace = Mod:Set({
 	HeartSubType.HEART_ROTTEN
 })
 
+--For modded characters
+WEB_HEART.KeeperCharacters = {}
+
 local webHeartUI = Sprite()
 webHeartUI:Load("gfx/web_heart_ui.anm2", true)
 
@@ -136,6 +139,31 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 
 ---@param pickup EntityPickup
 ---@param collider Entity
+function WEB_HEART:KeeperHeartCollision(pickup, collider)
+	local player = collider:ToPlayer()
+	if not (player and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE)) then
+		return
+	end
+	if player:GetHealthType() == HealthType.COIN
+		or WEB_HEART.KeeperCharacters[player:GetPlayerType()]
+	then
+		if pickup:IsShopItem() then
+			return true
+		end
+		ARACHNAMOD:PickupKill(pickup)
+		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
+		local amount = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
+		for _ = 1, amount do
+			Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, 0, pickup.Position)
+		end
+		return true
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.IMPORTANT, WEB_HEART.KeeperHeartCollision, PickupVariant.PICKUP_HEART)
+
+---@param pickup EntityPickup
+---@param collider Entity
 function WEB_HEART:CollectWebHeart(pickup, collider)
 	local player = collider:ToPlayer()
 	if not (player and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE)) then
@@ -146,12 +174,9 @@ function WEB_HEART:CollectWebHeart(pickup, collider)
 	end
 
 	if ARACHNAMOD:PricedPickup(player, pickup) then
-		pickup:GetSprite():Play("Collect", true)
 		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
 		local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
 		WEB_HEART:AddWebHearts(player, heartWorth)
-		pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-		pickup:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK | EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
 	end
 end
 
@@ -159,69 +184,45 @@ Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.L
 
 --#endregion
 
---#region On Update
-
----@param pickup EntityPickup
-function WEB_HEART:OnPickupUpdate(pickup)
-	if pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE then
-		local sprite = pickup:GetSprite()
-
-		if sprite:IsEventTriggered("DropSound") then
-			Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 1, 0, false, 3)
-		end
-
-		if sprite:IsFinished("Collect") then
-			pickup:Remove()
-		end
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.OnPickupUpdate, PickupVariant.PICKUP_HEART)
-
---#endregion
-
 --#region Replace Hearts
 
 local function everyoneIsKeeper()
 	local foundKeeper = false
-	return Mod.Foreach.Player(function (player, index)
-		if player:GetHealthType() == HealthType.COIN then
+	local noKeeper = Mod.Foreach.Player(function (player, index)
+		if player:GetHealthType() == HealthType.COIN or WEB_HEART.KeeperCharacters[player:GetPlayerType()] then
 			foundKeeper = true
 		elseif not player.Parent then
-			return false
+			return true
 		end
-	end) or foundKeeper
+	end)
+	if noKeeper then
+		return false
+	else
+		return foundKeeper
+	end
 end
 
 local function everyoneIsArachna()
 	local foundArachna = false
-	return Mod.Foreach.Player(function (player, index)
+	local noArachna = Mod.Foreach.Player(function (player, index)
 		if Mod.Character.ARACHNA:IsAnyArachna(player) then
 			foundArachna = true
 		elseif not player.Parent then
-			return false
+			return true
 		end
-	end) or foundArachna
-end
-
----@param pickup EntityPickup
-function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
-	if everyoneIsKeeper() and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE) then
-		local amount = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
-		for _ = 1, amount do
-			local spider = Mod.Spawn.Familiar(FamiliarVariant.BLUE_SPIDER, 0, pickup.Position, nil, pickup)
-			spider:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
-		end
-		pickup:Remove()
+	end)
+	if noArachna then
+		return false
+	else
+		return foundArachna
 	end
 end
-
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, WEB_HEART.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
 
 ---@param pickup EntityPickup
 function WEB_HEART:ForceReplaceHearts(pickup)
 	if WEB_HEART.HeartsToReplace[pickup.SubType] and everyoneIsArachna() then
 		local rng = pickup:GetDropRNG()
+		Mod:DebugLog("Replaced heart subtype", pickup.SubType, "with Web Heart")
 		if rng:RandomFloat() < 0.05 then
 			pickup:Morph(pickup.Type, pickup.Variant, WEB_HEART.ID_DOUBLE, true, true)
 		else
@@ -231,6 +232,21 @@ function WEB_HEART:ForceReplaceHearts(pickup)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts, PickupVariant.PICKUP_HEART)
+
+---@param pickup EntityPickup
+function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
+	if everyoneIsKeeper() and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE) then
+		Mod:DebugLog("Replaced Web Heart with blue spiders for Keeper character")
+		local amount = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
+		for _ = 1, amount do
+			local spider = Mod.Spawn.Familiar(FamiliarVariant.BLUE_SPIDER, 0, pickup.Position, nil, pickup)
+			spider:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
+		end
+		pickup:Remove()
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
 
 --#endregion
 

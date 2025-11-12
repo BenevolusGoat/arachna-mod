@@ -41,7 +41,12 @@ end
 
 local patches = {
 	"pogforgooditems",
-	"minimapapi"
+	"minimapapi",
+	"epiphany",
+	"stageapi",
+	"fiend_folio",
+	"future",
+	"no_costumes"
 }
 
 for _, fileName in ipairs(patches) do

@@ -74,23 +74,17 @@ end
 
 ---Kills a pickup and simulaters vanilla behaviour
 ---@param pickup EntityPickup
-function ARACHNAMOD:PickupKill(pickup)
-	pickup:PlayPickupSound()
-	pickup.Velocity = Vector.Zero
-	pickup.EntityCollisionClass = 0
-	local effect = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, 0, pickup.Position, Vector.Zero, nil)
-		:ToEffect() ---@cast effect EntityEffect
-	effect.Timeout = pickup.Timeout
-	local sprite = effect:GetSprite()
-	sprite:Load(pickup:GetSprite():GetFilename(), false)
-	if pickup.Variant == PickupVariant.PICKUP_TRINKET then
-		local gfx = Mod.ItemConfig:GetTrinket(pickup.SubType).GfxFileName
-		sprite:ReplaceSpritesheet(0, gfx)
+---@param playSound? boolean
+function ARACHNAMOD:PickupKill(pickup, playSound)
+	if playSound then
+		pickup:PlayPickupSound()
 	end
-	sprite:LoadGraphics()
-	sprite:Play("Collect", true)
+	pickup.Velocity = Vector.Zero
+	pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+	pickup:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK | EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+	pickup:GetSprite():Play("Collect", true)
 	pickup:TriggerTheresOptionsPickup()
-	pickup:Remove()
+	pickup:Die()
 end
 
 ---Makes a custom coin play the pickup animation
