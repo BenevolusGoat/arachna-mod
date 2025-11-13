@@ -105,6 +105,7 @@ Most of these changes can be reverted by enabling "Legacy Gameplay" in the setti
 -- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 
 Other:
+- Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
 - Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
 - 3D Glasses now works for all weapon types

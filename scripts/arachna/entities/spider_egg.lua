@@ -92,7 +92,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 			maxSpiders = maxSpiders - 2
 		end
 
-		if shouldIncreaseSpider and ARACHNAMOD:IsLegacyGameplayEnabled() then
+		if shouldIncreaseSpider and isLegacy then
 			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders, rng) + webHearts)
 		else
 			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
@@ -109,7 +109,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 			then
 				spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(true)
 				if rng:RandomFloat() < 0.1 and spiderSubtype < COLORED_SPIDERS.SpiderSubtype.BIG_FLAG then
-					spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
+				spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 				end
 			end
 			COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, egg.Position)
