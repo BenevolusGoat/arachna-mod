@@ -67,7 +67,7 @@ return function(modifiers)
 			Description = {
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
 				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed and drop a Spider Egg on death",
-				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders. Some can be {{ColorRainbow}}special{{CR}}",
+				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
 			}
 		},
@@ -75,7 +75,7 @@ return function(modifiers)
 			Name = "Divine Cloth",
 			Description = {
 				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies, {{Slow}} slowing and causing them to drop a Spider Egg on death",
-				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders. Some can be {{ColorRainbow}}special{{CR}} and/or larger",
+				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{Timer}} Spider Eggs break on their own after 16 seconds, spawning nothing",
 				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
 			}

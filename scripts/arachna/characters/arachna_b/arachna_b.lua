@@ -6,7 +6,8 @@ ARACHNAMOD.Character.ARACHNA_B = ARACHNA_B
 
 Mod.Include("scripts.arachna.characters.arachna_b.divine_cloth")
 
-CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY
+CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
+CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA_B] = true
 
 ---@param player EntityPlayer
 function ARACHNA_B:IsArachnaB(player)

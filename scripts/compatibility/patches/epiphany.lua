@@ -25,7 +25,7 @@ local function epiphanyPatch()
 		[Mod.Pickup.WEB_HEART.ID] = 0,
 		[Mod.Pickup.WEB_HEART.ID] = 0,
 	})
-	Mod.Pickup.WEB_HEART.KeeperCharacters[Epiphany.PlayerType.KEEPER] = true
+	ARACHNAMOD.KeeperPlayers[Epiphany.PlayerType.KEEPER] = true
 end
 
 loader:RegisterPatch("Epiphany", epiphanyPatch)

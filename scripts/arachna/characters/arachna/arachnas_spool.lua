@@ -71,8 +71,8 @@ end
 ---...this is literally just the Stage HP formula don't @ me
 function ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
 	local stage = Mod.Level():GetStage()
-	local stageModifier = Mod.math.min(4, stage) + 0.8 * math_bound(0,stage - 5, 5)
-	return ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD + stageModifier *ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE
+	local stageModifier = Mod.math.min(4, stage) + 0.8 * math_bound(0, stage - 5, 5)
+	return ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD + stageModifier * ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE
 end
 
 --#endregion
@@ -176,7 +176,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, 
 ---@param source EntityRef
 ---@param duration integer
 function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil, {UndoKnockback = not npc:HasEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)})
+	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil)
 end
 
 ---@param npc EntityNPC
@@ -186,7 +186,7 @@ function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
 		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
 		and npc:IsActiveEnemy(false)
 		and npc:IsVulnerableEnemy()
-		and (not ARACHNAMOD:IsLegacyGameplay() or not npc:IsBoss())
+		and (not ARACHNAMOD:IsLegacyGameplayEnabled() or not npc:IsBoss())
 end
 
 ---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
@@ -203,33 +203,27 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
 
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:OnNPCDeath(npc)
-	if Mod:GetData(npc).QueueSpiderEgg and not npc:IsBoss() then
-		Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
+	if Mod:GetData(npc).QueueSpiderEgg then
+		if npc:IsBoss() then
+			if ARACHNAMOD:IsLegacyGameplayEnabled() then return end
+			Mod.Foreach.Pickup(function (heart, index)
+				if heart.SpawnerType == npc.Type and heart.FrameCount == 0 then
+					local newSubtype = heart.SubType == HeartSubType.HEART_DOUBLEPACK and Mod.Pickup.WEB_HEART.ID_DOUBLE or Mod.Pickup.WEB_HEART.ID
+					heart:Morph(heart.Type, heart.Variant, newSubtype, true, true, true)
+				end
+			end, PickupVariant.PICKUP_HEART)
+			for i = 1, 3 do
+				local spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
+				spiderSubtype = spiderSubtype + Mod.Entities.COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
+				Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(Isaac.GetPlayer(), spiderSubtype, npc.Position)
+			end
+		else
+			Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
+		end
 	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNAS_SPOOL.OnNPCDeath)
-
---Experiemntal thing of removing knockback while webbed. Dunno if it should be kept
---[[
----@param ent Entity
-function ARACHNAS_SPOOL:PostAddWebbed(ent, statusEffect, statusEffectData)
-	ent:AddEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostAddWebbed, ARACHNAS_SPOOL.STATUS_WEBBED)
-
----@param ent Entity
----@param statusEffectData StatusEffectData
-function ARACHNAS_SPOOL:PostRemoveWebbed(ent, statusEffect, statusEffectData)
-	if statusEffectData.CustomData.UndoKnockback then
-		ent:ClearEntityFlags(EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_REMOVE_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostRemoveWebbed, ARACHNAS_SPOOL.STATUS_WEBBED) ]]
-
---#endregion
 
 --#region Webbed & Spider Bite
 
@@ -281,12 +275,12 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTIT
 ---@param source EntityRef
 ---@param countdown integer
 function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
-	if ARACHNAMOD:IsLegacyGameplay() then
+	if ARACHNAMOD:IsLegacyGameplayEnabled() then
 		return
 	end
 	local npc = ent:ToNPC()
 	if npc and npc:IsBoss() then
-		local player = Mod:TryGetPlayer(source, {LoopSpawnerEnt = true})
+		local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
 		local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
 		local hasSpiderBite = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
 
@@ -335,7 +329,8 @@ function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
 			local progress = data.SpiderBossCharge / data.SpiderBossChargeDMGNeeded
 			local percent = Mod.math.floor(progress * 100)
 			local frameNum = Mod:Clamp(percent - 1, 0, 99)
-			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A, (hasWebbed or hasSpiderBite) and 1 or 0.5, 0.2)
+			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A,
+				(hasWebbed or hasSpiderBite) and 1 or 0.5, 0.2)
 			data.SpiderBossChargeSprite:SetFrame("Charging", frameNum)
 			data.SpiderBossChargeSprite:Render(renderPos)
 		end

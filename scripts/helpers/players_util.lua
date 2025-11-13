@@ -314,8 +314,9 @@ function ARACHNAMOD:IsAnyLost(player)
 	return ARACHNAMOD.LostPlayers[player:GetPlayerType()]
 end
 
+---@param player EntityPlayer
 function ARACHNAMOD:IsAnyKeeper(player)
-	return ARACHNAMOD.KeeperPlayers[player:GetPlayerType()]
+	return player:GetHealthType() == HealthType.COIN or ARACHNAMOD.KeeperPlayers[player:GetPlayerType()]
 end
 
 ---returns true if the player can pickup the item, false if they cannot (not being able to pickup due animation is included)

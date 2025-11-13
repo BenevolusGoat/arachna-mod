@@ -39,7 +39,7 @@ end
 function SPIDER_CAKE:OnGameStart(isContinued)
 	local player = Isaac.GetPlayer()
 	if not isContinued
-		and Mod.Character.ARACHNA:IsAnyArachna(player)
+		and Mod:IsAnyArachna(player)
 		and SPIDER_CAKE:ShouldSpawnCake()
 	then
 		local itemPos = Mod.Room():FindFreePickupSpawnPosition(Vector(140, 240))

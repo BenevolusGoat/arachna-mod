@@ -76,6 +76,8 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 - Fixed mod incompatibility with Arachnid's Grip effect of instakilling fly enemies
 - Fixed sparkles from Arachna's Golden Spiders not being removed properly, causing increasing amounts of lag over time until you left the room
 - Fixed the Spider Egg orbital from Arachnid's Grip not having a variant assigned, which had self-assigned itself a variant of 0
+- Fixed Web Hearts replacing specific heart types if any Arachna players were present, even if other co-op players weren't Arachna
+- Fixed Web Hearts turning into blue spiders if any Keeper players were present, even if other co-op players weren't a Keeper
 
 ## GAMEPLAY CHANGES
 New Content:
@@ -88,7 +90,7 @@ These changes can be reverted by enabling "Legacy Gameplay" in the settings.
 
 Tainted Arachna:
 These changes can be reverted by enabling "Legacy Gameplay" in the settings.
-- List changes here
+- Replaced inherint +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
 
 Both Arachnas:
 Most of these changes can be reverted by enabling "Legacy Gameplay" in the settings. Those that aren't will be labelled with an additional bullet point.
@@ -97,11 +99,13 @@ Most of these changes can be reverted by enabling "Legacy Gameplay" in the setti
 - Enemies below 10 HP or those spawned by other enemies now spawn small versions of Spider Eggs on death, which will spawn less spiders. Enemies spawned by other enemies only have a 50% chance to spawn a small egg
 - Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
 - Shooting bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into friendly spiders
+- Guppy's Paw and Abbadon no longer have manual interactions with either Arachna's Web Hearts
+- Arachna and Tainted Arachna's Web Hearts are sorted before all other health, similarly to heart containers
+-- Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 -- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
--- Changed Web Hearts replacing specific heart types to trigger if every player is either Arachna or Tainted Arachna, not counting "Strawman" players, instead of just one character being Arachna or Tainted Arachna
--- The above change is also reflected for Web Hearts turning into blue spiders for any "Keeper" characters
 
-Items:
+Other:
+- Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
 - Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
 - 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
@@ -134,6 +138,8 @@ Items:
 - Updated all English EID descriptions
 - Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect
 - Added mod icon for EID
+- Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
+- TR Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
 
 ## INTERNAL CHANGES
 Arachna didn't really have an API before, which is where I would put this down, but these changes are important to note for any mods with mod compatibility with Arachna.

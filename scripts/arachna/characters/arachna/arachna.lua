@@ -18,27 +18,8 @@ function ARACHNA:ArachnaHasBirthright(player)
 	return ARACHNA:IsArachna(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
 
-CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
-
----@param player EntityPlayer
-function ARACHNA:IsAnyArachna(player)
-	local playerType = player:GetPlayerType()
-	return playerType == Mod.PlayerType.ARACHNA or playerType == Mod.PlayerType.ARACHNA_B
-end
-
-function ARACHNAMOD:IsLegacyGameplay()
-	return Mod.SaveManager.GetRunSave().ArachnaLegacyGameplay or false
-end
-
----@param isContinued boolean
-function ARACHNA:UpdateLegacyGameplay(isContinued)
-	if not isContinued then
-		local run_save = Mod.SaveManager.GetRunSave()
-		run_save.ArachnaLegacyGameplay = Mod.GetSetting(Mod.Setting.LegacyGameplay)
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ARACHNA.UpdateLegacyGameplay)
+CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
+CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA] = true
 
 ARACHNA.TearVariantSpritesheetPath = "gfx/projectiles/"
 ARACHNA.TearVariantToSpritesheet = {
@@ -56,7 +37,7 @@ ARACHNA.TearVariantToSpritesheet = {
 function ARACHNA:SetArachnaTearSprite(tear)
 	local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
 	if player
-		and ARACHNA:IsAnyArachna(player)
+		and Mod:IsAnyArachna(player)
 		and tear.CanTriggerStreakEnd
 	then
 		local sprite = tear:GetSprite()
@@ -75,7 +56,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, ARACHNA.SetArachnaTearSprite)
 ---@param player EntityPlayer
 ---@param tearParams TearParams
 function ARACHNA:PosionTears(player, tearParams, weaponType, damageScale, tearDisplacement, source)
-	if ARACHNA:IsAnyArachna(player)
+	if Mod:IsAnyArachna(player)
 		and player:GetCollectibleRNG(Mod.Item.ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNA.POISON_CHANCE
 	then
 		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
@@ -114,7 +95,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_TEAR_COLLISION, ARACHNA.TearTouchEnemy)
 function ARACHNA:IgnoreCobwebSlow(statusID, ent, source, duration)
 	local player = ent:ToPlayer()
 	if player
-		and ARACHNA:IsAnyArachna(player)
+		and Mod:IsAnyArachna(player)
 		and source.Type == 0 --If it came from nothing, best we can assume is cobweb. Otherwise...oh well!
 	then
 		return false

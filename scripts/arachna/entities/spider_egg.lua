@@ -29,7 +29,7 @@ end
 ---@param spawner? Entity
 function SPIDER_EGG:TrySpawnEgg(pos, spawner)
 	local smallEgg = spawner and SPIDER_EGG:ShouldSpawnSmallEgg(spawner) or false
-	if smallEgg and ARACHNAMOD:IsLegacyGameplay() then
+	if smallEgg and ARACHNAMOD:IsLegacyGameplayEnabled() then
 		return
 	end
 	local subtype = smallEgg and 1 or 0
@@ -78,7 +78,10 @@ function SPIDER_EGG:Explode(egg, rewards)
 		local webHearts = Mod.Pickup.WEB_HEART:GetWebHearts(player)
 		local stageModifier = ceil((stageNum + 1) / 2) * 0.5
 		local minSpiders, maxSpiders = 2, 4
-		local shouldIncreaseSpider = Mod.Character.ARACHNA:ArachnaHasBirthright(player) or Mod.Character.ARACHNA_B:IsArachnaB(player)
+		local isLegacy = ARACHNAMOD:IsLegacyGameplayEnabled()
+		local shouldIncreaseSpider = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
+			or Mod.Character.ARACHNA_B:IsArachnaB(player) and isLegacy
+		local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 		if shouldIncreaseSpider then
 			minSpiders = minSpiders + 1
@@ -89,7 +92,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 			maxSpiders = maxSpiders - 2
 		end
 
-		if shouldIncreaseSpider and ARACHNAMOD:IsLegacyGameplay() then
+		if shouldIncreaseSpider and ARACHNAMOD:IsLegacyGameplayEnabled() then
 			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders, rng) + webHearts)
 		else
 			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
@@ -100,15 +103,17 @@ function SPIDER_EGG:Explode(egg, rewards)
 			if Mod.Character.ARACHNA:IsArachna(player)
 				and rng:RandomInt(2) == 1
 			then
-				spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
+				spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype()
 			elseif Mod.Character.ARACHNA_B:IsArachnaB(player)
 				and rng:RandomInt(3) == 1
 			then
-				spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
+				spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(true)
+				if rng:RandomFloat() < 0.1 and spiderSubtype < COLORED_SPIDERS.SpiderSubtype.BIG_FLAG then
+					spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
+				end
 			end
-			Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, egg.Position)
+			COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, egg.Position)
 		end
-
 
 		if Mod.Character.ARACHNA:ArachnaHasBirthright(player) and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then
 			Mod.Spawn.Pickup(Mod.Pickup.WEB_HEART.ID, 0, egg.Position, nil, egg)

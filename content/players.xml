@@ -1,13 +1,13 @@
 <players root="gfx/characters/costumes/"
          portraitroot="gfx/ui/stage/"
          nameimageroot="gfx/ui/boss/">
-	<player name="Arachna" skin="character_arachna.png" hp="4" armor="4" healthtype="1"
+	<player name="Arachna" skin="character_arachna.png" hp="4" armor="4"
 		  pocketActive="Arachna's Spool" modcostume="0"
 		  damagemodifier="-0.7" speedmodifier="0.25" luckmodifier="-0.8"
           nameimage="playername_arachna.png"
           portrait="playerportrait_arachna.png" skinColor="1" costumeSuffix="arachna" noshake="true"
 		  birthright="More Web, More Friends, More Health!" />
-	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2" healthtype="1"
+	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2"
 		  pocketActive="Divine Cloth" modcostume="1"
 		  speedmodifier="-0.25" luckmodifier="0.8" firedelaymodifier="-2.3" damagemodifier="-2.5"
 		  achievement="The Wretched"

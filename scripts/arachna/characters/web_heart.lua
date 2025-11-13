@@ -11,11 +11,16 @@ WEB_HEART.ID_DOUBLE = Isaac.GetEntitySubTypeByName("Web Heart (Double)")
 WEB_HEART.CLOT_FAMILIAR = Isaac.GetEntitySubTypeByName("Web Heart Baby")
 WEB_HEART.PICKUP_SFX = SoundEffect.SOUND_SPIDER_SPIT_ROAR
 WEB_HEART.KEY = "WEB_HEART"
+WEB_HEART.KEY_ARACHNA = "WEB_HEART_ARACHNA"
 
 WEB_HEART.HeartsToReplace = Mod:Set({
 	HeartSubType.HEART_ETERNAL,
 	HeartSubType.HEART_BONE,
 	HeartSubType.HEART_ROTTEN
+})
+WEB_HEART.BLOCK_KEYS = Mod:Set({
+	"BONE_HEART",
+	"ETERNAL_HEART"
 })
 
 --For modded characters
@@ -24,69 +29,152 @@ WEB_HEART.KeeperCharacters = {}
 local webHeartUI = Sprite()
 webHeartUI:Load("gfx/web_heart_ui.anm2", true)
 
+local SORT_ORDER_BONE = 50
+local SORT_ORDER_SOUL = 100
+
+local WEB_HEART_BASE = {
+	AnimationFilename = "gfx/web_heart_ui.anm2",
+	AnimationName = "UI",
+	HealFlashRO = 240 / 255,
+	HealFlashGO = 240 / 255,
+	HealFlashBO = 240 / 255,
+	MaxHP = 1,
+	PrioritizeHealing = false,
+	PickupEntities = {
+		{ ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID },
+		{ ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID_DOUBLE }
+	},
+	SumptoriumSubType = WEB_HEART.CLOT_FAMILIAR,
+	SumptoriumSplatColor = Color(1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00),
+	SumptoriumTrailColor = Color(1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00),
+	SumptoriumCollectSoundSettings = {
+		ID = SoundEffect.SOUND_MEAT_IMPACTS,
+		Volume = 1.0,
+		FrameDelay = 0,
+		Loop = false,
+		Pitch = 1.0,
+		Pan = 0
+	}
+}
+
+local WEB_HEART_BONE = Mod:CopyTable(WEB_HEART_BASE)
+WEB_HEART_BONE.SortOrder = SORT_ORDER_BONE
+WEB_HEART_BONE.AddPriority = 0
+WEB_HEART_BONE.RemovePriority = 90
+WEB_HEART_BONE.ProtectsDealChance = false
+WEB_HEART_BONE.CanHaveHalfCapacity = false
+CustomHealthAPI.Library.RegisterHealthContainer(WEB_HEART.KEY_ARACHNA, WEB_HEART_BONE)
+
+local WEB_HEART_SOUL = Mod:CopyTable(WEB_HEART_BASE)
+WEB_HEART_SOUL.SortOrder = SORT_ORDER_SOUL
+WEB_HEART_SOUL.AddPriority = 125
+WEB_HEART_SOUL.AnimationName = {WEB_HEART_SOUL.AnimationName}
+CustomHealthAPI.Library.RegisterSoulHealth(WEB_HEART.KEY, WEB_HEART_SOUL)
+
+local NO_PENTALTY_FLAGS = DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_FAKE | DamageFlag.DAMAGE_NO_PENALTIES
+
+--#endregion
+
+--#region Helpers
+
+---@param key string
+function WEB_HEART:IsWebHeart(key)
+	return key == WEB_HEART.KEY or key == WEB_HEART.KEY_ARACHNA
+end
+
+---@param player EntityPlayer
+function WEB_HEART:GetKey(player)
+	local key = WEB_HEART.KEY
+	if Mod:IsAnyArachna(player) and not Mod:IsLegacyGameplayEnabled() then
+		key = WEB_HEART.KEY_ARACHNA
+	end
+	return key
+end
+
 ---@param player EntityPlayer
 ---@param amount integer
 function WEB_HEART:AddWebHearts(player, amount)
-	CustomHealthAPI.Library.AddHealth(player, WEB_HEART.KEY, amount, false, false)
+	local key = WEB_HEART:GetKey(player)
+	if key == WEB_HEART.KEY then
+		amount = Mod.math.floor(amount * 2)
+	end
+	CustomHealthAPI.Library.AddHealth(player, key, amount, false, false)
 end
 
 ---@param player EntityPlayer
 ---@return boolean
 function WEB_HEART:CanPickup(player)
-	return CustomHealthAPI.Library.CanPickKey(player, WEB_HEART.KEY)
+	return CustomHealthAPI.Library.CanPickKey(player, WEB_HEART:GetKey(player))
 end
 
 ---@param player EntityPlayer
 ---@return integer
 function WEB_HEART:GetWebHearts(player)
-	return CustomHealthAPI.Library.GetHPOfKey(player, WEB_HEART.KEY, nil, nil, true)
+	local key = WEB_HEART:GetKey(player)
+	local amount = CustomHealthAPI.Library.GetHPOfKey(player,key, nil, nil, true)
+	if key == WEB_HEART.KEY then
+		amount = Mod.math.ceil(amount / 2)
+	end
+	return amount
 end
-
-CustomHealthAPI.Library.RegisterSoulHealth(
-    WEB_HEART.KEY,
-    {
-        AnimationFilename = "gfx/web_heart_ui.anm2",
-        AnimationName = {"UI"},
-        SortOrder = 100,
-        AddPriority = 125,
-        HealFlashRO = 240/255,
-        HealFlashGO = 240/255,
-        HealFlashBO = 240/255,
-        MaxHP = 1,
-        PrioritizeHealing = false,
-        PickupEntities = {
-            {ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID},
-            {ID = EntityType.ENTITY_PICKUP, Var = PickupVariant.PICKUP_HEART, Sub = WEB_HEART.ID_DOUBLE}
-        },
-        SumptoriumSubType = WEB_HEART.CLOT_FAMILIAR,
-        SumptoriumSplatColor = Color(1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00),
-        SumptoriumTrailColor = Color(1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00),
-        SumptoriumCollectSoundSettings = {
-            ID = SoundEffect.SOUND_MEAT_IMPACTS,
-            Volume = 1.0,
-            FrameDelay = 0,
-            Loop = false,
-            Pitch = 1.0,
-            Pan = 0
-        }
-    }
-)
 
 --#endregion
 
 --#region CustomHealthAPI
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0, function (player,index,health)
-    if health.Key == WEB_HEART.KEY then
-        if CustomHealthAPI.Helper.GetGoldenRenderMask(player)[index+1] then
-            return {AnimationFilename = "gfx/web_heart_ui.anm2", AnimationName = "UI_Gold"}
-        end
-    end
-end)
+function WEB_HEART:UpdateHealthConversion()
+	if Mod:IsLegacyGameplayEnabled() then
+		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
+		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY
+	else
+		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
+		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
+	end
+end
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED, CustomHealthAPI.Enums.CallbackPriorities.LATE,
-	function (player, flags, _, _, key, hp, hpToRemove)
-		if key == WEB_HEART.KEY and hpToRemove >= hp then
+Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, WEB_HEART.UpdateHealthConversion)
+
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH, CustomHealthAPI.Enums.CallbackPriorities.EARLY,
+function(player, key, hp)
+	local expectedKey = WEB_HEART:GetKey(player)
+		--In case the incorrect heart is added
+		if WEB_HEART:IsWebHeart(key) and key ~= expectedKey then
+			if expectedKey == WEB_HEART.KEY then
+				hp = Mod.math.floor(hp * 2)
+			else
+				hp = Mod.math.ceil(hp / 2)
+			end
+			return expectedKey, hp
+		--Manually handle max HP so its identical to Forgor, 2:1 ratio of hearts
+		elseif Mod:IsAnyArachna(player)
+			and not Mod:IsLegacyGameplayEnabled()
+			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
+			and CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0
+			and CustomHealthAPI.Library.GetInfoOfKey(key, "KindContained") ~= CustomHealthAPI.Enums.HealthKinds.NONE
+		then
+			local hpToAdd = math.ceil(hp)
+			if CustomHealthAPI.PersistentData.HealthDefinitions[key].CanHaveHalfCapacity then
+				hpToAdd = math.ceil(hpToAdd / 2)
+			end
+			return WEB_HEART.KEY_ARACHNA, hpToAdd
+		elseif Mod:IsAnyArachna(player) and WEB_HEART.BLOCK_KEYS[key] then
+			return true
+		end
+	end)
+
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0,
+	function(player, index, health)
+		if health.Key == WEB_HEART.KEY then
+			if CustomHealthAPI.Helper.GetGoldenRenderMask(player)[index + 1] then
+				return { AnimationFilename = "gfx/web_heart_ui.anm2", AnimationName = "UI_Gold" }
+			end
+		end
+	end)
+
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED,
+	CustomHealthAPI.Enums.CallbackPriorities.LATE,
+	function(player, flags, _, _, key, hp, hpToRemove)
+		if WEB_HEART:IsWebHeart(key) and hpToRemove >= hp then
 			local numGoldens = CustomHealthAPI.Library.GetHPOfKey(player, "GOLDEN_HEART", nil, nil, true)
 			local data = Mod:GetData(player)
 			if numGoldens > 0 and not data.GoldenHeartsPreDamage then
@@ -94,13 +182,12 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 				Isaac.CreateTimer(function() Mod:GetData(player).GoldenHeartsPreDamage = nil end, 1, 1, true)
 			end
 		end
-	end
-)
+	end)
 
 CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
 	---@param player EntityPlayer
 	function(player, flags, key, hpDamaged, wasDepleted, wasLastDamaged)
-		if key == WEB_HEART.KEY and wasDepleted then
+		if WEB_HEART:IsWebHeart(key) and wasDepleted then
 			local spiderType = 0
 			local data = Mod:GetData(player)
 			if data.GoldenHeartsPreDamage then
@@ -117,19 +204,17 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 			--visual/sound effects
 			local poof02 = Mod.Spawn.Poof02(0, player.Position, player)
 			poof02:GetSprite().Color = Color(0, 1, 1, 0.5, 1, 1, 1)
-			poof02.DepthOffset = 250
-			poof02:Update()
 			local splat = Mod.Spawn.Effect(EffectVariant.BLOOD_EXPLOSION, 0, player.Position, nil, player)
 			splat:GetSprite().Color = Color(0, 1, 1, 0.5, 1, 1, 1)
-			splat.DepthOffset = 250
-			splat:Update()
 			Mod.Game:SpawnParticles(player.Position, 5, Mod:RandomNum(5, 10), 4, Color(1, 1, 1, 1, 1, 1, 1))
 			Mod.Game:ShakeScreen(16)
 			Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
 			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
-			--fake damage
-			Mod.Level():SetStateFlag(LevelStateFlag.STATE_DAMAGED, true) --for perfection
-			player:SetMinDamageCooldown(60)
+
+			if Mod:IsAnyArachna(player) and not Mod:HasAnyBitFlags(flags, NO_PENTALTY_FLAGS) then
+				Mod.Room():SetRedHeartDamage()
+				Mod.Level():SetRedHeartDamage()
+			end
 		end
 	end)
 
@@ -160,7 +245,8 @@ function WEB_HEART:KeeperHeartCollision(pickup, collider)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.IMPORTANT, WEB_HEART.KeeperHeartCollision, PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.IMPORTANT, WEB_HEART.KeeperHeartCollision,
+	PickupVariant.PICKUP_HEART)
 
 ---@param pickup EntityPickup
 ---@param collider Entity
@@ -175,12 +261,13 @@ function WEB_HEART:CollectWebHeart(pickup, collider)
 
 	if ARACHNAMOD:PricedPickup(player, pickup) then
 		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
-		local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
+		local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 2 or 1
 		WEB_HEART:AddWebHearts(player, heartWorth)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart,
+	PickupVariant.PICKUP_HEART)
 
 --#endregion
 
@@ -188,8 +275,8 @@ Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.L
 
 local function everyoneIsKeeper()
 	local foundKeeper = false
-	local noKeeper = Mod.Foreach.Player(function (player, index)
-		if player:GetHealthType() == HealthType.COIN or WEB_HEART.KeeperCharacters[player:GetPlayerType()] then
+	local noKeeper = Mod.Foreach.Player(function(player, index)
+		if Mod:IsAnyKeeper(player) then
 			foundKeeper = true
 		elseif not player.Parent then
 			return true
@@ -202,25 +289,9 @@ local function everyoneIsKeeper()
 	end
 end
 
-local function everyoneIsArachna()
-	local foundArachna = false
-	local noArachna = Mod.Foreach.Player(function (player, index)
-		if Mod.Character.ARACHNA:IsAnyArachna(player) then
-			foundArachna = true
-		elseif not player.Parent then
-			return true
-		end
-	end)
-	if noArachna then
-		return false
-	else
-		return foundArachna
-	end
-end
-
 ---@param pickup EntityPickup
 function WEB_HEART:ForceReplaceHearts(pickup)
-	if WEB_HEART.HeartsToReplace[pickup.SubType] and everyoneIsArachna() then
+	if WEB_HEART.HeartsToReplace[pickup.SubType] and Mod:EveryoneIsArachna() then
 		local rng = pickup:GetDropRNG()
 		Mod:DebugLog("Replaced heart subtype", pickup.SubType, "with Web Heart")
 		if rng:RandomFloat() < 0.05 then
@@ -231,7 +302,7 @@ function WEB_HEART:ForceReplaceHearts(pickup)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts, PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts,PickupVariant.PICKUP_HEART)
 
 ---@param pickup EntityPickup
 function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
@@ -250,12 +321,12 @@ Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPOR
 
 --#endregion
 
---#region Abaddon
+--#region Abaddon (Legacy)
 
 ---@param player EntityPlayer
 function WEB_HEART:Abaddon(itemID, charge, firstTime, slot, varData, player)
 	local numWebHearts = WEB_HEART:GetWebHearts(player)
-	if numWebHearts > 0 then
+	if numWebHearts > 0 and Mod:IsLegacyGameplayEnabled() then
 		player:AddBlackHearts(numWebHearts * 2)
 		WEB_HEART:AddWebHearts(player, -numWebHearts)
 	end
@@ -265,13 +336,13 @@ Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, WEB_HEART.Abaddon, Collect
 
 --#endregion
 
---#region Guppy's Paw
+--#region Guppy's Paw (Legacy)
 
 ---@param player EntityPlayer
 function WEB_HEART:ArachnaGuppysPaw(itemID, rng, player, flags, slot, customVar)
-	local playerType = player:GetPlayerType()
 	if WEB_HEART:GetWebHearts(player) > 0
-		and (playerType == Mod.PlayerType.ARACHNA or playerType == Mod.PlayerType.ARACHNA_B)
+		and Mod:IsLegacyGameplayEnabled()
+		and Mod:IsAnyArachna(player)
 	then
 		player:AddSoulHearts(6)
 		WEB_HEART:AddWebHearts(player, -1)
@@ -280,6 +351,29 @@ function WEB_HEART:ArachnaGuppysPaw(itemID, rng, player, flags, slot, customVar)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.ArachnaGuppysPaw, CollectibleType.COLLECTIBLE_GUPPYS_PAW)
+Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, WEB_HEART.ArachnaGuppysPaw, CollectibleType.COLLECTIBLE_GUPPYS_PAW)
+
+--#endregion
+
+--#region Devil Deals (Purely visual)
+
+local SUPPORTED_VISUALS = Mod:Set({
+	PickupPrice.PRICE_ONE_HEART,
+	PickupPrice.PRICE_ONE_HEART_AND_ONE_SOUL_HEART,
+	PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS,
+	PickupPrice.PRICE_TWO_HEARTS
+})
+
+---@param pickup EntityPickup
+function WEB_HEART:UpdateDevilSprite(pickup)
+	if not pickup:IsShopItem() or pickup.FrameCount > 0 then return end
+	if SUPPORTED_VISUALS[pickup.Price] and Mod:EveryoneIsArachna() then
+		pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/price_web.png", true)
+	else
+		pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/shop_001_bitfont.png", true)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_RENDER, WEB_HEART.UpdateDevilSprite, PickupVariant.PICKUP_COLLECTIBLE)
 
 --#endregion

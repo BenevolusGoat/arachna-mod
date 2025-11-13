@@ -91,6 +91,42 @@ ARACHNAMOD:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.L
 	end
 end)
 
+---@param player EntityPlayer
+function ARACHNAMOD:IsAnyArachna(player)
+	local playerType = player:GetPlayerType()
+	return playerType == Mod.PlayerType.ARACHNA or playerType == Mod.PlayerType.ARACHNA_B
+end
+
+function ARACHNAMOD:IsLegacyGameplayEnabled()
+	local run_save = Mod.SaveManager.GetRunSave()
+	return run_save and run_save.ArachnaLegacyGameplay or false
+end
+
+function ARACHNAMOD:EveryoneIsArachna()
+	local foundArachna = false
+	local noArachna = Mod.Foreach.Player(function(player, index)
+		if Mod:IsAnyArachna(player) then
+			foundArachna = true
+		elseif not player.Parent then
+			return true
+		end
+	end)
+	if noArachna then
+		return false
+	else
+		return foundArachna
+	end
+end
+
+function ARACHNAMOD:UpdateLegacyGameplay()
+	if Mod.Game:GetFrameCount() <= 0 then
+		local run_save = Mod.SaveManager.GetRunSave()
+		run_save.ArachnaLegacyGameplay = Mod.GetSetting(Mod.Setting.LegacyGameplay)
+	end
+end
+
+Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, ARACHNAMOD.UpdateLegacyGameplay)
+
 ARACHNAMOD.FileLoadError = false
 ARACHNAMOD.InvalidPathError = false
 
