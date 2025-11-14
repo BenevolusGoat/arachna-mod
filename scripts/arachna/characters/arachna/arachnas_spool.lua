@@ -218,7 +218,10 @@ function ARACHNAS_SPOOL:OnNPCDeath(npc)
 				Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(Isaac.GetPlayer(), spiderSubtype, npc.Position)
 			end
 		else
-			Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
+			local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
+			if egg and egg.SubType == 0 then
+				egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
+			end
 		end
 	end
 end

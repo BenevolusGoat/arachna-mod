@@ -86,11 +86,11 @@ New Content:
 
 Arachna:
 These changes can be reverted by enabling "Legacy Gameplay" in the settings.
-- List changes here
+- Divine Cloth's timer-based eggs have been moved to Arachna's Spool
 
 Tainted Arachna:
 These changes can be reverted by enabling "Legacy Gameplay" in the settings.
-- Replaced inherint +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
+- Replaced inherent +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
 
 Both Arachnas:
 Most of these changes can be reverted by enabling "Legacy Gameplay" in the settings. Those that aren't will be labelled with an additional bullet point.

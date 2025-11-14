@@ -136,7 +136,7 @@ function SPIDER_EGG:OnUpdate(egg)
 		sprite:Play("Idle")
 	end
 
-	if (Mod.Room():IsClear()) and (sprite:IsPlaying("Idle")) then
+	if (Mod.Room():IsClear() or egg.SubType == 1) and (sprite:IsPlaying("Idle")) then
 		sprite:Play("Explode")
 	end
 
