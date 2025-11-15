@@ -144,7 +144,7 @@ function SPIDER_EGG:OnUpdate(egg)
 		SPIDER_EGG:Explode(egg, sprite:IsFinished("Explode"))
 	end
 
-	if egg.Timeout == 1 then
+	if egg.Timeout == 0 then
 		sprite:Play("ExplodeEmpty")
 	end
 end

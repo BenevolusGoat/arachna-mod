@@ -151,7 +151,8 @@ Arachna didn't really have an API before, which is where I would put this down, 
 - Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
 - Status effects now utilize StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Golden Shopkeeper is now an actual shopkeeper (type 17) instead of an effect (type 1000)
-- Web Heart's variant is now PickupVariant.PICKUP_HEART rather than their own unique variant
+- Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant
+- Best Bud Ball's effect variant is now a unique number instead of being a subtype of Friendly Ball
 - The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON, named "spiderBeggar"]])
 )
 

@@ -5,4 +5,11 @@
 	<!-- Dead Sea Scrolls Menu -->
 	<sound name="deadseascrolls_pop"> <sample weight="1" path="deadseascrolls/pop.wav"/> </sound>
 	<sound name="deadseascrolls_whoosh"> <sample weight="1" path="deadseascrolls/whoosh.wav"/> </sound>
+	<!-- Best Bud Ball (Friendly Ball backwards port from Rep+) -->
+	<sound name="Best Bud Ball (Raise)"><sample weight="1" path="best_bud_ball/bestbudball_raise.wav"/></sound>
+	<sound name="Best Bud Ball (Throw)"><sample weight="1" path="best_bud_ball/bestbudball_throw.wav"/></sound>
+	<sound name="Best Bud Ball (Land)"><sample weight="1" path="best_bud_ball/bestbudball_land.wav"/></sound>
+	<sound name="Best Bud Ball (Pickup)"><sample weight="1" path="best_bud_ball/bestbudball_pickup.wav"/></sound>
+	<sound name="Best Bud Ball (Capture)"><sample weight="1" path="best_bud_ball/bestbudball_capture.wav"/></sound>
+	<sound name="Best Bud Ball (Release)"><sample weight="1" path="best_bud_ball/bestbudball_release.wav"/></sound>
 </sounds>

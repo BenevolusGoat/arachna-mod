@@ -6,7 +6,6 @@ ARACHNAMOD.Item.GEPTAMERON = GEPTAMERON
 
 GEPTAMERON.ID = Isaac.GetItemIdByName("Geptameron")
 GEPTAMERON.OVERLAY = Isaac.GetGiantBookIdByName("Geptameron")
-GEPTAMERON.DAY_NULL_ITEM = Isaac.GetNullItemIdByName("geptameron day")
 
 ---@enum GeptameronWeek
 GEPTAMERON.WeekEffect = {
@@ -24,11 +23,19 @@ GEPTAMERON.WEEK_NAME = {
 	[GEPTAMERON.WeekEffect.MONDAY] = "Mighty Monday",
 	[GEPTAMERON.WeekEffect.TUESDAY] = "Terrific Tuesday",
 	[GEPTAMERON.WeekEffect.WEDNESDAY] = "Wise Wednesday",
-	[GEPTAMERON.WeekEffect.THURSDAY] = "Torrid Thursday", --Torrid isn't a word??
+	[GEPTAMERON.WeekEffect.THURSDAY] = "Torrid Thursday",
 	[GEPTAMERON.WeekEffect.FRIDAY] = "Fleeting Friday",
 	[GEPTAMERON.WeekEffect.SATURDAY] = "Sanguineous Saturday",
 	[GEPTAMERON.WeekEffect.SUNDAY] = "Stingy Sunday"
 }
+
+function GEPTAMERON:GetDayOfTheWeek()
+	local run_save = Mod.SaveManager.GetRunSave()
+	if not run_save.GeptameronWeek then
+		run_save.GeptameronWeek = 0
+	end
+	return run_save.GeptameronWeek
+end
 
 ---@param itemId CollectibleType
 ---@param rng RNG
@@ -37,10 +44,13 @@ GEPTAMERON.WEEK_NAME = {
 ---@param slot ActiveSlot
 ---@param customVarData integer
 function GEPTAMERON:OnUse(itemId, rng, player, useFlags, slot, customVarData)
-	if Mod.GetSetting(Mod.Setting.GeptameronGiantbook) then
+	if Mod.GetSetting(Mod.Setting.GeptameronGiantbook)
+		and (not Mod:HasBitFlags(useFlags, UseFlag.USE_OWNED) or player:GetEffects():GetCollectibleEffectNum(GEPTAMERON.ID) == 0)
+	then
 		ItemOverlay.Show(GEPTAMERON.OVERLAY, 3, player)
 	end
 	Mod.sfxman:Play(SoundEffect.SOUND_SUPERHOLY)
+	local effect = Mod:HasBitFlags(useFlags, UseFlag.USE_CUSTOMVARDATA) and customVarData or player:GetActiveItemDesc(slot).VarData
 	return true
 end
 
@@ -50,24 +60,32 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, GEPTAMERON.OnUse, GEPTAMERON.ID)
 ---@param slot ActiveSlot
 function GEPTAMERON:AdjustCropOffset(player, slot, offset, alpha, scale, chargebarOffset)
 	local varData = player:GetActiveItemDesc(slot).VarData
-	return {CropOffset = Vector(32 * (varData), 0)}
+	return {CropOffset = Vector(32 * (varData + 1), 0)}
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_PLAYERHUD_RENDER_ACTIVE_ITEM, GEPTAMERON.AdjustCropOffset, GEPTAMERON.ID)
 
----@param player EntityPlayer
-function GEPTAMERON:OnRoomClear(player)
-	--[[ for slot = ActiveSlot.SLOT_PRIMARY, ActiveSlot.SLOT_POCKET do
-		local itemDesc = player:GetActiveItemDesc(slot)
-		local nextDay = itemDesc.VarData + 1
-		if itemDesc.Item == GEPTAMERON.ID then
-			if nextDay == GEPTAMERON.WeekEffect.NUM_EFFECTS then
-				player:SetActiveVarData(nextDay - GEPTAMERON.WeekEffect.NUM_EFFECTS, slot)
-			else
-				player:SetActiveVarData(nextDay, slot)
-			end
-		end
-	end ]]
+function GEPTAMERON:UpdateVarDataOnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
+	player:SetActiveVarData(GEPTAMERON:GetDayOfTheWeek(), slot)
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, GEPTAMERON.OnRoomClear)
+Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, GEPTAMERON.UpdateVarDataOnCollectibleAdd)
+
+function GEPTAMERON:OnRoomClear()
+	if not PlayerManager.AnyoneHasCollectible(GEPTAMERON.ID) then return end
+	local nextDay = GEPTAMERON:GetDayOfTheWeek() + 1
+	if nextDay >= GEPTAMERON.WeekEffect.NUM_EFFECTS then
+		nextDay = GEPTAMERON.WeekEffect.MONDAY
+	end
+	local run_save = Mod.SaveManager.GetRunSave()
+	run_save.GeptameronWeek = nextDay
+	Mod.Foreach.Player(function (player, index)
+		local slots = Mod:GetActiveItemSlots(player, GEPTAMERON.ID)
+		for _, slot in ipairs(slots) do
+			player:SetActiveVarData(nextDay, slot)
+		end
+	end)
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, CallbackPriority.LATE, GEPTAMERON.OnRoomClear)
+Mod:AddCallback(ModCallbacks.MC_POST_START_GREED_WAVE, GEPTAMERON.OnRoomClear)

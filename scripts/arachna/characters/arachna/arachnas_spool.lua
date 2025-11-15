@@ -82,7 +82,7 @@ end
 ThrowableItemLib:RegisterThrowableItem({
 	Type = ThrowableItemLib.Type.ACTIVE,
 	ID = ARACHNAS_SPOOL.ID,
-	Identifier = "Arachna",
+	Identifier = "Arachna's Spool",
 	ThrowFn = function(player, vect, slot, mimic)
 		ARACHNAS_SPOOL:FireSpool(player.Position, Mod:AddTearVelocity(vect, 12, player), player)
 	end
