@@ -5,7 +5,7 @@
 	<active id="2" name="Yarn Heart" description="Reusable web protection" achievement="Yarn Heart" gfx="yarn-heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
 	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." achievement="Mutagen" gfx="mutagen.png" flatdamage="1" quality="2"/>
 	<familiar id="4" name="Lil Arachna" description="Spider friend" achievement="Lil Arachna" gfx="lil-arachna.png" tags="baby" quality="3"/>
-	<active id="5" name="Best Bud Ball" description="Find your very best friend!" achievement="Best Bud Ball" gfx="best-bud-ball.png" maxcharges="12" tags="nochallenge noeden" quality="4"/>
+	<active id="5" name="Best Bud Ball" description="Find your very best friend!" achievement="Best Bud Ball" gfx="best-bud-ball.png" activegfx="hud_best_bud_ball.png" maxcharges="8" tags="nochallenge noeden" quality="4"/>
 	<familiar id="6" name="The Yarn" description="Static shock!" achievement="The Yarn" gfx="the-yarn.png" tags="baby" quality="2"/>
 	<passive id="7" name="Mechanical Eye" description="Active expansion" achievement="Mechanical Eye" gfx="mechanical-eye.png" cache="familiars" tags="tech" quality="3"/>
 	<passive id="8" name="Arachnid's Grip" description="Infested!" achievement="Arachnid's Grip" gfx="arachnid-grips.png" tags="spider" quality="3"/> <!-- ::::) -->

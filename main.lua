@@ -249,7 +249,6 @@ Mod.Include("scripts.arachna.unlocks.unlock_loader")
 --!End of file
 
 include("scripts/dead_sea_scrolls/deadseascrolls")
---include("scripts/compatibility/patches/map_api/minimap_compat")
 Mod.Include("scripts.compatibility.patches.eid.eid_support")
 Mod.Include("scripts.compatibility.patches_loader")
 
