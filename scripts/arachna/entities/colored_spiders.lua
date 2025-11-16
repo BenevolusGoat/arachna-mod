@@ -25,7 +25,7 @@ COLORED_SPIDERS.SpiderSubtype = {
 	NUM_COLORED_SPIDERS = 19
 }
 
-COLORED_SPIDERS.SPIDER_COLORS = {
+COLORED_SPIDERS.SpiderColors = {
 	[COLORED_SPIDERS.SpiderSubtype.WRATH] = Color(1, 1, 0, 1, 0.49, 0, 0),
 	[COLORED_SPIDERS.SpiderSubtype.PESTILENCE] = Color(1, 1, 0, 1, 0, 0.31, 0),
 	[COLORED_SPIDERS.SpiderSubtype.FAMINE] = Color(0.8, 0.8, 0, 1, 0.31, 0.22, 0),
@@ -37,10 +37,12 @@ COLORED_SPIDERS.SPIDER_COLORS = {
 	[COLORED_SPIDERS.SpiderSubtype.ICE] = Color(0, 1, 1, 1, 0, 0.3, 0.49),
 }
 
-COLORED_SPIDERS.SHINY_SUBTYPES = Mod:Set({
+COLORED_SPIDERS.ShinySubtypes = Mod:Set({
 	COLORED_SPIDERS.SpiderSubtype.RAINBOW,
 	COLORED_SPIDERS.SpiderSubtype.GOLDEN,
 })
+
+COLORED_SPIDERS.BIG_SPIDER_CHANCE = 0.1
 
 local WOP = WeightedOutcomePicker()
 WOP:AddOutcomeWeight(0, 25)
@@ -55,6 +57,7 @@ WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE, 4)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 2)
 COLORED_SPIDERS.WOP = WOP
 
+--For legacy gameplay
 local WOP_BIG = WeightedOutcomePicker()
 for _, wopOutcome in ipairs(WOP:GetOutcomes()) do
 	if wopOutcome.Value ~= COLORED_SPIDERS.SpiderSubtype.BIG_FLAG then
@@ -117,7 +120,7 @@ end
 
 ---@param bigSpider? boolean
 ---@param onlyColor? boolean
-function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor)
+local function legacyRandomSpider(bigSpider, onlyColor)
 	local wop = bigSpider and WOP_BIG or WOP
 	local rng = Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID)
 	local randomSpiderSubtype = 0
@@ -137,6 +140,34 @@ function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor)
 	return randomSpiderSubtype
 end
 
+---@param bigSpider? boolean
+---@param onlyColor? boolean
+local function randomSpider(bigSpider, onlyColor)
+	local rng = Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID)
+	local randomSpiderSubtype = 0
+	if onlyColor then
+		WOP:RemoveOutcome(0)
+		randomSpiderSubtype = WOP:PickOutcome(rng)
+		WOP:AddOutcomeWeight(0, 25)
+	else
+		randomSpiderSubtype = WOP:PickOutcome(rng)
+	end
+	if bigSpider and rng:RandomFloat() < COLORED_SPIDERS.BIG_SPIDER_CHANCE then
+		randomSpiderSubtype = randomSpiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
+	end
+	return randomSpiderSubtype
+end
+
+---@param bigSpider? boolean
+---@param onlyColor? boolean
+function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor)
+	if Mod:IsLegacyGameplayEnabled() then
+		return legacyRandomSpider(bigSpider, onlyColor)
+	else
+		return randomSpider(bigSpider, onlyColor)
+	end
+end
+
 ---@param player EntityPlayer
 ---@param subtype ColoredSpiderSubtype | integer
 ---@param pos Vector
@@ -154,7 +185,7 @@ end
 
 ---@param spider EntityFamiliar
 function COLORED_SPIDERS:TrySpawnGlow(spider)
-	if COLORED_SPIDERS.SHINY_SUBTYPES[spider.SubType % 10] then
+	if COLORED_SPIDERS.ShinySubtypes[spider.SubType % 10] then
 		local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 		local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, spider.Position, nil, spider)
 		glow:FollowParent(spider)
@@ -182,7 +213,7 @@ function COLORED_SPIDERS:OnSpiderInit(spider)
 		sprite:Play(anim)
 	end
 	local spiderColor = spider.SubType % 10
-	local color = COLORED_SPIDERS.SPIDER_COLORS[spiderColor]
+	local color = COLORED_SPIDERS.SpiderColors[spiderColor]
 	if color then
 		spider.Color = color
 	end
