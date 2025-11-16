@@ -177,8 +177,12 @@ function MECHANICAL_EYE:PostDischarge(itemId, removed, player, slot)
 		local poof = Mod.Spawn.Effect(MECHANICAL_EYE.EFFECT_VAR, MECHANICAL_EYE.EFFECT_SUB, familiar.Position, nil, familiar)
 		poof.SpriteScale = familiar.SpriteScale
 		poof:FollowParent(familiar)
-
-		Mod.Game:GetHUD():ShowItemText(player, Mod.ItemConfig:GetCollectible(generatedItem))
+		local name = Mod.ItemConfig:GetCollectible(generatedItem).Name
+		local localizedStr = Isaac.GetString(StringTableCategory.ITEMS, name)
+		if localizedStr and localizedStr ~= "StringTable::InvalidKey" then
+			name = localizedStr
+		end
+		Mod.Game:GetHUD():ShowItemText(name)
 		Mod.sfxman:Play(SoundEffect.SOUND_LASERRING, 0.8)
 		MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	end, MECHANICAL_EYE.FAMILIAR)
