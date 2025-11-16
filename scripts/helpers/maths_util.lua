@@ -10,8 +10,8 @@ ARACHNAMOD.RandomRNG:SetSeed(max(Random(), 1), 35)
 ---@param rng? RNG
 function ARACHNAMOD:RandomNum(lower, upper, rng)
 	rng = rng or ARACHNAMOD.RandomRNG
-	if upper then
-		return rng:RandomInt((upper - lower) + 1) + lower
+	if lower and upper then
+		return rng:RandomInt(lower, upper)
 	elseif lower then
 		return rng:RandomInt(lower) + 1
 	else
