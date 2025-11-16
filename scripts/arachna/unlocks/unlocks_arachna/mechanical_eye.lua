@@ -91,8 +91,8 @@ function MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	local chargeList = Mod:CopyTable(activeList[desiredCharge])
 	chargeList = Mod:FilterList(chargeList, function (val, key)
 		local itemConfig = Mod.ItemConfig:GetCollectible(val)
-		return val ~= primaryActive
-			and Mod.PersistGameData:Unlocked(itemConfig.AchievementID)
+		--Does not allow the same item or achievement-locked or hidden items
+		return val ~= primaryActive and itemConfig:IsAvailable()
 	end)
 	local rng = player:GetCollectibleRNG(MECHANICAL_EYE.ID)
 	local itemId = chargeList[rng:RandomInt(#chargeList) + 1] or CollectibleType.COLLECTIBLE_POOP
