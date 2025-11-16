@@ -249,7 +249,9 @@ function MERGED_CARD:OnUse(card, player, useFlags)
 	end
 	local mainStr = table.concat(hudNames, " + ")
 	local bonusStr = #bonusHUDNames > 0 and "BONUS: " .. table.concat(bonusHUDNames, ", ") or nil
-	Mod.Game:GetHUD():ShowItemText(mainStr, bonusStr)
+	if not Mod:HasBitFlags(useFlags, UseFlag.USE_NOHUD) then
+		Mod.Game:GetHUD():ShowItemText(mainStr, bonusStr)
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_USE_CARD, MERGED_CARD.OnUse, MERGED_CARD.ID)

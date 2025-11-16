@@ -123,7 +123,14 @@ return function(modifiers)
 		[Item.GEPTAMERON.ID] = {
 			Name = "Getameron",
 			Description = {
-				"???"
+				"Triggers an effect based on the indicator on the item:",
+				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" .. CollectibleType.COLLECTIBLE_DADS_KEY .. "}}",
+				"#{{2}} Spawns temporary friendly companions that chase enemies. May leave 1 {{RottenHeart}} on death",
+				"#{{3}} 50% chance to {{Charm}} charm all enemies or have them spawn 3 {{Trinket" .. TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} locusts on death",
+				"#{{4}} Gain 2 {{Collectible" .. CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantle}} mantle shield for the room",
+				"#{{5}} All enemies in the room will drop {{Coin}} disappearing coins on death",
+				"#{{6}} Missiles rain down in random locations for 10 seconds",
+				"#{{7}} 1-3 enemies marked to drop a random disappearing pickup on death, which passes the mark to another enemy"
 			}
 		},
 		[Item.GLASSES_3D.ID] = {
@@ -172,7 +179,11 @@ return function(modifiers)
 		[Item.BEST_BUD_BALL.ID] = {
 			Name = "Best Bud Ball",
 			Description = {
-				"???"
+				"{{Throwable}} Can be thrown at bosses in an attempt to capture them",
+				"#{{Luck}} Chances of catching scales with boss' health and Isaac's luck",
+				"#{{Friendly}} Using the item after successfully capturing a boss spawns the capture as a friendly companion",
+				"#Walking over the ball after a capture instantly recharges the item",
+				"#!!! Only one boss can be active at a time"
 			}
 		},
 	}

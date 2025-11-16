@@ -24,7 +24,6 @@ end
 
 if EID.SingleUseCollectibles then
 	EID.SingleUseCollectibles[Item.TESTAMENT.ID] = true
-	EID.SingleUseCollectibles[Item.BEST_BUD_BALL.ID] = true
 end
 
 --#region Icons

@@ -123,6 +123,7 @@ function BEST_BUD_BALL:FailReleaseEnemy(npc, ball)
 	npc.Position = ball.Position
 	npc.Visible = true
 	npc:ClearEntityFlags(EntityFlag.FLAG_FREEZE | EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS)
+	npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
 	npc:SetColor(Color(1, 1, 1, 1, 1, 1, 1), 15, 10, true, false)
 	Mod.Game:SpawnParticles(ball.Position, EffectVariant.TOOTH_PARTICLE, 6, 4)
 	Mod.sfxman:Play(SoundEffect.SOUND_CHAIN_BREAK)
@@ -134,15 +135,16 @@ end
 ---@param player EntityPlayer
 function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
 	Mod.Foreach.NPC(function (npc, index)
-		if Mod:GetData(npc).BestBudBall
+		local data = Mod:TryGetData(npc)
+		if data
+			and data.BestBudBall
 			and npc.SpawnerEntity
 			and Mod:IsSameEntity(npc.SpawnerEntity, player)
 		then
-			--Only one boss at a time
-			Mod.Spawn.Poof01(3, npc.Position)
 			npc:Remove()
+			Mod.Spawn.Poof01(3, npc.Position)
 		end
-	end)
+	end, nil, nil, nil, {Inverse = true})
 	local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, player, cfg.Subtype, Random())
 	npc.MaxHitPoints = cfg.MaxHitPoints
 	npc.HitPoints = cfg.InitialCapture and cfg.MaxHitPoints or cfg.HitPoints
@@ -169,9 +171,9 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 		ball.PositionOffset = Vector.Zero
 		ball.Velocity = Vector.Zero
 		Mod.sfxman:Play(BEST_BUD_BALL.SFX.LAND, 1, 2, false, 0.8)
-		ball:SetTimeout(30)
 		data.BallStationary = true
---[[ 	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER and ball.SpawnerEntity then
+		ball:SetTimeout(30)
+	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER and ball.SpawnerEntity and data.CaptureSuccess then
 		local spawner = ball.SpawnerEntity
 		Mod.Foreach.PlayerInRadius(ball.Position, ball.Size, function (player, index)
 			if spawner and Mod:IsSameEntity(spawner, player) then
@@ -185,7 +187,7 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 					end
 				end
 			end
-		end) ]]
+		end)
 	end
 end
 
@@ -226,12 +228,13 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 	if npc then
 		npc:AddEntityFlags(EntityFlag.FLAG_FREEZE | EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS)
 		npc.Visible = false
+		npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 		if ball.Timeout == 0 then
 			Mod:GetData(npc).BestBudBallCaptured = nil
 			if data.CaptureSuccess and player then
 				BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player, true)
-				ball:Remove()
-				return
+				player:AnimateHappy()
+				ball.Timeout = -1
 			else
 				BEST_BUD_BALL:FailReleaseEnemy(npc, ball)
 			end
@@ -243,6 +246,7 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 		if cfg and player then
 			BEST_BUD_BALL:SpawnFriendlyBoss(cfg, ball.Position, player)
 		end
+		Mod.Spawn.Poof01(1, ball.Position, ball)
 		ball:Remove()
 		return
 	end
@@ -262,18 +266,10 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, BEST_BUD_BALL.OnBallUpdate, 
 
 --#region Captured enemies immune to damage and collision
 
-function BEST_BUD_BALL:StopCaptureCollision(npc)
-	local data = Mod:GetData(npc)
-	if data.BestBudBallCaptured then
-		return true
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_PRE_NPC_COLLISION, BEST_BUD_BALL.StopCaptureCollision)
-
 function BEST_BUD_BALL:StopCaptureDamage(ent, amount, flags, source)
 	local npc = ent:ToNPC()
-	if npc and Mod:GetData(npc).BestBudBallCaptured then
+	local data = npc and Mod:TryGetData(npc)
+	if npc and data and data.BestBudBallCaptured then
 		return false
 	end
 end
@@ -286,7 +282,8 @@ Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, BEST_BUD_BALL.StopCaptureDamage
 
 function BEST_BUD_BALL:FixPosOnNewRoom()
 	Mod.Foreach.NPC(function (npc, index)
-		if Mod:GetData(npc).BestBudBall then
+		local data = Mod:TryGetData(npc)
+		if data and data.BestBudBall then
 			npc.Position = Isaac.GetPlayer().Position
 		end
 	end)
@@ -300,13 +297,14 @@ Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, BEST_BUD_BALL.FixPosOnNewRoom)
 
 function BEST_BUD_BALL:SaveBossOnGamExit()
 	Mod.Foreach.NPC(function (npc, index)
-		if Mod:GetData(npc).BestBudBall then
+		local data = Mod:TryGetData(npc)
+		if data and data.BestBudBall then
 			local player = npc.SpawnerEntity and npc.SpawnerEntity:ToPlayer()
 			if player then
 				BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player)
 			end
 		end
-	end)
+	end, nil, nil, nil, {Inverse = true})
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, BEST_BUD_BALL.SaveBossOnGamExit)

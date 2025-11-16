@@ -29,5 +29,7 @@
 
 	<!-- NULL ITEMS -->
 	<null name="arachnids grip orbitals" persistent="true" cache="familiars"/>
+	<null name="geptameron tuesday" cooldown="300"/>
+	<null name="geptameron saturday" cooldown="300"/>
 </items>
 

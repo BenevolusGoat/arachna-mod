@@ -107,6 +107,8 @@ Most of these changes can be reverted by enabling "Legacy Gameplay" in the setti
 Other:
 - Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
+- Redesigned Best Bud Ball. 8 charges, only has a chance to capture bosses that scales with its HP and luck, isn't removed when capturing a boss, only one Best Bud Ball capture at a time
+- Redesigned Geptameron. Still retains its shifting 7 day effects, but all days have been given new effects or had their effects tweaked. No longer grants flight or stats
 - Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
 - 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies

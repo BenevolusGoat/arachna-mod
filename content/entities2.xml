@@ -144,4 +144,6 @@
 	<entity id="975" name="Testament Spawner" anm2path="no.anm2" variant="500" subtype="0"
 		friction="0" baseHP="0" boss="0" champion="0" shutdoors="false">
     </entity>
+
+	<!-- Geptameron -->
 </entities>
