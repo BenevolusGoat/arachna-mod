@@ -60,7 +60,7 @@ function ARACHNAMOD:AreColorsDifferent(c1, c2)
 	local c2Metatable = getmetatable(c2)
 	local different = false
 	for key, value in pairs(c1Metatable.__propget) do
-		if c2Metatable.__propget[key] ~= value then
+		if c2Metatable.__propget[key](c2) ~= value(c1) then
 			different = true
 			break
 		end
@@ -403,4 +403,9 @@ local laserWeaponType = ARACHNAMOD:Set({
 
 function ARACHNAMOD:IsLaserWeaponType(weaponType)
 	return laserWeaponType[weaponType]
+end
+
+---@param ent Entity
+function ARACHNAMOD:TypeVarSubToString(ent)
+	return tostring(ent.Type) .. "." .. tostring(ent.Variant) .. "." .. tostring(ent.SubType)
 end

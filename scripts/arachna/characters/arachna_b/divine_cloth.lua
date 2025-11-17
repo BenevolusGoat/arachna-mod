@@ -137,7 +137,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, DIVINE_CLOTH.OnNPCKill)
 ---@param npc EntityNPC
 function DIVINE_CLOTH:OnNPCDeath(npc)
 	if Mod:GetData(npc).QueueTimedSpiderEgg and not npc:IsBoss() then
-		local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc)
+		local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, Isaac.GetPlayer())
 		if egg then
 			egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
 		end
@@ -145,5 +145,17 @@ function DIVINE_CLOTH:OnNPCDeath(npc)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, DIVINE_CLOTH.OnNPCDeath)
+
+--#endregion
+
+--#region Legacy Charge Time
+
+function DIVINE_CLOTH:RevertMaxCharge()
+	if Mod:IsLegacyGameplayEnabled() then
+		return 90
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PLAYER_GET_ACTIVE_MAX_CHARGE, DIVINE_CLOTH.RevertMaxCharge, DIVINE_CLOTH.ID)
 
 --#endregion

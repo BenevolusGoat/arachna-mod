@@ -833,7 +833,7 @@ end
 ---@param player EntityPlayer
 AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function(_, player)
     local data = ThrowableItemLib.Internal:GetData(player)
-    local controlsEnabled = not player:IsDead() and player.ControlsEnabled
+    local controlsEnabled = not player:IsDead() and player.ControlsEnabled and player.ControlsCooldown <= 0
 
     if controlsEnabled then
         if ThrowableItemLib.Utility:GetActiveInput(player, Input.IsActionTriggered) then

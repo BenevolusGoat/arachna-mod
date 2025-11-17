@@ -44,12 +44,12 @@ function ARACHNA:SetArachnaTearSprite(tear)
 		local spritesheet = ARACHNA.TearVariantToSpritesheet[tear.Variant]
 		if spritesheet then
 			sprite:ReplaceSpritesheet(0, ARACHNA.TearVariantSpritesheetPath .. spritesheet .. ".png", true)
-			tear:GetData().spiderTear = true
+			Mod:GetData(tear).SpiderTear = true
 		end
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, ARACHNA.SetArachnaTearSprite)
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, ARACHNA.SetArachnaTearSprite)
 
 --Poison Tears
 
@@ -70,9 +70,12 @@ Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, ARACHNA.PosionTears)
 ---Tear splash on grid collision
 ---@param tear EntityTear
 function ARACHNA:TearTouchGrid(tear)
-	local data = tear:GetData()
-	if (tear:IsDead()) and (data.spiderTear) then
-		tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
+	local data = Mod:GetData(tear)
+	if (tear:IsDead()) and (data.SpiderTear) then
+		local tC = tear:GetSprite().Color
+		if not Mod:AreColorsDifferent(tC, Color.Default) then
+			tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
+		end
 	end
 end
 
@@ -82,9 +85,12 @@ Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, ARACHNA.TearTouchGrid)
 ---@param tear EntityTear
 ---@param collider Entity
 function ARACHNA:TearTouchEnemy(tear, collider)
-	local data = tear:GetData()
-	if data.spiderTear and tear:IsDead() then
-		tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
+	local data = Mod:GetData(tear)
+	if data.SpiderTear and tear:IsDead() then
+		local tC = tear:GetSprite().Color
+		if not Mod:AreColorsDifferent(tC, Color.Default) then
+			tear.Color = Color(0, 0, 0, 1, 1, 1, 1)
+		end
 	end
 end
 

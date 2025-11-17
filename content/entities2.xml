@@ -1,6 +1,6 @@
 <entities anm2root="gfx/" version="5">
 	<!-- Tears -->
-	<entity id="2" variant="2000" name="Spool Tear" anm2path="tear_spool.anm2" collisionMass="16" collisionRadius="8" friction="1" numGridCollisionPoints="8" shadowSize="16" stageHP="0">
+	<entity id="2" variant="2000" name="Spool Tear" anm2path="tear_spool.anm2" collisionMass="16" collisionRadius="16" friction="1" numGridCollisionPoints="8" shadowSize="16" stageHP="0">
 		<gibs amount="1" blood="0" bone="1" eye="0" gut="0" large="0" />
 	</entity>
 

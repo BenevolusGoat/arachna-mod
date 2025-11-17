@@ -149,14 +149,23 @@ function(player, key, hp)
 		elseif Mod:IsAnyArachna(player)
 			and not Mod:IsLegacyGameplayEnabled()
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
-			and CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "KindContained") ~= CustomHealthAPI.Enums.HealthKinds.NONE
 		then
-			local hpToAdd = math.ceil(hp)
-			if CustomHealthAPI.PersistentData.HealthDefinitions[key].CanHaveHalfCapacity then
-				hpToAdd = math.ceil(hpToAdd / 2)
+			--Empty Heart to Web Heart conversion
+			if CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0 then
+				local hpToAdd = math.ceil(hp)
+				if CustomHealthAPI.PersistentData.HealthDefinitions[key].CanHaveHalfCapacity then
+					hpToAdd = math.ceil(hpToAdd / 2)
+				end
+				return WEB_HEART.KEY_ARACHNA, hpToAdd
+			elseif key == "BONE_HEART" then
+				--Allow removing Bone Hearts to also remove Web Hearts
+				if hp < 0 then
+					return expectedKey, hp
+				else --But still don't want actual Bone Hearts
+					return true
+				end
 			end
-			return WEB_HEART.KEY_ARACHNA, hpToAdd
 		elseif Mod:IsAnyArachna(player) and WEB_HEART.BLOCK_KEYS[key] then
 			return true
 		end

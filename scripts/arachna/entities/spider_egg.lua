@@ -17,26 +17,44 @@ SPIDER_EGG.MAX_EGG_TIMEOUT = 500
 
 --#region Helpers
 
----@param spawner Entity
-function SPIDER_EGG:ShouldSpawnSmallEgg(spawner)
-	return spawner.MaxHitPoints <= 10
-		or spawner.SpawnerType ~= EntityType.ENTITY_NULL
-		or spawner:IsBoss()
+---@param npc Entity
+function SPIDER_EGG:ShouldNotSpawnEgg(npc)
+	local isSmallHP
+	local isLegacy = Mod:IsLegacyGameplayEnabled()
+	if isLegacy then
+		isSmallHP = npc.MaxHitPoints < 10
+	else
+		--[[ local stage = Mod.Level():GetAbsoluteStage() - 1
+		--Reaches 20 HP by Stage 6 for small eggs
+		isSmallHP = npc.MaxHitPoints <= 10 + (10 * (Mod.math.min(stage, 5) / 5)) ]]
+		isSmallHP = npc.MaxHitPoints < 10
+	end
+	return isSmallHP
+		or npc.SpawnerType ~= EntityType.ENTITY_NULL
+		or (isLegacy and npc:IsBoss())
+end
+
+---@param npc Entity
+function SPIDER_EGG:ShouldSpawnSmallEgg(npc)
+	return npc:IsBoss() and Mod.Room():GetType() == RoomType.ROOM_BOSS
 end
 
 ---Enemies spawned by other enemies will have a 50/50 chance to not spawn a Spider Egg, and in such case this function will return nothing
 ---@param pos Vector
----@param spawner? Entity
-function SPIDER_EGG:TrySpawnEgg(pos, spawner)
-	local smallEgg = spawner and SPIDER_EGG:ShouldSpawnSmallEgg(spawner) or false
-	if smallEgg and ARACHNAMOD:IsLegacyGameplayEnabled() then
+---@param npc? Entity
+---@param player? EntityPlayer
+function SPIDER_EGG:TrySpawnEgg(pos, npc, player)
+	if npc and SPIDER_EGG:ShouldNotSpawnEgg(npc) then
+		Mod:DebugLog("Blocked egg spawn")
 		return
 	end
+	local smallEgg = npc and SPIDER_EGG:ShouldSpawnSmallEgg(npc) or false
+	Mod:DebugLog("Small Egg?", smallEgg)
 	local subtype = smallEgg and 1 or 0
-	if spawner and spawner.SpawnerType ~= EntityType.ENTITY_NULL and spawner:GetDropRNG():RandomFloat() < 0.5 then
+	if npc and npc.SpawnerType ~= EntityType.ENTITY_NULL and npc:GetDropRNG():RandomFloat() < 0.5 then
 		return
 	end
-	return Mod.Spawn.Effect(SPIDER_EGG.ID, subtype, pos, nil, spawner)
+	return Mod.Spawn.Effect(SPIDER_EGG.ID, subtype, pos, nil, player)
 end
 
 --#endregion
@@ -72,15 +90,18 @@ function SPIDER_EGG:Explode(egg, rewards)
 	if rewards then
 		local player = egg.SpawnerEntity and egg.SpawnerEntity:ToPlayer()
 		if not player then player = Isaac.GetPlayer() end
+		local isLegacy = ARACHNAMOD:IsLegacyGameplayEnabled()
 		local stageNum = Mod.Game:GetLevel():GetStage()
 		local spiderCount = 0
 		local rng = egg:GetDropRNG()
 		local webHearts = Mod.Pickup.WEB_HEART:GetWebHearts(player)
+		if not isLegacy then
+			webHearts = Mod.math.floor(webHearts / 2)
+		end
 		local stageModifier = ceil((stageNum + 1) / 2) * 0.5
 		local minSpiders, maxSpiders = 2, 4
-		local isLegacy = ARACHNAMOD:IsLegacyGameplayEnabled()
 		local shouldIncreaseSpider = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
-			or Mod.Character.ARACHNA_B:IsArachnaB(player) and isLegacy
+			or isLegacy and Mod.Character.ARACHNA_B:IsArachnaB(player)
 		local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 		if shouldIncreaseSpider then
@@ -97,7 +118,6 @@ function SPIDER_EGG:Explode(egg, rewards)
 		else
 			spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
 		end
-
 		for _ = 1, spiderCount do
 			local spiderSubtype = 0
 			if Mod.Character.ARACHNA:IsArachna(player)
@@ -155,7 +175,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, SPIDER_EGG.OnUpdate, SPIDER_
 
 --#region Greed Mode
 
-function SPIDER_EGG:ExplodeOnGreedWave()
+function SPIDER_EGG:ExplodeEggOnClearTrigger()
 	Mod.Foreach.Effect(function(effect, index)
 		local sprite = effect:GetSprite()
 		if not sprite:IsPlaying("ExplodeEmpty") then
@@ -164,7 +184,20 @@ function SPIDER_EGG:ExplodeOnGreedWave()
 	end, SPIDER_EGG.ID)
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_START_GREED_WAVE, SPIDER_EGG.ExplodeOnGreedWave)
+local function explodeEggCheck(legacyMethod)
+	legacyMethod = type(legacyMethod) == "boolean"
+	if legacyMethod and Mod:IsLegacyGameplayEnabled()
+		or not legacyMethod and not Mod:IsLegacyGameplayEnabled()
+	then
+		SPIDER_EGG:ExplodeEggOnClearTrigger()
+	end
+end
+
+
+Mod:AddCallback(ModCallbacks.MC_POST_START_GREED_WAVE, function()
+	explodeEggCheck(true)
+end)
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, explodeEggCheck)
 
 --#endregion
 

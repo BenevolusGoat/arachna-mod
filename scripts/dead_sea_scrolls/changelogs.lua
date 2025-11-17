@@ -87,6 +87,10 @@ New Content:
 Arachna:
 These changes can be reverted by enabling "Legacy Gameplay" in the settings.
 - Divine Cloth's timer-based eggs have been moved to Arachna's Spool
+- Bosses that die while Webbed will spawn 3 large colorful spiders. Minibosses will only drop 1
+- Bosses that die while Webbed that would drop a heart will turn it into a Web Heart
+- Doubled hitsphere size of Arachna's Spool tear
+- Arachna's Spool's web no longer affects enemies that are above pits
 
 Tainted Arachna:
 These changes can be reverted by enabling "Legacy Gameplay" in the settings.
@@ -94,13 +98,14 @@ These changes can be reverted by enabling "Legacy Gameplay" in the settings.
 
 Both Arachnas:
 Most of these changes can be reverted by enabling "Legacy Gameplay" in the settings. Those that aren't will be labelled with an additional bullet point.
-- Changed logic of Web Heart interaction with Spider Eggs on Arachna + Birthright and Tainted Arachna to match non-Arachna players, where it increases the potential maximum amount of spiders to be spawned instead of guaranteeing an additional amount of spiders to spawn
+- Doubled recharge time of Arachna's Spool and Divine Cloth
+- Changed Web Heart interaction with Spider Eggs: Halved its effect on how many spiders to spawn. On Arachna + Birthright and Tainted Arachna to match non-Arachna players, it increases the potential maximum amount of spiders to be spawned instead of guaranteeing an additional amount of spiders to spawn
 - Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
-- Enemies below 10 HP or those spawned by other enemies now spawn small versions of Spider Eggs on death, which will spawn less spiders. Enemies spawned by other enemies only have a 50% chance to spawn a small egg
 - Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
-- Shooting bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into friendly spiders
+- Shooting bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders
 - Guppy's Paw and Abbadon no longer have manual interactions with either Arachna's Web Hearts
 - Arachna and Tainted Arachna's Web Hearts are sorted before all other health, similarly to heart containers
+- Spider Eggs now explode on challenge/boss rush wave clears
 -- Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 -- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 
@@ -135,6 +140,7 @@ Other:
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
 - Changed poison tears from Arachna, Tainted Arachna, and Arachnid's Grip to be colored green
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
+- Changed the floor web from Arachna's Spool to render below grid entities, similarly to creep
 
 ## MOD COMPATIBILITY
 - Added MinimapAPI compatibility

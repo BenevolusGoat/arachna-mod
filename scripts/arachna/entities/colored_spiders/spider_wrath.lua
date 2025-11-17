@@ -1,7 +1,7 @@
 local Mod = ARACHNAMOD
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
-local DAMAGE = 60
+local DAMAGE = 50
 local DAMAGE_BIG = 100
 local RADIUS_MULT = 0.3
 local RADIUS_MULT_BIG = 0.5
