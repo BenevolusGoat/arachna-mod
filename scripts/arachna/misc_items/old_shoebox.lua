@@ -15,7 +15,7 @@ function OLD_SHOEBOX:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, 
 	Mod.Spawn.Heart(Mod.Pickup.WEB_HEART.ID, nearPos, nil, player, rng:Next())
 
 	for _ = 1, Mod:RandomNum(7, 14, rng) do
-		Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, 0, player.Position)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, 0, player.Position)
 	end
 end
 

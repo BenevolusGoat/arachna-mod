@@ -50,10 +50,11 @@ function ARACHNIDS_GRIP:TryKillSpiderEgg(familiar)
 		if player:HasCollectible(Mod.Item.MUTAGEN.ID) then
 			spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
 		end
-		Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, familiar.Position)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, familiar.Position)
 		local swirl = Mod.Item.DIVINE_CLOTH:SpawnSwirl(familiar.Position, familiar)
-		swirl.PositionOffset = Vector(0, -25* familiar.SpriteScale.Y)
-		Mod.Game:SpawnParticles(familiar.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(3, 4), 4, Color(1, 1, 1, 1, 1, 1, 1))
+		swirl.PositionOffset = Vector(0, -25 * familiar.SpriteScale.Y)
+		Mod.Game:SpawnParticles(familiar.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(3, 4), 4,
+			Color(1, 1, 1, 1, 1, 1, 1))
 		Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 		familiar:Die()
 		ARACHNIDS_GRIP:AddSpiderEggOrbital(player, -1)
@@ -68,7 +69,7 @@ end
 function ARACHNIDS_GRIP:OnPickupInit(pickup)
 	local sprite = pickup:GetSprite()
 	local rng = RNG(pickup.InitSeed)
-	sprite:ReplaceSpritesheet(0, "gfx/familiars/egg_orbital_" .. tostring(rng:RandomInt(4)+1) .. ".png", true)
+	sprite:ReplaceSpritesheet(0, "gfx/familiars/egg_orbital_" .. tostring(rng:RandomInt(4) + 1) .. ".png", true)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, ARACHNIDS_GRIP.OnPickupInit, ARACHNIDS_GRIP.PICKUP)
@@ -87,7 +88,8 @@ function ARACHNIDS_GRIP:OnPickupCollision(pickup, collider)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, ARACHNIDS_GRIP.OnPickupCollision, ARACHNIDS_GRIP.PICKUP)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, ARACHNIDS_GRIP.OnPickupCollision,
+	ARACHNIDS_GRIP.PICKUP)
 
 ---@param pickup EntityPickup
 function ARACHNIDS_GRIP:OnPickupUpdate(pickup)
@@ -103,7 +105,8 @@ function ARACHNIDS_GRIP:OnPickupUpdate(pickup)
 
 	if Mod.Room():IsClear() then
 		Mod.Item.DIVINE_CLOTH:SpawnSwirl(pickup.Position, pickup)
-		Mod.Game:SpawnParticles(pickup.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(3, 5), 4, Color(1, 1, 1, 1, 1, 1, 1))
+		Mod.Game:SpawnParticles(pickup.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(3, 5), 4,
+			Color(1, 1, 1, 1, 1, 1, 1))
 		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 		pickup:Remove()
 	end
@@ -131,7 +134,7 @@ function ARACHNIDS_GRIP:OnEnemyKill(npc)
 		if Mod:HasBitFlags(npc:GetEntityConfigEntity():GetEntityTags(), EntityTag.FLY)
 			and rng:RandomFloat() < ARACHNIDS_GRIP.FLY_HEAL_CHANCE
 		then
-			Mod.Foreach.Player(function (player, index)
+			Mod.Foreach.Player(function(player, index)
 				if player:HasCollectible(ARACHNIDS_GRIP.ID) then
 					player:AddHearts(2)
 					Mod.Spawn.Notification(player.Position, 0, true)
@@ -142,6 +145,14 @@ function ARACHNIDS_GRIP:OnEnemyKill(npc)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNIDS_GRIP.OnEnemyKill)
+
+function ARACHNIDS_GRIP:PreRoomExit()
+	Mod.Foreach.Pickup(function (pickup, index)
+		pickup:Remove()
+	end, ARACHNIDS_GRIP.PICKUP, 0)
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_ROOM_EXIT, ARACHNIDS_GRIP.PreRoomExit)
 
 --#endregion
 
@@ -155,7 +166,8 @@ function ARACHNIDS_GRIP:OnOrbitalBlockProjectile(familiar, collider)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, ARACHNIDS_GRIP.OnOrbitalBlockProjectile, ARACHNIDS_GRIP.FAMILIAR)
+Mod:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, ARACHNIDS_GRIP.OnOrbitalBlockProjectile, ARACHNIDS_GRIP
+.FAMILIAR)
 
 ---@param ent Entity
 ---@param source EntityRef
@@ -177,7 +189,7 @@ function ARACHNIDS_GRIP:OrbitalInit(familiar)
 	local rng = RNG(familiar.InitSeed)
 	local sprite = familiar:GetSprite()
 	familiar:AddToOrbit(7)
-	sprite:ReplaceSpritesheet(0, "gfx/familiars/egg_orbital_" .. tostring(rng:RandomInt(4)+1) .. ".png", true)
+	sprite:ReplaceSpritesheet(0, "gfx/familiars/egg_orbital_" .. tostring(rng:RandomInt(4) + 1) .. ".png", true)
 end
 
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, ARACHNIDS_GRIP.OrbitalInit, ARACHNIDS_GRIP.FAMILIAR)

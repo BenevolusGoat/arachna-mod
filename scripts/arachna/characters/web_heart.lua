@@ -60,7 +60,7 @@ local WEB_HEART_BASE = {
 local WEB_HEART_BONE = Mod:CopyTable(WEB_HEART_BASE)
 WEB_HEART_BONE.SortOrder = SORT_ORDER_BONE
 WEB_HEART_BONE.AddPriority = 0
-WEB_HEART_BONE.RemovePriority = 90
+WEB_HEART_BONE.RemovePriority = 110
 WEB_HEART_BONE.ProtectsDealChance = false
 WEB_HEART_BONE.CanHaveHalfCapacity = false
 CustomHealthAPI.Library.RegisterHealthContainer(WEB_HEART.KEY_ARACHNA, WEB_HEART_BONE)
@@ -68,7 +68,7 @@ CustomHealthAPI.Library.RegisterHealthContainer(WEB_HEART.KEY_ARACHNA, WEB_HEART
 local WEB_HEART_SOUL = Mod:CopyTable(WEB_HEART_BASE)
 WEB_HEART_SOUL.SortOrder = SORT_ORDER_SOUL
 WEB_HEART_SOUL.AddPriority = 125
-WEB_HEART_SOUL.AnimationName = {WEB_HEART_SOUL.AnimationName}
+WEB_HEART_SOUL.AnimationName = { WEB_HEART_SOUL.AnimationName }
 CustomHealthAPI.Library.RegisterSoulHealth(WEB_HEART.KEY, WEB_HEART_SOUL)
 
 local NO_PENTALTY_FLAGS = DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_FAKE | DamageFlag.DAMAGE_NO_PENALTIES
@@ -111,7 +111,7 @@ end
 ---@return integer
 function WEB_HEART:GetWebHearts(player)
 	local key = WEB_HEART:GetKey(player)
-	local amount = CustomHealthAPI.Library.GetHPOfKey(player,key, nil, nil, true)
+	local amount = CustomHealthAPI.Library.GetHPOfKey(player, key, nil, nil, true)
 	if key == WEB_HEART.KEY then
 		amount = Mod.math.ceil(amount / 2)
 	end
@@ -134,9 +134,10 @@ end
 
 Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, WEB_HEART.UpdateHealthConversion)
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH, CustomHealthAPI.Enums.CallbackPriorities.EARLY,
-function(player, key, hp)
-	local expectedKey = WEB_HEART:GetKey(player)
+CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH,
+	CustomHealthAPI.Enums.CallbackPriorities.EARLY,
+	function(player, key, hp)
+		local expectedKey = WEB_HEART:GetKey(player)
 		--In case the incorrect heart is added
 		if WEB_HEART:IsWebHeart(key) and key ~= expectedKey then
 			if expectedKey == WEB_HEART.KEY then
@@ -145,7 +146,7 @@ function(player, key, hp)
 				hp = Mod.math.ceil(hp / 2)
 			end
 			return expectedKey, hp
-		--Manually handle max HP so its identical to Forgor, 2:1 ratio of hearts
+			--Manually handle max HP so its identical to Forgor, 2:1 ratio of hearts
 		elseif Mod:IsAnyArachna(player)
 			and not Mod:IsLegacyGameplayEnabled()
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
@@ -160,9 +161,11 @@ function(player, key, hp)
 				return WEB_HEART.KEY_ARACHNA, hpToAdd
 			elseif key == "BONE_HEART" then
 				--Allow removing Bone Hearts to also remove Web Hearts
-				if hp < 0 then
+				--Also for continuing a run
+				if hp < 0 or player.FrameCount == 0 then
 					return expectedKey, hp
-				else --But still don't want actual Bone Hearts
+				--No bone hearts allowed otherwise
+				else
 					return true
 				end
 			end
@@ -208,7 +211,7 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 			end
 			local rng = player:GetCollectibleRNG(Mod.Item.YARN_HEART.ID)
 			for i = 1, Mod:RandomNum(2, 6, rng) do
-				Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderType, player.Position)
+				Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, spiderType, player.Position)
 			end
 			--visual/sound effects
 			local poof02 = Mod.Spawn.Poof02(0, player.Position, player)
@@ -248,7 +251,7 @@ function WEB_HEART:KeeperHeartCollision(pickup, collider)
 		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
 		local amount = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
 		for _ = 1, amount do
-			Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, 0, pickup.Position)
+			Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, 0, pickup.Position)
 		end
 		return true
 	end
@@ -311,7 +314,8 @@ function WEB_HEART:ForceReplaceHearts(pickup)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts,PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts,
+	PickupVariant.PICKUP_HEART)
 
 ---@param pickup EntityPickup
 function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
@@ -326,7 +330,8 @@ function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART
+.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
 
 --#endregion
 

@@ -19,37 +19,27 @@ SPIDER_EGG.MAX_EGG_TIMEOUT = 500
 
 ---@param npc Entity
 function SPIDER_EGG:ShouldNotSpawnEgg(npc)
-	local isSmallHP
-	local isLegacy = Mod:IsLegacyGameplayEnabled()
-	if isLegacy then
-		isSmallHP = npc.MaxHitPoints < 10
-	else
-		--[[ local stage = Mod.Level():GetAbsoluteStage() - 1
-		--Reaches 20 HP by Stage 6 for small eggs
-		isSmallHP = npc.MaxHitPoints <= 10 + (10 * (Mod.math.min(stage, 5) / 5)) ]]
-		isSmallHP = npc.MaxHitPoints < 10
-	end
-	return isSmallHP
+	return npc.MaxHitPoints < 10
 		or npc.SpawnerType ~= EntityType.ENTITY_NULL
-		or (isLegacy and npc:IsBoss())
-end
-
----@param npc Entity
-function SPIDER_EGG:ShouldSpawnSmallEgg(npc)
-	return npc:IsBoss() and Mod.Room():GetType() == RoomType.ROOM_BOSS
+		or (Mod:IsLegacyGameplayEnabled() and npc:IsBoss())
 end
 
 ---Enemies spawned by other enemies will have a 50/50 chance to not spawn a Spider Egg, and in such case this function will return nothing
 ---@param pos Vector
 ---@param npc? Entity
 ---@param player? EntityPlayer
-function SPIDER_EGG:TrySpawnEgg(pos, npc, player)
+---@param smallEgg? boolean
+function SPIDER_EGG:TrySpawnEgg(pos, npc, player, smallEgg)
 	if npc and SPIDER_EGG:ShouldNotSpawnEgg(npc) then
+		if not Mod:IsLegacyGameplayEnabled() and player then
+			Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(), pos)
+			if Mod.Character.ARACHNA:ArachnaHasBirthright(player) and player:GetCollectibleRNG(Mod.Item.ARACHNAS_SPOOL.ID):RandomFloat() < 0.5 then
+				Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(), pos)
+			end
+		end
 		Mod:DebugLog("Blocked egg spawn")
 		return
 	end
-	local smallEgg = npc and SPIDER_EGG:ShouldSpawnSmallEgg(npc) or false
-	Mod:DebugLog("Small Egg?", smallEgg)
 	local subtype = smallEgg and 1 or 0
 	if npc and npc.SpawnerType ~= EntityType.ENTITY_NULL and npc:GetDropRNG():RandomFloat() < 0.5 then
 		return
@@ -129,10 +119,10 @@ function SPIDER_EGG:Explode(egg, rewards)
 			then
 				spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(true)
 				if rng:RandomFloat() < 0.1 and spiderSubtype < COLORED_SPIDERS.SpiderSubtype.BIG_FLAG then
-				spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
+					spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 				end
 			end
-			COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, egg.Position)
+			COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, egg.Position)
 		end
 
 		if Mod.Character.ARACHNA:ArachnaHasBirthright(player) and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then

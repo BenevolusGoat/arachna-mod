@@ -14,7 +14,8 @@ function SPIDER_DONUT:OnCollectibleAdd(itemId, charge, firstTime, slot, varData,
 	Mod.Pickup.WEB_HEART:AddWebHearts(player, 1)
 
 	for _ = 1, Mod:RandomNum(2, 3, rng) do
-		Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, Mod.Entities.COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, player.Position)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS.SpiderSubtype.BIG_FLAG,
+			player.Position)
 	end
 end
 

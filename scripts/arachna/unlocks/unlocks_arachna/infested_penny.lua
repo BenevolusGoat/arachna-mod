@@ -13,7 +13,7 @@ local function getWebHeartChance(coinWorth, trinketMult)
 	if coinWorth > 99 then
 		coinWorth = 1
 	end
-	return 1-(0.95 * trinketMult ^ coinWorth)
+	return 1 - (0.95 * trinketMult ^ coinWorth)
 end
 
 ---@param coin EntityPickup
@@ -26,7 +26,7 @@ function INFESTED_PENNY:OnCoinCollision(coin, collider)
 			spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
 		end
 
-		Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(player, spiderSubtype, coin.Position)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, coin.Position)
 
 		local rng = player:GetTrinketRNG(INFESTED_PENNY.ID)
 		local chance = getWebHeartChance(coin:GetCoinValue(), player:GetTrinketMultiplier(INFESTED_PENNY.ID))

@@ -160,6 +160,7 @@ end
 
 ---@param bigSpider? boolean
 ---@param onlyColor? boolean
+---@return ColoredSpiderSubtype
 function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor)
 	if Mod:IsLegacyGameplayEnabled() then
 		return legacyRandomSpider(bigSpider, onlyColor)
@@ -172,7 +173,7 @@ end
 ---@param subtype ColoredSpiderSubtype | integer
 ---@param pos Vector
 ---@param targetPos? Vector
-function COLORED_SPIDERS:ThrowColoredSpider(player, subtype, pos, targetPos)
+function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, targetPos)
 	if not targetPos then
 		targetPos = Isaac.GetFreeNearPosition(pos + Vector(Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)), 50)
 	end
@@ -227,10 +228,11 @@ Mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, COLORED_SPIDERS.OnSpiderInit, Fam
 --#region Respawn Glow
 
 function COLORED_SPIDERS:RespawnGlowOnNewRoom()
-	Mod.Foreach.Familiar(function (spider, index)
+	Mod.Foreach.Familiar(function(spider, index)
 		COLORED_SPIDERS:TrySpawnGlow(spider)
 	end, FamiliarVariant.BLUE_SPIDER)
 end
+
 Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, COLORED_SPIDERS.RespawnGlowOnNewRoom)
 
 --#endregion
@@ -263,7 +265,8 @@ function COLORED_SPIDERS:PreTakeDamageFromSpider(ent, amount, flags, source, cou
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, CallbackPriority.LATE - 1, COLORED_SPIDERS.PreTakeDamageFromSpider)
+Mod:AddPriorityCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, CallbackPriority.LATE - 1,
+	COLORED_SPIDERS.PreTakeDamageFromSpider)
 
 ---@param ent Entity
 ---@param amount number
@@ -281,9 +284,9 @@ function COLORED_SPIDERS:PostTakeDamageFromSpider(ent, amount, flags, source, co
 			local vecRad = Mod:RandomNum(75, 100)
 			local vecAngle = Mod:RandomNum(360)
 			local pos = familiar.Position
-			COLORED_SPIDERS:ThrowColoredSpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
+			COLORED_SPIDERS:ThrowFriendlySpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
 				Isaac.GetFreeNearPosition(pos + Vector.FromAngle(vecAngle):Resized(vecRad), 50))
-			COLORED_SPIDERS:ThrowColoredSpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
+			COLORED_SPIDERS:ThrowFriendlySpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
 				Isaac.GetFreeNearPosition(pos + Vector.FromAngle(vecAngle - 180):Resized(vecRad), 50))
 			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH, 0.8)
 		end

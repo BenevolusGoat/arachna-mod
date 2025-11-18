@@ -139,7 +139,8 @@ function ARACHNAS_SPOOL:OnTearDeath(tear)
 		ent:GetSprite():Play("Remove")
 		table.remove(ownedWebs, 1)
 	end
-	ARACHNAS_SPOOL:SpawnWeb(tear.Position, tear.SpawnerEntity)
+	local fixedPos = Mod.Room():GetClampedPosition(tear.Position, 45)
+	ARACHNAS_SPOOL:SpawnWeb(fixedPos, tear.SpawnerEntity)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, ARACHNAS_SPOOL.OnTearDeath, ARACHNAS_SPOOL.TEAR)
@@ -188,77 +189,6 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, 
 
 --#endregion
 
---#region Webbed Status
-
----@param npc EntityNPC
----@param source EntityRef
----@param duration integer
-function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil)
-end
-
----@param npc EntityNPC
-function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
-	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
-		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
-		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
-		and npc:IsActiveEnemy(false)
-		and npc:IsVulnerableEnemy()
-		and (not ARACHNAMOD:IsLegacyGameplayEnabled() or not npc:IsBoss())
-end
-
----We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
----
----Save the information that the enemy has the status effect to our own custom data which does save for POST_NPC_DEATH.
----@param ent Entity
-function ARACHNAS_SPOOL:OnNPCKill(ent)
-	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED) then
-		if ent:IsBoss()
-			and (ARACHNAMOD:IsLegacyGameplayEnabled() or ent.Parent)
-		then
-			Mod:DebugLog("Deny boss death spiders")
-			return
-		end
-		Mod:GetData(ent).QueueSpiderEgg = true
-		Mod:DebugLog("Enemy queued for spider egg death")
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
-
----@param npc EntityNPC
-function ARACHNAS_SPOOL:OnNPCDeath(npc)
-	if Mod:GetData(npc).QueueSpiderEgg then
-		if npc:IsBoss() and Mod.Room():GetType() == RoomType.ROOM_BOSS then
-			Mod:DebugLog("Spawning boss death spiders")
-			Mod.Foreach.Pickup(function (heart, index)
-				if heart.SpawnerType == npc.Type and heart.FrameCount == 0 then
-					local newSubtype = heart.SubType == HeartSubType.HEART_DOUBLEPACK and Mod.Pickup.WEB_HEART.ID_DOUBLE or Mod.Pickup.WEB_HEART.ID
-					heart:Morph(heart.Type, heart.Variant, newSubtype, true, true, true)
-					Mod:DebugLog("Web Heart drop!")
-				end
-			end, PickupVariant.PICKUP_HEART)
-			local isMiniboss = ARACHNAS_SPOOL.MINIBOSS[Mod:TypeVarSubToString(npc)]
-			local count = isMiniboss and 1 or 3
-			for i = 1, count do
-				local spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
-				spiderSubtype = spiderSubtype + Mod.Entities.COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
-				Mod.Entities.COLORED_SPIDERS:ThrowColoredSpider(Isaac.GetPlayer(), spiderSubtype, npc.Position)
-			end
-		else
-			Mod:DebugLog("Spawning egg")
-			local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, Isaac.GetPlayer())
-			if egg and egg.SubType == 0 then
-				egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
-			end
-		end
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNAS_SPOOL.OnNPCDeath)
-
---#endregion
-
 --#region Webbed & Spider Bite
 
 --Webbed and Spider Bite statuses share several similarities so the code is stored here
@@ -275,7 +205,8 @@ function ARACHNAS_SPOOL:PreAddWebOrBitten(ent, statusEffect, customData)
 	end
 end
 
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PreAddWebOrBitten)
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT,
+	ARACHNAS_SPOOL.PreAddWebOrBitten)
 
 ---@param ent Entity
 function ARACHNAS_SPOOL:PostAddWebOrBitten(ent, statusEffect, statusEffectData)
@@ -289,19 +220,8 @@ function ARACHNAS_SPOOL:PostAddWebOrBitten(ent, statusEffect, statusEffectData)
 	end
 end
 
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT, ARACHNAS_SPOOL.PostAddWebOrBitten)
-
----@param ent Entity
----@param statusEffects StatusFlag
-function ARACHNAS_SPOOL:SlowWhileWebbedOrBitten(ent, statusEffects)
-	if Mod:HasBitFlags(statusEffects, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffects, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-		local speed = ent:IsBoss() and 0.75 or 0.5
-		if ent:GetSpeedMultiplier() < speed then return end
-		ent:SetSpeedMultiplier(speed)
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE, ARACHNAS_SPOOL.SlowWhileWebbedOrBitten)
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
+	ARACHNAS_SPOOL.PostAddWebOrBitten)
 
 ---@param ent Entity
 ---@param amount number
@@ -334,7 +254,7 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
 				data.SpiderBossCharge = 0
 				Mod:DebugLog("Spawning Boss Egg")
-				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, ent, player)
+				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, ent, player, true)
 			end
 		end
 	end
@@ -374,6 +294,117 @@ function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderWebOnWebbedOrBitten)
+
+--#endregion
+
+--#region Webbed Status
+
+---@param npc EntityNPC
+---@param source EntityRef
+---@param duration integer
+function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
+	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil, {OriginalMass = npc.Mass})
+end
+
+---@param npc EntityNPC
+function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
+	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
+		and npc:IsActiveEnemy(false)
+		and npc:IsVulnerableEnemy()
+		and (not ARACHNAMOD:IsLegacyGameplayEnabled() or not npc:IsBoss())
+end
+
+---@param ent Entity
+---@param amount number
+---@param flags DamageFlag
+---@param source EntityRef
+---@param countdown integer
+function ARACHNAS_SPOOL:LastWebbedCredit(ent, amount, flags, source, countdown)
+	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED) then
+		local player = Mod:TryGetPlayer(source, {LoopSpawnerEnt = true})
+		if player then
+			Mod:GetData(ent).WebbedKillCredit = EntityPtr(player)
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, ARACHNAS_SPOOL.LastWebbedCredit)
+
+---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
+---
+---Save the information that the enemy has the status effect to our own custom data which does save for POST_NPC_DEATH.
+---@param ent Entity
+---@param source EntityRef
+function ARACHNAS_SPOOL:OnNPCKill(ent, source)
+	local isLegacy = ARACHNAMOD:IsLegacyGameplayEnabled()
+	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
+		or (not isLegacy and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
+	then
+		if ent:IsBoss() and isLegacy then
+			return
+		end
+		Mod:GetData(ent).QueueSpiderEgg = source
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
+
+---@param npc EntityNPC
+function ARACHNAS_SPOOL:OnNPCDeath(npc)
+	if Mod:GetData(npc).QueueSpiderEgg then
+		if npc:IsBoss() and Isaac.CountBosses() == 1 and Mod:SomeoneIsArachna() then
+			Mod.Foreach.Pickup(function(heart, index)
+				if heart.SpawnerType == npc.Type and heart.FrameCount == 0 then
+					local newSubtype = heart.SubType == HeartSubType.HEART_DOUBLEPACK and Mod.Pickup.WEB_HEART.ID_DOUBLE or
+					Mod.Pickup.WEB_HEART.ID
+					heart:Morph(heart.Type, heart.Variant, newSubtype, true, true, true)
+				end
+			end, PickupVariant.PICKUP_HEART)
+		end
+		local entityPtr = Mod:GetData(npc).WebbedKillCredit
+		local player = entityPtr and entityPtr.Ref and entityPtr.Ref:ToPlayer()
+		local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player)
+		if egg and egg.SubType == 0 then
+			--egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNAS_SPOOL.OnNPCDeath)
+
+---@param ent Entity
+---@param statusEffectData StatusEffectData
+function ARACHNAS_SPOOL:PostAddWebbed(ent, _, statusEffectData)
+	if not Mod:IsLegacyGameplayEnabled() then
+		ent.Mass = statusEffectData.CustomData.OriginalMass * 2
+	end
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
+	ARACHNAS_SPOOL.PostAddWebbed, ARACHNAS_SPOOL.STATUS_WEBBED)
+
+---@param ent Entity
+---@param statusEffectData StatusEffectData
+function ARACHNAS_SPOOL:PostRemoveWebbed(ent, _, statusEffectData)
+	if not Mod:IsLegacyGameplayEnabled() then
+		ent.Mass = statusEffectData.CustomData.OriginalMass
+	end
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_REMOVE_ENTITY_STATUS_EFFECT,
+	ARACHNAS_SPOOL.PostRemoveWebbed)
+
+---@param ent Entity
+function ARACHNAS_SPOOL:WebbedUpdate(ent)
+	local speed = ent:IsBoss() and 0.75 or 0.5
+	if ent:GetSpeedMultiplier() < speed then return end
+	ent:SetSpeedMultiplier(speed)
+end
+
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE,
+	ARACHNAS_SPOOL.WebbedUpdate, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 --#endregion
 

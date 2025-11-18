@@ -91,6 +91,8 @@ ARACHNAMOD:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.L
 	end
 end)
 
+local legacyEnabled = false
+
 ---@param player EntityPlayer
 function ARACHNAMOD:IsAnyArachna(player)
 	local playerType = player:GetPlayerType()
@@ -98,8 +100,7 @@ function ARACHNAMOD:IsAnyArachna(player)
 end
 
 function ARACHNAMOD:IsLegacyGameplayEnabled()
-	local run_save = Mod.SaveManager.GetRunSave()
-	return run_save and run_save.ArachnaLegacyGameplay or false
+	return legacyEnabled
 end
 
 function ARACHNAMOD:EveryoneIsArachna()
@@ -118,11 +119,16 @@ function ARACHNAMOD:EveryoneIsArachna()
 	end
 end
 
+function ARACHNAMOD:SomeoneIsArachna()
+	return PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA) or PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA_B)
+end
+
 function ARACHNAMOD:UpdateLegacyGameplay()
+	local run_save = Mod.SaveManager.GetRunSave()
 	if Mod.Game:GetFrameCount() <= 0 then
-		local run_save = Mod.SaveManager.GetRunSave()
 		run_save.ArachnaLegacyGameplay = Mod.GetSetting(Mod.Setting.LegacyGameplay)
 	end
+	legacyEnabled = run_save.ArachnaLegacyGameplay
 end
 
 Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, ARACHNAMOD.UpdateLegacyGameplay)

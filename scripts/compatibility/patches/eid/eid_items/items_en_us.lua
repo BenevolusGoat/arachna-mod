@@ -66,15 +66,15 @@ return function(modifiers)
 			Name = "Arachna's Spool",
 			Description = {
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
-				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed and drop a Spider Egg on death",
+				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
+				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, drops a small spider egg that breaks instantly",
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies, {{Slow}} slowing and causing them to drop a Spider Egg on death",
+				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies, {{Slow}} slowing and causing them to drop a spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{Timer}} Spider Eggs break on their own after 16 seconds, spawning nothing",
 				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",

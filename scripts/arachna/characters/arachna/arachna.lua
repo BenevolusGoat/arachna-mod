@@ -1,3 +1,5 @@
+--#region Variables
+
 local Mod = ARACHNAMOD
 
 local ARACHNA = {}
@@ -7,16 +9,6 @@ ARACHNAMOD.Character.ARACHNA = ARACHNA
 Mod.Include("scripts.arachna.characters.arachna.arachnas_spool")
 
 ARACHNA.POISON_CHANCE = 0.25
-
----@param player EntityPlayer
-function ARACHNA:IsArachna(player)
-	return player:GetPlayerType() == Mod.PlayerType.ARACHNA
-end
-
----@param player EntityPlayer
-function ARACHNA:ArachnaHasBirthright(player)
-	return ARACHNA:IsArachna(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
-end
 
 CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA] = true
@@ -32,6 +24,24 @@ ARACHNA.TearVariantToSpritesheet = {
 	[TearVariant.HUNGRY] = "tear_arachna_hungry",
 	[TearVariant.LOST_CONTACT] = "tear_arachna_lostcontact",
 }
+
+--#endregion
+
+--#region Helpers
+
+---@param player EntityPlayer
+function ARACHNA:IsArachna(player)
+	return player:GetPlayerType() == Mod.PlayerType.ARACHNA
+end
+
+---@param player EntityPlayer
+function ARACHNA:ArachnaHasBirthright(player)
+	return ARACHNA:IsArachna(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
+end
+
+--#endregion
+
+--#region Tear sprite
 
 ---@param tear EntityTear
 function ARACHNA:SetArachnaTearSprite(tear)
@@ -50,22 +60,6 @@ function ARACHNA:SetArachnaTearSprite(tear)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, ARACHNA.SetArachnaTearSprite)
-
---Poison Tears
-
----@param player EntityPlayer
----@param tearParams TearParams
-function ARACHNA:PosionTears(player, tearParams, weaponType, damageScale, tearDisplacement, source)
-	if Mod:IsAnyArachna(player)
-		and player:GetCollectibleRNG(Mod.Item.ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNA.POISON_CHANCE
-	then
-		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
-		tearParams.TearColor = ARACHNAMOD:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
-		return tearParams
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, ARACHNA.PosionTears)
 
 ---Tear splash on grid collision
 ---@param tear EntityTear
@@ -96,6 +90,28 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_COLLISION, ARACHNA.TearTouchEnemy)
 
+--#endregion
+
+--#region Poison Tears
+
+---@param player EntityPlayer
+---@param tearParams TearParams
+function ARACHNA:PosionTears(player, tearParams, weaponType, damageScale, tearDisplacement, source)
+	if Mod:IsAnyArachna(player)
+		and player:GetCollectibleRNG(Mod.Item.ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNA.POISON_CHANCE
+	then
+		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
+		tearParams.TearColor = ARACHNAMOD:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
+		return tearParams
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, ARACHNA.PosionTears)
+
+--#endregion
+
+--#region Ignore Cobweb slow
+
 ---@param ent Entity
 ---@param source EntityRef
 function ARACHNA:IgnoreCobwebSlow(statusID, ent, source, duration)
@@ -109,3 +125,20 @@ function ARACHNA:IgnoreCobwebSlow(statusID, ent, source, duration)
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_STATUS_EFFECT_APPLY, ARACHNA.IgnoreCobwebSlow, StatusEffect.SLOWING)
+
+--#endregion
+
+--#region Brittle Bones
+
+local BRITTLE_BONES_NULL_ITEM = Isaac.GetNullItemIdByName("arachna brittle bones bonus")
+
+---@param player EntityPlayer
+function ARACHNA:OnBrittleBonesAdd(_, _, firstTime, _, _, player)
+	if Mod:IsAnyArachna(player) and firstTime then
+		player:AddNullItemEffect(BRITTLE_BONES_NULL_ITEM)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, ARACHNA.OnBrittleBonesAdd, CollectibleType.COLLECTIBLE_BRITTLE_BONES)
+
+--#endregion
