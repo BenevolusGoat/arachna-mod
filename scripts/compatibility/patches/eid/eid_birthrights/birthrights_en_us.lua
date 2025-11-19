@@ -7,7 +7,7 @@ return function(modifiers)
 			Name = "Arachna",
 			Description = {
 				"{{Collectible" .. Item.ARACHNAS_SPOOL.ID .. "}} Can have up to 2 webs active at a time",
-				"#↑ +1 to possible maximum count of {{AracBlueSpider}} friendly spiders from spider eggs and webbed small enemies",
+				"#↑ Increased chance of spider eggs spawning {{ColorRainbow}}special{{CR}} friendly spiders",
 				"#{{WebHeart}} 5% chance for spider eggs to drop a Web Heart upon breaking"
 			}
 		},

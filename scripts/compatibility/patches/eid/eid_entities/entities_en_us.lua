@@ -8,7 +8,7 @@ return function(modifiers)
 					Name = "Web Heart {{WebHeart}}",
 					Description = {
 						"{{WebHeart}} +1 Web Heart",
-						"#{{AracBlueSpider}} Web Hearts deplete in one hit, spawning 2-6 blue spiders"
+						"#{{AracBlueSpider}} Web Hearts deplete in one hit, spawning 2-6 blue spiders",
 					}
 				},
 				[Mod.Pickup.WEB_HEART.ID_DOUBLE] = {

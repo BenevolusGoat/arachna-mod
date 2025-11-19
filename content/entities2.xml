@@ -114,6 +114,9 @@
 	<entity id="1000" variant="2001" name="Spider Egg (Small)" anm2path="spider_egg_small.anm2" subtype="1"
 		friction="0" numGridCollisionPoints="12" collisionRadius="20">
 	</entity>
+	<entity id="1000" variant="2001" name="Spider Egg (Boss)" anm2path="spider_egg.anm2" subtype="2"
+		friction="0" numGridCollisionPoints="12" collisionRadius="20">
+	</entity>
 	<entity id="1000" variant="2002" name="Divine Web" anm2path="web_effect.anm2" subtype="0"
 		collisionRadius="90" friction="0" numGridCollisionPoints="12">
 	</entity>

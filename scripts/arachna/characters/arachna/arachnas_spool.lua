@@ -254,19 +254,22 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			if not data.SpiderBossChargeDMGNeeded then
 				data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
 			end
+			if Mod:HasBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION) then
+				amount = amount / 2
+			end
 			local armor = npc:GetShieldStrength()
 			if armor > 0 then
 				--damage per hit
-				local dph = npc.MaxHitPoints / npc:GetShieldStrength() / 4
+				local dph = npc.MaxHitPoints / armor / 4
 				amount = Mod.math.min(amount, dph)
 			end
+			Mod:DebugLog("Boss Egg Progress:", "Room Frame", Mod.Room():GetFrameCount(), "Charge", "+" .. Mod.math.floor((amount / data.SpiderBossChargeDMGNeeded) * 100) .. "%")
 			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
-			Mod:DebugLog("Boss Egg Progress:", "Frame", Mod.Room():GetFrameCount(), "Charge", data.SpiderBossCharge, "Amount", amount)
 
 			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
 				data.SpiderBossCharge = 0
 				Mod:DebugLog("Spawning Boss Egg")
-				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, ent, player, true)
+				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, ent, player, Mod.Entities.SPIDER_EGG.EggSubtype.SMALL)
 			end
 		end
 	end
@@ -385,10 +388,15 @@ function ARACHNAS_SPOOL:OnNPCDeath(npc)
 		end
 		local entityPtr = Mod:GetData(npc).WebbedKillCredit
 		local player = entityPtr and entityPtr.Ref and entityPtr.Ref:ToPlayer()
-		local egg = Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player)
-		if egg and egg.SubType == 0 then
-			--egg:SetTimeout(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT)
+		local eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL
+		if npc:IsBoss() then
+			if npc.Parent or npc.Child then
+				eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.SMALL
+			else
+				eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.BOSS
+			end
 		end
+		Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player, eggSubtype)
 	end
 end
 

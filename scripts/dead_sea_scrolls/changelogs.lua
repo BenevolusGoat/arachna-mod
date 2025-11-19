@@ -94,19 +94,21 @@ Arachna:
 * Arachna's Spool's web reduces knockback to enemies, making it easier to keep them Webbed
 * Arachna's Spool's web no longer affects enemies that are above pits
 * If Arachna's Spool's tear kills an enemy, it counts as them being Webbed
+* Birthright adjusted. Instead of +1 to spawned spiders, chance is increased for spider eggs spawning colored spiders
 
 Tainted Arachna:
 * Replaced inherent +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
 
 Both Arachnas:
+* Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
 * Doubled recharge time of Arachna's Spool and Divine Cloth
-* Changed Web Heart interaction with Spider Eggs: Halved its effect on how many spiders to spawn. On Arachna + Birthright and Tainted Arachna to match non-Arachna players, it increases the potential maximum amount of spiders to be spawned instead of guaranteeing an additional amount of spiders to spawn
+* Halved Web Heart effect on increasing how many spiders to spawn
 * Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 * Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
-* Shooting bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders
-* Enemies that previously did not drop spider eggs on death now drop
-* Guppy's Paw and Abbadon no longer have manual interactions with either Arachna's Web Hearts
-* Arachna and Tainted Arachna's Web Hearts are sorted before all other health, similarly to heart containers
+* Dealing damage to bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
+* Enemies that previously did not drop spider eggs on death now drop a single friendly spider
+* Guppy's Paw and Abbadon no longer have manual interactions with Web Hearts
+* Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
 * Spider Eggs now explode on challenge/boss rush wave clears
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 - Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again

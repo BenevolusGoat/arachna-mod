@@ -42,39 +42,53 @@ COLORED_SPIDERS.ShinySubtypes = Mod:Set({
 	COLORED_SPIDERS.SpiderSubtype.GOLDEN,
 })
 
-COLORED_SPIDERS.BIG_SPIDER_CHANCE = 0.1
+COLORED_SPIDERS.COLORED_SPIDER_CHANCE = 0.35
+COLORED_SPIDERS.BIG_SPIDER_CHANCE = 0.2
+COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY = 25
+COLORED_SPIDERS.DEFAULT_BIG_SPIDER_WEIGHT_LEGACY = 4
 
 local WOP = WeightedOutcomePicker()
-WOP:AddOutcomeWeight(0, 25)
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 4)
+WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 2)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE, 5)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE, 5)
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH, 5)
+WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH, 4)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.CONQUEST, 5)
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.RAINBOW, 4)
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN, 2)
+WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.RAINBOW, 1)
+WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN, 3)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE, 4)
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 2)
-COLORED_SPIDERS.WOP = WOP
+WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 3)
+
+local WOP_LEGACY = WeightedOutcomePicker()
+WOP_LEGACY:AddOutcomeWeight(0, COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 4)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE, 5)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE, 5)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH, 5)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.CONQUEST, 5)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.RAINBOW, 4)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN, 2)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE, 4)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 2)
+COLORED_SPIDERS.WOP = WOP_LEGACY
 
 --For legacy gameplay
-local WOP_BIG = WeightedOutcomePicker()
-for _, wopOutcome in ipairs(WOP:GetOutcomes()) do
+local WOP_BIG_LEGACY = WeightedOutcomePicker()
+for _, wopOutcome in ipairs(WOP_LEGACY:GetOutcomes()) do
 	if wopOutcome.Value ~= COLORED_SPIDERS.SpiderSubtype.BIG_FLAG then
-		WOP_BIG:AddOutcomeWeight(wopOutcome.Value, wopOutcome.Weight)
+		WOP_BIG_LEGACY:AddOutcomeWeight(wopOutcome.Value, wopOutcome.Weight)
 	end
 end
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.CONQUEST + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.RAINBOW + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
-WOP_BIG:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
-COLORED_SPIDERS.WOP_BIG = WOP_BIG
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, COLORED_SPIDERS.DEFAULT_BIG_SPIDER_WEIGHT_LEGACY)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.CONQUEST + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.RAINBOW + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
+COLORED_SPIDERS.WOP_BIG = WOP_BIG_LEGACY
 
 --#endregion
 
@@ -121,7 +135,7 @@ end
 ---@param bigSpider? boolean
 ---@param onlyColor? boolean
 local function legacyRandomSpider(bigSpider, onlyColor)
-	local wop = bigSpider and WOP_BIG or WOP
+	local wop = bigSpider and WOP_BIG_LEGACY or WOP_LEGACY
 	local rng = Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID)
 	local randomSpiderSubtype = 0
 	if onlyColor then
@@ -130,9 +144,9 @@ local function legacyRandomSpider(bigSpider, onlyColor)
 			wop:RemoveOutcome(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG)
 		end
 		randomSpiderSubtype = wop:PickOutcome(rng)
-		wop:AddOutcomeWeight(0, 25)
+		wop:AddOutcomeWeight(0, COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY)
 		if bigSpider then
-			wop:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
+			wop:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, COLORED_SPIDERS.DEFAULT_BIG_SPIDER_WEIGHT_LEGACY)
 		end
 	else
 		randomSpiderSubtype = wop:PickOutcome(rng)
@@ -142,31 +156,25 @@ end
 
 ---@param bigSpider? boolean
 ---@param onlyColor? boolean
-local function randomSpider(bigSpider, onlyColor)
+---@param bonusColorChance? number
+---@param bonusBigChance? number
+---@return ColoredSpiderSubtype
+function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor, bonusColorChance, bonusBigChance)
+	if Mod:IsLegacyGameplayEnabled() then
+		return legacyRandomSpider(bigSpider, onlyColor)
+	end
+	bonusColorChance = bonusColorChance or 0
+	bonusBigChance = bonusBigChance or 0
 	local rng = Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID)
 	local randomSpiderSubtype = 0
-	if onlyColor then
-		WOP:RemoveOutcome(0)
-		randomSpiderSubtype = WOP:PickOutcome(rng)
-		WOP:AddOutcomeWeight(0, 25)
-	else
+	---@cast randomSpiderSubtype ColoredSpiderSubtype
+	if onlyColor or rng:RandomFloat() < COLORED_SPIDERS.COLORED_SPIDER_CHANCE + bonusColorChance then
 		randomSpiderSubtype = WOP:PickOutcome(rng)
 	end
-	if bigSpider and rng:RandomFloat() < COLORED_SPIDERS.BIG_SPIDER_CHANCE then
+	if bigSpider and rng:RandomFloat() < COLORED_SPIDERS.BIG_SPIDER_CHANCE + bonusBigChance then
 		randomSpiderSubtype = randomSpiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 	end
 	return randomSpiderSubtype
-end
-
----@param bigSpider? boolean
----@param onlyColor? boolean
----@return ColoredSpiderSubtype
-function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor)
-	if Mod:IsLegacyGameplayEnabled() then
-		return legacyRandomSpider(bigSpider, onlyColor)
-	else
-		return randomSpider(bigSpider, onlyColor)
-	end
 end
 
 ---@param player EntityPlayer
@@ -175,7 +183,7 @@ end
 ---@param targetPos? Vector
 function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, targetPos)
 	if not targetPos then
-		targetPos = Isaac.GetFreeNearPosition(pos + Vector(Mod:RandomNum(-100, 100), Mod:RandomNum(-100, 100)), 50)
+		targetPos = Isaac.GetFreeNearPosition(pos + Vector(Mod:RandomNum(40, 100), 0):Rotated(Mod:RandomNum(360)), 40)
 	end
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
 	---@cast spider EntityFamiliar
