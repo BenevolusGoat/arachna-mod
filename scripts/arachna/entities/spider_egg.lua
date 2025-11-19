@@ -19,7 +19,9 @@ SPIDER_EGG.MAX_EGG_TIMEOUT = 500
 
 ---@param npc Entity
 function SPIDER_EGG:ShouldNotSpawnEgg(npc)
-	return npc.MaxHitPoints < 10
+	--For enemies that turn frozen and dont trigger MC_POST_NPC_DEATH, thus their "new MaxHitPoints" being 10, its saved before they freeze
+	local hitPoints = Mod:GetData(npc).WebbedOverrideHitPoints or npc.MaxHitPoints
+	return hitPoints < 10
 		or npc.SpawnerType ~= EntityType.ENTITY_NULL
 		or (Mod:IsLegacyGameplayEnabled() and npc:IsBoss())
 end

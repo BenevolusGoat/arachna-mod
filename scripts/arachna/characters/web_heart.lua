@@ -185,6 +185,7 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 
 CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED,
 	CustomHealthAPI.Enums.CallbackPriorities.LATE,
+	---@param player EntityPlayer
 	function(player, flags, _, _, key, hp, hpToRemove)
 		if WEB_HEART:IsWebHeart(key) and hpToRemove >= hp then
 			local numGoldens = CustomHealthAPI.Library.GetHPOfKey(player, "GOLDEN_HEART", nil, nil, true)
@@ -192,6 +193,17 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 			if numGoldens > 0 and not data.GoldenHeartsPreDamage then
 				data.GoldenHeartsPreDamage = Mod.math.min(numGoldens, WEB_HEART:GetWebHearts(player))
 				Isaac.CreateTimer(function() Mod:GetData(player).GoldenHeartsPreDamage = nil end, 1, 1, true)
+			end
+			--Stop inherent Bone Heart functionality from tanking all damage at once
+			if key == WEB_HEART.KEY_ARACHNA and hpToRemove > 1 and not Mod:IsLegacyGameplayEnabled() then
+				for i = 1, hpToRemove do
+					player:TakeDamage(1, flags | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), 0)
+					if WEB_HEART:GetWebHearts(player) == 0 then
+						break
+					end
+					player:ResetDamageCooldown()
+				end
+				return true
 			end
 		end
 	end)
@@ -302,20 +314,26 @@ local function everyoneIsKeeper()
 end
 
 ---@param pickup EntityPickup
-function WEB_HEART:ForceReplaceHearts(pickup)
-	if WEB_HEART.HeartsToReplace[pickup.SubType] and Mod:EveryoneIsArachna() then
+---@param variant PickupVariant
+---@param subtype integer
+---@param requestedVariant PickupVariant
+---@param requestedSubtype integer
+function WEB_HEART:ForceReplaceHearts(pickup, variant, subtype, requestedVariant, requestedSubtype)
+	if variant == PickupVariant.PICKUP_HEART
+		and WEB_HEART.HeartsToReplace[subtype]
+		and Mod:EveryoneIsArachna()
+	then
 		local rng = pickup:GetDropRNG()
-		Mod:DebugLog("Replaced heart subtype", pickup.SubType, "with Web Heart")
+		Mod:DebugLog("Force-replaced heart subtype", subtype, "with Web Heart")
 		if rng:RandomFloat() < 0.05 then
-			pickup:Morph(pickup.Type, pickup.Variant, WEB_HEART.ID_DOUBLE, true, true)
+			return {PickupVariant.PICKUP_HEART, WEB_HEART.ID_DOUBLE, true}
 		else
-			pickup:Morph(pickup.Type, pickup.Variant, WEB_HEART.ID, true, true)
+			return {PickupVariant.PICKUP_HEART, WEB_HEART.ID, true}
 		end
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts,
-	PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, CallbackPriority.IMPORTANT, WEB_HEART.ForceReplaceHearts)
 
 ---@param pickup EntityPickup
 function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)

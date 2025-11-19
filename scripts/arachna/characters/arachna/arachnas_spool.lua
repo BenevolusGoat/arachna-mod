@@ -239,7 +239,13 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 
 		if hasWebbed or hasSpiderBite then
 			local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
-			if GetPtrHash(parent) ~= GetPtrHash(npc) then return end
+			if GetPtrHash(parent) ~= GetPtrHash(npc)
+				or (
+					source.Type == EntityType.ENTITY_FAMILIAR
+					and source.Variant == FamiliarVariant.BLUE_SPIDER
+			) then
+				return
+			end
 			local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
 			local data = Mod:GetData(parent)
 			if not data.SpiderBossChargeSprite then
@@ -248,8 +254,14 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			if not data.SpiderBossChargeDMGNeeded then
 				data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
 			end
+			local armor = npc:GetShieldStrength()
+			if armor > 0 then
+				--damage per hit
+				local dph = npc.MaxHitPoints / npc:GetShieldStrength() / 4
+				amount = Mod.math.min(amount, dph)
+			end
 			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
-			Mod:DebugLog("Boss Egg Progress:", "Frame", Mod.Room():GetFrameCount(), "Charge", data.SpiderBossCharge)
+			Mod:DebugLog("Boss Egg Progress:", "Frame", Mod.Room():GetFrameCount(), "Charge", data.SpiderBossCharge, "Amount", amount)
 
 			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
 				data.SpiderBossCharge = 0
@@ -346,6 +358,9 @@ function ARACHNAS_SPOOL:OnNPCKill(ent, source)
 			return
 		end
 		Mod:GetData(ent).QueueSpiderEgg = source
+		if ent:HasEntityFlags(EntityFlag.FLAG_ICE) then
+			Mod:GetData(ent).WebbedOverrideHitPoints = ent.MaxHitPoints
+		end
 	end
 end
 
