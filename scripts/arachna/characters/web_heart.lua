@@ -134,12 +134,12 @@ end
 
 Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, WEB_HEART.UpdateHealthConversion)
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH,
+CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH,
 	CustomHealthAPI.Enums.CallbackPriorities.EARLY,
 	function(player, key, hp)
 		local expectedKey = WEB_HEART:GetKey(player)
 		--In case the incorrect heart is added
-		if WEB_HEART:IsWebHeart(key) and key ~= expectedKey then
+		if WEB_HEART:IsWebHeart(key) and key ~= expectedKey and hp > 0 then
 			if expectedKey == WEB_HEART.KEY then
 				hp = Mod.math.floor(hp * 2)
 			else
@@ -174,7 +174,7 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 		end
 	end)
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0,
+CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0,
 	function(player, index, health)
 		if health.Key == WEB_HEART.KEY then
 			if CustomHealthAPI.Helper.GetGoldenRenderMask(player)[index + 1] then
@@ -183,7 +183,7 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 		end
 	end)
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED,
+CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED,
 	CustomHealthAPI.Enums.CallbackPriorities.LATE,
 	---@param player EntityPlayer
 	function(player, flags, _, _, key, hp, hpToRemove)
@@ -208,7 +208,7 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 		end
 	end)
 
-CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
+CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
 	---@param player EntityPlayer
 	function(player, flags, key, hpDamaged, wasDepleted, wasLastDamaged)
 		if WEB_HEART:IsWebHeart(key) and wasDepleted then
@@ -238,6 +238,94 @@ CustomHealthAPI.Library.AddCallback(ARACHNAMOD.CHAPI_ID, CustomHealthAPI.Enums.C
 			if Mod:IsAnyArachna(player) and not Mod:HasAnyBitFlags(flags, NO_PENTALTY_FLAGS) then
 				Mod.Room():SetRedHeartDamage()
 				Mod.Level():SetRedHeartDamage()
+			end
+		end
+	end)
+
+	---@param player EntityPlayer
+	---@param index integer
+	---@param key string
+	---@return table
+	local function forceConvertOtherKey(player, index, key)
+		local healthOrder = {}
+		local data = player:GetData().CustomHealthAPISavedata
+		local otherMasks = data.OtherHealthMasks
+		for i = 1, #otherMasks do
+			local mask = otherMasks[i]
+			for j = 1, #mask do
+				table.insert(healthOrder, {i, j})
+			end
+		end
+
+		if healthOrder[index] ~= nil then
+			local indices = healthOrder[index]
+			local health = otherMasks[indices[1]][indices[2]]
+			local convertedHP = health.HP
+			local maxHpOfKey = CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP")
+			local maskIndexOfKey = CustomHealthAPI.Library.GetInfoOfKey(key, "MaskIndex")
+
+			if CustomHealthAPI.Library.GetInfoOfHealth(health, "MaxHP") <= health.HP then
+				convertedHP = 2
+			end
+
+			local newHP
+			if maxHpOfKey <= 1 then
+				newHP = 1
+				convertedHP = convertedHP - 2
+			else
+			---@diagnostic disable-next-line: param-type-mismatch
+				newHP = math.min(maxHpOfKey, convertedHP)
+				convertedHP = convertedHP - newHP
+			end
+
+			local maskIndexOfHealth = CustomHealthAPI.Library.GetInfoOfHealth(health, "MaskIndex")
+			if maskIndexOfHealth < maskIndexOfKey then
+				table.remove(otherMasks[indices[1]], indices[2])
+				table.insert(otherMasks[maskIndexOfKey], 1, {Key = key, HP = newHP})
+			elseif maskIndexOfHealth == maskIndexOfKey then
+				health.Key = key
+				health.HP = newHP
+			else
+				table.remove(otherMasks[indices[1]], indices[2])
+				table.insert(otherMasks[maskIndexOfKey], {Key = key, HP = newHP})
+			end
+
+			if convertedHP > 0 then
+				CustomHealthAPI.Library.AddHealth(player, key, convertedHP)
+			end
+		end
+
+		while CustomHealthAPI.Helper.GetAmountUnoccupiedContainers(player) < 0 do
+			if not CustomHealthAPI.Helper.RemoveLowestPriorityRedKey(player, true) then
+				break
+			end
+		end
+
+		CustomHealthAPI.Helper.HandleGoldenRoom(player, false)
+		CustomHealthAPI.Helper.UpdateBasegameHealthState(player)
+
+		return healthOrder
+	end
+
+	--Directly replaces web hearts with the correct variant.
+	--CustomHealthAPI has a ConvertOtherKey function but it only works for soul hearts on both ends and the "force" argument literally does nothing
+	CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_CHANGE_PLAYER_TYPE, CallbackPriority.DEFAULT, function (player)
+		local expectedKey = WEB_HEART:GetKey(player)
+		local numNormalWeb = CustomHealthAPI.Library.GetHPOfKey(player, WEB_HEART.KEY, nil, nil, true)
+		local numArachnaWeb = CustomHealthAPI.Library.GetHPOfKey(player, WEB_HEART.KEY_ARACHNA, nil, nil, true)
+		if expectedKey == WEB_HEART.KEY and numArachnaWeb > 0
+			or expectedKey == WEB_HEART.KEY_ARACHNA and numNormalWeb > 0
+		then
+			local foundKey = true
+			while foundKey do
+				foundKey = false
+				local healthOrder = CustomHealthAPI.Library.GetHealthInOrder(player)
+				for index, health in ipairs(healthOrder) do
+					if health.Other and health.Other.Key == (expectedKey == WEB_HEART.KEY and WEB_HEART.KEY_ARACHNA or WEB_HEART.KEY) then
+						forceConvertOtherKey(player, index, expectedKey)
+						foundKey = true
+					end
+				end
 			end
 		end
 	end)
