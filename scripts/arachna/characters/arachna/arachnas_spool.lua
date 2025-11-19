@@ -290,7 +290,12 @@ function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
 			sprite:Update()
 		end
 	end
-	if data and data.SpiderBossCharge and data.SpiderBossChargeSprite and data.SpiderBossChargeDMGNeeded then
+	if data
+		and data.SpiderBossCharge
+		and data.SpiderBossCharge > 0
+		and data.SpiderBossChargeSprite
+		and data.SpiderBossChargeDMGNeeded
+	then
 		local nullFrame = npc:GetSprite():GetNullFrame("OverlayEffect")
 		if nullFrame and nullFrame:IsVisible() then
 			renderPos = renderPos + nullFrame:GetPos() + Vector(15, 10)
