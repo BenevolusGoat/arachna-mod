@@ -127,18 +127,3 @@ end
 Mod:AddCallback(ModCallbacks.MC_PRE_STATUS_EFFECT_APPLY, ARACHNA.IgnoreCobwebSlow, StatusEffect.SLOWING)
 
 --#endregion
-
---#region Brittle Bones
-
-local BRITTLE_BONES_NULL_ITEM = Isaac.GetNullItemIdByName("arachna brittle bones bonus")
-
----@param player EntityPlayer
-function ARACHNA:OnBrittleBonesAdd(_, _, firstTime, _, _, player)
-	if Mod:IsAnyArachna(player) and firstTime then
-		player:AddNullItemEffect(BRITTLE_BONES_NULL_ITEM)
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, ARACHNA.OnBrittleBonesAdd, CollectibleType.COLLECTIBLE_BRITTLE_BONES)
-
---#endregion

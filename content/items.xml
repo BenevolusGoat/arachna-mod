@@ -31,6 +31,5 @@
 	<null name="arachnids grip orbitals" persistent="true" cache="familiars"/>
 	<null name="geptameron tuesday" cooldown="300"/>
 	<null name="geptameron saturday" cooldown="300"/>
-	<null name="arachna brittle bones bonus" persistent="true" effectflattears="0.4"/>
 </items>
 

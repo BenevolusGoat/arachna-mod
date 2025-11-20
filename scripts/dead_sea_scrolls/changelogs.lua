@@ -102,7 +102,7 @@ Tainted Arachna:
 Both Arachnas:
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
 * Doubled recharge time of Arachna's Spool and Divine Cloth
-* Halved Web Heart effect on increasing how many spiders to spawn
+* Lowered Web Heart effect on increasing how many spiders to spawn
 * Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 * Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
 * Dealing damage to bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
@@ -110,6 +110,7 @@ Both Arachnas:
 * Guppy's Paw and Abbadon no longer have manual interactions with Web Hearts
 * Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
 * Spider Eggs now explode on challenge/boss rush wave clears
+* Bone and Eternal Hearts are allowed to be gained again through items or other means. Their pickup equivalent are still converted into Web Hearts
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 - Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Inherent poison tears now work on all weapon types
@@ -118,7 +119,6 @@ Other:
 - Poison tears from Arachnid's Grip now work on all weapon types
 - Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
-- Web Hearts now distribute damage across to other Web Hearts, meaning champions and stages past Womb II will have Web Hearts deal double damage
 - Redesigned Best Bud Ball. 8 charges, only has a chance to capture bosses that scales with its HP and luck, isn't removed when capturing a boss, only one Best Bud Ball capture at a time
 - Redesigned Geptameron. Still retains its shifting 7 day effects, but all days have been given new effects or had their effects tweaked. No longer grants flight or stats
 - Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
@@ -163,7 +163,7 @@ Arachna didn't really have an API before, which is where I would put this down, 
 - The entire mod's code was rewritten from the ground up. Everything on the mod is now properly attached to the "ARACHNAMOD" global
 - Save data is now handled through IsaacSaveManager. Previous save data on completion marks should be automatically transferred to REPENTOGON's own save data for completion marks and achievements
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
-- Web Hearts now utilize CustomHealthAPI for general improvements and cross-MOD compatibility
+- Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility
 - Status effects now utilize StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Golden Shopkeeper is now an actual shopkeeper (type 17) instead of an effect (type 1000)
 - Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant

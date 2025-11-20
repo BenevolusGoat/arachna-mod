@@ -18,10 +18,6 @@ WEB_HEART.HeartsToReplace = Mod:Set({
 	HeartSubType.HEART_BONE,
 	HeartSubType.HEART_ROTTEN
 })
-WEB_HEART.BLOCK_KEYS = Mod:Set({
-	"BONE_HEART",
-	"ETERNAL_HEART"
-})
 
 --For modded characters
 WEB_HEART.KeeperCharacters = {}
@@ -152,6 +148,9 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "KindContained") ~= CustomHealthAPI.Enums.HealthKinds.NONE
 		then
+			Mod.Foreach.Pickup(function (pickup, index)
+				WEB_HEART:UpdateDevilSprite(pickup)
+			end, PickupVariant.PICKUP_COLLECTIBLE)
 			--Empty Heart to Web Heart conversion
 			if CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0 then
 				local hpToAdd = math.ceil(hp)
@@ -160,17 +159,13 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 				end
 				return WEB_HEART.KEY_ARACHNA, hpToAdd
 			elseif key == "BONE_HEART" then
-				--Allow removing Bone Hearts to also remove Web Hearts
+				--Removing Bone Hearts removes Web Hearts instead. For devil deals
 				--Also for continuing a run
 				if hp < 0 or player.FrameCount == 0 then
 					return expectedKey, hp
 				--No bone hearts allowed otherwise
-				else
-					return true
 				end
 			end
-		elseif Mod:IsAnyArachna(player) and WEB_HEART.BLOCK_KEYS[key] then
-			return true
 		end
 	end)
 
@@ -194,8 +189,7 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 				data.GoldenHeartsPreDamage = Mod.math.min(numGoldens, WEB_HEART:GetWebHearts(player))
 				Isaac.CreateTimer(function() Mod:GetData(player).GoldenHeartsPreDamage = nil end, 1, 1, true)
 			end
-			--Stop inherent Bone Heart functionality from tanking all damage at once
-			if key == WEB_HEART.KEY_ARACHNA and hpToRemove > 1 and not Mod:IsLegacyGameplayEnabled() then
+			--[[ if key == WEB_HEART.KEY_ARACHNA and hpToRemove > 1 and not Mod:IsLegacyGameplayEnabled() then
 				for i = 1, hpToRemove do
 					player:TakeDamage(1, flags | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), 0)
 					if WEB_HEART:GetWebHearts(player) == 0 then
@@ -204,7 +198,7 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 					player:ResetDamageCooldown()
 				end
 				return true
-			end
+			end ]]
 		end
 	end)
 
@@ -485,15 +479,71 @@ local SUPPORTED_VISUALS = Mod:Set({
 })
 
 ---@param pickup EntityPickup
+function WEB_HEART:DevilDealUpdate(pickup)
+	local price = pickup.Price
+	if price < 0 then
+		local data = Mod:GetData(pickup)
+		if not data.TrackPrice then
+			data.TrackPrice = price
+		end
+		if data.TrackPrice ~= price then
+			data.UpdateWebHeartSheet = true
+			data.TrackPrice = price
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.DevilDealUpdate, PickupVariant.PICKUP_COLLECTIBLE)
+
+---@param pickup EntityPickup
 function WEB_HEART:UpdateDevilSprite(pickup)
-	if not pickup:IsShopItem() or pickup.FrameCount > 0 then return end
-	if SUPPORTED_VISUALS[pickup.Price] and Mod:EveryoneIsArachna() then
-		pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/price_web.png", true)
-	else
-		pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/shop_001_bitfont.png", true)
+	if not pickup:IsShopItem() or pickup.Price >= 0 then return end
+	local data = Mod:TryGetData(pickup)
+	if data and data.UpdateWebHeartSheet or pickup.FrameCount == 0 then
+		local someoneHasArachnaWeb = Mod.Foreach.Player(function (player, index)
+			if Mod:IsAnyArachna(player) and not Mod:IsLegacyGameplayEnabled() and WEB_HEART:GetWebHearts(player) > 0 then
+				return true
+			end
+		end) or false
+		if SUPPORTED_VISUALS[pickup.Price] and someoneHasArachnaWeb then
+			pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/price_web.png", true)
+		end
 	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_RENDER, WEB_HEART.UpdateDevilSprite, PickupVariant.PICKUP_COLLECTIBLE)
+
+--#endregion
+
+--#region Reverse Fool fix
+
+--CustomHealthAPI spawns twice the required amount for some reason. Queue to remove duplicates
+function WEB_HEART:BeforeReverseFool(card, player)
+	if Mod:IsAnyArachna(player) then
+		local numToRemove = WEB_HEART:GetWebHearts(player) - 1
+		if numToRemove > 0 then
+			Mod:GetData(player).WebHeartReverseFool = numToRemove
+		end
+	end
+end
+
+--IMPORTANT-1 to run before CHAPI
+Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.IMPORTANT - 1, WEB_HEART.BeforeReverseFool, Card.CARD_REVERSE_FOOL)
+
+function WEB_HEART:OnReverseFool(card, player)
+	local data = Mod:GetData(player)
+	if data.WebHeartReverseFool then
+		Mod.Foreach.Pickup(function (pickup, index)
+			if pickup.FrameCount == 0 and Mod:IsSameEntity(player, pickup.SpawnerEntity) then
+				pickup:Remove()
+				data.WebHeartReverseFool = data.WebHeartReverseFool - 1
+				if data.WebHeartReverseFool == 0 then return true end
+			end
+		end, PickupVariant.PICKUP_HEART, WEB_HEART.ID, {Inverse = true})
+		data.WebHeartReverseFool = nil
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY, WEB_HEART.OnReverseFool, Card.CARD_REVERSE_FOOL)
 
 --#endregion

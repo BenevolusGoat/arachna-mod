@@ -2,6 +2,7 @@
 
 local Mod = ARACHNAMOD
 local ceil = Mod.math.ceil
+local floor = Mod.math.floor
 
 local SPIDER_EGG = {}
 
@@ -47,7 +48,7 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggSubtype)
 				Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(), pos)
 			end
 		end
-		Mod:DebugLog("Blocked egg spawn")
+		Mod:DebugLog(Mod:TypeVarSubToString(npc), "spawning regular spider instead of egg")
 		return
 	end
 	local subtype = eggSubtype or 0
@@ -146,8 +147,8 @@ function SPIDER_EGG:Explode(egg, rewards)
 	local stageNum = Mod.Game:GetLevel():GetStage()
 	local spiderCount = 0
 	local rng = egg:GetDropRNG()
-	local webHearts = Mod.math.floor(Mod.Pickup.WEB_HEART:GetWebHearts(player) / 2)
-	local stageModifier = ceil((stageNum + 1) / 2) * 0.5
+	local webHearts = Mod.math.max(0, floor(Mod.Pickup.WEB_HEART:GetWebHearts(player) / 1.5))
+	local stageModifier = Mod.math.max(1, ceil((stageNum + 1) / 2) * 0.5)
 	local minSpiders, maxSpiders = 2, 3
 	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
@@ -176,7 +177,8 @@ function SPIDER_EGG:Explode(egg, rewards)
 		maxSpiders = maxSpiders - 1
 	end
 
-	spiderCount = ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng))
+	spiderCount = floor(ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng)))
+	Mod:DebugLog("Spawning", spiderCount, "spiders from a random count of", stageModifier, "*", "RandomNum(" .. minSpiders .. ", (" .. maxSpiders, "+", webHearts .. "))")
 
 	for _ = 1, spiderCount do
 		local spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(allowBig, false, bonusColorChance, bonusBigChance)
@@ -258,7 +260,7 @@ function SPIDER_EGG:RenderTimer(effect, offset)
 	local nullFrame = effect:GetSprite():GetNullFrame("timer")
 	if nullFrame and nullFrame:IsVisible() and effect.Timeout > 0 then
 		renderPos = renderPos + nullFrame:GetPos()
-		local frameNum = Mod.math.floor(effect.Timeout / SPIDER_EGG.MAX_EGG_TIMEOUT * 100) - 1
+		local frameNum = floor(effect.Timeout / SPIDER_EGG.MAX_EGG_TIMEOUT * 100) - 1
 		eggTimerSprite:SetFrame("Charging", frameNum)
 		eggTimerSprite:Render(renderPos)
 	end

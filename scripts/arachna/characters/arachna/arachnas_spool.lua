@@ -193,6 +193,16 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, 
 
 --Webbed and Spider Bite statuses share several similarities so the code is stored here
 
+---@param npc EntityNPC
+function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
+	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
+		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
+		and npc:IsActiveEnemy(false)
+		and npc:IsVulnerableEnemy()
+		and (not ARACHNAMOD:IsLegacyGameplayEnabled() or not npc:IsBoss())
+end
+
 ---@param ent Entity
 ---@param statusEffect StatusFlag
 ---@param customData table
@@ -221,7 +231,7 @@ function ARACHNAS_SPOOL:PostAddWebOrBitten(ent, statusEffect, statusEffectData)
 end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
-	ARACHNAS_SPOOL.PostAddWebOrBitten)
+	ARACHNAS_SPOOL.PostAddWebOrBitten, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param ent Entity
 ---@param amount number
@@ -326,16 +336,6 @@ function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
 	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil, {OriginalMass = npc.Mass})
 end
 
----@param npc EntityNPC
-function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
-	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
-		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
-		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
-		and npc:IsActiveEnemy(false)
-		and npc:IsVulnerableEnemy()
-		and (not ARACHNAMOD:IsLegacyGameplayEnabled() or not npc:IsBoss())
-end
-
 ---@param ent Entity
 ---@param amount number
 ---@param flags DamageFlag
@@ -422,7 +422,7 @@ function ARACHNAS_SPOOL:PostRemoveWebbed(ent, _, statusEffectData)
 end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_REMOVE_ENTITY_STATUS_EFFECT,
-	ARACHNAS_SPOOL.PostRemoveWebbed)
+	ARACHNAS_SPOOL.PostRemoveWebbed, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param ent Entity
 function ARACHNAS_SPOOL:WebbedUpdate(ent)
