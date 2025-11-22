@@ -110,6 +110,19 @@ Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, ARACHNA.PosionTears)
 
 --#endregion
 
+--#region White lasers
+
+---@param player EntityPlayer
+function ARACHNA:LaserColorCache(player)
+	if Mod:IsAnyArachna(player) then
+		player:SetLaserColor(Color(1, 1, 1, 1, 0, 0, 0, 5.2, 5.2, 5, 1))
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, ARACHNA.LaserColorCache, CacheFlag.CACHE_TEARCOLOR)
+
+--#endregion
+
 --#region Ignore Cobweb slow
 
 ---@param ent Entity

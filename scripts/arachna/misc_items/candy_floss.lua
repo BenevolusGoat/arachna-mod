@@ -35,7 +35,7 @@ local knifeLaserWeaponTypes = Mod:Set({
 ---@param player EntityPlayer
 function CANDY_FLOSS:LaserColorCache(player)
 	if player:HasCollectible(CANDY_FLOSS.ID) then
-		player:SetLaserColor(CANDY_FLOSS.MODIFIER.LaserColor)
+		player:SetLaserColor(Color(1, 1, 1, 1, 0, 0, 0, 5.2, 5.2, 5, 1))
 	end
 end
 

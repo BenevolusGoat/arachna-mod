@@ -148,6 +148,7 @@ Other:
 - Changed poison tears from Arachna, Tainted Arachna, and Arachnid's Grip to be colored green
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
 - Changed the floor web from Arachna's Spool to render below grid entities, similarly to creep
+- Arachna and Tainted Arachna have the same laser color as Spider Bite
 
 ## MOD COMPATIBILITY
 - Added MinimapAPI compatibility
