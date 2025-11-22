@@ -88,7 +88,6 @@ New Content:
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
 
 Arachna:
-* Bosses that die while Webbed will replace their heart drop with a Web Heart
 * Bosses can now drop a Spider Egg on death
 * Doubled hitsphere size of Arachna's Spool tear
 * Arachna's Spool's web reduces knockback to enemies, making it easier to keep them Webbed
