@@ -11,7 +11,7 @@ WHITE_STRING.ID = Isaac.GetTrinketIdByName("White String")
 function WHITE_STRING:WebHeartOnNewFloor(player, fromPlayerUpdate, postLevelInitFinished)
 	if not postLevelInitFinished then return end
 	if player:HasTrinket(WHITE_STRING.ID) and Mod.Pickup.WEB_HEART:CanPickup(player) then
-		Mod.Pickup.WEB_HEART:AddWebHearts(player, 2)
+		Mod.Pickup.WEB_HEART:AddWebHearts(player, 1)
 	end
 end
 
