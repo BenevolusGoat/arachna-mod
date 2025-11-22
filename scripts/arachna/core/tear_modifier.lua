@@ -22,6 +22,7 @@ end
 ---@field GFX_BLOOD string? @The anm2 to use for the blood tear.
 ---@field Color Color? @The color to use for the tear.
 ---@field LaserColor Color? @The color to use for the laser
+---@field DisableApplyLogic boolean? @Disable the modifier automatically applying tear effects/colors. Useful for manually handling application logic, such as through `MC_EVALUATE_TEAR_HIT_PARAMS`
 local TearModifier = {}
 TearModifier.__index = TearModifier
 
@@ -239,6 +240,7 @@ end
 ---@field Color Color? @The color to use for a tear, knife, or laser. Leave nil to let the game decide.
 ---@field LaserColor Color? @The color to use for only lasers. If `Color` is defined, this will override it
 ---@field ShouldAffectBombs boolean? @If Dr and Epic Fetus should be affected. By default, this is false.
+---@field DisableApplyLogic boolean? @Disable the modifier automatically applying tear effects/colors. Useful for manually handling application logic, such as through `MC_EVALUATE_TEAR_HIT_PARAMS`
 
 ---Constructs a new TearModifier. Use this for deciding the luck stuff: https://www.desmos.com/calculator/b9x583q0md
 ---@param params TearModifierParams
@@ -263,6 +265,7 @@ function TearModifier.New(params)
 	self.GFX_BLOOD = params.GFX_BLOOD
 	self.Color = params.Color
 	self.LaserColor = params.LaserColor
+	self.DisableApplyLogic = params.DisableApplyLogic
 
 	self.ShouldAffectBombs = params.ShouldAffectBombs or false
 
@@ -321,7 +324,7 @@ function TearModifier.New(params)
 	---@param tear EntityTear
 	Mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function(_, tear)
 		local data = getData(tear)
-		if not tear.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
+		if params.DisableApplyLogic or not tear.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
 			return
 		end
 
@@ -357,7 +360,7 @@ function TearModifier.New(params)
 	---@param tear EntityTear
 	Mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, function(_, tear)
 		local data = getData(tear)
-		if not tear.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
+		if params.DisableApplyLogic or not tear.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
 			return
 		end
 		if tear:HasTearFlags(TearFlags.TEAR_LUDOVICO) then
@@ -427,7 +430,7 @@ function TearModifier.New(params)
 	---@param knife EntityKnife
 	local function fireKnife(_, knife)
 		local data = getData(knife)
-		if not knife.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
+		if params.DisableApplyLogic or not knife.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
 			return
 		end
 
@@ -449,7 +452,7 @@ function TearModifier.New(params)
 	---@param knife EntityKnife
 	Mod:AddCallback(ModCallbacks.MC_POST_KNIFE_UPDATE, function(_, knife)
 		local data = getData(knife)
-		if not knife.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
+		if params.DisableApplyLogic or not knife.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
 			return
 		end
 
@@ -513,7 +516,7 @@ function TearModifier.New(params)
 	---@param laser EntityLaser
 	local function laserFire(_, laser)
 		local data = getData(laser)
-		if not laser.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
+		if params.DisableApplyLogic or not laser.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
 			return
 		end
 
@@ -543,7 +546,7 @@ function TearModifier.New(params)
 	---@param laser EntityLaser
 	Mod:AddCallback(ModCallbacks.MC_POST_LASER_UPDATE, function(_, laser)
 		local data = getData(laser)
-		if not laser.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
+		if params.DisableApplyLogic or not laser.SpawnerEntity or data[modInitial .. self.Name .. "_Disabled"] then
 			return
 		end
 
@@ -660,7 +663,7 @@ function TearModifier.New(params)
 	end
 
 	--#region Bomb code (the easy one)
-	if self.ShouldAffectBombs then
+	if self.ShouldAffectBombs and not params.DisableApplyLogic then
 		---@param effect EntityEffect
 		Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function(_, effect)
 			if not effect.SpawnerEntity then
