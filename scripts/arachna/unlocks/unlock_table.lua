@@ -141,7 +141,7 @@ end
 local rootCommand = "arachnaMod"
 
 local commands = {
-	{"unlocktainted", "Unlocks Tainted Arachna", function() Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT, true) end},
+	{"unlocktainted", "Unlocks Tainted Arachna", function() Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT) end},
 	{"unlockall", "Unlocks all mod achievements", function() manageAchievements(true) end},
 	{"lockall", "Locks all mod achievements", function() manageAchievements(false) end},
 }
@@ -168,3 +168,17 @@ end)
 Mod:AddCallback(ModCallbacks.MC_CONSOLE_AUTOCOMPLETE, function (command, params)
 	return commands
 end, rootCommand)
+
+--#endregion
+
+--#region Wipe save
+
+function ARACHNAMOD:WipeSave()
+	Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA)
+	Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA_B)
+	manageAchievements(false)
+end
+
+Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_DELETE, ARACHNAMOD.WipeSave)
+
+--#endregion

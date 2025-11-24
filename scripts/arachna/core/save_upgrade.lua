@@ -79,6 +79,7 @@ function ARACHNAMOD:TransferMarksToREPENTOGON(saveData)
 		saveData.file.other.arachnaMarks = nil
 		saveData.file.other.arachnaMarksAlt = nil
 		Mod.SaveManager.Save()
+		ARACHNAMOD.ShowNewPopup = true
 	end
 end
 

@@ -277,9 +277,10 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
 
 			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
+				local pos = Isaac.GetFreeNearPosition(ent.Position, 40 + (40 * Mod.math.floor(ent.Size / 40)))
 				data.SpiderBossCharge = 0
 				Mod:DebugLog("Spawning Boss Egg")
-				Mod.Entities.SPIDER_EGG:TrySpawnEgg(ent.Position, ent, player, Mod.Entities.SPIDER_EGG.EggSubtype.SMALL)
+				Mod.Entities.SPIDER_EGG:TrySpawnEgg(pos, ent, player, Mod.Entities.SPIDER_EGG.EggSubtype.SMALL)
 			end
 		end
 	end

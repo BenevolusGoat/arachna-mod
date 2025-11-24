@@ -52,7 +52,7 @@ WrapPatchNotes([[MM/DD/YYYY
 
 ## Major Mod Rewrite
 
-The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! The mod now requires REPENTOGON+ to function, a large quantity of bugs have been fixed, some new content has been added, and balancing adjustments have been made across the mod.
+The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! The mod now requires REPENTOGON on Repentance+ to function, a large quantity of bugs have been fixed, some new content has been added, and balancing adjustments have been made across the entire mod.
 
 ## GENERAL ADJUSTMENTS
 - Added a Dead Sea Scrolls menu where you can check settings, achievements, current and past changelogs, and credits
@@ -94,6 +94,7 @@ Arachna:
 * Arachna's Spool's web no longer affects enemies that are above pits
 * If Arachna's Spool's tear kills an enemy, it counts as them being Webbed
 * Birthright adjusted. Instead of +1 to spawned spiders, chance is increased for spider eggs spawning colored spiders
+* Dealing damage to bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
 
 Tainted Arachna:
 * Replaced inherent +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
@@ -104,7 +105,6 @@ Both Arachnas:
 * Lowered Web Heart effect on increasing how many spiders to spawn
 * Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 * Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
-* Dealing damage to bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Guppy's Paw and Abbadon no longer have manual interactions with Web Hearts
 * Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
@@ -168,7 +168,8 @@ Arachna didn't really have an API before, which is where I would put this down, 
 - Golden Shopkeeper is now an actual shopkeeper (type 17) instead of an effect (type 1000)
 - Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant
 - Best Bud Ball's effect variant is now a unique number instead of being a subtype of Friendly Ball
-- The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON, named "spiderBeggar"]])
+- The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON, named "spiderBeggar"
+- Completion marks and achievements for Arachna MOD's content are now deleted when the save file is deleted]])
 )
 
 DeadSeaScrollsMenu.AddChangelog(

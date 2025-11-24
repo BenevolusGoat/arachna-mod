@@ -3,7 +3,7 @@
 
 local game = Game()
 local SaveManager = {}
-SaveManager.VERSION = "2.3.3"
+SaveManager.VERSION = "2.4"
 SaveManager.Utility = {}
 
 SaveManager.Debug = false
@@ -39,6 +39,7 @@ local currentListIndex = 0
 local checkLastIndex = false
 local inRunButNotLoaded = true
 local retainFamiliarSaveOnFlip = false
+local isMenuActive = false
 local tLazInitPlayer
 local tLazInitSeeds
 local dupeTaggedPickups = {}
@@ -61,6 +62,7 @@ local lastUsedHourglassSlot = "1"
 
 SaveManager.Utility.ERROR_MESSAGE_FORMAT = "[IsaacSaveManager:%s] ERROR: %s (%s)\n"
 SaveManager.Utility.WARNING_MESSAGE_FORMAT = "[IsaacSaveManager:%s] WARNING: %s (%s)\n"
+SaveManager.Utility.MESSAGE_FORMAT = "[IsaacSaveManager:%s] %s\n"
 SaveManager.Utility.ErrorMessages = {
 	NOT_INITIALIZED = "The save manager cannot be used without initializing it first!",
 	DATA_NOT_LOADED = "An attempt to use save data was made before it was loaded!",
@@ -83,11 +85,11 @@ SaveManager.Utility.JsonIncompatibilityType = {
 
 ---@enum SaveCallbacks
 SaveManager.SaveCallbacks = {
-	---(SaveData saveData): SaveData - Called before validating the save data to store into the mod's save file. This will not run if there happens to be an issue with copying the contents of the save data or its hourglass backup. Modify the existing contents of the table or return a new table to overwrite the provided save data. As this is a copy, it will not affect the save data currently accessible
+	---(SaveData saveData): SaveData - Called before validating the save data to store into the mod's save file. This will not run if there happens to be an issue with copying the contents of the save data or its hourglass backup. Return a new table to overwrite the provided save data.
 	PRE_DATA_SAVE = "ISAACSAVEMANAGER_PRE_DATA_SAVE",
 	---(SaveData saveData) - Called after storing save data into the mod's save file
 	POST_DATA_SAVE = "ISAACSAVEMANAGER_POST_DATA_SAVE",
-	---(SaveData saveData, boolean isLuamod): SaveData - Called after loading the data from the mod's save file but before loading it into the local save data. Modify the existing contents of the table or return a new table to overwrite the provided save data. `isLuamod` will return `true` if the mod's data was reloaded via the luamod command
+	---(SaveData saveData, boolean isLuamod): SaveData - Called after loading the data from the mod's save file but before loading it into the local save data. Return a new table to overwrite the provided save data. `isLuamod` will return `true` if the mod's data was reloaded via the luamod command
 	PRE_DATA_LOAD = "ISAACSAVEMANAGER_PRE_DATA_LOAD",
 	---(SaveData saveData, boolean isLuamod) - Called after loading the mod's save file and storing it in local save data
 	POST_DATA_LOAD = "ISAACSAVEMANAGER_POST_DATA_LOAD",
@@ -116,7 +118,11 @@ SaveManager.SaveCallbacks = {
 	---() - Called when Glowing Hourglass is detected to have activated and is queued to reset all save data to the hourglass save
 	PRE_GLOWING_HOURGLASS_RESET = "ISAACSAVEMANAGER_PRE_GLOWING_HOURGLASS_RESET",
 	---() - Called after Glowing Hourglass reverts all save data has to the hourglass save
-	POST_GLOWING_HOURGLASS_RESET = "ISAACSAVEMANAGER_POST_GLOWING_HOURGLASS_RESET"
+	POST_GLOWING_HOURGLASS_RESET = "ISAACSAVEMANAGER_POST_GLOWING_HOURGLASS_RESET",
+	---(SaveData saveData): SaveData | boolean - Called after a save data deletion is detected, but before save data is deleted. The Settings save is intentionally not wiped by default. Return `true` to stop deletion, or a new table to overwrite the provided save data.
+	PRE_DATA_DELETE = "ISAACSAVEMANAGER_PRE_DATA_DELETE",
+	---(SaveData saveData) - Called after a save data deletion is detected and save data is deleted.  The Settings save is intentionally not wiped by default.
+	POST_DATA_DELETE = "ISAACSAVEMANAGER_POST_DATA_DELETE"
 }
 
 SaveManager.Utility.CustomCallback = {}
@@ -342,6 +348,11 @@ function SaveManager.Utility.SendWarning(msg)
 		msg, traceback))
 	Isaac.DebugString(SaveManager.Utility.WARNING_MESSAGE_FORMAT:format(modReference and modReference.Name or "???", msg,
 		traceback))
+end
+
+function SaveManager.Utility.SendMessage(msg)
+	Isaac.ConsoleOutput(SaveManager.Utility.MESSAGE_FORMAT:format(modReference and modReference.Name or "???", msg))
+	Isaac.DebugString(SaveManager.Utility.MESSAGE_FORMAT:format(modReference and modReference.Name or "???", msg))
 end
 
 ---A wrap for `print` that only triggers if `SaveManager.Debug` is set to `true`.
@@ -666,34 +677,6 @@ function SaveManager.Utility.IsEntitySaveAllowed(ent, saveType)
 	then
 		return false, SaveManager.Utility.ErrorMessages.INVALID_ENTITY_WITH_SAVE:format(ent.Type, ent.Variant, ent.SubType)
 	end
-	if ent:ToNPC() then
-		if ent:HasEntityFlags(EntityFlag.FLAG_PERSISTENT) then
-			return true
-		end
-
-		if ent.Type == EntityType.ENTITY_BLOOD_PUPPY then
-			if ent.Parent.Type == EntityType.ENTITY_FAMILIAR then
-				return true
-			else
-				return false, "Cannot save data for Blood Puppy if it is not handled by a familiar."
-			end
-		end
-
-		if ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
-			if not ent:IsBoss()
-				and ent:IsActiveEnemy(false)
-				and (ent.Type ~= EntityType.ENTITY_CHARGER or (ent.Variant ~= 0 and ent.SubType ~= 1)) --My Shadow charger, lol
-			then
-				return true
-			elseif ent:IsBoss() then
-				return false, "Cannot save data for friendly bosses"
-			elseif not ent:IsActiveEnemy(false) then
-				return false, "Cannot save data for friendly non-active enemies"
-			elseif ent.Type == EntityType.ENTITY_CHARGER and ent.Variant ~= 0 and ent.SubType ~= 1 then
-				return false, "Cannot save data for the My Shadow Charger"
-			end
-		end
-	end
 	return true
 end
 
@@ -858,7 +841,7 @@ function SaveManager.Save()
 		return
 	end
 
-	local newFinalData = SaveManager.Utility.RunCallback(SaveManager.Utility.CustomCallback.PRE_DATA_SAVE, finalData)
+	local newFinalData = SaveManager.Utility.RunCallback(SaveManager.SaveCallbacks.PRE_DATA_SAVE, finalData)
 	if newFinalData then
 		finalData = newFinalData
 	end
@@ -879,7 +862,7 @@ function SaveManager.Save()
 
 	modReference:SaveData(json.encode(finalData))
 
-	SaveManager.Utility.RunCallback(SaveManager.Utility.CustomCallback.POST_DATA_SAVE, finalData)
+	SaveManager.Utility.RunCallback(SaveManager.SaveCallbacks.POST_DATA_SAVE, finalData)
 end
 
 -- Restores the game save with the data in the hourglass backup.
@@ -904,6 +887,45 @@ function SaveManager.TryHourglassRestore(slot)
 	end
 end
 
+--Taken from EID with some slight tweaks
+local function hasBeatMom()
+	--Tainted characters have definitely beaten Mom!
+	if Isaac.GetPlayer():GetPlayerType() < PlayerType.PLAYER_ISAAC_B
+		-- Challenge runs and TMTrainer might break the pool, so ignore them.
+		and not game:GetSeeds():IsCustomRun()
+		and not Isaac.GetPlayer():HasCollectible(CollectibleType.COLLECTIBLE_TMTRAINER)
+	then
+		local hasBookOfRevelationsUnlocked = Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_REVELATIONS):IsAvailable()
+		if not hasBookOfRevelationsUnlocked then
+			local hasCubeOfMeatUnlocked = Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT):IsAvailable()
+			if not hasCubeOfMeatUnlocked then
+				return false
+			end
+		end
+	end
+	return true
+end
+
+local function deleteSave(slot)
+	local result = Isaac.RunCallback(SaveManager.SaveCallbacks.PRE_DATA_DELETE, dataCache)
+	if result == true then
+		return
+	elseif type(result) == "table" then
+		dataCache = result
+	else
+		local settingsSave = dataCache.file.settings
+		dataCache = SaveManager.Utility.PatchSaveFile({}, SaveManager.DEFAULT_SAVE)
+		dataCache.file.settings = settingsSave
+	end
+	SaveManager.Save()
+	local message = "MOD SAVE DATA DELETED!"
+	if slot then
+		message = "MOD SAVE DATA IN SAVE FILE " ..  slot .. " DELETED!"
+	end
+	SaveManager.Utility.SendMessage(message)
+	Isaac.RunCallback(SaveManager.SaveCallbacks.POST_DATA_DELETE, dataCache)
+end
+
 -- Loads save data from the file, overwriting what is already loaded.
 ---@param isLuamod? boolean
 function SaveManager.Load(isLuamod)
@@ -919,7 +941,7 @@ function SaveManager.Load(isLuamod)
 		saveData = SaveManager.Utility.PatchSaveFile(data, SaveManager.DEFAULT_SAVE)
 	end
 
-	local newSaveData = SaveManager.Utility.RunCallback(SaveManager.Utility.CustomCallback.PRE_DATA_LOAD, saveData,
+	local newSaveData = SaveManager.Utility.RunCallback(SaveManager.SaveCallbacks.PRE_DATA_LOAD, saveData,
 		isLuamod)
 	if newSaveData then
 		saveData = newSaveData
@@ -928,6 +950,13 @@ function SaveManager.Load(isLuamod)
 	if game:GetFrameCount() > 0 then
 		currentListIndex = saveData.__SAVEMANAGER_LIST_INDEX or game:GetLevel():GetCurrentRoomDesc().ListIndex
 		saveData.__SAVEMANAGER_LIST_INDEX = nil
+	elseif not REPENTOGON and Isaac.GetPlayer() then
+		local beatMom = hasBeatMom()
+		if saveData.__SAVEMANAGER_BEAT_MOM == nil then
+			saveData.__SAVEMANAGER_BEAT_MOM = beatMom
+		elseif saveData.__SAVEMANAGER_BEAT_MOM == true and not beatMom then
+			deleteSave()
+		end
 	end
 
 	dataCache = saveData
@@ -948,7 +977,7 @@ function SaveManager.Load(isLuamod)
 	loadedData = true
 	inRunButNotLoaded = false
 
-	SaveManager.Utility.RunCallback(SaveManager.Utility.CustomCallback.POST_DATA_LOAD, saveData, isLuamod)
+	SaveManager.Utility.RunCallback(SaveManager.SaveCallbacks.POST_DATA_LOAD, saveData, isLuamod)
 end
 
 ---Gets a unique string as an identifier for the pickup when outside of the room it's present in.
@@ -1680,13 +1709,22 @@ end
 
 ---With REPENTOGON, allows you to load data whenever you select a save slot.
 ---@param isSlotSelected boolean
-local function postSaveSlotLoad(_, _, isSlotSelected, _)
+local function postSaveSlotLoad(_, slot, isSlotSelected, raw)
 	if not isSlotSelected then
 		return
 	end
 	if saveFileWait < 3 then
 		saveFileWait = saveFileWait + 1
 	else
+		if isMenuActive and MenuManager.GetActiveMenu() == MainMenuType.SAVES then
+			local sprite = SaveMenu.GetDeletePopupSprite()
+			if sprite:GetAnimation() == "DeleteConfirmationIdle"
+				and sprite:GetLayerFrameData(8):GetStartFrame() --Cursor
+			then
+				deleteSave(slot)
+				saveFileWait = -2
+			end
+		end
 		SaveManager.Load(false)
 	end
 end
@@ -1733,9 +1771,16 @@ function SaveManager.Init(mod)
 		modReference:AddPriorityCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD,
 			SaveManager.Utility.CallbackPriority.IMPORTANT, postSaveSlotLoad)
 		modReference:AddPriorityCallback(ModCallbacks.MC_MENU_INPUT_ACTION,
-			SaveManager.Utility.CallbackPriority.IMPORTANT, function()
-				local success, currentMenu = pcall(MenuManager.GetActiveMenu)
-				if not success then return end
+			SaveManager.Utility.CallbackPriority.IMPORTANT, function(_, ent, inputHook, buttonAction)
+				isMenuActive = false
+				if MenuManager.IsActive and MenuManager.IsActive() == false then
+					return
+				elseif not MenuManager.IsActive then
+					local success, _ = pcall(MenuManager.GetActiveMenu)
+					if not success then return end
+				end
+				isMenuActive = true
+				local currentMenu = MenuManager.GetActiveMenu()
 				dontSaveModData = currentMenu == MainMenuType.TITLE or
 					currentMenu == MainMenuType.MODS
 				detectLuamod()

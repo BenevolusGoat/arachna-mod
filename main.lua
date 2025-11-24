@@ -22,6 +22,10 @@ ARACHNAMOD.GENERIC_RNG = RNG()
 ARACHNAMOD:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	local seed = ARACHNAMOD.Game:GetSeeds():GetStartSeed()
 	ARACHNAMOD.GENERIC_RNG:SetSeed(seed, 35)
+	if Mod.ShowNewPopup then
+		DeadSeaScrollsMenu.QueueMenuOpen("Arachna", "arachnapopup", 0, true)
+		Mod.ShowNewPopup = nil
+	end
 end)
 
 ARACHNAMOD.RANGE_BASE_MULT = 40

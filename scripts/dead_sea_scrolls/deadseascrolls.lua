@@ -29,6 +29,8 @@ end
 local DSSInitializerFunction = require("scripts.dead_sea_scrolls.vendor.dssmenucore")
 local dssmod = DSSInitializerFunction(DSSModName, DSSCoreVersion, Mod.SaveManager.MenuProvider)
 local BREAK_LINE = { str = "", fsize = 1, nosel = true }
+local areYouSureText = ""
+local areYouSureAction = function() end
 
 local arachnaDssDirectory = {
 	DSSMOD = dssmod,
@@ -37,13 +39,45 @@ local arachnaDssDirectory = {
 
 		buttons = {
 			{str = 'resume game', action = 'resume'},
-			{str = 'achievements', dest = 'achievementviewer', tooltip = GenerateTooltip("view your achievements")},
+			{str = 'unlocks', dest = 'unlocks', tooltip = GenerateTooltip("view and manage unlocks")},
 			dssmod.changelogsButton,
 			{str = 'settings', dest = 'settings', tooltip = GenerateTooltip("edit various settings")},
 			{str = 'credits', dest = 'credits', tooltip = GenerateTooltip("view the credits")},
 		},
 
 		tooltip = dssmod.menuOpenToolTip
+	},
+	unlocks = {
+		title = 'unlocks',
+		buttons = {
+			{str = 'achievements', dest = 'achievementviewer', tooltip = GenerateTooltip("view your achievements. also available in the main menu!")},
+			{str = 'unlock manager', dest = 'unlockmanager', tooltip = GenerateTooltip("manage your unlocks")}
+		}
+	},
+	unlockmanager = {
+		title = 'unlock manager',
+		buttons = {
+			{
+				str = 'unlock tainted',
+				dest = 'areyousure',
+				tooltip = GenerateTooltip("unlock tainted arachna"),
+				func = function()
+					areYouSureText = "this will immediately unlock tainted arachna. are you sure you want to do that?"
+					areYouSureAction = function()
+						Isaac.ExecuteCommand("arachnaMod unlocktainted")
+					end
+				end
+			},
+			{
+				str = 'wipe save',
+				dest = 'areyousure',
+				tooltip = GenerateTooltip("clear completion marks and achievements"),
+				func = function()
+					areYouSureText = "this will remove all arachna marks and achievements. are you sure you want to do that?"
+					areYouSureAction = Mod.WipeSave
+				end
+			},
+		}
 	},
 	settings = {
 		title = "settings",
@@ -123,9 +157,59 @@ local arachnaDssDirectory = {
 			{str = "shapatsmith", fsize = 2, tooltip = GenerateTooltip("voiceover for pocket items")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("playtesting, sprites for several costumes")},
 			{str = "steamjek", fsize = 2, tooltip = GenerateTooltip("mod thumbnail art as a commission")},
-			{str = "benevolusgoat", fsize = 2, tooltip = GenerateTooltip("v2.0 code rewrite for repentogon+")}
+			{str = "benevolusgoat", fsize = 2, tooltip = GenerateTooltip("v2.0 coder")}
 		},
 	},
+	areyousure = {
+		title = "are you sure?",
+		tooltip = { strset = {""} },
+		buttons = {
+			BREAK_LINE,
+			BREAK_LINE,
+			{
+				str = "no",
+				action = "back",
+				glowcolor = 2,
+				generate = function(button)
+					button.tooltip = GenerateTooltip(areYouSureText)
+				end,
+			},
+			BREAK_LINE,
+			{
+				str = "yes",
+				action = "back",
+				generate = function(button)
+					button.tooltip = GenerateTooltip(areYouSureText)
+					button.func = areYouSureAction
+				end,
+			},
+		},
+	},
+	arachnapopup = {
+		title = "arachna",
+		tooltip = GenerateTooltip("this update was brought to you by benny!"),
+		fsize = 1,
+		buttons = {
+			{str = "welcome to arachna 2.0!", fsize = 2, nosel = true},
+			{str = "the mod's code has been rewritten", nosel = true},
+			{str = "and many changes have been made.", nosel = true},
+			{str = "main features include:", nosel = true},
+			BREAK_LINE,
+			{str = "- character gameplay rework", nosel = true},
+			{str = "- deadseascrolls menu", nosel = true},
+			{str = "- 4 new items to the boss pool", nosel = true},
+			{str = "- quality of life improvements", nosel = true},
+			{str = "- unquantifiable amount of bug fixes", nosel = true},
+			BREAK_LINE,
+			{str = "see dss changelog for full list!", nosel = true},
+			{
+				str = "ok",
+				action = "resume",
+				fsize = 3,
+				glowcolor = 3
+			}
+		},
+	}
 }
 
 ARACHNAMOD.DSS_DIRECTORY = arachnaDssDirectory
