@@ -153,7 +153,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
 	local allowBig = false
-	local bonusColorChance
+	local bonusColorChance = 0
 	local bonusBigChance = 0
 	if arachnaBirthright then
 		bonusColorChance = bonusColorChance + 0.15
