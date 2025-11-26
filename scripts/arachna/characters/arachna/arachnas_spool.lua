@@ -39,7 +39,7 @@ ARACHNAS_SPOOL.MINIBOSS = Mod:Set({
 	tostring(EntityType.ENTITY_PRIDE) .. ".0.0",
 })
 ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD = 50
-ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE = 10
+ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE = 5
 
 --#endregion
 
@@ -114,7 +114,7 @@ end
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, ARACHNAS_SPOOL.OnTearUpdate, ARACHNAS_SPOOL.TEAR)
 
 ---@param tear EntityTear
-function ARACHNAS_SPOOL:OnTearDeath(tear)
+function ARACHNAS_SPOOL:OnSpoolDeath(tear)
 	Mod.sfxman:Play(SoundEffect.SOUND_WOOD_PLANK_BREAK, 1, 7, false, 3)
 	Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.8)
 	Mod.Game:SpawnParticles(tear.Position, EffectVariant.WOOD_PARTICLE, Mod:RandomNum(5, 10), 4)
@@ -143,7 +143,7 @@ function ARACHNAS_SPOOL:OnTearDeath(tear)
 	ARACHNAS_SPOOL:SpawnWeb(fixedPos, tear.SpawnerEntity)
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, ARACHNAS_SPOOL.OnTearDeath, ARACHNAS_SPOOL.TEAR)
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, ARACHNAS_SPOOL.OnSpoolDeath, ARACHNAS_SPOOL.TEAR)
 
 --#endregion
 
@@ -257,6 +257,7 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 				return
 			end
 			local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
+			if not player then return end
 			local data = Mod:GetData(parent)
 			if not data.SpiderBossChargeSprite then
 				data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
@@ -277,10 +278,10 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
 
 			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
-				local pos = Isaac.GetFreeNearPosition(ent.Position, 40 + (40 * Mod.math.floor(ent.Size / 40)))
+				local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderRange(player, Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL)
+				local dist = npc.Size + 80
+				Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, npc.Position, spiderCount, dist, Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL, true)
 				data.SpiderBossCharge = 0
-				Mod:DebugLog("Spawning Boss Egg")
-				Mod.Entities.SPIDER_EGG:TrySpawnEgg(pos, ent, player, Mod.Entities.SPIDER_EGG.EggSubtype.SMALL)
 			end
 		end
 	end

@@ -180,16 +180,16 @@ end
 ---@param player EntityPlayer
 ---@param subtype ColoredSpiderSubtype | integer
 ---@param pos Vector
----@param targetPos? Vector
-function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, targetPos)
-	if not targetPos then
-		targetPos = Isaac.GetFreeNearPosition(pos + Vector(Mod:RandomNum(40, 100), 0):Rotated(Mod:RandomNum(360)), 40)
-	end
+---@param dist? number
+function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, dist)
+	dist = dist or 80
+	local targetPos = Isaac.GetFreeNearPosition(pos + Vector(dist, 0):Rotated(Mod:RandomNum(360)), 0)
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
 	---@cast spider EntityFamiliar
-	if subtype == 0 then return end
+	if subtype == 0 then return spider end
 	spider.SubType = subtype
 	COLORED_SPIDERS:OnSpiderInit(spider)
+	return spider
 end
 
 ---@param spider EntityFamiliar
@@ -321,5 +321,37 @@ function COLORED_SPIDERS:ShinySpiderUpdate(spider)
 end
 
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, COLORED_SPIDERS.ShinySpiderUpdate, FamiliarVariant.BLUE_SPIDER)
+
+--#endregion
+
+--#region Obsure Spider with Egg
+
+---@param familiar EntityFamiliar
+---@param offset Vector
+function COLORED_SPIDERS:RenderEggOnSpider(familiar, offset)
+	local data = Mod:TryGetData(familiar)
+	if data and data.EggCoveredSpider then
+		if not data.EggSprite then
+			data.EggSprite = Sprite("gfx/002.027_egg tear.anm2", true)
+			local sizeNum = familiar.SubType >= COLORED_SPIDERS.SpiderSubtype.BIG_FLAG and "4" or "3"
+			data.EggSprite:Play("Stone" .. sizeNum .. "Move")
+		end
+		data.EggSprite:Render(Mod:GetEntityRenderPosition(familiar, offset))
+		if Mod:ShouldUpdateSprite() then
+			data.EggSprite:Update()
+		end
+		--The frame they land
+		if familiar.FrameCount >= 21 then
+			local poof = Mod.Spawn.Effect(EffectVariant.TEAR_POOF_A, 0, familiar.Position)
+			poof.Color = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
+			data.EggSprite = nil
+			data.EggCoveredSpider = nil
+			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
+		end
+		return false
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_FAMILIAR_RENDER, COLORED_SPIDERS.RenderEggOnSpider, FamiliarVariant.BLUE_SPIDER)
 
 --#endregion

@@ -25,6 +25,42 @@ SPIDER_EGG.EggSubtype = {
 
 --#region Helpers
 
+---@param player EntityPlayer
+---@param eggSubtype SpiderEggSubtype
+function SPIDER_EGG:GetSpiderRange(player, eggSubtype)
+	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
+	local webHearts = Mod.math.max(0, floor(Mod.Pickup.WEB_HEART:GetWebHearts(player) / 1.5))
+	local minSpiders, maxSpiders = 2, 3
+	if arachnaBirthright then
+		minSpiders = minSpiders + 1
+		maxSpiders = maxSpiders + 1
+	end
+
+	if eggSubtype == SPIDER_EGG.EggSubtype.SMALL then
+		minSpiders = minSpiders - 1
+		maxSpiders = maxSpiders - 1
+	end
+	return minSpiders, maxSpiders + webHearts
+end
+
+---@param player EntityPlayer
+---@param eggSubtype SpiderEggSubtype
+function SPIDER_EGG:GetSpiderBonusChances(player, eggSubtype)
+	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
+	local bonusColorChance = 0
+	local bonusBigChance = 0
+	if arachnaBirthright then
+		bonusColorChance = bonusColorChance + 0.15
+	end
+	if eggSubtype == SPIDER_EGG.EggSubtype.BOSS then
+		bonusBigChance = bonusBigChance + 0.5
+	end
+	if Mod.Character.ARACHNA_B:IsArachnaB(player) then
+		bonusBigChance = bonusBigChance + 0.25
+	end
+	return bonusColorChance, bonusBigChance
+end
+
 ---@param npc Entity
 function SPIDER_EGG:ShouldNotSpawnEgg(npc)
 	local legacy = Mod:IsLegacyGameplayEnabled()
@@ -35,6 +71,24 @@ function SPIDER_EGG:ShouldNotSpawnEgg(npc)
 		or (legacy and npc:IsBoss())
 end
 
+---@param player EntityPlayer
+---@param pos Vector
+---@param numSpiders integer
+---@param dist? number @default: `80`
+---@param eggSubtype? SpiderEggSubtype @default: SPIDER_EGG.EggSubtype.NORMAL
+---@param obscureInEgg? boolean @default: `false`. If set to `true`, will render the spider invisible and instead render a Parasitoid Egg Tear until it lands on the ground
+function SPIDER_EGG:SpawnSpiderBurst(player, pos, numSpiders, dist, eggSubtype, obscureInEgg)
+	eggSubtype = eggSubtype or SPIDER_EGG.EggSubtype.NORMAL
+	local bonusColorChance, bonusBigChance = SPIDER_EGG:GetSpiderBonusChances(player, eggSubtype)
+	local allowBig = bonusBigChance > 0
+	for _ = 1, numSpiders do
+		local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
+		local spiderSubtype = Mod:IsAnyArachna(player) and COLORED_SPIDERS:GetRandomSpiderSubtype(allowBig, false, bonusColorChance, bonusBigChance) or 0
+		local spider = COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, pos, dist)
+		Mod:GetData(spider).EggCoveredSpider = obscureInEgg
+	end
+end
+
 ---Enemies spawned by other enemies will have a 50/50 chance to not spawn a Spider Egg, and in such case this function will return nothing
 ---@param pos Vector
 ---@param npc? Entity
@@ -43,10 +97,12 @@ end
 function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggSubtype)
 	if npc and SPIDER_EGG:ShouldNotSpawnEgg(npc) then
 		if not Mod:IsLegacyGameplayEnabled() and player then
-			Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(), pos)
+			local count = 1
 			if Mod.Character.ARACHNA:ArachnaHasBirthright(player) and player:GetCollectibleRNG(Mod.Item.ARACHNAS_SPOOL.ID):RandomFloat() < 0.5 then
-				Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(), pos)
+				count = 2
 			end
+			local dist = npc.Size + 40
+			SPIDER_EGG:SpawnSpiderBurst(player, pos, count, dist, SPIDER_EGG.EggSubtype.SMALL, true)
 		end
 		Mod:DebugLog(Mod:TypeVarSubToString(npc), "spawning regular spider instead of egg")
 		return
@@ -131,8 +187,8 @@ end
 ---@param egg EntityEffect
 ---@param rewards? boolean
 function SPIDER_EGG:Explode(egg, rewards)
-	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4,
-	Color(1, 1, 1, 1, 1, 1, 1))
+	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE,
+		Mod:RandomNum(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
 	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 	egg:Remove()
 	if not rewards then
@@ -147,43 +203,12 @@ function SPIDER_EGG:Explode(egg, rewards)
 	local stageNum = Mod.Game:GetLevel():GetStage()
 	local spiderCount = 0
 	local rng = egg:GetDropRNG()
-	local webHearts = Mod.math.max(0, floor(Mod.Pickup.WEB_HEART:GetWebHearts(player) / 1.5))
 	local stageModifier = Mod.math.max(1, ceil((stageNum + 1) / 2) * 0.5)
-	local minSpiders, maxSpiders = 2, 3
-	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
-	local allowBig = false
-	local bonusColorChance = 0
-	local bonusBigChance = 0
-	if arachnaBirthright then
-		bonusColorChance = bonusColorChance + 0.15
-	end
-	if egg.SubType == SPIDER_EGG.EggSubtype.BOSS then
-		bonusBigChance = bonusBigChance + 0.5
-		allowBig = true
-	end
-	if Mod.Character.ARACHNA_B:IsArachnaB(player) then
-		bonusBigChance = bonusBigChance + 0.25
-		allowBig = true
-	end
+	local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderRange(player, egg.SubType)
 
-	if arachnaBirthright then
-		minSpiders = minSpiders + 1
-		maxSpiders = maxSpiders + 1
-	end
-
-	if egg.SubType == SPIDER_EGG.EggSubtype.SMALL then
-		minSpiders = minSpiders - 1
-		maxSpiders = maxSpiders - 1
-	end
-
-	spiderCount = floor(ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders + webHearts, rng)))
-	Mod:DebugLog("Spawning", spiderCount, "spiders from a random count of", stageModifier, "*", "RandomNum(" .. minSpiders .. ", (" .. maxSpiders, "+", webHearts .. "))")
-
-	for _ = 1, spiderCount do
-		local spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(allowBig, false, bonusColorChance, bonusBigChance)
-		COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, egg.Position)
-	end
+	spiderCount = floor(ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders, rng)))
+	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, egg.SubType)
 
 	if arachnaBirthright and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then
 		Mod.Spawn.Pickup(Mod.Pickup.WEB_HEART.ID, 0, egg.Position, nil, egg)

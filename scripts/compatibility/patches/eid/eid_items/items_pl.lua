@@ -68,7 +68,7 @@ return function(modifiers)
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
 				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, drops a small spider egg that breaks instantly",
+				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders and resets the meter",
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
