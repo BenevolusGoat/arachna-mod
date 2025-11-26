@@ -31,7 +31,7 @@ function SPIDER_EGG:ShouldNotSpawnEgg(npc)
 	--For enemies that turn frozen and dont trigger MC_POST_NPC_DEATH, thus their "new MaxHitPoints" being 10, its saved before they freeze
 	local hitPoints = Mod:GetData(npc).WebbedOverrideHitPoints or npc.MaxHitPoints
 	return hitPoints < 10
-		or npc.SpawnerType ~= EntityType.ENTITY_NULL
+		or (npc.SpawnerType ~= EntityType.ENTITY_NULL and (legacy or not npc:IsBoss()))
 		or (legacy and npc:IsBoss())
 end
 
