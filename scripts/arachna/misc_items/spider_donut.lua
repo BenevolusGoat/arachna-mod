@@ -10,12 +10,16 @@ SPIDER_DONUT.ID = Isaac.GetItemIdByName(" Spider Donut ")
 ---@param itemId CollectibleType
 ---@param firstTime boolean
 function SPIDER_DONUT:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
+	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	local rng = player:GetCollectibleRNG(itemId)
 	Mod.Pickup.WEB_HEART:AddWebHearts(player, 1)
 
 	for _ = 1, Mod:RandomNum(2, 3, rng) do
-		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, Mod.Entities.COLORED_SPIDERS.SpiderSubtype.BIG_FLAG,
-			player.Position)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(
+			player,
+			COLORED_SPIDERS.SpiderSubtype.LOVE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG,
+			player.Position
+		)
 	end
 end
 

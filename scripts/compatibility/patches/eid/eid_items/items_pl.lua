@@ -34,7 +34,7 @@ return function(modifiers)
 			Description = {
 				"{{WebHeart}} +1 Web Heart",
 				"#↑ {{Damage}} +0.69 Damage",
-				"#{{AracBlueSpider}} Grants 2-3 big blue spiders"
+				"#{{AracBlueSpider}} Grants 2-3 big purple spiders"
 			}
 		},
 		[Item.OLD_SHOEBOX.ID] = {
