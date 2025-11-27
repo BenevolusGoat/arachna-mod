@@ -344,7 +344,9 @@ end
 ---@param source EntityRef
 ---@param countdown integer
 function ARACHNAS_SPOOL:LastWebbedCredit(ent, amount, flags, source, countdown)
-	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED) then
+	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
+		or (not ARACHNAMOD:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
+	then
 		local player = Mod:TryGetPlayer(source, {LoopSpawnerEnt = true})
 		if player then
 			Mod:GetData(ent).WebbedKillCredit = EntityPtr(player)
@@ -360,11 +362,10 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, ARACHNAS_SPOOL.LastWebbedC
 ---@param ent Entity
 ---@param source EntityRef
 function ARACHNAS_SPOOL:OnNPCKill(ent, source)
-	local isLegacy = ARACHNAMOD:IsLegacyGameplayEnabled()
 	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
-		or (not isLegacy and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
+		or (not ARACHNAMOD:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
 	then
-		if ent:IsBoss() and isLegacy then
+		if ent:IsBoss() and ARACHNAMOD:IsLegacyGameplayEnabled() then
 			return
 		end
 		Mod:GetData(ent).QueueSpiderEgg = source
