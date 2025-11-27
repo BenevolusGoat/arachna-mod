@@ -180,10 +180,17 @@ end
 ---@param player EntityPlayer
 ---@param subtype ColoredSpiderSubtype | integer
 ---@param pos Vector
----@param dist? number
-function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, dist)
-	dist = dist or 80
-	local targetPos = Isaac.GetFreeNearPosition(pos + Vector(dist, 0):Rotated(Mod:RandomNum(360)), 0)
+---@param distOrTarget? number | Vector
+function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, distOrTarget)
+	local targetPos
+	if type(distOrTarget) == "userdata" and getmetatable(distOrTarget).__type == "Vector" then
+		targetPos = distOrTarget
+	else
+		local dist = distOrTarget or 80
+		---@cast dist number
+		targetPos = Isaac.GetFreeNearPosition(pos + Vector(dist, 0):Rotated(Mod:RandomNum(360)), 0)
+	end
+	---@cast targetPos Vector
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
 	---@cast spider EntityFamiliar
 	if subtype == 0 then return spider end
