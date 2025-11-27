@@ -101,8 +101,8 @@ Tainted Arachna:
 
 Both Arachnas:
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
-* Doubled recharge time of Arachna's Spool and Divine Cloth
-* Lowered Web Heart effect on increasing how many spiders to spawn
+* Increased recharge time of Arachna's Spool and Divine Cloth
+* Current stage no longer has a multiplicative effect on how many spiders are spawned from spider eggs
 * Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 * Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider

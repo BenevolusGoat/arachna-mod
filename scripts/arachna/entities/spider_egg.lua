@@ -29,8 +29,8 @@ SPIDER_EGG.EggSubtype = {
 ---@param eggSubtype SpiderEggSubtype
 function SPIDER_EGG:GetSpiderRange(player, eggSubtype)
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
-	local webHearts = Mod.math.max(0, floor(Mod.Pickup.WEB_HEART:GetWebHearts(player) / 1.5))
-	local minSpiders, maxSpiders = 2, 3
+	local webHearts = Mod.Pickup.WEB_HEART:GetWebHearts(player)
+	local minSpiders, maxSpiders = 2, 4
 	if arachnaBirthright then
 		minSpiders = minSpiders + 1
 		maxSpiders = maxSpiders + 1
@@ -203,11 +203,10 @@ function SPIDER_EGG:Explode(egg, rewards)
 	local stageNum = Mod.Game:GetLevel():GetStage()
 	local spiderCount = 0
 	local rng = egg:GetDropRNG()
-	local stageModifier = Mod.math.max(1, ceil((stageNum + 1) / 2) * 0.5)
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
 	local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderRange(player, egg.SubType)
 
-	spiderCount = floor(ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders, rng)))
+	spiderCount = Mod:RandomNum(minSpiders, maxSpiders, rng)
 	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, nil, egg.SubType)
 
 	if arachnaBirthright and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then
