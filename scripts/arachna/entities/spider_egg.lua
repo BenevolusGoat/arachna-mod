@@ -208,7 +208,7 @@ function SPIDER_EGG:Explode(egg, rewards)
 	local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderRange(player, egg.SubType)
 
 	spiderCount = floor(ceil(stageModifier * Mod:RandomNum(minSpiders, maxSpiders, rng)))
-	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, egg.SubType)
+	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, nil, egg.SubType)
 
 	if arachnaBirthright and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then
 		Mod.Spawn.Pickup(Mod.Pickup.WEB_HEART.ID, 0, egg.Position, nil, egg)
