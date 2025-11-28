@@ -38,7 +38,7 @@ function SPIDER_EGG:GetSpiderRange(player, eggSubtype)
 
 	if eggSubtype == SPIDER_EGG.EggSubtype.SMALL then
 		minSpiders = minSpiders - 1
-		maxSpiders = maxSpiders - 1
+		maxSpiders = maxSpiders - 2
 	end
 	return minSpiders, maxSpiders + webHearts
 end
@@ -63,12 +63,15 @@ end
 
 ---@param npc Entity
 function SPIDER_EGG:ShouldNotSpawnEgg(npc)
-	local legacy = Mod:IsLegacyGameplayEnabled()
 	--For enemies that turn frozen and dont trigger MC_POST_NPC_DEATH, thus their "new MaxHitPoints" being 10, its saved before they freeze
 	local hitPoints = Mod:GetData(npc).WebbedOverrideHitPoints or npc.MaxHitPoints
+	if Mod:IsLegacyGameplayEnabled() then
+		return hitPoints < 10
+			or npc:IsBoss()
+			or npc.SpawnerEntity ~= EntityType.ENTITY_NULL
+	end
 	return hitPoints < 10
-		or (npc.SpawnerType ~= EntityType.ENTITY_NULL and (legacy or not npc:IsBoss()))
-		or (legacy and npc:IsBoss())
+		or (npc.SpawnerType ~= EntityType.ENTITY_NULL and (not npc.SpawnerEntity or not npc.SpawnerEntity:IsBoss()))
 end
 
 ---@param player EntityPlayer
@@ -91,26 +94,27 @@ end
 
 ---Enemies spawned by other enemies will have a 50/50 chance to not spawn a Spider Egg, and in such case this function will return nothing
 ---@param pos Vector
----@param npc? Entity
----@param player? EntityPlayer
----@param eggSubtype? SpiderEggSubtype
+---@param npc Entity
+---@param player EntityPlayer
+---@param eggSubtype SpiderEggSubtype
 function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggSubtype)
-	if npc and SPIDER_EGG:ShouldNotSpawnEgg(npc) then
-		if not Mod:IsLegacyGameplayEnabled() and player then
+	if SPIDER_EGG:ShouldNotSpawnEgg(npc) then
+		if not Mod:IsLegacyGameplayEnabled() then
 			local count = 1
 			if Mod.Character.ARACHNA:ArachnaHasBirthright(player) and player:GetCollectibleRNG(Mod.Item.ARACHNAS_SPOOL.ID):RandomFloat() < 0.5 then
 				count = 2
 			end
 			local dist = npc.Size + 40
 			SPIDER_EGG:SpawnSpiderBurst(player, pos, count, dist, SPIDER_EGG.EggSubtype.SMALL, true)
+			Mod:DebugLog(Mod:TypeVarSubToString(npc), "spawning regular spider instead of egg")
 		end
-		Mod:DebugLog(Mod:TypeVarSubToString(npc), "spawning regular spider instead of egg")
 		return
 	end
 	local subtype = eggSubtype or 0
-	if npc and npc.SpawnerType ~= EntityType.ENTITY_NULL and npc:GetDropRNG():RandomFloat() < 0.5 then
+	if eggSubtype ~= SPIDER_EGG.EggSubtype.NORMAL and Mod:IsLegacyGameplayEnabled() then
 		return
 	end
+	Mod:DebugLog(Mod:TypeVarSubToString(npc), "spawning egg subtype", eggSubtype)
 	return Mod.Spawn.Effect(SPIDER_EGG.ID, subtype, pos, nil, player)
 end
 

@@ -380,15 +380,6 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:OnNPCDeath(npc)
 	if Mod:GetData(npc).QueueSpiderEgg then
-		if npc:IsBoss() and Isaac.CountBosses() == 1 and Mod:SomeoneIsArachna() then
-			--[[ Mod.Foreach.Pickup(function(heart, index)
-				if heart.SpawnerType == npc.Type and heart.FrameCount == 0 then
-					local newSubtype = heart.SubType == HeartSubType.HEART_DOUBLEPACK and Mod.Pickup.WEB_HEART.ID_DOUBLE or
-					Mod.Pickup.WEB_HEART.ID
-					heart:Morph(heart.Type, heart.Variant, newSubtype, true, true, true)
-				end
-			end, PickupVariant.PICKUP_HEART) ]]
-		end
 		local entityPtr = Mod:GetData(npc).WebbedKillCredit
 		local player = entityPtr and entityPtr.Ref and entityPtr.Ref:ToPlayer()
 		local eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL
@@ -398,6 +389,8 @@ function ARACHNAS_SPOOL:OnNPCDeath(npc)
 			else
 				eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.BOSS
 			end
+		elseif not npc:IsBoss() and npc.SpawnerEntity and npc.SpawnerEntity:IsBoss() then
+			eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.SMALL
 		end
 		Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player, eggSubtype)
 	end

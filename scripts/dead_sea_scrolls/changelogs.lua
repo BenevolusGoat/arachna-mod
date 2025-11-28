@@ -88,13 +88,11 @@ New Content:
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
 
 Arachna:
-* Bosses can now drop a Spider Egg on death
 * Doubled hitsphere size of Arachna's Spool tear
 * Arachna's Spool's web reduces knockback to enemies, making it easier to keep them Webbed
 * Arachna's Spool's web no longer affects enemies that are above pits
-* If Arachna's Spool's tear kills an enemy, it counts as them being Webbed
+* If Arachna's Spool's tear kills an enemy, it counts as them being Webbed and will spawn a spider
 * Birthright adjusted. Instead of +1 to spawned spiders, chance is increased for spider eggs spawning colored spiders
-* Dealing damage to bosses under Arachna's Spool's or Divine Cloth's slowing effect will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
 
 Tainted Arachna:
 * Replaced inherent +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
@@ -102,14 +100,16 @@ Tainted Arachna:
 Both Arachnas:
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
 * Increased recharge time of Arachna's Spool and Divine Cloth
-* Current stage no longer has a multiplicative effect on how many spiders are spawned from spider eggs
+* Removed stage multiplier on how many spiders spawned from spider eggs
 * Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
 * Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
-* Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Guppy's Paw and Abbadon no longer have manual interactions with Web Hearts
 * Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
 * Spider Eggs now explode on challenge/boss rush wave clears
 * Bone and Eternal Hearts are allowed to be gained again through items or other means. Their pickup equivalent are still converted into Web Hearts
+* Enemies that previously did not drop spider eggs on death now drop a single friendly spider
+* Bosses can now drop a Spider Egg on death. 50% of the spawned spiders will be big spiders
+* Dealing damage to Webbed or Spider Bitten bosses will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 - Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Inherent poison tears now work on all weapon types
@@ -158,12 +158,12 @@ Other:
 - TR Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
 
 ## INTERNAL CHANGES
-Arachna didn't really have an API before, which is where I would put this down, but these changes are important to note for any mods with mod compatibility with Arachna.
+Important changes for modders to be aware of for updating compatibility with Arachna
 - Arachna now requires REPENTOGON on Repentance+ to function. REPENTOGON on regular Repentance will not work
 - The entire mod's code was rewritten from the ground up. Everything on the mod is now properly attached to the "ARACHNAMOD" global
 - Save data is now handled through IsaacSaveManager. Previous save data on completion marks should be automatically transferred to REPENTOGON's own save data for completion marks and achievements
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
-- Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility
+- Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility. On both Arachnas, they are internally treated as Bone Hearts. On other characters, they act as Soul Hearts
 - Status effects now utilize StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Golden Shopkeeper is now an actual shopkeeper (type 17) instead of an effect (type 1000)
 - Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant
