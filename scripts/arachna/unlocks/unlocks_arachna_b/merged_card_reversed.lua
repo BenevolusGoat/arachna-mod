@@ -86,13 +86,13 @@ MERGED_CARD_REVERSED.CARD_EFFECTS = {
 		player:AddNullItemEffect(MERGED_CARD_REVERSED.REVERSE_CHARIOT_NULL_ITEM)
 	end,
 	[Card.CARD_REVERSE_JUSTICE] = function(player, rng)
-		for _ = 1, 2 do
+		for _ = 1, rng:RandomInt(2) + 1 do
 			local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 			Mod.Spawn.Chest(PickupVariant.PICKUP_LOCKEDCHEST, pos, nil, player, rng:Next())
 		end
 	end,
 	[Card.CARD_REVERSE_HERMIT] = function(player, rng)
-		for _ = 1, 5 do
+		for _ = 1, rng:RandomInt(5) + 1 do
 			local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 			Mod.Spawn.Pickup(PickupVariant.PICKUP_COIN, 0, pos, nil, player, rng:Next())
 		end
@@ -120,7 +120,6 @@ MERGED_CARD_REVERSED.CARD_EFFECTS = {
 	end,
 	[Card.CARD_REVERSE_HANGED_MAN] = function(player, rng)
 		player:AddNullItemEffect(MERGED_CARD_REVERSED.REVERSE_HANGED_MAN_NULL_ITEM)
-		player:AddInnateCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER)
 	end,
 	[Card.CARD_REVERSE_DEATH] = function(player, rng)
 		local enemyKey = DEATH_WOP:PickOutcome(rng)
@@ -162,9 +161,7 @@ MERGED_CARD_REVERSED.CARD_EFFECTS = {
 		Mod.Spawn.Pickup(PickupVariant.PICKUP_TAROTCARD, Card.CARD_CRACKED_KEY, pos, nil, player, rng:Next())
 	end,
 	[Card.CARD_REVERSE_SUN] = function(player, rng)
-		player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT)
 		player:AddNullItemEffect(MERGED_CARD_REVERSED.REVERSE_SUN_NULL_ITEM)
-		Mod.Game:Darken(1, 999999999)
 	end,
 	[Card.CARD_REVERSE_JUDGEMENT] = function(player, rng)
 		player:UseActiveItem(CollectibleType.COLLECTIBLE_D6, UseFlag.USE_NOANIM, -1)
@@ -376,36 +373,49 @@ Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, MERGED_CARD_REVERSED.ReverseChar
 
 --#region Reverse Hanged Man
 
+local REVERSE_NULL_HANGED_MAN_CONFIG = Mod.ItemConfig:GetNullItem(MERGED_CARD_REVERSED.REVERSE_HANGED_MAN_NULL_ITEM)
+
 ---@param player EntityPlayer
----@param itemConfig ItemConfigItem
-function MERGED_CARD_REVERSED:OnReverseHangedManRemove(player, itemConfig)
-	if itemConfig:IsNull() and itemConfig.ID == MERGED_CARD_REVERSED.REVERSE_HANGED_MAN_NULL_ITEM then
-		player:AddInnateCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER, -1)
-		if not player:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER, false, true) then
-			player:RemoveCostume(Mod.ItemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER))
-		end
+function MERGED_CARD_REVERSED:OnReverseHangedManAdd(player)
+	player:AddInnateCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER)
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_ADD_EFFECT, MERGED_CARD_REVERSED.OnReverseHangedManAdd, REVERSE_NULL_HANGED_MAN_CONFIG)
+
+---@param player EntityPlayer
+function MERGED_CARD_REVERSED:OnReverseHangedManRemove(player)
+	player:AddInnateCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER, -1)
+	if not player:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER) then
+		player:RemoveCostume(Mod.ItemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER))
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, MERGED_CARD_REVERSED.OnReverseHangedManRemove)
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, MERGED_CARD_REVERSED.OnReverseHangedManRemove, REVERSE_NULL_HANGED_MAN_CONFIG)
 
 --#endregion
 
 --#region Reverse Sun
 
+local REVERSE_SUN_NULL_CONFIG = Mod.ItemConfig:GetNullItem(MERGED_CARD_REVERSED.REVERSE_SUN_NULL_ITEM)
+
 ---@param player EntityPlayer
----@param itemConfig ItemConfigItem
-function MERGED_CARD_REVERSED:OnReverseSunRemove(player, itemConfig)
-	if itemConfig:IsNull() and itemConfig.ID == MERGED_CARD_REVERSED.REVERSE_SUN_NULL_ITEM then
-		player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT, -1)
-		if not player:HasCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT, false, true) then
-			player:RemoveCostume(Mod.ItemConfig:GetCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT))
-		end
-		Mod.Game:Darken(1, 0)
-	end
+function MERGED_CARD_REVERSED:OnReverseSunAdd(player)
+	player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT)
+	Mod.Game:Darken(1, 999999999)
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, MERGED_CARD_REVERSED.OnReverseSunRemove)
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_ADD_EFFECT, MERGED_CARD_REVERSED.OnReverseSunAdd, REVERSE_SUN_NULL_CONFIG)
+
+---@param player EntityPlayer
+function MERGED_CARD_REVERSED:OnReverseSunRemove(player)
+	player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT, -1)
+	if not player:HasCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT) then
+		player:RemoveCostume(Mod.ItemConfig:GetCollectible(CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT))
+	end
+	Mod.Game:Darken(1, 0)
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, MERGED_CARD_REVERSED.OnReverseSunRemove, REVERSE_SUN_NULL_CONFIG)
 
 --#endregion
 

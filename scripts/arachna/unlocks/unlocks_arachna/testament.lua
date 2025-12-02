@@ -165,6 +165,7 @@ function TESTAMENT:OnUse(itemId, rng, player)
 		doNotTeleport = true
 		player:GetEffects():RemoveCollectibleEffect(itemId, -1)
 	else
+		doNotTeleport = false
 		Mod.Foreach.Player(function (_player, index)
 			TESTAMENT:AnimateTestamentTeleport(_player)
 		end)
