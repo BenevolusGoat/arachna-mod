@@ -151,6 +151,7 @@ Other:
 
 ## MOD COMPATIBILITY
 - Added MinimapAPI compatibility
+- Added Ugh for Bad Items compatibility for normal Arachna
 - Updated all English EID descriptions
 - Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect
 - Added mod icon for EID
