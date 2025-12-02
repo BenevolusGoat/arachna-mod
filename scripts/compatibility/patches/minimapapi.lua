@@ -8,7 +8,7 @@ local function minimapAPIPatch()
 
 	MinimapAPI:AddIcon("WebHeart", sprite, "WebHeart", 0)
 	MinimapAPI:AddPickup("WebHeart", "WebHeart", EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART,
-	Mod.Pickup.WEB_HEART.ID, MinimapAPI.PickupNotCollected, "hearts", 15300)
+		Mod.Pickup.WEB_HEART.ID, MinimapAPI.PickupNotCollected, "hearts", 15300)
 
 	MinimapAPI:AddIcon("WebHeartDouble", sprite, "WebHeartDouble", 0)
 	MinimapAPI:AddPickup("WebHeartDouble", "WebHeartDouble", EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART,
@@ -25,6 +25,11 @@ local function minimapAPIPatch()
 	MinimapAPI:AddIcon("MergedCard", sprite, "MergedCard", 0)
 	MinimapAPI:AddPickup("MergedCard", "MergedCard", EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
 		Mod.Card.MERGED_CARD.ID, MinimapAPI.PickupNotCollected, "cards", 10100)
+
+	MinimapAPI:AddIcon("MergedCardReverse", sprite, "MergedCardReverse", 0)
+	MinimapAPI:AddPickup("MergedCardReverse", "MergedCardReverse", EntityType.ENTITY_PICKUP,
+		PickupVariant.PICKUP_TAROTCARD,
+		Mod.Card.MERGED_CARD_REVERSED.ID, MinimapAPI.PickupNotCollected, "cards", 10101)
 end
 
 loader:RegisterPatch("MinimapAPI", minimapAPIPatch)

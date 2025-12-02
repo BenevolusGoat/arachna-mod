@@ -86,6 +86,7 @@ Changes that will be reverted with the setting set to Off are marked with a *.
 New Content:
 - Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
+- Added Reversed Merged Card (suggestion by cadetpirx!). It's unlocked alongside the normal Merged Card
 
 Arachna:
 * Doubled hitsphere size of Arachna's Spool tear
@@ -148,6 +149,7 @@ Other:
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
 - Changed the floor web from Arachna's Spool to render below grid entities, similarly to creep
 - Arachna and Tainted Arachna have the same laser color as Spider Bite
+- Moved Geptameron's day of the week counter to the active item sprite with a new look
 
 ## MOD COMPATIBILITY
 - Added MinimapAPI compatibility

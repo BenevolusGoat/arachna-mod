@@ -43,6 +43,9 @@ GEPTAMERON.WeekName = {
 	[GEPTAMERON.WeekEffect.SUNDAY] = "Stingy Sunday"
 }
 
+local weekCircle = Sprite("gfx/ui/hud_geptameron.anm2", true)
+weekCircle:SetFrame("Idle", 0)
+
 local coinIcon = Sprite("gfx/geptameron_ui.anm2", false)
 coinIcon:Play("Coin")
 local coinIdentifier = "ARACHNA_TEMPCOINS"
@@ -174,12 +177,17 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, GEPTAMERON.OnUse, GEPTAMERON.ID)
 
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
-function GEPTAMERON:AdjustCropOffset(player, slot, offset, alpha, scale, chargebarOffset)
+---@param alpha number
+---@param scale number
+function GEPTAMERON:RenderCurrentDay(player, slot, offset, alpha, scale, chargebarOffset)
 	local varData = player:GetActiveItemDesc(slot).VarData
-	return {CropOffset = Vector(32 * (varData + 1), 0)}
+	weekCircle:SetFrame(varData)
+	weekCircle.Color.A = alpha
+	weekCircle.Scale = Vector(scale, scale)
+	weekCircle:Render(offset)
 end
 
-Mod:AddCallback(ModCallbacks.MC_PRE_PLAYERHUD_RENDER_ACTIVE_ITEM, GEPTAMERON.AdjustCropOffset, GEPTAMERON.ID)
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYERHUD_RENDER_ACTIVE_ITEM, GEPTAMERON.RenderCurrentDay, GEPTAMERON.ID)
 
 function GEPTAMERON:UpdateVarDataOnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
 	player:SetActiveVarData(GEPTAMERON:GetDayOfTheWeek(), slot)

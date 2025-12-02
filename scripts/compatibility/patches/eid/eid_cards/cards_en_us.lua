@@ -43,5 +43,40 @@ return function(modifiers)
 				"#{{Card" .. Card.CARD_WORLD .. "}} Reveals {{TreasureRoom}}{{Planetarium}}",
 			}
 		},
+		[Mod.Card.MERGED_CARD_REVERSED.ID] = {
+			Name = "Merged Card?",
+			Description = {
+				"Triggers 2 random effects:",
+				"#{{Card" .. Card.CARD_REVERSE_FOOL .. "}} {{Collectible" .. CollectibleType.COLLECTIBLE_D7 .. "}} D7",
+				"#{{Card" .. Card.CARD_REVERSE_MAGICIAN .. "}} {{Slow}} Slow all enemies",
+				"#{{Card" .. Card.CARD_REVERSE_HIGH_PRIESTESS .. "}} {{MomBossSmall}} stomps Isaac",
+				"#{{Card" ..
+				Card.CARD_REVERSE_EMPRESS .. "}} {{Collectible" .. CollectibleType.COLLECTIBLE_THE_NAIL .. "}} The Nail",
+				"#{{Card" .. Card.CARD_REVERSE_EMPEROR .. "}} Reveals {{BossRoom}}",
+				"#{{Card" .. Card.CARD_REVERSE_HIEROPHANT .. "}} Spawns 2 {{HalfSoulHeart}}",
+				"#{{Card" .. Card.CARD_REVERSE_LOVERS .. "}} Spawns 2 {{HalfHeart}}",
+				"#{{Card" ..
+				Card.CARD_REVERSE_CHARIOT .. "}} {{Collectible" .. CollectibleType.COLLECTIBLE_UNICORN_STUMP ..
+				"}} Unicorn Stump",
+				"#{{Card" .. Card.CARD_REVERSE_JUSTICE .. "}} Spawns 2 pickups",
+				"#{{Card" ..
+				Card.CARD_REVERSE_HERMIT ..
+				"}} {{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} Keeper's Box",
+				"#{{Card" .. Card.CARD_REVERSE_WHEEL_OF_FORTUNE .. "}} Uses {{Slotmachine}} 3 times",
+				"#{{Card" .. Card.CARD_REVERSE_STRENGTH .. "}} Stats up for one room",
+				"#{{Card" .. Card.CARD_REVERSE_HANGED_MAN .. "}} Destroys rocks, fills pits",
+				"#{{Card" .. Card.CARD_REVERSE_DEATH .. "}} Deals 20{{DamageSmall}} to enemies",
+				"#{{Card" .. Card.CARD_REVERSE_TEMPERANCE .. "}} Spawns a {{DemonBeggar}}",
+				"#{{Card" .. Card.CARD_REVERSE_DEVIL .. "}} {{DamageSmall}} Damage up for one room",
+				"#{{Card" .. Card.CARD_REVERSE_TOWER .. "}} Spawns 3 Troll Bombs",
+				"#{{Card" .. Card.CARD_REVERSE_STARS .. "}} Spawns {{GoldenChest}}",
+				"#{{Card" .. Card.CARD_REVERSE_MOON .. "}} Reveals {{SecretRoom}}{{SuperSecretRoom}}{{UltraSecretRoom}}",
+				"#{{Card" ..
+				Card.CARD_REVERSE_SUN ..
+				"}} Reveals {{TreasureRoom}}{{Planetarium}}, heals 1 {{Heart}}, deals 5{{DamageSmall}} to enemies",
+				"#{{Card" .. Card.CARD_REVERSE_JUDGEMENT .. "}} Spawns a shopkeeper",
+				"#{{Card" .. Card.CARD_REVERSE_WORLD .. "}} Reveals {{TreasureRoom}}{{Planetarium}}",
+			}
+		},
 	}
 end

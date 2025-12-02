@@ -1,3 +1,5 @@
+--#region Variables
+
 local Mod = ARACHNAMOD
 
 local MERGED_CARD = {}
@@ -22,10 +24,15 @@ MERGED_CARD.WHEEL_OUTOMES = {
 	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL}, Weight = 5},
 }
 
+
 local WHEEL_WOP = WeightedOutcomePicker()
 for i, outcome in ipairs(MERGED_CARD.WHEEL_OUTOMES) do
 	WHEEL_WOP:AddOutcomeWeight(i, outcome.Weight)
 end
+
+--#endregion
+
+--#region Helpers
 
 ---@param ... RoomType
 function MERGED_CARD:DisplayRoomType(...)
@@ -40,6 +47,10 @@ function MERGED_CARD:DisplayRoomType(...)
 	end
 	Mod.Level():UpdateVisibility()
 end
+
+--#endregion
+
+--#region Effects
 
 ---@type {[Card]: fun(player: EntityPlayer, rng: RNG)}
 MERGED_CARD.CARD_EFFECTS = {
@@ -202,6 +213,10 @@ MERGED_CARD.CARD_EFFECTS = {
 	end
 }
 
+--#endregion
+
+--#region On Use
+
 ---@param card Card
 ---@param player? EntityPlayer
 ---@param rng? RNG
@@ -255,3 +270,5 @@ function MERGED_CARD:OnUse(card, player, useFlags)
 end
 
 Mod:AddCallback(ModCallbacks.MC_USE_CARD, MERGED_CARD.OnUse, MERGED_CARD.ID)
+
+--#endregion

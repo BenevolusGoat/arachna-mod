@@ -9,6 +9,9 @@ local modifiers = {
 	[Mod.Card.MERGED_CARD.ID] = {
 		_metadata = { 6, false }
 	},
+	[Mod.Card.MERGED_CARD_REVERSED.ID] = {
+		_metadata = { 6, false }
+	},
 }
 
 local descriptions = {

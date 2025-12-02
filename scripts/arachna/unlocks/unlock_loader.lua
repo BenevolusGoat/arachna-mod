@@ -29,6 +29,7 @@ local arachna_b = {
 	"best_bud_ball",
 	"dads_newspaper",
 	"merged_card",
+	"merged_card_reversed",
 	"soul_of_arachna",
 	"spider_beggar",
 	"sprindle"
