@@ -12,23 +12,6 @@ MERGED_CARD.SFX = Isaac.GetSoundIdByName("Merged Card")
 MERGED_CARD.NUM_EFFECTS = 2
 
 MERGED_CARD.WHEEL_NUM_ROLLS = 5
-MERGED_CARD.WHEEL_EFFECT_CHANCE = 0.45
-MERGED_CARD.WHEEL_OUTOMES = {
-	{V = {EntityType.ENTITY_FAMILIAR, FamiliarVariant.FLY_ORBITAL, 0}, Weight = 3},
-	{V = {EntityType.ENTITY_FLY, 0, 0}, Weight = 3},
-	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_ETERNAL}, Weight = 3},
-	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, HeartSubType.HEART_FULL}, Weight = 12},
-	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, 0}, Weight = 5},
-	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY}, Weight = 9},
-	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_NORMAL}, Weight = 3},
-	{V = {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL}, Weight = 5},
-}
-
-
-local WHEEL_WOP = WeightedOutcomePicker()
-for i, outcome in ipairs(MERGED_CARD.WHEEL_OUTOMES) do
-	WHEEL_WOP:AddOutcomeWeight(i, outcome.Weight)
-end
 
 --#endregion
 
@@ -102,6 +85,7 @@ MERGED_CARD.CARD_EFFECTS = {
 			local pickupChoice = rng:RandomInt(#pickupVariants)+1
 			local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 			Mod.Spawn.Pickup(pickupVariants[pickupChoice], 1, pos, nil, player, rng:Next())
+			table.remove(pickupVariants, pickupChoice)
 		end
 	end,
 	[Card.CARD_HERMIT] = function (player, rng)
@@ -110,22 +94,10 @@ MERGED_CARD.CARD_EFFECTS = {
 	[Card.CARD_WHEEL_OF_FORTUNE] = function (player, rng)
 		local hadCoins = player:GetNumCoins() > 0
 		for _ = 1, MERGED_CARD.WHEEL_NUM_ROLLS do
-			if player:GetNumCoins() > 0 then
-				if rng:RandomFloat() < MERGED_CARD.WHEEL_EFFECT_CHANCE then
-					local outcomeIndex = WHEEL_WOP:PickOutcome(rng)
-					local outcome = MERGED_CARD.WHEEL_OUTOMES[outcomeIndex]
-					local typeTable = outcome.V
-					if typeTable[1] == EntityType.ENTITY_FAMILIAR and typeTable[2] == FamiliarVariant.FLY_ORBITAL then
-						player:AddPrettyFly()
-					else
-						local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
-						Mod.Game:Spawn(typeTable[1], typeTable[2], pos, Vector.Zero, player, typeTable[3], rng:Next())
-					end
-				end
-				player:AddCoins(-1)
-			else
+			if player:GetNumCoins() == 0 then
 				break
 			end
+			player:UseActiveItem(CollectibleType.COLLECTIBLE_PORTABLE_SLOT, UseFlag.USE_NOANIM, -1)
 		end
 		if hadCoins then
 			Mod.sfxman:Play(SoundEffect.SOUND_CASH_REGISTER, 3, 0, false, 1)

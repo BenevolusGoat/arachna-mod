@@ -140,6 +140,7 @@ Other:
 - Testament can no longer be used in runs that do not allow achievements, instead spawning Eden's Blessing
 - Testament pedestals for the next run no longer spawn in runs that do not allow achievements
 - Added support for multiple uses of Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before Testament instead spawns Eden's Blessing
+- Merged Card's Wheel of Fortune effect now uses Portable Slot instead of its own custom logic
 
 ## VISUAL CHANGES
 - The "webbed" sprite from Divine Cloth has been moved to enemies webbed by Arachna's Spool. Divine Cloth's "Spider Bite" status has a new icon to compensate
@@ -157,6 +158,7 @@ Other:
 - Updated all English EID descriptions
 - Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect
 - Added mod icon for EID
+- Moved Merged Card's EID description into a unique "TAB description", where you can expand the list of effects separated by pages
 - Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
 - TR Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
 
