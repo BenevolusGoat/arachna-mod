@@ -13,7 +13,7 @@ function GUMMY_SPIDERS:OnCollectibleAdd(itemId, charge, firstTime, slot, varData
 	local rng = player:GetCollectibleRNG(itemId)
 	Mod.Pickup.WEB_HEART:AddWebHearts(player, 2)
 	for _ = 1, Mod:RandomNum(4, 8, rng) do
-		local spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(false, true)
+		local spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
 		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, player.Position)
 	end
 end

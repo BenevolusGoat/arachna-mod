@@ -12,6 +12,7 @@ end
 
 ---@enum ColoredSpiderSubtype
 COLORED_SPIDERS.SpiderSubtype = {
+	NORMAL = 0,
 	WRATH = getSub("Wrath"),
 	PESTILENCE = getSub("Pestilence"),
 	FAMINE = getSub("Famine"),
@@ -58,6 +59,7 @@ WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.GOLDEN, 3)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE, 4)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 3)
 
+--For legacy gameplay
 local WOP_LEGACY = WeightedOutcomePicker()
 WOP_LEGACY:AddOutcomeWeight(0, COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 4)
@@ -71,7 +73,6 @@ WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.LOVE, 4)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 2)
 COLORED_SPIDERS.WOP = WOP_LEGACY
 
---For legacy gameplay
 local WOP_BIG_LEGACY = WeightedOutcomePicker()
 for _, wopOutcome in ipairs(WOP_LEGACY:GetOutcomes()) do
 	if wopOutcome.Value ~= COLORED_SPIDERS.SpiderSubtype.BIG_FLAG then
@@ -154,24 +155,22 @@ local function legacyRandomSpider(bigSpider, onlyColor)
 	return randomSpiderSubtype
 end
 
----@param bigSpider? boolean
----@param onlyColor? boolean
----@param bonusColorChance? number
----@param bonusBigChance? number
+---@param onlyColor? boolean @Will return a non-default spider color
+---@param bonusColorChance? number @Adds onto the existing chance for a spider to become a colored spider
+---@param bigChance? number @Chance for the spider to become a big spider
 ---@return ColoredSpiderSubtype
-function COLORED_SPIDERS:GetRandomSpiderSubtype(bigSpider, onlyColor, bonusColorChance, bonusBigChance)
+function COLORED_SPIDERS:GetRandomSpiderSubtype(onlyColor, bonusColorChance, bigChance)
 	if Mod:IsLegacyGameplayEnabled() then
-		return legacyRandomSpider(bigSpider, onlyColor)
+		return legacyRandomSpider(bigChance > 0, onlyColor)
 	end
 	bonusColorChance = bonusColorChance or 0
-	bonusBigChance = bonusBigChance or 0
 	local rng = Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID)
 	local randomSpiderSubtype = 0
 	---@cast randomSpiderSubtype ColoredSpiderSubtype
 	if onlyColor or rng:RandomFloat() < COLORED_SPIDERS.COLORED_SPIDER_CHANCE + bonusColorChance then
 		randomSpiderSubtype = WOP:PickOutcome(rng)
 	end
-	if bigSpider and rng:RandomFloat() < COLORED_SPIDERS.BIG_SPIDER_CHANCE + bonusBigChance then
+	if bigChance and rng:RandomFloat() < bigChance then
 		randomSpiderSubtype = randomSpiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 	end
 	return randomSpiderSubtype

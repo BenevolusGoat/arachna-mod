@@ -15,7 +15,7 @@ function MUTAGEN:SpawnColoredSpiders()
 			if rng:RandomFloat() < MUTAGEN.SPAWN_CHANCE * player:GetCollectibleNum(MUTAGEN.ID) then
 				for i = 1, Mod:RandomNum(3, 5, rng) do
 					Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player,
-						Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(false, true), player.Position)
+						Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true), player.Position)
 				end
 				Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8)
 			end

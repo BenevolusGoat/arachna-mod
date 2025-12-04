@@ -25,22 +25,30 @@ Mod:AddCallback(Mod.ModCallbacks.POST_ENEMY_TAKE_DMG_FROM_SPIDER, postEnemyTakeD
 COLORED_SPIDERS.SHINE_VARIANT = Isaac.GetEntityVariantByName("Golden Spider shine")
 COLORED_SPIDERS.SHINE_SUBTYPE = Isaac.GetEntitySubTypeByName("Golden Spider shine")
 
+---@param pos Vector
+---@param spawner Entity?
+function COLORED_SPIDERS:SpawnSparkle(pos, spawner)
+	local centerPos = Vector(pos.X, pos.Y - 5)
+	local shinePos = centerPos
+	shinePos = shinePos + Vector.FromAngle(Mod:RandomNum(360)):Resized(Mod:RandomNum(5, 10))
+	local goldenShine = Mod.Spawn.Effect(COLORED_SPIDERS.SHINE_VARIANT, COLORED_SPIDERS.SHINE_SUBTYPE, shinePos, nil, spawner)
+	goldenShine.DepthOffset = 250
+	goldenShine.SpriteScale = goldenShine.SpriteScale * (Mod:RandomNum(4, 8) / 10)
+	goldenShine:GetSprite().PlaybackSpeed = 1.2
+	goldenShine:SetTimeout(12)
+	local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, goldenShine.Position, nil, spawner)
+	glow.SpriteScale = glow.SpriteScale / 4
+	glow:SetTimeout(12)
+	return goldenShine
+end
+
 ---@param spider EntityFamiliar
 local function spiderUpdate(_, spider)
-	if spider.FrameCount % 4 == 0 then
-		for i = 1, Mod:RandomNum(1, 3) do
-			local centerPos = Vector(spider.Position.X, spider.Position.Y - 5)
-			local shinePos = centerPos
-			shinePos = shinePos + Vector.FromAngle(Mod:RandomNum(360)):Resized(Mod:RandomNum(5, 10))
-			local goldenShine = Mod.Spawn.Effect(COLORED_SPIDERS.SHINE_VARIANT, COLORED_SPIDERS.SHINE_SUBTYPE, shinePos, nil, spider)
-			goldenShine.DepthOffset = 250
-			goldenShine.SpriteScale = goldenShine.SpriteScale * (Mod:RandomNum(4, 8) / 10)
-			goldenShine:GetSprite().PlaybackSpeed = 1.2
-			goldenShine:SetTimeout(12)
-			local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, goldenShine.Position, nil, spider)
-			glow.SpriteScale = glow.SpriteScale / 4
-			glow:SetTimeout(12)
-		end
+	if spider.FrameCount % 4 ~= 0 then
+		return
+	end
+	for _ = 1, Mod:RandomNum(1, 3) do
+		COLORED_SPIDERS:SpawnSparkle(spider.Position, spider)
 	end
 end
 

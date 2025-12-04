@@ -229,8 +229,8 @@ if not REPENTOGON or not REPENTANCE_PLUS then
 end
 
 local entities = {
+	"colored_spiders",
 	"spider_egg",
-	"colored_spiders"
 }
 
 Mod.LoopInclude(entities, "scripts.arachna.entities")

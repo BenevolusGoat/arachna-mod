@@ -12,8 +12,7 @@ ARACHNAS_SPOOL.TEAR = Isaac.GetEntityVariantByName("Spool Tear")
 ARACHNAS_SPOOL.WEB_EFFECT = Isaac.GetEntityVariantByName("Spider Web")
 
 local identifier = "ARACHNA_WEBBED"
-StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW,
-	true)
+StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
 ARACHNAS_SPOOL.STATUS_WEBBED = StatusEffectLibrary.StatusFlag[identifier]
 
 ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS = {
@@ -179,9 +178,7 @@ function ARACHNAS_SPOOL:OnWebUpdate(web)
 		if grid and grid:ToPit() and not Mod:IsLegacyGameplayEnabled() then
 			return
 		end
-		if not StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-			ARACHNAS_SPOOL:ApplyWebbed(npc, source, 2)
-		end
+		ARACHNAS_SPOOL:ApplyWebbed(npc, source, 2)
 	end, nil, nil, { UseEnemySearchParams = true, Dead = true })
 end
 
@@ -189,9 +186,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, 
 
 --#endregion
 
---#region Webbed & Spider Bite
-
---Webbed and Spider Bite statuses share several similarities so the code is stored here
+--#region Webbed status
 
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
@@ -204,34 +199,28 @@ function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
 end
 
 ---@param ent Entity
----@param statusEffect StatusFlag
----@param customData table
-function ARACHNAS_SPOOL:PreAddWebOrBitten(ent, statusEffect, customData)
-	if Mod:HasBitFlags(statusEffect, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffect, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-		local npc = ent:ToNPC()
-		if not npc or not ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc) then
-			return true
-		end
+function ARACHNAS_SPOOL:PreAddWeb(ent)
+	local npc = ent:ToNPC()
+	if not npc or not ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc) then
+		return true
 	end
 end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT,
-	ARACHNAS_SPOOL.PreAddWebOrBitten)
+	ARACHNAS_SPOOL.PreAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param ent Entity
-function ARACHNAS_SPOOL:PostAddWebOrBitten(ent, statusEffect, statusEffectData)
-	if Mod:HasBitFlags(statusEffect, ARACHNAS_SPOOL.STATUS_WEBBED) or Mod:HasBitFlags(statusEffect, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-		local data = Mod:GetData(ent)
-		if not data.WebbedStatusSprite then
-			local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
-			sprite:Play("Idle")
-			data.WebbedStatusSprite = sprite
-		end
+function ARACHNAS_SPOOL:PostAddWeb(ent)
+	local data = Mod:GetData(ent)
+	if not data.WebbedStatusSprite then
+		local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
+		sprite:Play("Idle")
+		data.WebbedStatusSprite = sprite
 	end
 end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
-	ARACHNAS_SPOOL.PostAddWebOrBitten, ARACHNAS_SPOOL.STATUS_WEBBED)
+	ARACHNAS_SPOOL.PostAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param ent Entity
 ---@param amount number
@@ -239,50 +228,50 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_
 ---@param source EntityRef
 ---@param countdown integer
 function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
-	if ARACHNAMOD:IsLegacyGameplayEnabled() then
+	if Mod:IsLegacyGameplayEnabled() then
 		return
 	end
 	local npc = ent:ToNPC()
 	if npc and npc:IsBoss() then
 		local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
-		local hasSpiderBite = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
-
-		if hasWebbed or hasSpiderBite then
-			local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
-			if GetPtrHash(parent) ~= GetPtrHash(npc)
-				or (
-					source.Type == EntityType.ENTITY_FAMILIAR
-					and source.Variant == FamiliarVariant.BLUE_SPIDER
+		if not hasWebbed then
+			return
+		end
+		local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
+		if GetPtrHash(parent) ~= GetPtrHash(npc)
+			or (
+				source.Type == EntityType.ENTITY_FAMILIAR
+				and source.Variant == FamiliarVariant.BLUE_SPIDER
 			) then
-				return
-			end
-			local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
-			if not player then return end
-			local data = Mod:GetData(parent)
-			if not data.SpiderBossChargeSprite then
-				data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
-			end
-			if not data.SpiderBossChargeDMGNeeded then
-				data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
-			end
-			if Mod:HasBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION) then
-				amount = amount / 2
-			end
-			local armor = npc:GetShieldStrength()
-			if armor > 0 then
-				--damage per hit
-				local dph = npc.MaxHitPoints / armor / 4
-				amount = Mod.math.min(amount, dph)
-			end
-			Mod:DebugLog("Boss Egg Progress:", "Room Frame", Mod.Room():GetFrameCount(), "Charge", "+" .. Mod.math.floor((amount / data.SpiderBossChargeDMGNeeded) * 100) .. "%")
-			data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
+			return
+		end
+		local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
+		if not player then return end
+		local data = Mod:GetData(parent)
+		if not data.SpiderBossChargeSprite then
+			data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
+		end
+		if not data.SpiderBossChargeDMGNeeded then
+			data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
+		end
+		if Mod:HasBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION) then
+			amount = amount / 2
+		end
+		local armor = npc:GetShieldStrength()
+		if armor > 0 then
+			--damage per hit
+			local dph = npc.MaxHitPoints / armor / 4
+			amount = Mod.math.min(amount, dph)
+		end
+		Mod:DebugLog("Boss Egg Progress:", "Room Frame", Mod.Room():GetFrameCount(), "Charge",
+			"+" .. Mod.math.floor((amount / data.SpiderBossChargeDMGNeeded) * 100) .. "%")
+		data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
 
-			if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
-				local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderRange(player, Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL)
-				local dist = npc.Size + 80
-				Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, npc.Position, spiderCount, dist, Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL, true)
-				data.SpiderBossCharge = 0
-			end
+		if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
+			local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCountRange(player)
+			local dist = npc.Size + 80
+			Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, npc.Position, spiderCount, dist, nil, true)
+			data.SpiderBossCharge = 0
 		end
 	end
 end
@@ -291,12 +280,11 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, ARACHNAS_SPOOL.BossChargeb
 
 ---@param npc EntityNPC
 ---@param offset Vector
-function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
+function ARACHNAS_SPOOL:RenderBossCharge(npc, offset)
 	local data = Mod:TryGetData(npc)
 	local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
-	local hasSpiderBite = StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
 	local renderPos = Mod:GetEntityRenderPosition(npc, offset)
-	if (hasWebbed or hasSpiderBite) and data and data.WebbedStatusSprite then
+	if hasWebbed and data and data.WebbedStatusSprite then
 		---@type Sprite
 		local sprite = data.WebbedStatusSprite
 		sprite.Scale = (npc.Size / 15) * npc.SpriteScale
@@ -317,15 +305,14 @@ function ARACHNAS_SPOOL:RenderWebOnWebbedOrBitten(npc, offset)
 			local progress = data.SpiderBossCharge / data.SpiderBossChargeDMGNeeded
 			local percent = Mod.math.floor(progress * 100)
 			local frameNum = Mod:Clamp(percent - 1, 0, 99)
-			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A,
-				(hasWebbed or hasSpiderBite) and 1 or 0.5, 0.2)
+			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A, hasWebbed and 1 or 0.5, 0.2)
 			data.SpiderBossChargeSprite:SetFrame("Charging", frameNum)
 			data.SpiderBossChargeSprite:Render(renderPos)
 		end
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderWebOnWebbedOrBitten)
+Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderBossCharge)
 
 --#endregion
 
@@ -333,9 +320,10 @@ Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderWebOnWebbe
 
 ---@param npc EntityNPC
 ---@param source EntityRef
----@param duration integer
+---@param duration? integer
 function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration, source, nil, {OriginalMass = npc.Mass})
+	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration or 2, source, nil,
+		{ OriginalMass = npc.Mass })
 end
 
 ---@param ent Entity
@@ -347,7 +335,7 @@ function ARACHNAS_SPOOL:LastWebbedCredit(ent, amount, flags, source, countdown)
 	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
 		or (not ARACHNAMOD:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
 	then
-		local player = Mod:TryGetPlayer(source, {LoopSpawnerEnt = true})
+		local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
 		if player then
 			Mod:GetData(ent).WebbedKillCredit = EntityPtr(player)
 		end
@@ -368,7 +356,9 @@ function ARACHNAS_SPOOL:OnNPCKill(ent, source)
 		if ent:IsBoss() and ARACHNAMOD:IsLegacyGameplayEnabled() then
 			return
 		end
-		Mod:GetData(ent).QueueSpiderEgg = source
+		local data = Mod:GetData(ent)
+		data.QueueSpiderEgg = source
+		data.SpiderBitten = StatusEffectLibrary:HasStatusEffect(ent, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
 		if ent:HasEntityFlags(EntityFlag.FLAG_ICE) then
 			Mod:GetData(ent).WebbedOverrideHitPoints = ent.MaxHitPoints
 		end
@@ -379,20 +369,26 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
 
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:OnNPCDeath(npc)
-	if Mod:GetData(npc).QueueSpiderEgg then
-		local entityPtr = Mod:GetData(npc).WebbedKillCredit
+	local data = Mod:TryGetData(npc)
+	if data and data.QueueSpiderEgg then
+		local entityPtr = data.WebbedKillCredit
 		local player = entityPtr and entityPtr.Ref and entityPtr.Ref:ToPlayer()
-		local eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.NORMAL
+		local eggFlags
+		local SPIDER_EGG = Mod.Entities.SPIDER_EGG
 		if npc:IsBoss() then
 			if npc.Parent or npc.Child then
-				eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.SMALL
+				eggFlags = SPIDER_EGG.EggFlag.SMALL
 			else
-				eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.BOSS
+				eggFlags = SPIDER_EGG.EggFlag.BOSS
 			end
 		elseif not npc:IsBoss() and npc.SpawnerEntity and npc.SpawnerEntity:IsBoss() then
-			eggSubtype = Mod.Entities.SPIDER_EGG.EggSubtype.SMALL
+			eggFlags = SPIDER_EGG.EggFlag.SMALL
 		end
-		Mod.Entities.SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player, eggSubtype)
+		local spiderColor
+		if data.SpiderBitten and not Mod:IsLegacyGameplayEnabled() then
+			spiderColor = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
+		end
+		SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player, eggFlags, spiderColor)
 	end
 end
 
