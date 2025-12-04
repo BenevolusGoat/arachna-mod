@@ -65,6 +65,7 @@ Sheriff = {}
 MASTEMA = {}
 BirthcakeRebaked = {}
 Epiphany = {}
+UniqueMinisaacs = {}
 
 ---@class EID_DescObj
 ---@field ObjType integer

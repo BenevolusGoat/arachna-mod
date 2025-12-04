@@ -42,6 +42,7 @@ end
 local patches = {
 	"pogforgooditems",
 	"ughforbaditems",
+	"unique_minisaacs",
 	"minimapapi",
 	"epiphany",
 	"stageapi",

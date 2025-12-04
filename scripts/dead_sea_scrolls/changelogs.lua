@@ -153,9 +153,8 @@ Other:
 - Moved Geptameron's day of the week counter to the active item sprite with a new look
 
 ## MOD COMPATIBILITY
-- Added MinimapAPI compatibility
-- Added Ugh for Bad Items compatibility for normal Arachna
-- Updated all English EID descriptions
+- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs
+- Updated all English EID descriptions. Previous translations will need to be re-implemented! You can go to the GitHub repository and make a fork in order to submit a PR with your translations
 - Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect
 - Added mod icon for EID
 - Moved Merged Card's EID description into a unique "TAB description", where you can expand the list of effects separated by pages
