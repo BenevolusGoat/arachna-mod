@@ -10,7 +10,7 @@ local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdown)
 	local player = spider.Player
 	if not ent:IsBoss() then
-		ent:AddIce(EntityRef(player), -1)
+		ent:AddEntityFlags(EntityFlag.FLAG_ICE)
 		return {Damage = ent.HitPoints + 1}
 	else
 		ent:AddSlowing(EntityRef(player), 120, 0.5, StatusEffectLibrary.StatusColor.SLOW)
