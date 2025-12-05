@@ -326,24 +326,6 @@ function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
 		{ OriginalMass = npc.Mass })
 end
 
----@param ent Entity
----@param amount number
----@param flags DamageFlag
----@param source EntityRef
----@param countdown integer
-function ARACHNAS_SPOOL:LastWebbedCredit(ent, amount, flags, source, countdown)
-	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
-		or (not ARACHNAMOD:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
-	then
-		local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
-		if player then
-			Mod:GetData(ent).WebbedKillCredit = EntityPtr(player)
-		end
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, ARACHNAS_SPOOL.LastWebbedCredit)
-
 ---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
 ---
 ---Save the information that the enemy has the status effect to our own custom data which does save for POST_NPC_DEATH.
@@ -357,8 +339,9 @@ function ARACHNAS_SPOOL:OnNPCKill(ent, source)
 			return
 		end
 		local data = Mod:GetData(ent)
-		data.QueueSpiderEgg = source
+		data.QueueSpiderEgg = true
 		data.SpiderBitten = StatusEffectLibrary:HasStatusEffect(ent, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
+		data.SpiderEggSource = StatusEffectLibrary:GetStatusEffectData(ent, ARACHNAS_SPOOL.STATUS_WEBBED).Source
 		if ent:HasEntityFlags(EntityFlag.FLAG_ICE) then
 			Mod:GetData(ent).WebbedOverrideHitPoints = ent.MaxHitPoints
 		end
@@ -371,8 +354,9 @@ Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, ARACHNAS_SPOOL.OnNPCKill)
 function ARACHNAS_SPOOL:OnNPCDeath(npc)
 	local data = Mod:TryGetData(npc)
 	if data and data.QueueSpiderEgg then
-		local entityPtr = data.WebbedKillCredit
-		local player = entityPtr and entityPtr.Ref and entityPtr.Ref:ToPlayer()
+		---@type EntityRef
+		local source = data.SpiderEggSource
+		local player = source and source.Entity and source.Entity:ToPlayer()
 		local eggFlags
 		local SPIDER_EGG = Mod.Entities.SPIDER_EGG
 		if npc:IsBoss() then

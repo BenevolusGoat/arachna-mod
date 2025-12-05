@@ -350,9 +350,9 @@ function COLORED_SPIDERS:RenderEggOnSpider(familiar, offset)
 		if familiar.FrameCount >= 21 then
 			local poof = Mod.Spawn.Effect(EffectVariant.TEAR_POOF_A, 0, familiar.Position)
 			poof.Color = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
+			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 			data.EggSprite = nil
 			data.EggCoveredSpider = nil
-			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 		end
 		return false
 	end

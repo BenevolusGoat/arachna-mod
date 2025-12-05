@@ -54,3 +54,12 @@ function ARACHNA_B:NegateFirerateWithGlasses(player, stage, value)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_STAT, CallbackPriority.IMPORTANT, ARACHNA_B.NegateFirerateWithGlasses, EvaluateStatStage.TEARS_UP)
+
+---@param player EntityPlayer
+function ARACHNA_B:RestoreDivineCloth(player)
+	if Mod:IsLegacyGameplayEnabled() then
+		player:SetPocketActiveItem(Mod.Item.DIVINE_CLOTH.ID, ActiveSlot.SLOT_POCKET, false)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PLAYER_INIT_POST_LEVEL_INIT_STATS, ARACHNA_B.RestoreDivineCloth, Mod.PlayerType.ARACHNA_B)

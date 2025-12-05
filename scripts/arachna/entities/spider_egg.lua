@@ -39,6 +39,13 @@ SPIDER_EGG.EggColors = {
 
 --#region Helpers
 
+---@param spiderColor ColoredSpiderSubtype
+---@return Color?
+function SPIDER_EGG:GetEggColor(spiderColor)
+	spiderColor = spiderColor % 10
+	return SPIDER_EGG.EggColors[spiderColor]
+end
+
 ---@param player EntityPlayer
 ---@param eggFlags? SpiderEggFlag
 function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
@@ -165,11 +172,9 @@ function SPIDER_EGG:OnInit(egg)
 	--Allow it to be picked up by Isaac.FindInRadius
 	egg.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYERONLY
 
-	if egg.SubType > 0 then
-		local color = SPIDER_EGG.EggColors[egg.SubType]
-		if color then
-			egg.Color = color
-		end
+	local color = SPIDER_EGG:GetEggColor(egg.SubType)
+	if color then
+		egg.Color = color
 	end
 end
 
@@ -227,7 +232,7 @@ end
 ---@param egg EntityEffect
 ---@param rewards? boolean
 function SPIDER_EGG:Explode(egg, rewards)
-	local color = egg.SubType == 0 and Color(1, 1, 1, 1, 1, 1, 1) or Mod.Entities.COLORED_SPIDERS.SpiderColors[egg.SubType]
+	local color = SPIDER_EGG:GetEggColor(egg.SubType) or Color(1,1,1,1,1,1,1)
 	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, color)
 	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 	if not rewards then
