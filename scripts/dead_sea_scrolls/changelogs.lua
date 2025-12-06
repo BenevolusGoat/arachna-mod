@@ -84,7 +84,7 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 The newly available "Legacy Gameplay" option allows certain changes to be reverted to how they acted before this update.
 Changes that will be reverted with the setting set to Off are marked with a *.
 New Content:
-- Added 4 new items for the boss pool: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
+- Added 4 new items after unlocking Web Hearts: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
 - Added Reversed Merged Card (suggestion by cadetpirx!). It's unlocked alongside the normal Merged Card
 
@@ -97,6 +97,11 @@ Arachna:
 
 Tainted Arachna:
 * Replaced inherent +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
+* Can no longer get random spider colors from spider spawns
+* Removed Spider Egg timer
+* Spider Eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color
+* Divine Cloth has been moved to a double-tap action
+* New Pocket Active: Grab (placeholder name!)
 
 Both Arachnas:
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
@@ -110,7 +115,7 @@ Both Arachnas:
 * Bone and Eternal Hearts are allowed to be gained again through items or other means. Their pickup equivalent are still converted into Web Hearts
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Bosses can now drop a Spider Egg on death. 50% of the spawned spiders will be big spiders
-* Dealing damage to Webbed or Spider Bitten bosses will charge a meter above their head. When the meter is filled, it resets and the boss spawns a small spider egg that instantly breaks into lesser amounts of friendly spiders. Friendly spiders do not contribute to the meter
+* Dealing damage to Webbed or Spider Bitten bosses will charge a meter above their head. When the meter is filled, it resets and spawns a reward of spiders depending on which status they have. Friendly spiders do not contribute to the meter
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 - Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Inherent poison tears now work on all weapon types

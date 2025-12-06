@@ -32,41 +32,6 @@ function DADS_NEWSPAPER:TryGetNewspaperEffect(player)
 	end
 end
 
----@param player EntityPlayer
-function DADS_NEWSPAPER:HasDoubleTapped(player)
-	local ctrlIndex = player.ControllerIndex
-	local firedLeft, firedUp, firedRight, firedDown = Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, ctrlIndex),
-		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, ctrlIndex),
-		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTRIGHT, ctrlIndex),
-		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTDOWN, ctrlIndex)
-	local data = Mod:GetData(player)
-	local fireDir
-	if firedLeft then
-		fireDir = Direction.LEFT
-	elseif firedUp then
-		fireDir = Direction.UP
-	elseif firedRight then
-		fireDir = Direction.RIGHT
-	elseif firedDown then
-		fireDir = Direction.DOWN
-	end
-
-	if (firedLeft or firedRight or firedUp or firedDown) then
-		if not data.NewspaperTapWindow or (data.NewspaperLastDirection ~= fireDir) then
-			data.NewspaperLastDirection = fireDir
-			data.NewspaperTapWindow = Mod.GetSetting(Mod.Setting.DadsNewspaperDoubletap) + 5
-		elseif data.NewspaperTapWindow then
-			data.NewspaperTapWindow = nil
-			return true
-		end
-	elseif data.NewspaperTapWindow and data.NewspaperTapWindow > 0 then
-		data.NewspaperTapWindow = data.NewspaperTapWindow - 1
-	else
-		data.NewspaperTapWindow = nil
-		data.NewspaperLastDirection = nil
-	end
-end
-
 ---@param effectParent EntityEffect
 function DADS_NEWSPAPER:SpawnHitbox(effectParent)
 	local player = effectParent.SpawnerEntity and effectParent.SpawnerEntity:ToPlayer()
@@ -147,7 +112,7 @@ function DADS_NEWSPAPER:PostPlayerUpdate(player)
 	local isShooting = player:GetFireDirection() ~= Direction.NO_DIRECTION
 	local aimVec = player:GetAimDirection()
 	local newspaperVec = Mod:GetData(effect).LastNewspaperDirection
-	local doubleTapped = effect.Timeout <= 0 and DADS_NEWSPAPER:HasDoubleTapped(player) or false
+	local doubleTapped = effect.Timeout <= 0 and Mod:HasDoubleTapped(player) or false
 	local finalVec
 
 	if effect.Timeout > 0 and not effect:GetSprite():IsFinished() then
@@ -186,7 +151,7 @@ function DADS_NEWSPAPER:OnPaperUpdate(effect)
 		Mod:DebugLog("Removed old newspaper")
 	end
 	if effect.Timeout == 1 then
-		effect:SetColor(Color(1,1,1,1,0.78,0.78,0.78), 10, 1, true, false)
+		effect:SetColor(Color(1, 1, 1, 1, 0.78, 0.78, 0.78), 10, 1, true, false)
 		Mod.sfxman:Play(SoundEffect.SOUND_BEEP)
 	end
 end
@@ -239,7 +204,7 @@ function DADS_NEWSPAPER:OnHitboxUpdate(effect)
 				ent:Die()
 			end
 		end
-		Mod.Foreach.GridInRadius(pos, DADS_NEWSPAPER.RADIUS, function (gridEnt, gridIndex)
+		Mod.Foreach.GridInRadius(pos, DADS_NEWSPAPER.RADIUS, function(gridEnt, gridIndex)
 			if gridEnt:ToPoop() or gridEnt:ToTNT() then
 				gridEnt:Destroy()
 			end

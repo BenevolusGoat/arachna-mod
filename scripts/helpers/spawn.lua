@@ -260,11 +260,12 @@ end
 ---@param velocity? Vector
 ---@param spawner? Entity
 ---@param seed? integer
----@return EntityEffect[]
+---@return EntityEffect
 function Spawn.DustCloud(position, velocity, spawner, seed)
 	local cloud = spawnEffect(EffectVariant.DUST_CLOUD, 0, position, velocity or RandomVector():Resized(randomNum(0, 4) + randomNum()), spawner, seed)
 	cloud:SetTimeout(randomNum(15, 25))
-	cloud.Color.A = max(0.3, randomNum())
+	cloud.Rotation = randomNum(2, 11) + rng:RandomFloat()
+	cloud.LifeSpan = cloud.Timeout
 	return cloud
 end
 

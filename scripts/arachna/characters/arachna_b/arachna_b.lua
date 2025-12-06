@@ -5,9 +5,12 @@ local ARACHNA_B = {}
 ARACHNAMOD.Character.ARACHNA_B = ARACHNA_B
 
 Mod.Include("scripts.arachna.characters.arachna_b.divine_cloth")
+Mod.Include("scripts.arachna.characters.arachna_b.grab")
 
 CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA_B] = true
+
+ARACHNA_B.DIVINE_CLOTH_COOLDOWN = 60 * 6 --6 seconds
 
 ---@param player EntityPlayer
 function ARACHNA_B:IsArachnaB(player)
@@ -63,3 +66,23 @@ function ARACHNA_B:RestoreDivineCloth(player)
 end
 
 Mod:AddCallback(ModCallbacks.MC_PLAYER_INIT_POST_LEVEL_INIT_STATS, ARACHNA_B.RestoreDivineCloth, Mod.PlayerType.ARACHNA_B)
+
+---@param player EntityPlayer
+function ARACHNA_B:DoubleTapCloth(player)
+	local data = Mod:GetData(player)
+	if data.TArachnaClothCooldown then
+		data.TArachnaClothCooldown = data.TArachnaClothCooldown - 1
+		if data.TArachnaClothCooldown <= 0 then
+			Mod.sfxman:Play(SoundEffect.SOUND_BEEP)
+			player:SetColor(StatusEffectLibrary.StatusColor.SLOW, 15, 100, true, false)
+			data.TArachnaClothCooldown = nil
+		end
+		return
+	end
+	if Mod:HasDoubleTapped(player) then
+		player:UseActiveItem(Mod.Item.DIVINE_CLOTH.ID, UseFlag.USE_NOANIM, -1)
+		data.TArachnaClothCooldown = ARACHNA_B.DIVINE_CLOTH_COOLDOWN
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, ARACHNA_B.DoubleTapCloth)

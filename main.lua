@@ -256,6 +256,52 @@ Mod.LoopInclude(miscItems, "scripts.arachna.misc_items")
 
 Mod.Include("scripts.arachna.unlocks.unlock_loader")
 
+---@param player EntityPlayer
+function ARACHNAMOD:HasDoubleTapped(player)
+	return Mod:GetData(player).DoubleTapped or false
+end
+
+---@param player EntityPlayer
+function ARACHNAMOD:HandleDoubleTap(player)
+	local ctrlIndex = player.ControllerIndex
+	local firedLeft, firedUp, firedRight, firedDown = Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, ctrlIndex),
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, ctrlIndex),
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTRIGHT, ctrlIndex),
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTDOWN, ctrlIndex)
+	local data = Mod:GetData(player)
+	local fireDir
+	if firedLeft then
+		fireDir = Direction.LEFT
+	elseif firedUp then
+		fireDir = Direction.UP
+	elseif firedRight then
+		fireDir = Direction.RIGHT
+	elseif firedDown then
+		fireDir = Direction.DOWN
+	end
+
+	if data.DoubleTapped then
+		data.DoubleTapped = nil
+	end
+
+	if (firedLeft or firedRight or firedUp or firedDown) then
+		if not data.DoubleTapWindow or (data.DoubleTapLastDirection ~= fireDir) then
+			data.DoubleTapLastDirection = fireDir
+			data.DoubleTapWindow = Mod.GetSetting(Mod.Setting.DoubletapFrameWindow) + 5
+		elseif data.DoubleTapWindow then
+			data.DoubleTapped = true
+			data.DoubleTapWindow = nil
+		end
+	elseif data.DoubleTapWindow and data.DoubleTapWindow > 0 then
+		data.DoubleTapWindow = data.DoubleTapWindow - 1
+	else
+		data.DoubleTapWindow = nil
+		data.DoubleTapLastDirection = nil
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, Mod.HandleDoubleTap)
+
 --!End of file
 
 include("scripts/dead_sea_scrolls/deadseascrolls")

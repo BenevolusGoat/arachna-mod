@@ -8,7 +8,7 @@ local DIVINE_CLOTH = {}
 ARACHNAMOD.Item.DIVINE_CLOTH = DIVINE_CLOTH
 
 DIVINE_CLOTH.ID = Isaac.GetItemIdByName("Divine Cloth")
-DIVINE_CLOTH.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
+
 DIVINE_CLOTH.ID_GRAB = Isaac.GetItemIdByName("Grab")
 
 DIVINE_CLOTH.DIVINE_WEB_VAR = Isaac.GetEntityVariantByName("Divine Web")
@@ -24,94 +24,6 @@ local statusSprite = Sprite("gfx/indicator_arachna_b.anm2", false)
 statusSprite:Play("Float")
 DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, statusSprite, nil, EntityFlag.FLAG_SLOW, true)
 DIVINE_CLOTH.STATUS_BITTEN = StatusEffectLibrary.StatusFlag[identifier]
-
----@param pos Vector
----@param vel Vector
----@param spawner? Entity
-function DIVINE_CLOTH:FireEgg(pos, vel, spawner)
-	Mod.sfxman:Play(SoundEffect.SOUND_TEARS_FIRE, 0, 2)
-	local eggTear = Mod.Spawn.Tear(DIVINE_CLOTH.TEAR, pos, vel, nil, spawner)
-	eggTear.CollisionDamage = 10
-	eggTear.FallingSpeed = -5.5
-	eggTear.FallingAcceleration = 0.5
-	eggTear:GetSprite():Play("Stone5Move")
-	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
-	local player = spawner and spawner:ToPlayer()
-	if player then
-		local weapon = player:GetWeapon(1)
-		local playerFlags = player:GetTearHitParams(weapon and weapon:GetWeaponType() or WeaponType.WEAPON_TEARS, 1, 1,
-			eggTear).TearFlags
-		for _, tearFlag in ipairs(ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS) do
-			if Mod:HasBitFlags(playerFlags, tearFlag) then
-				eggTear:AddTearFlags(tearFlag)
-			end
-		end
-		local data = Mod:GetData(player)
-		if data.HeldEggColor then
-			local tearData = Mod:GetData(eggTear)
-			tearData.EggFlags = data.HeldEggFlags
-			tearData.EggColor = data.HeldEggColor
-			local color = Mod.Entities.SPIDER_EGG:GetEggColor(tearData.EggColor)
-			if color then
-				eggTear.Color = color
-			end
-			data.HeldEggFlags = nil
-			data.HeldEggColor = nil
-		end
-	end
-end
-
-ThrowableItemLib:RegisterThrowableItem({
-	ID = DIVINE_CLOTH.ID_GRAB,
-	Type = ThrowableItemLib.Type.ACTIVE,
-	Identifier = "Arachna Spider Eggs",
-	Flags = ThrowableItemLib.Flag.DISABLE_HIDE | ThrowableItemLib.Flag.PERSISTENT,
-	HoldCondition = function (player, config)
-		local eggToRemove
-		Mod.Foreach.EffectInRadius(player.Position, 90, function(egg, index)
-			if egg:GetSprite():IsPlaying("Idle") then
-				eggToRemove = egg
-				return true
-			end
-		end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
-		if eggToRemove then
-			Mod:GetData(player).QueuedEggLift = EntityPtr(eggToRemove)
-			return ThrowableItemLib.HoldConditionReturnType.ALLOW_HOLD
-		else
-			return ThrowableItemLib.HoldConditionReturnType.DISABLE_USE
-		end
-	end,
-	ThrowFn = function (player, vect, slot, mimic)
-		DIVINE_CLOTH:FireEgg(player.Position, Mod:AddTearVelocity(vect, 12, player), player)
-	end,
-	LiftFn = function (player, continued, slot, mimic)
-		local data = Mod:GetData(player)
-		if not continued then
-			local egg = data.QueuedEggLift and data.QueuedEggLift.Ref
-			if not egg then return end
-			local eggData = Mod:GetData(egg)
-			data.HeldEggFlags = eggData.EggFlags
-			data.HeldEggColor = egg.SubType
-			egg:Remove()
-		end
-		local spiderColor = data.HeldEggColor
-		local sprite = player:GetHeldSprite()
-		sprite:Load("gfx/002.027_egg tear.anm2", true)
-		sprite:Play("Stone5Idle")
-		sprite.Offset = Vector(0, -10)
-		local color = Mod.Entities.SPIDER_EGG:GetEggColor(spiderColor)
-		if color then
-			sprite.Color = color
-		end
-	end,
-	AnimateFn = function (player, state)
-		if state == ThrowableItemLib.State.THROW then
-			player:AnimateCollectible(1, "HideItem")
-			player:GetHeldSprite().Color.A = 0
-			return true
-		end
-	end
-})
 
 --#endregion
 
@@ -254,31 +166,6 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_
 
 --#region Throwable Eggs
 
----@param tear EntityTear
-function DIVINE_CLOTH:OnEggDeath(tear)
-	local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
-	local poof = Mod.Spawn.Effect(EffectVariant.TEAR_POOF_A, 0, tear.Position)
-	local data = Mod:TryGetData(tear)
-	local poofColor = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
-
-	poof.Color = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
-	Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
-
-	if player and data and data.EggColor then
-		local color = Mod.Entities.SPIDER_EGG:GetEggColor(data.EggColor)
-		local SPIDER_EGG = Mod.Entities.SPIDER_EGG
-		local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderCountRange(player, data.EggFlags)
-		local rng = player:GetCollectibleRNG(DIVINE_CLOTH.ID)
-		local spiderCount = Mod.math.ceil(rng:RandomInt(minSpiders, maxSpiders) / 2)
-		Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, tear.Position, spiderCount, nil, data.EggFlags, false, data.EggColor)
-		if color then
-			poofColor = color
-		end
-	end
-	poof.Color = poofColor
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, DIVINE_CLOTH.OnEggDeath, DIVINE_CLOTH.TEAR)
 
 --#endregion
 

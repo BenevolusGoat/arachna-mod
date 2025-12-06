@@ -21,6 +21,7 @@ SPIDER_EGG.MAX_EGG_TIMEOUT = 500
 SPIDER_EGG.EggFlag = {
 	SMALL = 1 << 0, --Produce less spiders
 	BOSS = 1 << 1, --+50% chance to spawn big spiders
+	THROWN = 1 << 2, --Was an egg that was thrown directly at enemies. Negates T. Arachna big spider bonus, 50% less spiders
 }
 
 SPIDER_EGG.EggColors = {
@@ -61,6 +62,11 @@ function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
 		minSpiders = minSpiders - 1
 		maxSpiders = maxSpiders - 2
 	end
+
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN) then
+		minSpiders = Mod.math.max(1, Mod.math.floor(minSpiders / 2))
+		maxSpiders = Mod.math.max(1, Mod.math.floor(maxSpiders / 2))
+	end
 	return minSpiders, maxSpiders + webHearts
 end
 
@@ -76,7 +82,7 @@ function SPIDER_EGG:GetSpiderBonusChances(player, eggFlags)
 	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
 		bigChance = bigChance + 0.5
 	end
-	if Mod.Character.ARACHNA_B:IsArachnaB(player) then
+	if Mod.Character.ARACHNA_B:IsArachnaB(player) and not (eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN)) then
 		bigChance = bigChance + 0.25
 	end
 	return bonusColorChance, bigChance
@@ -105,16 +111,14 @@ end
 function SPIDER_EGG:SpawnSpiderBurst(player, pos, numSpiders, dist, eggFlags, obscureInEgg, forceColor)
 	local bonusColorChance, bigChance = SPIDER_EGG:GetSpiderBonusChances(player, eggFlags)
 	for _ = 1, numSpiders do
-		local spiderSubtype = forceColor
-		if Mod:IsAnyArachna(player) then
-			spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(false, bonusColorChance, bigChance)
-		else
-			spiderSubtype = COLORED_SPIDERS.SpiderSubtype.NORMAL
-		end
+		local spiderSubtype = COLORED_SPIDERS.SpiderSubtype.NORMAL
 		if forceColor then
-			--Multiplies BIG_FLAG by 0 or 1 to retain "big" status while still forcing the color
-			spiderSubtype = COLORED_SPIDERS.SpiderSubtype.BIG_FLAG *
-			(Mod.math.floor(spiderSubtype / COLORED_SPIDERS.SpiderSubtype.BIG_FLAG)) + forceColor
+			spiderSubtype = forceColor
+			if bigChance > 0 and Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID):RandomFloat() < bigChance then
+				spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
+			end
+		elseif (Mod:IsLegacyGameplayEnabled() and Mod:IsAnyArachna(player) or Mod.Character.ARACHNA:IsArachna(player)) or player:HasCollectible(Mod.Item.MUTAGEN.ID) then
+			spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(false, bonusColorChance, bigChance)
 		end
 		local spider = COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, pos, dist)
 		Mod:GetData(spider).EggCoveredSpider = obscureInEgg
@@ -252,10 +256,10 @@ function SPIDER_EGG:Explode(egg, rewards)
 	---@type SpiderEggFlag
 	local eggFlags = Mod:GetData(egg).EggFlags
 	local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
+	local forcedColor = egg.SubType > 0 and egg.SubType or nil
 
 	spiderCount = Mod:RandomNum(minSpiders, maxSpiders, rng)
-	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, nil, eggFlags, false,
-		egg.SubType > 0 and egg.SubType or nil)
+	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, nil, eggFlags, false, forcedColor)
 
 	if arachnaBirthright and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then
 		Mod.Spawn.Pickup(Mod.Pickup.WEB_HEART.ID, 0, egg.Position, nil, egg)

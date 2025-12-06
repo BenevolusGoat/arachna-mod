@@ -3,7 +3,7 @@
 
 ARACHNAMOD.Setting = {
 	GeptameronGiantbook = "Geptameron Giantbook",
-	DadsNewspaperDoubletap = "Dad's Newspaper Double Tap Frame Window",
+	DoubletapFrameWindow = "Frame Window for Double Tap Actions",
 	AnniversaryOverride = "Override Anniversary Option",
 	LegacyGameplay = "Legacy Character Gameplay"
 }
