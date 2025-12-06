@@ -81,7 +81,7 @@ end
 ---@param player EntityPlayer
 function WEB_HEART:GetKey(player)
 	local key = WEB_HEART.KEY
-	if Mod:IsAnyArachna(player) and not Mod:IsLegacyGameplayEnabled() then
+	if Mod:IsAnyArachna(player) then
 		key = WEB_HEART.KEY_ARACHNA
 	end
 	return key
@@ -118,18 +118,6 @@ end
 
 --#region CustomHealthAPI
 
-function WEB_HEART:UpdateHealthConversion()
-	if Mod:IsLegacyGameplayEnabled() then
-		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
-		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY
-	else
-		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
-		CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
-	end
-end
-
-Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, WEB_HEART.UpdateHealthConversion)
-
 CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH,
 	CustomHealthAPI.Enums.CallbackPriorities.EARLY,
 	function(player, key, hp)
@@ -144,7 +132,6 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 			return expectedKey, hp
 			--Manually handle max HP so its identical to Forgor, 2:1 ratio of hearts
 		elseif Mod:IsAnyArachna(player)
-			and not Mod:IsLegacyGameplayEnabled()
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "KindContained") ~= CustomHealthAPI.Enums.HealthKinds.NONE
 		then
@@ -501,7 +488,7 @@ function WEB_HEART:UpdateDevilSprite(pickup)
 	local data = Mod:TryGetData(pickup)
 	if data and data.UpdateWebHeartSheet or pickup.FrameCount == 0 then
 		local someoneHasArachnaWeb = Mod.Foreach.Player(function (player, index)
-			if Mod:IsAnyArachna(player) and not Mod:IsLegacyGameplayEnabled() and WEB_HEART:GetWebHearts(player) > 0 then
+			if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) > 0 then
 				return true
 			end
 		end) or false
