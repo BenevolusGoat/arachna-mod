@@ -561,3 +561,18 @@ end
 Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY, WEB_HEART.OnReverseFool, Card.CARD_REVERSE_FOOL)
 
 --#endregion
+
+--#region Bed fix
+
+---@param player EntityPlayer
+function WEB_HEART:SleepEffect(player)
+	if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) > 0 then
+		player:AddSoulHearts(6)
+		Mod.sfxman:Play(SoundEffect.SOUND_POWERUP1)
+		return true
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_TRIGGER_BED_SLEEP_EFFECT, WEB_HEART.SleepEffect)
+
+--#endregion
