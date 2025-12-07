@@ -338,8 +338,7 @@ function WEB_HEART:KeeperHeartCollision(pickup, collider)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.IMPORTANT, WEB_HEART.KeeperHeartCollision,
-	PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.IMPORTANT, WEB_HEART.KeeperHeartCollision, PickupVariant.PICKUP_HEART)
 
 ---@param pickup EntityPickup
 ---@param collider Entity
@@ -359,8 +358,7 @@ function WEB_HEART:CollectWebHeart(pickup, collider)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart,
-	PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.CollectWebHeart, PickupVariant.PICKUP_HEART)
 
 --#endregion
 
@@ -417,17 +415,18 @@ function WEB_HEART:ReplaceWebHeartsForKeeper(pickup)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART
-.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPORTANT, WEB_HEART.ReplaceWebHeartsForKeeper, PickupVariant.PICKUP_HEART)
 
 --#endregion
 
---#region Abaddon (Legacy)
+--#region Abaddon
 
 ---@param player EntityPlayer
 function WEB_HEART:Abaddon(itemID, charge, firstTime, slot, varData, player)
 	local numWebHearts = WEB_HEART:GetWebHearts(player)
-	if numWebHearts > 0 and Mod:IsLegacyGameplayEnabled() then
+	if numWebHearts > 0
+		--and Mod:IsLegacyGameplayEnabled()
+	then
 		player:AddBlackHearts(numWebHearts * 2)
 		WEB_HEART:AddWebHearts(player, -numWebHearts)
 	end
@@ -437,14 +436,42 @@ Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, WEB_HEART.Abaddon, Collect
 
 --#endregion
 
---#region Guppy's Paw (Legacy)
+--#region Guppy's Paw
+
+---@param player EntityPlayer
+local function canUseForcedGuppysPaw(player)
+	return WEB_HEART:GetWebHearts(player) > 0
+		and Mod:IsAnyArachna(player)
+		and player:GetMaxHearts() == 0
+end
+
+---@param player EntityPlayer
+function WEB_HEART:ForceGuppysPaw(player)
+	if canUseForcedGuppysPaw(player)
+		and player.ControlsEnabled
+		and player.ControlsCooldown == 0
+	then
+		if Input.IsActionTriggered(ButtonAction.ACTION_ITEM, player.ControllerIndex)
+			and player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == CollectibleType.COLLECTIBLE_GUPPYS_PAW
+		then
+			player:UseActiveItem(CollectibleType.COLLECTIBLE_GUPPYS_PAW, UseFlag.USE_OWNED, ActiveSlot.SLOT_PRIMARY)
+		end
+		if Input.IsActionTriggered(ButtonAction.ACTION_PILLCARD, player.ControllerIndex) then
+			local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
+			if pocketItem:GetType() == PocketItemType.ACTIVE_ITEM
+				and player:GetActiveItem(pocketItem:GetSlot() - 1) == CollectibleType.COLLECTIBLE_GUPPYS_PAW
+			then
+				player:UseActiveItem(CollectibleType.COLLECTIBLE_GUPPYS_PAW, UseFlag.USE_OWNED, pocketItem:GetSlot() - 1)
+			end
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, WEB_HEART.ForceGuppysPaw, PlayerVariant.PLAYER)
 
 ---@param player EntityPlayer
 function WEB_HEART:ArachnaGuppysPaw(itemID, rng, player, flags, slot, customVar)
-	if WEB_HEART:GetWebHearts(player) > 0
-		and Mod:IsLegacyGameplayEnabled()
-		and Mod:IsAnyArachna(player)
-	then
+	if canUseForcedGuppysPaw(player) then
 		player:AddSoulHearts(6)
 		WEB_HEART:AddWebHearts(player, -1)
 		Mod.sfxman:Play(SoundEffect.SOUND_VAMP_GULP, 1, 0, false, 0.8)
@@ -452,7 +479,7 @@ function WEB_HEART:ArachnaGuppysPaw(itemID, rng, player, flags, slot, customVar)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, WEB_HEART.ArachnaGuppysPaw, CollectibleType.COLLECTIBLE_GUPPYS_PAW)
+Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.ArachnaGuppysPaw, CollectibleType.COLLECTIBLE_GUPPYS_PAW)
 
 --#endregion
 

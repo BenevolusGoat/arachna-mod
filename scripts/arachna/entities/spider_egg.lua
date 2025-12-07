@@ -15,7 +15,8 @@ SPIDER_EGG.ID_SMALL = Isaac.GetEntityVariantByName("Spider Egg (Small)")
 SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE = 0.05
 SPIDER_EGG.RARE_SPRITE_CHANCE = 0.001
 
-SPIDER_EGG.MAX_EGG_TIMEOUT = 500
+SPIDER_EGG.MAX_EGG_TIMEOUT = 30 * 10 --10 seconds
+SPIDER_EGG.MAX_EGG_TIMEOUT_LEGACY = 600 --16.6 seconds
 
 ---@enum SpiderEggFlag
 SPIDER_EGG.EggFlag = {
@@ -67,7 +68,7 @@ function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
 		minSpiders = Mod.math.max(1, Mod.math.floor(minSpiders / 2))
 		maxSpiders = Mod.math.max(1, Mod.math.floor(maxSpiders / 2))
 	end
-	return minSpiders, maxSpiders + webHearts
+	return minSpiders, maxSpiders--[[  + webHearts ]]
 end
 
 ---@param player EntityPlayer
@@ -152,6 +153,8 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 	local egg = Mod.Spawn.Effect(SPIDER_EGG.ID, spiderColor, pos, nil, player)
 	Mod:GetData(egg).EggFlags = eggFlags
 	if Mod.Character.ARACHNA_B:IsArachnaB(player) and isLegacy then
+		egg:SetTimeout(SPIDER_EGG.MAX_EGG_TIMEOUT_LEGACY)
+	elseif Mod.Character.ARACHNA:IsArachna(player) then
 		egg:SetTimeout(SPIDER_EGG.MAX_EGG_TIMEOUT)
 	end
 end

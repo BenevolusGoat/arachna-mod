@@ -339,7 +339,8 @@ end
 ---@param ent Entity
 ---@param source EntityRef
 function ARACHNAS_SPOOL:OnNPCKill(ent, source)
-	if StatusEffectLibrary:HasStatusEffect(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
+	local webbed_data = StatusEffectLibrary:GetStatusEffectData(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
+	if webbed_data
 		or (not ARACHNAMOD:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
 	then
 		if ent:IsBoss() and ARACHNAMOD:IsLegacyGameplayEnabled() then
@@ -348,7 +349,11 @@ function ARACHNAS_SPOOL:OnNPCKill(ent, source)
 		local data = Mod:GetData(ent)
 		data.QueueSpiderEgg = true
 		data.SpiderBitten = StatusEffectLibrary:HasStatusEffect(ent, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN)
-		data.SpiderEggSource = StatusEffectLibrary:GetStatusEffectData(ent, ARACHNAS_SPOOL.STATUS_WEBBED).Source
+		if webbed_data then
+			data.SpiderEggSource = webbed_data.Source
+		else
+			data.SpiderEggSource = EntityRef(source.Entity.SpawnerEntity)
+		end
 		if ent:HasEntityFlags(EntityFlag.FLAG_ICE) then
 			Mod:GetData(ent).WebbedOverrideHitPoints = ent.MaxHitPoints
 		end
