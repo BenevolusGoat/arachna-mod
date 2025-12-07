@@ -115,7 +115,7 @@ ThrowableItemLib:RegisterThrowableItem({
 ---@param source EntityRef
 ---@param playerSource EntityRef
 ---@param damage number
-function GRAB:EggOnHitEffect(spiderColor, ent, player, source, playerSource, damage)
+function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
 	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	Mod:DebugLog("Activated effect", spiderColor)
 	if spiderColor == COLORED_SPIDERS.SpiderSubtype.WRATH then
@@ -195,10 +195,10 @@ function GRAB:OnEggDamage(ent, amount, flags, source, countdown)
 			local colorIndex = rng:RandomInt(#randomColors) + 1
 			spiderColor = randomColors[colorIndex]
 			table.remove(randomColors, colorIndex)
-			GRAB:EggOnHitEffect(spiderColor, ent, player, source, playerSource, damage)
+			GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
 			spiderColor = randomColors[rng:RandomInt(#randomColors) + 1]
 		end
-		GRAB:EggOnHitEffect(spiderColor, ent, player, source, playerSource, damage)
+		GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
 	end
 end
 
