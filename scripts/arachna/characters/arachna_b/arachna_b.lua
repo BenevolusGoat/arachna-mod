@@ -69,6 +69,7 @@ Mod:AddCallback(ModCallbacks.MC_PLAYER_INIT_POST_LEVEL_INIT_STATS, ARACHNA_B.Res
 
 ---@param player EntityPlayer
 function ARACHNA_B:DoubleTapCloth(player)
+	if not ARACHNA_B:IsArachnaB(player) then return end
 	local data = Mod:GetData(player)
 	if data.TArachnaClothCooldown then
 		data.TArachnaClothCooldown = data.TArachnaClothCooldown - 1
