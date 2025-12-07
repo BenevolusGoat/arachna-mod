@@ -34,7 +34,7 @@ function ARACHNA_B:BaseMultishot(player, multiShotParams, weaponType)
 	if player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then
 		tearsToAdd = tearsToAdd - 1
 	end
-	multiShotParams:SetSpreadAngle(weaponType, multiShotParams:GetSpreadAngle(weaponType) + SPREAD_ANGLE_MULT * tearsToAdd)
+	pcall(multiShotParams.SetSpreadAngle, multiShotParams:GetSpreadAngle(weaponType) + SPREAD_ANGLE_MULT * tearsToAdd)
 	multiShotParams:SetNumTears(multiShotParams:GetNumTears() + tearsToAdd)
 	local expectedAmount = multiShotParams:GetNumTears() / multiShotParams:GetNumEyesActive()
 	multiShotParams:SetNumLanesPerEye(expectedAmount)
