@@ -263,6 +263,11 @@ end
 
 ---@param player EntityPlayer
 function ARACHNAMOD:HandleDoubleTap(player)
+	if not player.ControlsEnabled
+		or player.ControlsCooldown > 0
+	then
+		return
+	end
 	local ctrlIndex = player.ControllerIndex
 	local firedLeft, firedUp, firedRight, firedDown = Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, ctrlIndex),
 		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, ctrlIndex),

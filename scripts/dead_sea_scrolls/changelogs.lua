@@ -103,24 +103,28 @@ Tainted Arachna:
 * Spider Eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color
 * Divine Cloth has been moved to a double-tap action
 * New Pocket Active: Grab (placeholder name!)
+* Increased starting damage to 2.00 (from 1.00)
+* Increased starting speed to 1.00 (from 0.75)
 
 Both Arachnas:
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
 * Increased recharge time of Arachna's Spool and Divine Cloth
 * Removed stage multiplier and Web Heart interaction on how many spiders spawned from spider eggs
 * Arachna and Tainted Arachna no longer get slowed from cobwebs on the ground
-* Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
 * Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
 * Spider Eggs now explode on challenge/boss rush wave clears
 * Bone and Eternal Hearts are allowed to be gained again through items or other means. Their pickup equivalent are still converted into Web Hearts
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Bosses can now drop a Spider Egg on death. 50% of the spawned spiders will be big spiders
-* Dealing damage to Webbed or Spider Bitten bosses will charge a meter above their head. When the meter is filled, it resets and spawns a reward of spiders depending on which status they have. Friendly spiders do not contribute to the meter
+- Web Hearts are now sorted before Soul Hearts instead of after
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 - Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Inherent poison tears now work on all weapon types
 
 Other:
+* Bosses are no longer immune to the slowing effect of Arachna's Spool and Divine Cloth, but aren't slowed as much as a regular slowing effect
+* Increased Divine Cloth's radius to match Tainted Arachna's old birthright radius
+* Dealing damage to Webbed or Spider Bitten bosses will charge a meter above their head. When the meter is filled, it resets and spawns a reward of spiders depending on which status they have. Friendly spiders do not contribute to the meter
 - Poison tears from Arachnid's Grip now work on all weapon types
 - Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance

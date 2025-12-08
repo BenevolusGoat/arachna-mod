@@ -272,7 +272,7 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			if StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
 				local dist = player.Position:Distance(npc.Position)
 				local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(-45, 45))
-				local tear = Mod.Item.GRAB:FireEgg(npc.Position, vel, npc, player)
+				local tear = Mod.Item.GRAB:FireEgg(npc.Position, vel, player, npc)
 				tear.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 			else
 				local dist = npc.Size + 80

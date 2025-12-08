@@ -7,14 +7,19 @@ ARACHNAMOD.Item.GRAB = GRAB
 GRAB.ID = Isaac.GetItemIdByName("Grab")
 GRAB.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
 
+---@param player EntityPlayer
+function GRAB:GetEggTearDamage(player)
+	return player.Damage * 2 + (Mod.Level():GetStage() * 0.5)
+end
+
 ---@param pos Vector
 ---@param vel Vector
----@param spawner? Entity
 ---@param player EntityPlayer
-function GRAB:FireEgg(pos, vel, spawner, player)
+---@param spawner? Entity
+function GRAB:FireEgg(pos, vel, player, spawner)
 	Mod.sfxman:Play(SoundEffect.SOUND_TEARS_FIRE, 0, 2)
 	local eggTear = Mod.Spawn.Tear(GRAB.TEAR, pos, vel, nil, spawner)
-	eggTear.CollisionDamage = 10
+	eggTear.CollisionDamage = GRAB:GetEggTearDamage(player)
 	eggTear.FallingSpeed = -5.5
 	eggTear.FallingAcceleration = 0.5
 	eggTear:GetSprite():Play("Stone5Move")
@@ -109,6 +114,14 @@ ThrowableItemLib:RegisterThrowableItem({
 	end
 })
 
+---@param player? EntityPlayer
+local function getNecroDamage(player)
+	if not player then return 40 end
+	local missingPage1 = player:GetTrinketMultiplier(TrinketType.TRINKET_MISSING_PAGE)
+	local missingPage2 = player:GetCollectibleNum(CollectibleType.COLLECTIBLE_MISSING_PAGE_2)
+	return 40 * (1 + (missingPage1 + missingPage2))
+end
+
 ---@param spiderColor ColoredSpiderSubtype
 ---@param ent? Entity
 ---@param player? EntityPlayer
@@ -129,9 +142,9 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.PESTILENCE then
 		local cloud = Mod.Spawn.Effect(EffectVariant.SMOKE_CLOUD, 0, source.Position, nil, player)
 		cloud:SetTimeout(150)
-		cloud.CollisionDamage = 5
+		cloud.CollisionDamage = source.Entity.CollisionDamage / 2
 		if ent then
-			ent:AddPoison(playerSource, 60, damage)
+			ent:AddPoison(playerSource, 150, damage)
 		end
 		elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.FAMINE and ent then
 		if ent:IsBoss() then
@@ -139,26 +152,47 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 		else
 			ent:AddEntityFlags(EntityFlag.FLAG_CONFUSION)
 		end
-	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.DEATH and ent then
-		local bigHornHand = Mod.Spawn.Effect(EffectVariant.BIG_HORN_HAND, 0, source.Position, nil, player)
-		bigHornHand.Target = ent
+	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.DEATH then
+		local poof = Mod.Spawn.Poof02(1, source.Position, source.Entity)
+		poof.Color = source.Entity.Color
+		poof.SpriteScale = Vector(0.8, 0.8)
+		Mod.sfxman:Play(SoundEffect.SOUND_DEATH_CARD)
+		Mod.Foreach.NPCInRadius(source.Position, 80, function (npc, index)
+			if npc:IsActiveEnemy(false) and npc:IsVulnerableEnemy() and not npc:IsInvincible() then
+				npc:TakeDamage(getNecroDamage(player), 0, playerSource, 0)
+			end
+		end)
 	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.GOLDEN then
 		for _ = 1, 5 do
 			local rng = source.Entity:GetDropRNG()
 			local coin = Mod.Spawn.Coin(0, source.Position, EntityPickup.GetRandomPickupVelocity(source.Position, rng), player, rng:Next())
 			coin.Timeout = 60
 		end
-	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.LOVE and ent then
-		ent:AddBaited(playerSource, 150)
+	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.LOVE then
+		local poof = Mod.Spawn.Poof02(1, source.Position, source.Entity)
+		poof.Color = source.Entity.Color
+		poof.SpriteScale = Vector(0.8, 0.8)
+		Mod.Foreach.NPCInRadius(source.Position, 80, function (npc, index)
+			if npc:IsActiveEnemy(false) then
+				npc:AddCharmed(playerSource, 150)
+			end
+		end)
 	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.ICE then
 		local clouds = Mod.Spawn.DustClouds(source.Position, nil, source.Entity, nil, 3)
 		for _, cloud in ipairs(clouds) do
 			cloud.Velocity = Vector(Mod:RandomNum(3, 5), 0):Rotated(Mod:RandomNum(360))
 			cloud:GetSprite():GetLayer(0):SetColor(Color(1,1,1,0.4,0.8,0.9,1))
 		end
+		if ent and not ent:IsBoss() then
+			ent:AddEntityFlags(EntityFlag.FLAG_ICE)
+			ent.HitPoints = 0
+			ent:TakeDamage(1, DamageFlag.DAMAGE_IGNORE_ARMOR, playerSource, 0)
+		end
 		for _, _ent in ipairs(Isaac.FindInRadius(source.Position, 80, EntityPartition.ENEMY)) do
-			_ent:AddIce(playerSource, 150)
-			_ent:AddSlowing(playerSource, 150, 0.5, StatusEffectLibrary.StatusColor.SLOW)
+			if _ent:IsActiveEnemy(false) then
+				_ent:AddIce(playerSource, 150)
+				_ent:AddSlowing(playerSource, 150, 0.5, StatusEffectLibrary.StatusColor.SLOW)
+			end
 		end
 	end
 end

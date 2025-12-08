@@ -15,6 +15,7 @@ DIVINE_CLOTH.DIVINE_WEB_VAR = Isaac.GetEntityVariantByName("Divine Web")
 DIVINE_CLOTH.DIVINE_WEB_SUB = Isaac.GetEntitySubTypeByName("Divine Web")
 
 DIVINE_CLOTH.BITE_DURATION = 200
+DIVINE_CLOTH.RADIUS = 120
 
 local identifier = "ARACHNA_BITTEN"
 local statusSprite = Sprite("gfx/indicator_arachna_b.anm2", false)
@@ -59,16 +60,14 @@ end
 
 ---@param player EntityPlayer
 function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
-	local spriteSize = 1
-	local size = 90
 	local legacy = Mod:IsLegacyGameplayEnabled()
+	local spriteSize = legacy and 1 or 1.25
+	local size = legacy and 90 or DIVINE_CLOTH.RADIUS
 
-	if not legacy or Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
-		if legacy then
-			spriteSize = 1.2
-			size = size + 30
-			legacyEggInteraction(player.Position, size)
-		end
+	if legacy and Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
+		spriteSize = 1.2
+		size = 120
+		legacyEggInteraction(player.Position, size)
 	end
 	Mod.Game:ShakeScreen(8)
 	DIVINE_CLOTH:SpawnSwirl(player.Position, player)
