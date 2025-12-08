@@ -289,9 +289,9 @@ function SPIDER_EGG:OnUpdate(egg)
 		sprite:Play("Idle")
 	end
 
-	--[[ if (Mod.Room():IsClear() or egg.Variant == SPIDER_EGG.ID_SMALL) and (sprite:IsPlaying("Idle")) then
+	if (Mod.Room():IsClear() or egg.Variant == SPIDER_EGG.ID_SMALL) and (sprite:IsPlaying("Idle")) then
 		sprite:Play("Explode")
-	end ]]
+	end
 
 	if sprite:IsFinished("Explode") or sprite:IsFinished("ExplodeEmpty") then
 		SPIDER_EGG:Explode(egg, sprite:IsFinished("Explode"))
