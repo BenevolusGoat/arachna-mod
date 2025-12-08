@@ -5,12 +5,13 @@ local DSSCoreVersion = 7
 -- auto split tooltips into multiple lines optimally
 ---@param str string
 ---@param title? string
-local function GenerateTooltip(str, title)
+---@param len? integer
+local function GenerateTooltip(str, title, len)
 	local endTable = {}
 	local currentString = ""
 	for w in str:gmatch("%S+") do
 		local newString = currentString .. w .. " "
-		if newString:len() >= 15 then
+		if newString:len() >= (len or 15) then
 			table.insert(endTable, currentString)
 			currentString = ""
 		end
@@ -24,6 +25,15 @@ local function GenerateTooltip(str, title)
 		table.insert(endTable, 1, title)
 	end
 	return { strset = endTable }
+end
+
+---@param ... string
+local function GenerateDescription(...)
+	local strList = table.pack(...)
+	local str = table.concat(strList, " ")
+	local desc = GenerateTooltip(str, nil, 35)
+	desc.fsize = 1
+	return desc
 end
 
 local DSSInitializerFunction = require("scripts.dead_sea_scrolls.vendor.dssmenucore")
@@ -144,20 +154,28 @@ local arachnaDssDirectory = {
 
 				table.insert(menu.buttons, button)
 				table.insert(menu.buttons, BREAK_LINE)
+
+				if info.Name == Mod.Setting.LegacyGameplay then
+					table.insert(menu.buttons, {str= "legacy info", dest= "legacyinfo", fsize = 1, tooltip = GenerateTooltip("more information on legacy gameplay")})
+				end
 			end
 		end,
 	},
 	credits = {
 		title = "arachna credits",
 		buttons = {
+			{str = "developers", fsize = 3, tooltip = GenerateTooltip("directly involved with development on the mod")},
 			{str = "rvsty", fsize = 2, tooltip = GenerateTooltip("pre-v2.0 coder, majority of sprites, designer")},
+			{str = "benevolusgoat", fsize = 2, tooltip = GenerateTooltip("v2.0 coder")},
+			BREAK_LINE,
+			BREAK_LINE,
+			{str = "contributors", fsize = 3, tooltip = GenerateTooltip("contributed some amount to the mod")},
 			{str = "unknownthehero", fsize = 2, tooltip = GenerateTooltip("major playtesting")},
 			{str = "quartz", fsize = 2, tooltip = GenerateTooltip("amazing portrait sprites")},
 			{str = "brakedude", fsize = 2, tooltip = GenerateTooltip("coded in proper web heart rendering for pre-v2.0")},
 			{str = "shapatsmith", fsize = 2, tooltip = GenerateTooltip("voiceover for pocket items")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("playtesting, sprites for several costumes")},
 			{str = "steamjek", fsize = 2, tooltip = GenerateTooltip("mod thumbnail art as a commission")},
-			{str = "benevolusgoat", fsize = 2, tooltip = GenerateTooltip("v2.0 coder")}
 		},
 	},
 	areyousure = {
@@ -209,6 +227,47 @@ local arachnaDssDirectory = {
 				glowcolor = 3
 			}
 		},
+	},
+	legacyinfo = {
+		title = "legacy gameplay",
+		tooltip = GenerateTooltip("changes that are enabled with legacy gameplay"),
+		buttons = {
+			{str = "info", fsize = 2},
+			GenerateDescription(
+				"legacy gameplay returns arachna, tainted arachna, and some features of their pocket actives to before the v2.0 update.",
+				"this setting exists for those who prefer the older gameplay, as many changes have been made for a more balanced gameplay experience.",
+				"the list of the exact changes can be found below:"
+			),
+			BREAK_LINE,
+			{str = "arachna", fsize = 2},
+			GenerateDescription("- arachna's birthright has +1 to spawned spiders instead of increased chance for spider eggs spawning colored spiders"),
+			GenerateDescription("- spider eggs spawned by arachna no longer have a timer"),
+			GenerateDescription("- can get slowed by cobwebs on the ground"),
+			BREAK_LINE,
+			{str = "tainted arachna", fsize = 2},
+			GenerateDescription("- +1 guaranteed spider spawn from spider eggs instead of increased chance of spawning larger spiders"),
+			GenerateDescription("- can obtain random spider colors from spider eggs"),
+			GenerateDescription("- spider eggs break after 16 seconds, yeilding no rewards"),
+			GenerateDescription("- all spider eggs are the default color. no special color spider eggs can spawn"),
+			GenerateDescription("- removes double-tap action"),
+			GenerateDescription("- replaces pocket item with divine cloth"),
+			GenerateDescription("- 1.00 damage"),
+			GenerateDescription("- 0.75 speed"),
+			GenerateDescription("- can get slowed by cobwebs on the ground"),
+			BREAK_LINE,
+			{str = "arachna's spool/divine cloth", fsize = 2},
+			GenerateDescription("- decreases arachna's spool tear's collission radius by half"),
+			GenerateDescription("- arachna's spool's web no longer reduces knockback to enemies"),
+			GenerateDescription("- arachna's spool's web affects enemies that are above pits"),
+			GenerateDescription("- if arachna's spool's tear kills an enemy, it will not count as them being webbed to spawn a spider egg"),
+			GenerateDescription("- decreases recharge time of both items to 3 seconds"),
+			GenerateDescription("- how many spiders spawn from spider eggs are influenced by the current stage and number of web hearts"),
+			GenerateDescription("- bosses, enemies with a max hp below 10, or enemies spawned by other enemies no longer drop spider eggs or spiders"),
+			GenerateDescription("- bosses are immune to the webbed and spider bitten status effects"),
+			GenerateDescription("- decreases divine cloth's radius by -25%"),
+			GenerateDescription("- spider eggs no longer explode on challenge/boss rush wave clears"),
+			GenerateDescription("- adjusts logic for determining chances for spiders to spawn")
+		}
 	}
 }
 

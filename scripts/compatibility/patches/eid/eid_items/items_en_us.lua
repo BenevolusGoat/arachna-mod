@@ -69,15 +69,24 @@ return function(modifiers)
 				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders and resets the meter",
+				"#{{Timer}} Spider Eggs break on their own after 10 seconds, spawning nothing",
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies, {{Slow}} slowing and causing them to drop a spider egg on death",
+				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies. They will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{Timer}} Spider Eggs break on their own after 16 seconds, spawning nothing",
-				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
+				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns a spider egg and resets the meter",
+				"#Spider Eggs can spawn with a {{ColorRainbow}}special{{CR}} color. All spiders hatched from these eggs will be the same matching color, having unique effects",
+			}
+		},
+		[Item.GRAB.ID] = {
+			Name = "Grab (placeholder!)",
+			Description = {
+				"{{Throwable}} Grab and throw spider eggs spawned by enemies",
+				"#Thrown spider eggs hatch into half of the amount of spiders they normally spawn",
+				"#Triggers {{ColorRainbow}}special{{CR}} effects depending on the color of the egg when landing on the ground or hitting an enemy"
 			}
 		},
 		[Item.YARN.ID] = {
