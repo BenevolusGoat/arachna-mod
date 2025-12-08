@@ -131,6 +131,7 @@ function ARACHNA:IgnoreCobwebSlow(statusID, ent, source, duration)
 	local player = ent:ToPlayer()
 	if player
 		and Mod:IsAnyArachna(player)
+		and not Mod:IsLegacyGameplayEnabled()
 		and source.Type == 0 --If it came from nothing, best we can assume is cobweb. Otherwise...oh well!
 	then
 		return false
