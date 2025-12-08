@@ -45,8 +45,6 @@ COLORED_SPIDERS.ShinySubtypes = Mod:Set({
 
 COLORED_SPIDERS.COLORED_SPIDER_CHANCE = 0.35
 COLORED_SPIDERS.BIG_SPIDER_CHANCE = 0.2
-COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY = 25
-COLORED_SPIDERS.DEFAULT_BIG_SPIDER_WEIGHT_LEGACY = 4
 
 local WOP = WeightedOutcomePicker()
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 2)
@@ -61,7 +59,7 @@ WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 3)
 
 --For legacy gameplay
 local WOP_LEGACY = WeightedOutcomePicker()
-WOP_LEGACY:AddOutcomeWeight(0, COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY)
+WOP_LEGACY:AddOutcomeWeight(0, 25)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 4)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE, 5)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE, 5)
@@ -79,7 +77,7 @@ for _, wopOutcome in ipairs(WOP_LEGACY:GetOutcomes()) do
 		WOP_BIG_LEGACY:AddOutcomeWeight(wopOutcome.Value, wopOutcome.Weight)
 	end
 end
-WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, COLORED_SPIDERS.DEFAULT_BIG_SPIDER_WEIGHT_LEGACY)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
@@ -145,9 +143,9 @@ local function legacyRandomSpider(bigSpider, onlyColor)
 			wop:RemoveOutcome(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG)
 		end
 		randomSpiderSubtype = wop:PickOutcome(rng)
-		wop:AddOutcomeWeight(0, COLORED_SPIDERS.DEFAULT_SPIDER_WEIGHT_LEGACY)
+		wop:AddOutcomeWeight(0, 25)
 		if bigSpider then
-			wop:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, COLORED_SPIDERS.DEFAULT_BIG_SPIDER_WEIGHT_LEGACY)
+			wop:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
 		end
 	else
 		randomSpiderSubtype = wop:PickOutcome(rng)

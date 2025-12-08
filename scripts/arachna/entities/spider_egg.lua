@@ -16,7 +16,6 @@ SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE = 0.05
 SPIDER_EGG.RARE_SPRITE_CHANCE = 0.001
 
 SPIDER_EGG.MAX_EGG_TIMEOUT = 30 * 10 --10 seconds
-SPIDER_EGG.MAX_EGG_TIMEOUT_LEGACY = 600 --16.6 seconds
 
 ---@enum SpiderEggFlag
 SPIDER_EGG.EggFlag = {
@@ -153,7 +152,7 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 	local egg = Mod.Spawn.Effect(SPIDER_EGG.ID, spiderColor, pos, nil, player)
 	Mod:GetData(egg).EggFlags = eggFlags
 	if Mod.Character.ARACHNA_B:IsArachnaB(player) and isLegacy then
-		egg:SetTimeout(SPIDER_EGG.MAX_EGG_TIMEOUT_LEGACY)
+		egg:SetTimeout(600)
 	elseif Mod.Character.ARACHNA:IsArachna(player) then
 		egg:SetTimeout(SPIDER_EGG.MAX_EGG_TIMEOUT)
 	end

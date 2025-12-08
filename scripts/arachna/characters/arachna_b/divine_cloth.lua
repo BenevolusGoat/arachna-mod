@@ -15,9 +15,6 @@ DIVINE_CLOTH.DIVINE_WEB_VAR = Isaac.GetEntityVariantByName("Divine Web")
 DIVINE_CLOTH.DIVINE_WEB_SUB = Isaac.GetEntitySubTypeByName("Divine Web")
 
 DIVINE_CLOTH.BITE_DURATION = 200
-DIVINE_CLOTH.BITE_DURATION_BIRTHRIGHT = 250
-DIVINE_CLOTH.TIMER_HEAL = 100
-DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT = 30
 
 local identifier = "ARACHNA_BITTEN"
 local statusSprite = Sprite("gfx/indicator_arachna_b.anm2", false)
@@ -50,7 +47,7 @@ local function legacyEggInteraction(pos, size)
 		shouldPlayGood = true
 		if egg.Timeout > 0 then
 			egg:SetTimeout(Mod.math.min(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT,
-				egg.Timeout + DIVINE_CLOTH.TIMER_HEAL))
+				egg.Timeout + 100))
 		end
 		Mod.Spawn.Notification(egg.Position, 0)
 	end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
@@ -69,7 +66,7 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 	if not legacy or Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
 		if legacy then
 			spriteSize = 1.2
-			size = size + DIVINE_CLOTH.RADIUS_EXTENTION_BIRTHRIGHT
+			size = size + 30
 			legacyEggInteraction(player.Position, size)
 		end
 	end
@@ -114,6 +111,9 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 	end
 	local duration = DIVINE_CLOTH.BITE_DURATION
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
+	if Mod:IsLegacyGameplayEnabled() and player and Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
+		duration = 250
+	end
 	local source = player and EntityRef(player) or EntityRef(web)
 
 	Mod.Foreach.NPCInRadius(web.Position, web.Size, function(npc, index)
