@@ -69,15 +69,24 @@ return function(modifiers)
 				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders and resets the meter",
+				"#{{Timer}} Spider Eggs break on their own after 10 seconds, spawning nothing",
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies, {{Slow}} slowing and causing them to drop a spider egg on death",
+				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies. They will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{Timer}} Spider Eggs break on their own after 16 seconds, spawning nothing",
-				"#No effect on bosses, enemies with starting HP below 10, or enemies spawned by other enemies",
+				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns a spider egg and resets the meter",
+				"#Spider Eggs can spawn with a {{ColorRainbow}}special{{CR}} color. All spiders hatched from these eggs will be the same matching color, having unique effects",
+			}
+		},
+		[Item.GRAB.ID] = {
+			Name = "Grab (placeholder!)",
+			Description = {
+				"{{Throwable}} Grab and throw spider eggs spawned by enemies",
+				"#Thrown spider eggs hatch into half of the amount of spiders they normally spawn",
+				"#Triggers {{ColorRainbow}}special{{CR}} effects depending on the color of the egg when landing on the ground or hitting an enemy"
 			}
 		},
 		[Item.YARN.ID] = {
@@ -123,7 +132,14 @@ return function(modifiers)
 		[Item.GEPTAMERON.ID] = {
 			Name = "Getameron",
 			Description = {
-				"???"
+				"Triggers an effect based on the indicator on the item:",
+				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" .. CollectibleType.COLLECTIBLE_DADS_KEY .. "}}",
+				"#{{2}} Spawns temporary friendly companions that chase enemies. May leave 1 {{RottenHeart}} on death",
+				"#{{3}} 50% chance to {{Charm}} charm all enemies or have them spawn 3 {{Trinket" .. TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} locusts on death",
+				"#{{4}} Gain 2 {{Collectible" .. CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantle}} mantle shield for the room",
+				"#{{5}} All enemies in the room will drop {{Coin}} disappearing coins on death",
+				"#{{6}} Missiles rain down in random locations for 10 seconds",
+				"#{{7}} 1-3 enemies marked to drop a random disappearing pickup on death, which passes the mark to another enemy"
 			}
 		},
 		[Item.GLASSES_3D.ID] = {
@@ -172,7 +188,11 @@ return function(modifiers)
 		[Item.BEST_BUD_BALL.ID] = {
 			Name = "Best Bud Ball",
 			Description = {
-				"???"
+				"{{Throwable}} Can be thrown at bosses in an attempt to capture them",
+				"#{{Luck}} Chances of catching scales with boss' health and Isaac's luck",
+				"#{{Friendly}} Using the item after successfully capturing a boss spawns the capture as a friendly companion",
+				"#Walking over the ball after a capture instantly recharges the item",
+				"#!!! Only one boss can be active at a time"
 			}
 		},
 	}

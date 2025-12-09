@@ -18,6 +18,7 @@ return function(modifiers)
 				"#Not affected by cowbebs",
 				"#{{WebHeart}} Health ups grant Web Hearts",
 				"#↑ {{AracBlueSpider}} Chance of Spider Eggs hatching larger spiders, having more powerful effects and splitting into 2 smaller spiders on death",
+				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{Slow}} slowing enemies and having them drop spider eggs on death"
 			}
 		},
 	}

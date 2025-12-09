@@ -9,7 +9,6 @@ return function(modifiers)
 				"#Not affected by cowbebs",
 				"#{{WebHeart}} Health ups grant Web Hearts",
 				"#Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}}, having unique effects",
-				"#{{WebHeart}} Killing a Webbed boss will replace its heart drop with a Web Heart",
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
@@ -18,9 +17,8 @@ return function(modifiers)
 				"Can't have Red Hearts",
 				"#Not affected by cowbebs",
 				"#{{WebHeart}} Health ups grant Web Hearts",
-				"Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}} and/or larger, having unique effects",
-				"#↑ {{AracBlueSpider}} Increased chance of Spider Eggs hatching larger spiders",
-				"#{{WebHeart}} Killing a Webbed Boss will replace its heart drop with a Web Heart",
+				"#↑ {{AracBlueSpider}} Chance of Spider Eggs hatching larger spiders, having more powerful effects and splitting into 2 smaller spiders on death",
+				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{Slow}} slowing enemies and having them drop spider eggs on death"
 			}
 		},
 	}
