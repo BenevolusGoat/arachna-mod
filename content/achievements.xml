@@ -39,13 +39,13 @@
 	<achievement name="Golden Shopkeepers" gfx="achievement_golden_shopkeepers.png" />
 	<achievement name="Mutagen" gfx="achievement_mutagen.png" />
 	<achievement name="Yarn Heart" gfx="achievement_yarn_heart.png" />
-	<achievement name="Testament" gfx="achievement_testament.png" />
+	<achievement name="The Testament" gfx="achievement_testament.png" />
 	<achievement name="Lil Arachna" gfx="achievement_lil_arachna.png" />
 	<achievement name="The Wretched" gfx="achievement_arachna_b.png" />
 
 	<!-- Tainted Arachna Unlocks -->
 	<achievement name="Soul of Arachna" gfx="achievement_soul_of_arachna.png" />
-	<achievement name="Sprindle" gfx="achievement_sprindle.png" />
+	<achievement name="Spindle" gfx="achievement_spindle.png" />
 	<achievement name="Spider Beggar" gfx="achievement_spider_beggar.png" />
 	<achievement name="Merged Card" gfx="achievement_merged_card.png" />
 	<achievement name="Divine Cloth" gfx="achievement_divine_cloth.png" />

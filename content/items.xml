@@ -11,7 +11,7 @@
 	<passive id="7" name="Mechanical Eye" description="Active expansion" achievement="Mechanical Eye" gfx="mechanical-eye.png" cache="familiars" tags="tech" quality="3"/>
 	<passive id="8" name="Arachnid's Grip" description="Infested!" achievement="Arachnid's Grip" gfx="arachnid-grips.png" tags="spider" quality="3"/> <!-- ::::) -->
 	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" achievement="Dad's Newspaper" gfx="dads-newspaper.png" quality="3"/>
-	<active id="10" name="Testament" description="Leave the inheritance for your descendants" achievement="Testament" gfx="lastwill.png" maxcharges="0" tags="nochallenge noeden" quality="4" cooldown="20" persistent="true"/>
+	<active id="10" name="The Testament" description="Leave the inheritance for your descendants" achievement="The Testament" gfx="lastwill.png" maxcharges="0" tags="nochallenge noeden" quality="4" cooldown="20" persistent="true"/>
 	<active id="11" name="Geptameron" description="Ever changing holy tome" achievement="Geptameron" gfx="geptameron.png" maxcharges="4" tags="book" quality="3" />
 	<passive id="12" name="3D Glasses" description="I'm seeing double..." achievement="3D Glasses" gfx="3dglasses.png" quality="2"/>
 	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4"
@@ -25,7 +25,7 @@
 
 	<!--TRINKETS-->
 	<trinket name="White String" description="Spider's little gift" achievement="White String" gfx="white-string.png" />
-	<trinket name="Sprindle" description="Ouch!" achievement="Sprindle" gfx="sprindle.png"/>
+	<trinket name="Spindle" description="Ouch!" achievement="Spindle" gfx="spindle.png"/>
 	<trinket name="Infested Penny" description="Wealth of spiders" achievement="Infested Penny" gfx="infested-penny.png"/>
 
 	<!-- NULL ITEMS -->

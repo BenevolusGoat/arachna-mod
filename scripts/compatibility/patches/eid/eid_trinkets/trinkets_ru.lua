@@ -16,8 +16,8 @@ return function(modifiers)
 				end
 			},
 		},
-		[Trinket.SPRINDLE.ID] = {
-			Name = "Sprindle",
+		[Trinket.SPINDLE.ID] = {
+			Name = "Spindle",
 			Description = {
 				"{{StatusSpiderBite}} Touching enemies inflicts them with Spider Bite, spawning Spider Eggs on death",
 				"#{{Timer}} Spider Eggs drop nothing after 16 seconds or {{ColorRainbow}}special{{CR}} friendly spiders on room clear",

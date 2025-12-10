@@ -158,7 +158,7 @@ return function(modifiers)
 			}
 		},
 		[Item.TESTAMENT.ID] = {
-			Name = "Testament",
+			Name = "The Testament",
 			Description = {
 				"Teleports Isaac to a floor that contains all his current items",
 				"#Choosing an item from this floor teleports Isaac back to the room he came from",

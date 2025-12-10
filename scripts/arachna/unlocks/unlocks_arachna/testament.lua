@@ -6,7 +6,7 @@ local TESTAMENT = {}
 
 ARACHNAMOD.Item.TESTAMENT = TESTAMENT
 
-TESTAMENT.ID = Isaac.GetItemIdByName("Testament")
+TESTAMENT.ID = Isaac.GetItemIdByName("The Testament")
 
 TESTAMENT.SPAWNER_ID = Isaac.GetEntityTypeByName("Testament Spawner")
 TESTAMENT.SPAWNER_VAR = Isaac.GetEntityVariantByName("Testament Spawner")

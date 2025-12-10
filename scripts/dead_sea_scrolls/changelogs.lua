@@ -44,9 +44,9 @@ local function WrapPatchNotes(str)
 end
 
 DeadSeaScrollsMenu.AddChangelog(
-"Arachna",
-"Version 2",
-WrapPatchNotes([[MM/DD/YYYY
+	"Arachna",
+	"Version 2",
+	WrapPatchNotes([[MM/DD/YYYY
 
 #2.0.0 (??/??/2025)
 
@@ -165,7 +165,7 @@ Other:
 ## MOD COMPATIBILITY
 - Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs
 - Updated all English EID descriptions. Previous translations will need to be re-implemented! You can go to the GitHub repository and make a fork in order to submit a PR with your translations
-- Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Sprindle now correctly mentions this effect
+- Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Spindle now correctly mentions this effect
 - Added mod icon for EID
 - Moved Merged Card's EID description into a unique "TAB description", where you can expand the list of effects separated by pages
 - Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
@@ -183,13 +183,15 @@ Important changes for modders to be aware of for updating compatibility with Ara
 - Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant
 - Best Bud Ball's effect variant is now a unique number instead of being a subtype of Friendly Ball
 - The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON, named "spiderBeggar"
-- Completion marks and achievements for Arachna MOD's content are now deleted when the save file is deleted]])
+- Completion marks and achievements for Arachna MOD's content are now deleted when the save file is deleted
+- "Testament" renamed to "The Testament"
+- "Sprindle" renamed to "Spindle"]])
 )
 
 DeadSeaScrollsMenu.AddChangelog(
-"Arachna",
-"Version 1",
-WrapPatchNotes([[MM/DD/YYYY
+	"Arachna",
+	"Version 1",
+	WrapPatchNotes([[MM/DD/YYYY
 
 #1.5.3 (08/03/2022)
 

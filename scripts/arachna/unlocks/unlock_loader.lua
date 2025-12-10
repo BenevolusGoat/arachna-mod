@@ -32,7 +32,7 @@ local arachna_b = {
 	"merged_card_reversed",
 	"soul_of_arachna",
 	"spider_beggar",
-	"sprindle"
+	"spindle"
 }
 
 Mod.LoopInclude(arachna_b, prefix .. "arachna_b")

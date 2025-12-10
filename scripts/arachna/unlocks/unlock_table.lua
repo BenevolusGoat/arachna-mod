@@ -32,7 +32,7 @@ ARACHNAMOD.Item.ARACHNIDS_GRIP.ACHIEVEMENT = achievement("Arachnid's Grip")
 ARACHNAMOD.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT = achievement("Golden Shopkeepers")
 ARACHNAMOD.Item.MUTAGEN.ACHIEVEMENT = achievement("Mutagen")
 ARACHNAMOD.Item.YARN_HEART.ACHIEVEMENT = achievement("Yarn Heart")
-ARACHNAMOD.Item.TESTAMENT.ACHIEVEMENT = achievement("Testament")
+ARACHNAMOD.Item.TESTAMENT.ACHIEVEMENT = achievement("The Testament")
 ARACHNAMOD.Item.LIL_ARACHNA.ACHIEVEMENT = achievement("Lil Arachna")
 ARACHNAMOD.Character.ARACHNA_B.ACHIEVEMENT = achievement("The Wretched")
 
@@ -60,7 +60,7 @@ ARACHNAMOD.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA] = Mod.CompletionM
 --#region Tainted Arachna
 
 ARACHNAMOD.Card.SOUL_OF_ARACHNA.ACHIEVEMENT = achievement("Soul of Arachna")
-ARACHNAMOD.Trinket.SPRINDLE.ACHIEVEMENT = achievement("Sprindle")
+ARACHNAMOD.Trinket.SPINDLE.ACHIEVEMENT = achievement("Spindle")
 ARACHNAMOD.Slot.SPIDER_BEGGAR.ACHIEVEMENT = achievement("Spider Beggar")
 ARACHNAMOD.Card.MERGED_CARD.ACHIEVEMENT = achievement("Merged Card")
 ARACHNAMOD.Item.DIVINE_CLOTH.ACHIEVEMENT = achievement("Divine Cloth")
@@ -69,7 +69,7 @@ ARACHNAMOD.Item.BEST_BUD_BALL.ACHIEVEMENT = achievement("Best Bud Ball")
 
 ARACHNAMOD.CompletionMarkToAchievement.ARACHNA_B = {
 	[TaintedMarksGroup.SOULSTONE] = Mod.Card.SOUL_OF_ARACHNA.ACHIEVEMENT,
-	[TaintedMarksGroup.POLAROID_NEGATIVE] = Mod.Trinket.SPRINDLE.ACHIEVEMENT,
+	[TaintedMarksGroup.POLAROID_NEGATIVE] = Mod.Trinket.SPINDLE.ACHIEVEMENT,
 	[CompletionType.MEGA_SATAN] = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT,
 	[CompletionType.ULTRA_GREEDIER] = Mod.Card.MERGED_CARD.ACHIEVEMENT,
 	[CompletionType.DELIRIUM] = Mod.Item.DIVINE_CLOTH.ACHIEVEMENT,
@@ -83,8 +83,8 @@ ARACHNAMOD.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA_B] = Mod.Completio
 --#region Entity replacements
 
 Mod:RegisterReplacementEntity({
-	OldType = {EntityType.ENTITY_SLOT},
-	OldVariant = {SlotVariant.BEGGAR, SlotVariant.KEY_MASTER},
+	OldType = { EntityType.ENTITY_SLOT },
+	OldVariant = { SlotVariant.BEGGAR, SlotVariant.KEY_MASTER },
 	NewType = EntityType.ENTITY_SLOT,
 	NewVariant = Mod.Slot.SPIDER_BEGGAR.ID,
 	ReplacementChance = 0.2,
@@ -92,8 +92,8 @@ Mod:RegisterReplacementEntity({
 })
 
 Mod:RegisterReplacementEntity({
-	OldType = {EntityType.ENTITY_SHOPKEEPER},
-	OldVariant = {1, 2, 3, 4}, --Normal/Hanging Keepers and their Special variants
+	OldType = { EntityType.ENTITY_SHOPKEEPER },
+	OldVariant = { 1, 2, 3, 4 }, --Normal/Hanging Keepers and their Special variants
 	NewType = EntityType.ENTITY_SHOPKEEPER,
 	NewVariant = Mod.Entities.GOLDEN_SHOPKEEPER.ID,
 	ReplacementChance = 0.2,
@@ -101,18 +101,18 @@ Mod:RegisterReplacementEntity({
 })
 
 Mod:RegisterReplacementPickup({
-	OldVariant = {PickupVariant.PICKUP_HEART},
-	OldSubtype = {HeartSubType.HEART_BLACK, HeartSubType.HEART_BLENDED, HeartSubType.HEART_BONE, HeartSubType.HEART_ROTTEN},
+	OldVariant = { PickupVariant.PICKUP_HEART },
+	OldSubtype = { HeartSubType.HEART_BLACK, HeartSubType.HEART_BLENDED, HeartSubType.HEART_BONE, HeartSubType.HEART_ROTTEN },
 	NewVariant = PickupVariant.PICKUP_HEART,
-	NewSubtype = function (rng, subtype)
+	NewSubtype = function(rng, subtype)
 		if rng:RandomFloat() < 0.05 then
 			return Mod.Pickup.WEB_HEART.ID_DOUBLE
 		else
 			return Mod.Pickup.WEB_HEART.ID
 		end
 	end,
-	ReplacementChance = function ()
-		if PlayerManager.AnyoneHasTrinket(Mod.Trinket.SPRINDLE.ID) then
+	ReplacementChance = function()
+		if PlayerManager.AnyoneHasTrinket(Mod.Trinket.SPINDLE.ID) then
 			return 0.3
 		else
 			return 0.2
@@ -141,9 +141,10 @@ end
 local rootCommand = "arachnaMod"
 
 local commands = {
-	{"unlocktainted", "Unlocks Tainted Arachna", function() Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT) end},
-	{"unlockall", "Unlocks all mod achievements", function() manageAchievements(true) end},
-	{"lockall", "Locks all mod achievements", function() manageAchievements(false) end},
+	{ "unlocktainted", "Unlocks Tainted Arachna",      function() Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B
+		.ACHIEVEMENT) end },
+	{ "unlockall",     "Unlocks all mod achievements", function() manageAchievements(true) end },
+	{ "lockall",       "Locks all mod achievements",   function() manageAchievements(false) end },
 }
 
 Console.RegisterCommand(
@@ -165,7 +166,7 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 	end
 end)
 
-Mod:AddCallback(ModCallbacks.MC_CONSOLE_AUTOCOMPLETE, function (command, params)
+Mod:AddCallback(ModCallbacks.MC_CONSOLE_AUTOCOMPLETE, function(command, params)
 	return commands
 end, rootCommand)
 
