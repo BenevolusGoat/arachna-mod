@@ -89,29 +89,6 @@ end
 
 --#region CustomHealthAPI
 
-CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH,
-	CustomHealthAPI.Enums.CallbackPriorities.EARLY,
-	function(player, key, hp)
-		local web_key = WEB_HEART.KEY
-		--In case the incorrect heart is added
-		if Mod:IsAnyArachna(player)
-			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
-			and CustomHealthAPI.Library.GetInfoOfKey(key, "KindContained") ~= CustomHealthAPI.Enums.HealthKinds.NONE
-		then
-			Mod.Foreach.Pickup(function (pickup, index)
-				WEB_HEART:UpdateDevilSprite(pickup)
-			end, PickupVariant.PICKUP_COLLECTIBLE)
-			--Empty Heart to Web Heart conversion
-			--[[ if CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0 then
-				local hpToAdd = math.ceil(hp)
-				if CustomHealthAPI.PersistentData.HealthDefinitions[key].CanHaveHalfCapacity then
-					hpToAdd = math.ceil(hpToAdd / 2)
-				end
-				return web_key, hpToAdd
-			end ]]
-		end
-	end)
-
 CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0,
 	function(player, index, health)
 		if health.Key == WEB_HEART.KEY then
@@ -356,15 +333,64 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.PotatoPeelerUse, Collectible
 
 --#endregion
 
---#region Devil Deals (Purely visual)
+--#region Devil Deals
 
-local SUPPORTED_VISUALS = Mod:Set({
+local SUPPORTED_PRICES = Mod:Set({
 	PickupPrice.PRICE_ONE_HEART,
 	PickupPrice.PRICE_ONE_HEART_AND_ONE_SOUL_HEART,
 	PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS,
 	PickupPrice.PRICE_TWO_HEARTS
 })
 
+---@param pickup EntityPickup
+function WEB_HEART:ForcePrice(pickup)
+	if pickup.Price == PickupPrice.PRICE_THREE_SOULHEARTS
+		and pickup.AutoUpdatePrice
+		and WEB_HEART:AnyArachanaHasWebHearts()
+	then
+		local price = Mod.Room():GetShopItemPrice(pickup.Variant, pickup.SubType, pickup.ShopItemId)
+		if SUPPORTED_PRICES[price] then
+			pickup.Price = price
+			pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/price_web.png", true)
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.ForcePrice, PickupVariant.PICKUP_COLLECTIBLE)
+
+---@param pickup EntityPickup
+---@param player EntityPlayer
+function WEB_HEART:TryPayWebHeartPrice(pickup, player)
+	local webHearts = WEB_HEART:GetWebHearts(player)
+	local webHeartRequirement = 1
+	local price = pickup.Price
+	if price == PickupPrice.PRICE_TWO_HEARTS then
+		webHeartRequirement = 2
+	end
+	if webHearts < webHeartRequirement then
+		return false
+	end
+	pickup.Price = PickupPrice.PRICE_FREE
+	WEB_HEART:AddWebHearts(player, -webHeartRequirement)
+end
+
+---@param pickup EntityPickup
+---@param collider Entity
+function WEB_HEART:OnDevilDealCollision(pickup, collider)
+	local player = collider:ToPlayer()
+	if player
+		and Mod:IsAnyArachna(player)
+		and SUPPORTED_PRICES[pickup.Price]
+		and player:CanPickupItem()
+		and player.ItemHoldCooldown == 0
+		and player:IsExtraAnimationFinished()
+	then
+		WEB_HEART:TryPayWebHeartPrice(pickup, player)
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, CallbackPriority.LATE, WEB_HEART.OnDevilDealCollision, PickupVariant.PICKUP_COLLECTIBLE)
+--[[
 ---@param pickup EntityPickup
 function WEB_HEART:UpdateDevilSprite(pickup)
 	if not pickup:IsShopItem() or pickup.Price >= 0 then return end
@@ -376,7 +402,7 @@ function WEB_HEART:UpdateDevilSprite(pickup)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_RENDER, WEB_HEART.UpdateDevilSprite, PickupVariant.PICKUP_COLLECTIBLE)
+Mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_RENDER, WEB_HEART.UpdateDevilSprite, PickupVariant.PICKUP_COLLECTIBLE) ]]
 
 --#endregion
 

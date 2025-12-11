@@ -52,21 +52,9 @@ function ARACHNAMOD:PickupShopKill(player, pickup, sound)
 	local game = Mod.Game
 	local room = game:GetRoom()
 
-	if game:IsGreedMode() and room:GetType() == RoomType.ROOM_SHOP then
-		local pickupvariant = pickup.Variant
-		local pickupsubtype = pickup.SubType
-		local pickupposition = pickup.Position
-		local pickupprice = pickup.Price
-		local shopid = pickup.ShopItemId
-		Isaac.CreateTimer(function()
-			local NewPickup = Isaac.Spawn(EntityType.ENTITY_PICKUP, pickupvariant, pickupsubtype, pickupposition,
-					Vector.Zero, nil)
-				:ToPickup()
-			Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, 0, pickupposition, Vector.Zero, NewPickup)
-			NewPickup.Price = pickupprice
-			NewPickup.ShopItemId = shopid
-		end, 10, 1, true)
-	elseif player:HasCollectible(CollectibleType.COLLECTIBLE_RESTOCK) and (room:GetType() == RoomType.ROOM_SHOP or room:GetType() == RoomType.ROOM_BLACK_MARKET) then
+	if player:HasCollectible(CollectibleType.COLLECTIBLE_RESTOCK) and (room:GetType() == RoomType.ROOM_SHOP or room:GetType() == RoomType.ROOM_BLACK_MARKET)
+		or game:IsGreedMode() and room:GetType() == RoomType.ROOM_SHOP
+	then
 		CustomHealthAPI.Library.TriggerRestock(pickup)
 	end
 	pickup:Remove()
