@@ -7,7 +7,7 @@ ARACHNAMOD.Character.ARACHNA_B = ARACHNA_B
 Mod.Include("scripts.arachna.characters.arachna_b.divine_cloth")
 Mod.Include("scripts.arachna.characters.arachna_b.grab")
 
-CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
+CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA_B] = true
 
 ARACHNA_B.DIVINE_CLOTH_COOLDOWN = 60 * 6 --6 seconds

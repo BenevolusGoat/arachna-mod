@@ -123,7 +123,7 @@ function ARACHNAMOD:EveryoneIsArachna()
 	end
 end
 
-function ARACHNAMOD:SomeoneIsArachna()
+function ARACHNAMOD:AnyoneIsArachna()
 	return PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA) or PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA_B)
 end
 

@@ -11,7 +11,6 @@ WEB_HEART.ID_DOUBLE = Isaac.GetEntitySubTypeByName("Web Heart (Double)")
 WEB_HEART.CLOT_FAMILIAR = Isaac.GetEntitySubTypeByName("Web Heart Baby")
 WEB_HEART.PICKUP_SFX = SoundEffect.SOUND_SPIDER_SPIT_ROAR
 WEB_HEART.KEY = "WEB_HEART"
-WEB_HEART.KEY_ARACHNA = "WEB_HEART_ARACHNA"
 
 WEB_HEART.HeartsToReplace = Mod:Set({
 	HeartSubType.HEART_ETERNAL,
@@ -19,18 +18,14 @@ WEB_HEART.HeartsToReplace = Mod:Set({
 	HeartSubType.HEART_ROTTEN
 })
 
---For modded characters
-WEB_HEART.KeeperCharacters = {}
-
 local webHeartUI = Sprite()
 webHeartUI:Load("gfx/web_heart_ui.anm2", true)
 
-local SORT_ORDER_BONE = 50
-local SORT_ORDER_SOUL = 100
-
-local WEB_HEART_BASE = {
+CustomHealthAPI.Library.RegisterSoulHealth(WEB_HEART.KEY, {
+	SortOrder = 90,
+	AddPriority = 125,
 	AnimationFilename = "gfx/web_heart_ui.anm2",
-	AnimationName = "UI",
+	AnimationName = {"UI"},
 	HealFlashRO = 240 / 255,
 	HealFlashGO = 240 / 255,
 	HealFlashBO = 240 / 255,
@@ -51,21 +46,7 @@ local WEB_HEART_BASE = {
 		Pitch = 1.0,
 		Pan = 0
 	}
-}
-
-local WEB_HEART_BONE = Mod:CopyTable(WEB_HEART_BASE)
-WEB_HEART_BONE.SortOrder = SORT_ORDER_BONE
-WEB_HEART_BONE.AddPriority = 0
-WEB_HEART_BONE.RemovePriority = 110
-WEB_HEART_BONE.ProtectsDealChance = false
-WEB_HEART_BONE.CanHaveHalfCapacity = false
-CustomHealthAPI.Library.RegisterHealthContainer(WEB_HEART.KEY_ARACHNA, WEB_HEART_BONE)
-
-local WEB_HEART_SOUL = Mod:CopyTable(WEB_HEART_BASE)
-WEB_HEART_SOUL.SortOrder = SORT_ORDER_SOUL
-WEB_HEART_SOUL.AddPriority = 125
-WEB_HEART_SOUL.AnimationName = { WEB_HEART_SOUL.AnimationName }
-CustomHealthAPI.Library.RegisterSoulHealth(WEB_HEART.KEY, WEB_HEART_SOUL)
+})
 
 local NO_PENTALTY_FLAGS = DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_FAKE | DamageFlag.DAMAGE_NO_PENALTIES
 
@@ -73,45 +54,35 @@ local NO_PENTALTY_FLAGS = DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_FAKE 
 
 --#region Helpers
 
----@param key string
-function WEB_HEART:IsWebHeart(key)
-	return key == WEB_HEART.KEY or key == WEB_HEART.KEY_ARACHNA
-end
-
----@param player EntityPlayer
-function WEB_HEART:GetKey(player)
-	local key = WEB_HEART.KEY
-	if Mod:IsAnyArachna(player) then
-		key = WEB_HEART.KEY_ARACHNA
-	end
-	return key
-end
-
 ---@param player EntityPlayer
 ---@param amount integer
 function WEB_HEART:AddWebHearts(player, amount)
-	local key = WEB_HEART:GetKey(player)
-	if key == WEB_HEART.KEY then
-		amount = Mod.math.floor(amount * 2)
-	end
-	CustomHealthAPI.Library.AddHealth(player, key, amount, false, false)
+	amount = Mod.math.floor(amount * 2)
+	CustomHealthAPI.Library.AddHealth(player, WEB_HEART.KEY, amount, false, false)
 end
 
 ---@param player EntityPlayer
 ---@return boolean
 function WEB_HEART:CanPickup(player)
-	return CustomHealthAPI.Library.CanPickKey(player, WEB_HEART:GetKey(player))
+	return CustomHealthAPI.Library.CanPickKey(player, WEB_HEART.KEY)
 end
 
 ---@param player EntityPlayer
 ---@return integer
 function WEB_HEART:GetWebHearts(player)
-	local key = WEB_HEART:GetKey(player)
+	local key = WEB_HEART.KEY
 	local amount = CustomHealthAPI.Library.GetHPOfKey(player, key, nil, nil, true)
-	if key == WEB_HEART.KEY then
-		amount = Mod.math.ceil(amount / 2)
-	end
+	amount = Mod.math.ceil(amount / 2)
 	return amount
+end
+
+---@return EntityPlayer?
+function WEB_HEART:AnyArachanaHasWebHearts()
+	return Mod.Foreach.Player(function (player, index)
+		if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) > 0 then
+			return player
+		end
+	end)
 end
 
 --#endregion
@@ -121,17 +92,9 @@ end
 CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH,
 	CustomHealthAPI.Enums.CallbackPriorities.EARLY,
 	function(player, key, hp)
-		local expectedKey = WEB_HEART:GetKey(player)
+		local web_key = WEB_HEART.KEY
 		--In case the incorrect heart is added
-		if WEB_HEART:IsWebHeart(key) and key ~= expectedKey and hp > 0 then
-			if expectedKey == WEB_HEART.KEY then
-				hp = Mod.math.floor(hp * 2)
-			else
-				hp = Mod.math.ceil(hp / 2)
-			end
-			return expectedKey, hp
-			--Manually handle max HP so its identical to Forgor, 2:1 ratio of hearts
-		elseif Mod:IsAnyArachna(player)
+		if Mod:IsAnyArachna(player)
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "Type") == CustomHealthAPI.Enums.HealthTypes.CONTAINER
 			and CustomHealthAPI.Library.GetInfoOfKey(key, "KindContained") ~= CustomHealthAPI.Enums.HealthKinds.NONE
 		then
@@ -139,20 +102,13 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 				WEB_HEART:UpdateDevilSprite(pickup)
 			end, PickupVariant.PICKUP_COLLECTIBLE)
 			--Empty Heart to Web Heart conversion
-			if CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0 then
+			--[[ if CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP") <= 0 then
 				local hpToAdd = math.ceil(hp)
 				if CustomHealthAPI.PersistentData.HealthDefinitions[key].CanHaveHalfCapacity then
 					hpToAdd = math.ceil(hpToAdd / 2)
 				end
-				return WEB_HEART.KEY_ARACHNA, hpToAdd
-			elseif key == "BONE_HEART" then
-				--Removing Bone Hearts removes Web Hearts instead. For devil deals
-				--Also for continuing a run
-				if hp < 0 or player.FrameCount == 0 then
-					return expectedKey, hp
-				--No bone hearts allowed otherwise
-				end
-			end
+				return web_key, hpToAdd
+			end ]]
 		end
 	end)
 
@@ -166,41 +122,28 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 	end)
 
 CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_HEALTH_DAMAGED,
-	CustomHealthAPI.Enums.CallbackPriorities.LATE,
+	CustomHealthAPI.Enums.CallbackPriorities.EARLY,
 	---@param player EntityPlayer
 	function(player, flags, _, _, key, hp, hpToRemove)
-		if WEB_HEART:IsWebHeart(key) and hpToRemove >= hp then
+		if key == WEB_HEART.KEY and hpToRemove >= hp then
 			local numGoldens = CustomHealthAPI.Library.GetHPOfKey(player, "GOLDEN_HEART", nil, nil, true)
 			local data = Mod:GetData(player)
-			if numGoldens > 0 and not data.GoldenHeartsPreDamage then
-				data.GoldenHeartsPreDamage = Mod.math.min(numGoldens, WEB_HEART:GetWebHearts(player))
-				Isaac.CreateTimer(function() Mod:GetData(player).GoldenHeartsPreDamage = nil end, 1, 1, true)
+			if numGoldens > 0 and not data.HadGoldenWebHeart then
+				data.HadGoldenWebHeart = true
+				Isaac.CreateTimer(function() Mod:GetData(player).HadGoldenWebHeart = nil end, 1, 1, true)
 			end
-			--[[ if key == WEB_HEART.KEY_ARACHNA and hpToRemove > 1 and not Mod:IsLegacyGameplayEnabled() then
-				for i = 1, hpToRemove do
-					player:TakeDamage(1, flags | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), 0)
-					if WEB_HEART:GetWebHearts(player) == 0 then
-						break
-					end
-					player:ResetDamageCooldown()
-				end
-				return true
-			end ]]
+			return 1
 		end
 	end)
 
 CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_HEALTH_DAMAGED, 0,
 	---@param player EntityPlayer
 	function(player, flags, key, hpDamaged, wasDepleted, wasLastDamaged)
-		if WEB_HEART:IsWebHeart(key) and wasDepleted then
+		if key == WEB_HEART.KEY and wasDepleted then
 			local spiderType = 0
 			local data = Mod:GetData(player)
-			if data.GoldenHeartsPreDamage then
+			if data.HadGoldenWebHeart then
 				spiderType = Mod.Entities.COLORED_SPIDERS.SpiderSubtype.GOLDEN
-				data.GoldenHeartsPreDamage = data.GoldenHeartsPreDamage - 1
-				if data.GoldenHeartsPreDamage <= 0 then
-					data.GoldenHeartsPreDamage = nil
-				end
 			end
 			local rng = player:GetCollectibleRNG(Mod.Item.YARN_HEART.ID)
 			for i = 1, Mod:RandomNum(2, 6, rng) do
@@ -223,94 +166,6 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 		end
 	end)
 
-	---@param player EntityPlayer
-	---@param index integer
-	---@param key string
-	---@return table
-	local function forceConvertOtherKey(player, index, key)
-		local healthOrder = {}
-		local data = player:GetData().CustomHealthAPISavedata
-		local otherMasks = data.OtherHealthMasks
-		for i = 1, #otherMasks do
-			local mask = otherMasks[i]
-			for j = 1, #mask do
-				table.insert(healthOrder, {i, j})
-			end
-		end
-
-		if healthOrder[index] ~= nil then
-			local indices = healthOrder[index]
-			local health = otherMasks[indices[1]][indices[2]]
-			local convertedHP = health.HP
-			local maxHpOfKey = CustomHealthAPI.Library.GetInfoOfKey(key, "MaxHP")
-			local maskIndexOfKey = CustomHealthAPI.Library.GetInfoOfKey(key, "MaskIndex")
-
-			if CustomHealthAPI.Library.GetInfoOfHealth(health, "MaxHP") <= health.HP then
-				convertedHP = 2
-			end
-
-			local newHP
-			if maxHpOfKey <= 1 then
-				newHP = 1
-				convertedHP = convertedHP - 2
-			else
-			---@diagnostic disable-next-line: param-type-mismatch
-				newHP = math.min(maxHpOfKey, convertedHP)
-				convertedHP = convertedHP - newHP
-			end
-
-			local maskIndexOfHealth = CustomHealthAPI.Library.GetInfoOfHealth(health, "MaskIndex")
-			if maskIndexOfHealth < maskIndexOfKey then
-				table.remove(otherMasks[indices[1]], indices[2])
-				table.insert(otherMasks[maskIndexOfKey], 1, {Key = key, HP = newHP})
-			elseif maskIndexOfHealth == maskIndexOfKey then
-				health.Key = key
-				health.HP = newHP
-			else
-				table.remove(otherMasks[indices[1]], indices[2])
-				table.insert(otherMasks[maskIndexOfKey], {Key = key, HP = newHP})
-			end
-
-			if convertedHP > 0 then
-				CustomHealthAPI.Library.AddHealth(player, key, convertedHP)
-			end
-		end
-
-		while CustomHealthAPI.Helper.GetAmountUnoccupiedContainers(player) < 0 do
-			if not CustomHealthAPI.Helper.RemoveLowestPriorityRedKey(player, true) then
-				break
-			end
-		end
-
-		CustomHealthAPI.Helper.HandleGoldenRoom(player, false)
-		CustomHealthAPI.Helper.UpdateBasegameHealthState(player)
-
-		return healthOrder
-	end
-
-	--Directly replaces web hearts with the correct variant.
-	--CustomHealthAPI has a ConvertOtherKey function but it only works for soul hearts on both ends and the "force" argument literally does nothing
-	CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_CHANGE_PLAYER_TYPE, CallbackPriority.DEFAULT, function (player)
-		local expectedKey = WEB_HEART:GetKey(player)
-		local numNormalWeb = CustomHealthAPI.Library.GetHPOfKey(player, WEB_HEART.KEY, nil, nil, true)
-		local numArachnaWeb = CustomHealthAPI.Library.GetHPOfKey(player, WEB_HEART.KEY_ARACHNA, nil, nil, true)
-		if expectedKey == WEB_HEART.KEY and numArachnaWeb > 0
-			or expectedKey == WEB_HEART.KEY_ARACHNA and numNormalWeb > 0
-		then
-			local foundKey = true
-			while foundKey do
-				foundKey = false
-				local healthOrder = CustomHealthAPI.Library.GetHealthInOrder(player)
-				for index, health in ipairs(healthOrder) do
-					if health.Other and health.Other.Key == (expectedKey == WEB_HEART.KEY and WEB_HEART.KEY_ARACHNA or WEB_HEART.KEY) then
-						forceConvertOtherKey(player, index, expectedKey)
-						foundKey = true
-					end
-				end
-			end
-		end
-	end)
-
 --#endregion
 
 --#region On Collect
@@ -322,9 +177,7 @@ function WEB_HEART:KeeperHeartCollision(pickup, collider)
 	if not (player and (pickup.SubType == WEB_HEART.ID or pickup.SubType == WEB_HEART.ID_DOUBLE)) then
 		return
 	end
-	if player:GetHealthType() == HealthType.COIN
-		or WEB_HEART.KeeperCharacters[player:GetPlayerType()]
-	then
+	if Mod:IsAnyKeeper(player) then
 		if pickup:IsShopItem() then
 			return true
 		end
@@ -436,10 +289,15 @@ Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, WEB_HEART.Abaddon, Collect
 
 --#endregion
 
---#region Guppy's Paw
+--#region Guppy's Paw/Potato Peeler
+
+local ACTIVE_FORCE_USE = Mod:Set({
+	CollectibleType.COLLECTIBLE_GUPPYS_PAW,
+	CollectibleType.COLLECTIBLE_POTATO_PEELER,
+})
 
 ---@param player EntityPlayer
-local function canUseForcedGuppysPaw(player)
+local function canForceActiveItem(player)
 	return WEB_HEART:GetWebHearts(player) > 0
 		and Mod:IsAnyArachna(player)
 		and player:GetMaxHearts() == 0
@@ -447,21 +305,22 @@ end
 
 ---@param player EntityPlayer
 function WEB_HEART:ForceGuppysPaw(player)
-	if canUseForcedGuppysPaw(player)
+	if canForceActiveItem(player)
 		and player.ControlsEnabled
 		and player.ControlsCooldown == 0
 	then
 		if Input.IsActionTriggered(ButtonAction.ACTION_ITEM, player.ControllerIndex)
-			and player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == CollectibleType.COLLECTIBLE_GUPPYS_PAW
+			and ACTIVE_FORCE_USE[player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)]
 		then
-			player:UseActiveItem(CollectibleType.COLLECTIBLE_GUPPYS_PAW, UseFlag.USE_OWNED, ActiveSlot.SLOT_PRIMARY)
+			player:UseActiveItem(player:GetActiveItem(ActiveSlot.SLOT_PRIMARY), UseFlag.USE_OWNED, ActiveSlot.SLOT_PRIMARY)
 		end
 		if Input.IsActionTriggered(ButtonAction.ACTION_PILLCARD, player.ControllerIndex) then
 			local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
+			local activeSlot = pocketItem:GetSlot() - 1
 			if pocketItem:GetType() == PocketItemType.ACTIVE_ITEM
-				and player:GetActiveItem(pocketItem:GetSlot() - 1) == CollectibleType.COLLECTIBLE_GUPPYS_PAW
+				and ACTIVE_FORCE_USE[player:GetActiveItem(activeSlot)]
 			then
-				player:UseActiveItem(CollectibleType.COLLECTIBLE_GUPPYS_PAW, UseFlag.USE_OWNED, pocketItem:GetSlot() - 1)
+				player:UseActiveItem(player:GetActiveItem(activeSlot), UseFlag.USE_OWNED, activeSlot)
 			end
 		end
 	end
@@ -471,7 +330,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, WEB_HEART.ForceGuppysPaw, Pl
 
 ---@param player EntityPlayer
 function WEB_HEART:ArachnaGuppysPaw(itemID, rng, player, flags, slot, customVar)
-	if canUseForcedGuppysPaw(player) then
+	if canForceActiveItem(player) then
 		player:AddSoulHearts(6)
 		WEB_HEART:AddWebHearts(player, -1)
 		Mod.sfxman:Play(SoundEffect.SOUND_VAMP_GULP, 1, 0, false, 0.8)
@@ -480,6 +339,20 @@ function WEB_HEART:ArachnaGuppysPaw(itemID, rng, player, flags, slot, customVar)
 end
 
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.ArachnaGuppysPaw, CollectibleType.COLLECTIBLE_GUPPYS_PAW)
+
+---@param player EntityPlayer
+function WEB_HEART:PotatoPeelerUse(itemID, rng, player, flags, slot, customVar)
+	if canForceActiveItem(player) then
+		WEB_HEART:AddWebHearts(player, -1)
+		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS)
+		player:SetPotatoPeelerUses(player:GetPotatoPeelerUses() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_DAMAGE | CacheFlag.CACHE_FAMILIARS, true)
+		player:TakeDamage(1, DamageFlag.DAMAGE_FAKE | DamageFlag.DAMAGE_RED_HEARTS, EntityRef(player), 0)
+		return true
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.PotatoPeelerUse, CollectibleType.COLLECTIBLE_POTATO_PEELER)
 
 --#endregion
 
@@ -493,33 +366,11 @@ local SUPPORTED_VISUALS = Mod:Set({
 })
 
 ---@param pickup EntityPickup
-function WEB_HEART:DevilDealUpdate(pickup)
-	local price = pickup.Price
-	if price < 0 then
-		local data = Mod:GetData(pickup)
-		if not data.TrackPrice then
-			data.TrackPrice = price
-		end
-		if data.TrackPrice ~= price then
-			data.UpdateWebHeartSheet = true
-			data.TrackPrice = price
-		end
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.DevilDealUpdate, PickupVariant.PICKUP_COLLECTIBLE)
-
----@param pickup EntityPickup
 function WEB_HEART:UpdateDevilSprite(pickup)
 	if not pickup:IsShopItem() or pickup.Price >= 0 then return end
 	local data = Mod:TryGetData(pickup)
 	if data and data.UpdateWebHeartSheet or pickup.FrameCount == 0 then
-		local someoneHasArachnaWeb = Mod.Foreach.Player(function (player, index)
-			if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) > 0 then
-				return true
-			end
-		end) or false
-		if SUPPORTED_VISUALS[pickup.Price] and someoneHasArachnaWeb then
+		if SUPPORTED_VISUALS[pickup.Price] and WEB_HEART:AnyArachanaHasWebHearts() then
 			pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/price_web.png", true)
 		end
 	end
@@ -559,20 +410,5 @@ function WEB_HEART:OnReverseFool(card, player)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY, WEB_HEART.OnReverseFool, Card.CARD_REVERSE_FOOL)
-
---#endregion
-
---#region Bed fix
-
----@param player EntityPlayer
-function WEB_HEART:SleepEffect(player)
-	if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) > 0 then
-		player:AddSoulHearts(6)
-		Mod.sfxman:Play(SoundEffect.SOUND_POWERUP1)
-		return true
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_PRE_TRIGGER_BED_SLEEP_EFFECT, WEB_HEART.SleepEffect)
 
 --#endregion

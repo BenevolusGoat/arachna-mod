@@ -105,10 +105,10 @@ Tainted Arachna:
 Web Hearts:
 - Bone and Eternal Hearts are allowed to be gained again through items or other means. Their pickup equivalent are still converted into Web Hearts
 - Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
-- Web Hearts are now sorted before Soul Hearts instead of after
+- One Web Heart can tank any amount of damage, similarly to Bone Hearts
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
-- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Inherent poison tears now work on all weapon types
+- Added interaction with Potato Peeler to have Web Hearts act as a valid exchange instead of Red Heart Containers on Arachna only
 
 Arachna's Spool/Divine Cloth:
 * Doubled hitsphere size of Arachna's Spool tear
@@ -126,6 +126,7 @@ Arachna's Spool/Divine Cloth:
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
 
 Other:
+- Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again
 - Poison tears from Arachnid's Grip now work on all weapon types
 - Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
@@ -177,7 +178,7 @@ Important changes for modders to be aware of for updating compatibility with Ara
 - The entire mod's code was rewritten from the ground up. Everything on the mod is now properly attached to the "ARACHNAMOD" global
 - Save data is now handled through IsaacSaveManager. Previous save data on completion marks should be automatically transferred to REPENTOGON's own save data for completion marks and achievements
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
-- Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility. On both Arachnas, they are internally treated as Bone Hearts. On other characters, they act as Soul Hearts
+- Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility
 - Status effects now utilize StatusEffectLibrary for general improvements and cross-MOD compatibility
 - Golden Shopkeeper is now an actual shopkeeper (type 17) instead of an effect (type 1000)
 - Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant

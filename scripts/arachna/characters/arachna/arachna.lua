@@ -10,7 +10,7 @@ Mod.Include("scripts.arachna.characters.arachna.arachnas_spool")
 
 ARACHNA.POISON_CHANCE = 0.25
 
-CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY_ARACHNA
+CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA] = true
 
 ARACHNA.TearVariantSpritesheetPath = "gfx/projectiles/"
