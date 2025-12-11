@@ -3,11 +3,12 @@ local Mod = ARACHNAMOD
 return function(modifiers)
 	return {
 		[Mod.PlayerType.ARACHNA] = {
-			Name = "Tainted Arachna",
+			Name = "Arachna",
 			Description = {
-				"Can't have Red Hearts, Bone Hearts, or Eternal Hearts",
+				"Can't have Red Hearts",
 				"#Not affected by cowbebs",
 				"#{{WebHeart}} Health ups grant Web Hearts",
+				"#{{WebHeart}} Web Hearts act as a valid substitute for heart containers",
 				"#Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}}, having unique effects",
 			}
 		},
@@ -17,6 +18,7 @@ return function(modifiers)
 				"Can't have Red Hearts",
 				"#Not affected by cowbebs",
 				"#{{WebHeart}} Health ups grant Web Hearts",
+				"#{{WebHeart}} Web Hearts act as a valid substitute for heart containers",
 				"#↑ {{AracBlueSpider}} Chance of Spider Eggs hatching larger spiders, having more powerful effects and splitting into 2 smaller spiders on death",
 				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{Slow}} slowing enemies and having them drop spider eggs on death"
 			}

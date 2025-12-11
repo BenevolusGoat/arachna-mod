@@ -108,7 +108,7 @@ Web Hearts:
 - One Web Heart can tank any amount of damage, similarly to Bone Hearts
 - Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
 - Inherent poison tears now work on all weapon types
-- Added interaction with Potato Peeler to have Web Hearts act as a valid exchange instead of Red Heart Containers on Arachna only
+- Added interaction with Potato Peeler to have Web Hearts act as a valid substitute for Red Heart Containers on Arachna only
 
 Arachna's Spool/Divine Cloth:
 * Doubled hitsphere size of Arachna's Spool tear
