@@ -5,5 +5,6 @@ ARACHNAMOD.Setting = {
 	GeptameronGiantbook = "Geptameron Giantbook",
 	DoubletapFrameWindow = "Frame Window for Double Tap Actions",
 	AnniversaryOverride = "Override Anniversary Option",
-	LegacyGameplay = "Legacy Character Gameplay"
+	LegacyGameplay = "Legacy Character Gameplay",
+	RareSoundAlt = "Rare Sound Alt"
 }

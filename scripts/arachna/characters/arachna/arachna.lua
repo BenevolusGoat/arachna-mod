@@ -10,6 +10,12 @@ Mod.Include("scripts.arachna.characters.arachna.arachnas_spool")
 
 ARACHNA.POISON_CHANCE = 0.25
 
+ARACHNA.SFX_HURT = Isaac.GetSoundIdByName("Arachna Hurt")
+ARACHNA.SFX_DEATH = Isaac.GetSoundIdByName("Arachna Death")
+ARACHNA.SFX_HURT_RARE = Isaac.GetSoundIdByName("Arachna Hurt (Rare)")
+ARACHNA.SFX_DEATH_RARE = Isaac.GetSoundIdByName("Arachna Death (Rare)")
+ARACHNA.RARE_SFX_CHANCE = 0.05
+
 CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA] = true
 
@@ -139,5 +145,21 @@ function ARACHNA:IgnoreCobwebSlow(statusID, ent, source, duration)
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_STATUS_EFFECT_APPLY, ARACHNA.IgnoreCobwebSlow, StatusEffect.SLOWING)
+
+--#endregion
+
+--#region Rare Sounds
+
+function ARACHNA:RareSoundAlt(id, volume, delay, loop, pitch, pan)
+	if Mod.GetSetting(Mod.Setting.RareSoundAlt)
+		and Mod:RandomNum() < ARACHNA.RARE_SFX_CHANCE
+	then
+		local newId = id == ARACHNA.SFX_HURT and ARACHNA.SFX_HURT_RARE or ARACHNA.SFX_DEATH_RARE
+		return {newId, volume, delay, loop, pitch, pan}
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_SFX_PLAY, ARACHNA.RareSoundAlt, ARACHNA.SFX_HURT)
+Mod:AddCallback(ModCallbacks.MC_PRE_SFX_PLAY, ARACHNA.RareSoundAlt, ARACHNA.SFX_DEATH)
 
 --#endregion

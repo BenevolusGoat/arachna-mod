@@ -13,4 +13,23 @@
 	<sound name="Best Bud Ball (Pickup)"><sample weight="1" path="best_bud_ball/bestbudball_pickup.wav"/></sound>
 	<sound name="Best Bud Ball (Capture)"><sample weight="1" path="best_bud_ball/bestbudball_capture.wav"/></sound>
 	<sound name="Best Bud Ball (Release)"><sample weight="1" path="best_bud_ball/bestbudball_release.wav"/></sound>
+	<!-- Arachna -->
+	<sound name="Arachna Hurt">
+		<sample weight="1" path="arachna/arachna_hurt_rare_1.wav"/>
+		<sample weight="1" path="arachna/arachna_hurt_rare_2.wav"/>
+		<sample weight="1" path="arachna/arachna_hurt_rare_3.wav"/>
+		<sample weight="1" path="arachna/arachna_hurt_rare_4.wav"/>
+	</sound>
+	<sound name="Arachna Death">
+		<sample weight="1" path="arachna/arachna_death_rare.wav"/>
+	</sound>
+	<sound name="Arachna Hurt (Rare)">
+		<sample weight="1" path="arachna/arachna_hurt_rare_1.wav"/>
+		<sample weight="1" path="arachna/arachna_hurt_rare_2.wav"/>
+		<sample weight="1" path="arachna/arachna_hurt_rare_3.wav"/>
+		<sample weight="1" path="arachna/arachna_hurt_rare_4.wav"/>
+	</sound>
+	<sound name="Arachna Death (Rare)">
+		<sample weight="1" path="arachna/arachna_death_rare.wav"/>
+	</sound>
 </sounds>
