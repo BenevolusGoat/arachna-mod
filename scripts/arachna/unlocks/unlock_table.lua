@@ -125,6 +125,21 @@ Mod:RegisterReplacementPickup({
 
 --#region Achievement commands
 
+local nameToMark = {
+	MomsHeart = CompletionType.MOMS_HEART,
+	Isaac = CompletionType.ISAAC,
+	Satan = CompletionType.SATAN,
+	BossRush = CompletionType.BOSS_RUSH,
+	BlueBaby = CompletionType.BLUE_BABY,
+	Lamb = CompletionType.LAMB,
+	MegaSatan = CompletionType.MEGA_SATAN,
+	UltraGreed = CompletionType.ULTRA_GREED,
+	Hush = CompletionType.HUSH,
+	Delirium = CompletionType.DELIRIUM,
+	Mother = CompletionType.MOTHER,
+	Beast = CompletionType.BEAST,
+}
+
 local function manageAchievements(shouldUnlock)
 	local startAch = Mod.Pickup.WEB_HEART.ACHIEVEMENT
 	local endAch = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT
@@ -138,19 +153,77 @@ local function manageAchievements(shouldUnlock)
 	end
 end
 
+---@param playerType PlayerType
+---@param args string
+local function setMarkCommand(playerType, args)
+	for name, completionType in pairs(nameToMark) do
+		local strStart, strEnd = string.find(args, name)
+		if strStart and strEnd then
+			args = string.sub(args, strEnd + 2)
+			local value = tonumber(args)
+			if value and value >= 0 and value <= 2 then
+				Isaac.SetCompletionMark(playerType, completionType, value)
+				break
+			end
+		end
+	end
+end
+
 local rootCommand = "arachnaMod"
 
+---@type {[1]: string, [2]: string}[]
 local commands = {
-	{ "unlocktainted", "Unlocks Tainted Arachna",      function() Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B
-		.ACHIEVEMENT) end },
-	{ "unlockall",     "Unlocks all mod achievements", function() manageAchievements(true) end },
-	{ "lockall",       "Locks all mod achievements",   function() manageAchievements(false) end },
+	{ "unlocktainted",  "Unlocks Tainted Arachna" },
+	{ "unlockall",      "Unlocks all mod achievements" },
+	{ "lockall",        "Locks all mod achievements" },
+	{ "setmark",        "Updates a completion mark for Arachna. Does NOT update its associated unlock" },
+	{ "setmarktainted", "Updates a completion mark for Tainted Arachna. Does NOT update its associated unlock" },
 }
+
+local helpText = {
+	["setmark"] =
+		"Accepts two arguments: arachnaMod setmark <string completiontype> <int value>\n"
+		.. "<completiontype>: [MomsHeart|Isaac|Satan|BossRush|BlueBaby|Lamb|MegaSatan|UltraGreed|Hush|Delirium|Mother|Beast]\n"
+		.. "<value>: [0: Locked|1: Normal|2: Hard]\n"
+		.. "Examples:\n"
+		.. "(arachnaMod setmark MomsHeart 0) will set the Mom's Heart/It Lives completion mark to Locked.\n"
+		.. "(arachnaMod setmark Beast 1) will set the Beast completion mark to Normal Mode.\n"
+		.. "(arachnaMod setmark UltraGreed 2) will set the Greed Mode completion mark to Hard/Greedier Mode."
+	,
+	["setmarktainted"] = "Arguments are identical to setmark's arguments.",
+}
+
+---@type {[string]: fun(args: string)}
+local commandFuncs = {
+	["unlocktainted"] = function()
+		Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT)
+	end,
+	["unlockall"] = function()
+		manageAchievements(true)
+	end,
+	["lockall"] = function()
+		manageAchievements(false)
+	end,
+	["setmark"] = function(args)
+		setMarkCommand(Mod.PlayerType.ARACHNA, args)
+	end,
+	["setmarktainted"] = function(args)
+		setMarkCommand(Mod.PlayerType.ARACHNA_B, args)
+	end
+}
+
+local description = "The following commands can be accessed by typing \"arachnaMod <command name>\""
+for _, commandTable in ipairs(commands) do
+	description = description .. "\n  - " .. commandTable[1] .. " - " .. commandTable[2]
+	if helpText[commandTable[1]] then
+		description = description .. ". " .. helpText[commandTable[1]]
+	end
+end
 
 Console.RegisterCommand(
 	rootCommand,
 	"Debug commands for the Arachna MOD",
-	"Serves as a hub for all commands under the Arachna mod",
+	description,
 	true,
 	AutocompleteType.CUSTOM
 )
@@ -160,8 +233,9 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 		return
 	end
 	for _, commandTable in ipairs(commands) do
-		if params == commandTable[1] then
-			commandTable[3]()
+		if string.find(params, commandTable[1]) then
+			local args = string.gsub(params, commandTable[1] .. " ", "")
+			commandFuncs[commandTable[1]](args)
 		end
 	end
 end)

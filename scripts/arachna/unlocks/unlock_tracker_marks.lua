@@ -2,11 +2,9 @@ local Mod = ARACHNAMOD
 
 ---@param playerType PlayerType
 ---@param completionType CompletionType
----@return boolean @Returns if unlock was successful.
-function ARACHNAMOD:TryUpdateCompletionMark(playerType, completionType)
-	if Mod.Game:AchievementUnlocksDisallowed() then return false end
+function ARACHNAMOD:GetAchievement(playerType, completionType)
 	local entityConfigPlayer = EntityConfig.GetPlayer(playerType)
-	if not entityConfigPlayer then return false end
+	if not entityConfigPlayer then return end
 	local completionTable = Mod.PlayerTypeToCompletionTable[playerType]
 	if entityConfigPlayer:IsTainted() then
 		if (
@@ -15,21 +13,35 @@ function ARACHNAMOD:TryUpdateCompletionMark(playerType, completionType)
 				or completionType == CompletionType.LAMB
 				or completionType == CompletionType.BLUE_BABY
 			)
-			and Isaac.AllTaintedCompletion(playerType, TaintedMarksGroup.POLAROID_NEGATIVE)
+			and Isaac.AllTaintedCompletion(playerType, TaintedMarksGroup.POLAROID_NEGATIVE) > 0
 		then
-			return Mod.PersistGameData:TryUnlock(completionTable[TaintedMarksGroup.POLAROID_NEGATIVE])
+			return completionTable[TaintedMarksGroup.POLAROID_NEGATIVE]
 		elseif (completionType == CompletionType.BOSS_RUSH or completionType == CompletionType.HUSH)
-			and Isaac.AllTaintedCompletion(playerType, TaintedMarksGroup.SOULSTONE)
+			and Isaac.AllTaintedCompletion(playerType, TaintedMarksGroup.SOULSTONE) > 0
 		then
-			return Mod.PersistGameData:TryUnlock(completionTable[TaintedMarksGroup.SOULSTONE])
+			return completionTable[TaintedMarksGroup.SOULSTONE]
 		elseif completionTable[completionType] then
-			return Mod.PersistGameData:TryUnlock(completionTable[completionType])
+			return completionTable[completionType]
 		end
-	elseif completionTable[completionType] and (completionType ~= CompletionType.MOMS_HEART or Mod.Game:IsHardMode()) then
-		return Mod.PersistGameData:TryUnlock(completionTable[completionType])
+	elseif completionTable[completionType] then
+		return completionTable[completionType]
 	end
-	if Isaac.AllMarksFilled(playerType) == 2 and completionTable[Mod.CompletionType.ALL] then
-		return Mod.PersistGameData:TryUnlock(completionTable[Mod.CompletionType.ALL])
+end
+
+---@param playerType PlayerType
+---@param completionType CompletionType
+---@return boolean @Returns if unlock was successful.
+function ARACHNAMOD:TryUnlockCompletionMark(playerType, completionType)
+	if Mod.Game:AchievementUnlocksDisallowed() then return false end
+	local achievement = Mod:GetAchievement(playerType, completionType)
+	if achievement then
+		Mod.PersistGameData:TryUnlock(achievement)
+
+		local completionTable = Mod.PlayerTypeToCompletionTable[playerType]
+		if Isaac.AllMarksFilled(playerType) == 2 and completionTable[Mod.CompletionType.ALL] then
+			Mod.PersistGameData:TryUnlock(completionTable[Mod.CompletionType.ALL])
+		end
+		return true
 	end
 	return false
 end
@@ -37,10 +49,10 @@ end
 ---@param completionType CompletionType
 local function onCompletionEvent(_, completionType)
 	if Mod.Game:AchievementUnlocksDisallowed() then return end
-	Mod.Foreach.Player(function (player, index)
+	Mod.Foreach.Player(function(player, index)
 		local playerType = player:GetPlayerType()
 		if not player.Parent and Mod.PlayerTypeToCompletionTable[playerType] then
-			Mod:TryUpdateCompletionMark(playerType, completionType)
+			Mod:TryUnlockCompletionMark(playerType, completionType)
 		end
 	end)
 end
