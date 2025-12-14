@@ -176,14 +176,13 @@ local commands = {
 	{ "unlocktainted",  "Unlocks Tainted Arachna" },
 	{ "unlockall",      "Unlocks all mod achievements" },
 	{ "lockall",        "Locks all mod achievements" },
-	{ "setmark",        "Updates a completion mark for Arachna. Does NOT update its associated unlock" },
-	{ "setmarktainted", "Updates a completion mark for Tainted Arachna. Does NOT update its associated unlock" },
+	{ "setmark",        "Args: <string completiontype> <int value>. Updates a completion mark for Arachna" },
+	{ "setmarktainted", "Args: <string completiontype> <int value>. Updates a completion mark for Tainted Arachna" },
 }
 
 local helpText = {
 	["setmark"] =
-		"Accepts two arguments: arachnaMod setmark <string completiontype> <int value>\n"
-		.. "<completiontype>: [MomsHeart|Isaac|Satan|BossRush|BlueBaby|Lamb|MegaSatan|UltraGreed|Hush|Delirium|Mother|Beast]\n"
+		"<completiontype>: [MomsHeart|Isaac|Satan|BossRush|BlueBaby|Lamb|MegaSatan|UltraGreed|Hush|Delirium|Mother|Beast]\n"
 		.. "<value>: [0: Locked|1: Normal|2: Hard]\n"
 		.. "Examples:\n"
 		.. "(arachnaMod setmark MomsHeart 0) will set the Mom's Heart/It Lives completion mark to Locked.\n"
