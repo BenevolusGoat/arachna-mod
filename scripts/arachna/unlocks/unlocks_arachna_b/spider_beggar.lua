@@ -18,13 +18,6 @@ SPIDER_BEGGAR.SPIDERS = {
 	{EntityType.ENTITY_CRAZY_LONG_LEGS, 1}
 }
 
-local SlotState = {
-	IDLE = 1,
-	REWARD = 2,
-	BOMBED = 3,
-	PAYOUT = 4
-}
-
 ---@class PayoutEvent
 ---@field Name string
 ---@field Weight number
@@ -180,7 +173,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_SLOT_COLLISION, SPIDER_BEGGAR.OnBeggarColli
 
 ---@param beggar EntitySlot
 function SPIDER_BEGGAR:BeggarDrops(beggar)
-	if beggar:GetState() == SlotState.BOMBED then
+	if beggar:GetState() == SlotState.DESTROYED then
 		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8)
 		beggar:BloodExplode()
 		Mod.Level():SetStateFlag(LevelStateFlag.STATE_BUM_KILLED, true)

@@ -25,7 +25,7 @@ function MERGED_CARD:DisplayRoomType(...)
 	for i = 0, rooms.Size - 1 do
 		local roomDesc = rooms:Get(i)
 		if roomTypes[roomDesc.Data.Type] then
-			roomDesc.DisplayFlags = 1 << 0 | 1 << 2 --Visible + Show Icon
+			roomDesc.DisplayFlags = RoomDisplayFlags.VISIBLE | RoomDisplayFlags.SHOW_ICON --Visible + Show Icon
 		end
 	end
 	Mod.Level():UpdateVisibility()

@@ -48,12 +48,10 @@ ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE = 5
 ---@param vel Vector
 ---@param spawner? Entity
 function ARACHNAS_SPOOL:FireSpool(pos, vel, spawner)
-	Mod.sfxman:Play(SoundEffect.SOUND_TEARS_FIRE, 0, 2)
 	local spoolTear = Mod.Spawn.Tear(ARACHNAS_SPOOL.TEAR, pos, vel, nil, spawner)
 	spoolTear.CollisionDamage = 4.2
 	spoolTear.FallingSpeed = -5.5
 	spoolTear.FallingAcceleration = 0.5
-	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
 	if Mod:IsLegacyGameplayEnabled() then
 		spoolTear:SetSize(8, Vector.One, 8)
 	end
@@ -96,6 +94,13 @@ ThrowableItemLib:RegisterThrowableItem({
 		ARACHNAS_SPOOL:FireSpool(player.Position, Mod:AddTearVelocity(vect, 12, player), player)
 	end
 })
+
+---@param tear EntityTear
+function ARACHNAS_SPOOL:OnTearInit(tear)
+	tear:SetInitSound(SoundEffect.SOUND_FETUS_JUMP)
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, ARACHNAS_SPOOL.OnTearInit, ARACHNAS_SPOOL.TEAR)
 
 ---@param tear EntityTear
 function ARACHNAS_SPOOL:OnTearUpdate(tear)
