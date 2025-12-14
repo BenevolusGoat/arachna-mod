@@ -21,12 +21,7 @@ end
 function INFESTED_PENNY:OnCoinCollision(coin, collider)
 	local player = collider:ToPlayer()
 	if coin:IsDead() and player and player:HasTrinket(INFESTED_PENNY.ID) then
-		local spiderSubtype = 0
-		if player:HasCollectible(Mod.Item.MUTAGEN.ID) then
-			spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
-		end
-
-		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, coin.Position)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, 0, coin.Position)
 
 		local rng = player:GetTrinketRNG(INFESTED_PENNY.ID)
 		local chance = getWebHeartChance(coin:GetCoinValue(), player:GetTrinketMultiplier(INFESTED_PENNY.ID))

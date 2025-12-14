@@ -3,16 +3,7 @@ local Trinket = Mod.Trinket
 local ARC_EID = Mod.EID_Support
 local DD = ARC_EID.DynamicDescriptions
 
-local modifiers = {
-	[Trinket.INFESTED_PENNY.ID] = {
-		_modifier = function (descObj, desc)
-			local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
-			if player:HasCollectible(Mod.Item.MUTAGEN.ID) then
-				return desc
-			end
-		end
-	}
-}
+local modifiers = {}
 
 local descriptions = {
 	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_en_us")(modifiers),

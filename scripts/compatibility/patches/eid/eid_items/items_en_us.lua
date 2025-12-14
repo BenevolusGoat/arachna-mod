@@ -154,7 +154,8 @@ return function(modifiers)
 			Name = "Mutagen",
 			Description = {
 				"↑ {{Damage}} +1 Damage",
-				"#{{AracBlueSpider}} 20% chance to spawn 3-5 {{ColorRainbow}}special{{CR}} friendly spiders when entering a new room"
+				"#{{AracBlueSpider}} 20% chance to spawn 3-5 {{ColorRainbow}}special{{CR}} friendly spiders when entering a new room",
+				"#{{AracBlueSpider}} All spiders spawned outside of spider eggs have a chance to be {{ColorRainbow}}special{{CR}}"
 			}
 		},
 		[Item.TESTAMENT.ID] = {

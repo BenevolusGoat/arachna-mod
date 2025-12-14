@@ -154,6 +154,7 @@ Other:
 - Testament pedestals for the next run no longer spawn in runs that do not allow achievements
 - Added support for multiple uses of Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before Testament instead spawns Eden's Blessing
 - Merged Card's Wheel of Fortune effect now uses Portable Slot instead of its own custom logic
+- Mutagen's ability to turn blue spiders from select items into colored spiders now affects all non-spider egg blue spider spawns
 
 ## VISUAL CHANGES
 - All new achievement page sprites by damagaz

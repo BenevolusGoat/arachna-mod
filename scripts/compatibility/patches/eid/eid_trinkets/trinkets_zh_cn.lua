@@ -8,12 +8,7 @@ return function(modifiers)
 			Description = {
 				"{{AracBlueSpider}} Picking up a coin spawns a blue spider",
 				"#{{WebHeart}} Additional 5% chance to spawn a Web Heart",
-				"#Higher chance from nickels and dimes",
-				function(descObj)
-					return modifiers[Trinket.INFESTED_PENNY.ID]._modifier(descObj,
-						"#{{Collectible" .. Mod.Item.MUTAGEN.ID .. "}} Spiders can be {{ColorRainbow}}special{{CR}}"
-					)
-				end
+				"#Higher chance from nickels and dimes"
 			},
 		},
 		[Trinket.SPINDLE.ID] = {

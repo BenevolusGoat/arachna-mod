@@ -188,7 +188,9 @@ function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, distOrTarget)
 		targetPos = Isaac.GetFreeNearPosition(pos + Vector(dist, 0):Rotated(Mod:RandomNum(360)), 0)
 	end
 	---@cast targetPos Vector
+	Mod:GetData(player).IgnoreMutagen = true
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
+	Mod:GetData(player).IgnoreMutagen = false
 	---@cast spider EntityFamiliar
 	if subtype == 0 then return spider end
 	spider.SubType = subtype
