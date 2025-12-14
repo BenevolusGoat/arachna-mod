@@ -57,6 +57,8 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 ## GENERAL ADJUSTMENTS
 - Added a Dead Sea Scrolls menu where you can check settings, achievements, current and past changelogs, and credits
 - Added new mod settings. Available in the DSS menu
+- Arachna's console commands now have autofill thanks to REPENTOGON
+- Added a new debug commmand: arachnaMod setmark and arachnaMod setmarktainted
 - Changed Tainted Arachna's multishot to use REPENTOGON instead of an item wisp. Among other things, this allows their multishot to be utilized in the Mines chase sequence
 - Removed GiantBookAPI utility in favor of REPENTOGON implementation
 - Changed how Lil Arachna functions to be a more naturally integrated shooter familiar. They now obey all shooter familiar interactions (Lilith birthrights, shooter priority, etc.)
@@ -154,6 +156,7 @@ Other:
 - Merged Card's Wheel of Fortune effect now uses Portable Slot instead of its own custom logic
 
 ## VISUAL CHANGES
+- All new achievement page sprites by damagaz
 - The "webbed" sprite from Divine Cloth has been moved to enemies webbed by Arachna's Spool. Divine Cloth's "Spider Bite" status has a new icon to compensate
 - Size of web on enemies now scale with the enemy's size
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
