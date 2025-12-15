@@ -92,15 +92,14 @@ New Content:
 
 Arachna:
 * Birthright adjusted. Instead of +1 to spawned spiders, chance is increased for spider eggs spawning colored spiders
-* Spider Eggs spawned by Arachna now burst after 10 seconds, producing nothing
 
 Tainted Arachna:
-* Replaced inherent +1 guaranteed spider spawn from Spider Eggs with increased chance of spawning larger spiders
+* Replaced inherent +1 guaranteed spider spawn from Spider Eggs with decreased spider count
 * Can no longer get random spider colors from spider spawns
-* Removed Spider Egg timer
-* Spider Eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color
-* Divine Cloth has been moved to a double-tap action
-* New Pocket Active: Grab (placeholder name!)
+* Removed timer mechanic on spider eggs
+* Spider eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color
+* Divine Cloth has been moved to a double-tap action and now deals damage
+* New Pocket Active: Grab (placeholder name!). Grab and throw your eggs, which come with benefits when thrown and moreso when they hit enemies
 * Increased starting damage to 2.00 (from 1.00)
 * Increased starting speed to 1.00 (from 0.75)
 
@@ -121,7 +120,7 @@ Arachna's Spool/Divine Cloth:
 * Removed stage multiplier and Web Heart interaction on how many spiders spawned from spider eggs
 * Bosses are no longer immune to the slowing effect by the Webbed status, but aren't slowed as much as a regular slowing effect
 * Increased Divine Cloth's radius to match Tainted Arachna's old birthright radius
-* Dealing damage to Webbed bosses will charge a meter above their head. When the meter is filled, it resets and spawns a reward of spiders depending on which status they have. Friendly spiders do not contribute to the meter
+* Dealing damage to bosses with Webbed or Spider Bite will charge a meter above their head. When the meter is filled, it resets and spawns friendly spiders or a spider egg, depending on which status they have. Friendly spiders do not contribute to the meter
 * Spider Eggs now explode on challenge/boss rush wave clears
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Webbed Bosses can now drop a Spider Egg on death. 50% of the spawned spiders will be big spiders
@@ -161,7 +160,7 @@ Other:
 - The "webbed" sprite from Divine Cloth has been moved to enemies webbed by Arachna's Spool. Divine Cloth's "Spider Bite" status has a new icon to compensate
 - Size of web on enemies now scale with the enemy's size
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
-- Changed poison tears from Arachna, Tainted Arachna, and Arachnid's Grip to be colored green
+- Changed poison tears from Arachnid's Grip to be colored green
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
 - Changed the floor web from Arachna's Spool to render below grid entities, similarly to creep
 - Arachna and Tainted Arachna have the same laser color as Spider Bite

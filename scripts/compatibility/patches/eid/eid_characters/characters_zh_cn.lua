@@ -6,9 +6,9 @@ return function(modifiers)
 			Name = "Arachna",
 			Description = {
 				"Can't have Red Hearts",
+				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
 				"#Not affected by cowbebs",
-				"#{{WebHeart}} Health ups grant Web Hearts",
-				"#{{WebHeart}} Web Hearts act as a valid substitute for heart containers",
+				"#{{Poison}} 25% to shoot poison tears",
 				"#Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}}, having unique effects",
 			}
 		},
@@ -16,11 +16,12 @@ return function(modifiers)
 			Name = "Tainted Arachna",
 			Description = {
 				"Can't have Red Hearts",
+				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
 				"#Not affected by cowbebs",
-				"#{{WebHeart}} Health ups grant Web Hearts",
-				"#{{WebHeart}} Web Hearts act as a valid substitute for heart containers",
-				"#↑ {{AracBlueSpider}} Chance of Spider Eggs hatching larger spiders, having more powerful effects and splitting into 2 smaller spiders on death",
-				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{Slow}} slowing enemies and having them drop spider eggs on death"
+				"#{{Poison}} 25% to shoot poison tears",
+				"#↓ Less spiders from spider eggs",
+				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x damage",
+				"#{{StatusSpiderBite}} Spider Bite causes spider eggs to only drop spiders of its own color",
 			}
 		},
 	}

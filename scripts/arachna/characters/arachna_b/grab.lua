@@ -86,7 +86,7 @@ ThrowableItemLib:RegisterThrowableItem({
 			local egg = data.QueuedEggLift and data.QueuedEggLift.Ref
 			if not egg then return end
 			local eggData = Mod:GetData(egg)
-			data.HeldEggFlags = (eggData.EggFlags or 0) | Mod.Entities.SPIDER_EGG.EggFlag.THROWN
+			data.HeldEggFlags = (eggData.EggFlags or 0)
 			data.HeldEggColor = egg.SubType
 			egg:Remove()
 		end
@@ -272,26 +272,28 @@ function GRAB:OnEggDeath(tear)
 	local data = Mod:TryGetData(tear)
 	local poofColor = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
 	local color = Mod.Entities.SPIDER_EGG:GetEggColor(tear.SubType)
-	local eggFlags = data and data.EggFlags
+	local eggFlags = data and data.EggFlags or 0
+	---@cast eggFlags SpiderEggFlag
 	local SPIDER_EGG = Mod.Entities.SPIDER_EGG
 
 	poof.Color = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
 	Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 
 	if player then
-		local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
 		local rng = player:GetCollectibleRNG(GRAB.ID)
-		local spiderCount = rng:RandomInt(minSpiders, maxSpiders)
+		local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
+		if #tear:GetHitList() == 0 then
+			GRAB:OnEggDamage(nil, nil, nil, EntityRef(tear))
+		else
+			eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)
+		end
 		if tear.SubType == Mod.Entities.COLORED_SPIDERS.SpiderSubtype.CONQUEST then
 			spiderCount = Mod.math.ceil(spiderCount * 1.5)
 		end
-		Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, tear.Position, spiderCount, nil, eggFlags, false, tear.SubType)
 		if color then
 			poofColor = color
 		end
-		if #tear:GetHitList() == 0 then
-			GRAB:OnEggDamage(nil, nil, nil, EntityRef(tear))
-		end
+		Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, tear.Position, spiderCount, nil, eggFlags, false, tear.SubType)
 	elseif npc then
 		player = data and data.EggPlayer and data.EggPlayer.Ref and data.EggPlayer.Ref:ToPlayer()
 		if not player then return end

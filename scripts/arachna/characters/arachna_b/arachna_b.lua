@@ -74,15 +74,21 @@ end
 Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_STAT, CallbackPriority.IMPORTANT, ARACHNA_B.NegateFirerateWithGlasses, EvaluateStatStage.TEARS_UP)
 
 ---@param player EntityPlayer
+function ARACHNA_B:RechargeDoubleTap(player)
+	local data = Mod:GetData(player)
+	Mod.sfxman:Play(SoundEffect.SOUND_BEEP)
+	player:SetColor(StatusEffectLibrary.StatusColor.SLOW, 15, 100, true, false)
+	data.TArachnaClothCooldown = nil
+end
+
+---@param player EntityPlayer
 function ARACHNA_B:DoubleTapCloth(player)
 	if not ARACHNA_B:IsArachnaB(player) then return end
 	local data = Mod:GetData(player)
 	if data.TArachnaClothCooldown then
 		data.TArachnaClothCooldown = data.TArachnaClothCooldown - 1
 		if data.TArachnaClothCooldown <= 0 then
-			Mod.sfxman:Play(SoundEffect.SOUND_BEEP)
-			player:SetColor(StatusEffectLibrary.StatusColor.SLOW, 15, 100, true, false)
-			data.TArachnaClothCooldown = nil
+			ARACHNA_B:RechargeDoubleTap(player)
 		end
 		return
 	end
@@ -93,6 +99,7 @@ function ARACHNA_B:DoubleTapCloth(player)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, ARACHNA_B.DoubleTapCloth)
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, ARACHNA_B.RechargeDoubleTap)
 
 --#region Legacy
 

@@ -15,13 +15,13 @@ SPIDER_EGG.ID_SMALL = Isaac.GetEntityVariantByName("Spider Egg (Small)")
 SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE = 0.05
 SPIDER_EGG.RARE_SPRITE_CHANCE = 0.001
 
-SPIDER_EGG.MAX_EGG_TIMEOUT = 30 * 10 --10 seconds
+SPIDER_EGG.MAX_EGG_TIMEOUT = 500 --16.6 seconds
 
 ---@enum SpiderEggFlag
 SPIDER_EGG.EggFlag = {
 	SMALL = 1 << 0, --Produce less spiders
-	BOSS = 1 << 1, --+50% chance to spawn big spiders
-	THROWN = 1 << 2, --Was an egg that was thrown directly at enemies. Negates T. Arachna big spider bonus, 50% less spiders
+	BOSS = 1 << 1, --+50% chance to spawn big spiders, produces more spiders
+	THROWN_HIT = 1 << 2, --Was an egg that was thrown by T. Arachna that hit an enemy. Negates T. Arachna's spider count debuff and +25% chance to spawn big spiders
 }
 
 SPIDER_EGG.EggColors = {
@@ -48,21 +48,40 @@ function SPIDER_EGG:GetEggColor(spiderColor)
 end
 
 ---@param player EntityPlayer
+---@param rng RNG
+---@param eggFlags? SpiderEggFlag
+function SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
+	local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
+	return Mod:RandomNum(minSpiders, maxSpiders, rng)
+end
+
+---@param player EntityPlayer
 ---@param eggFlags? SpiderEggFlag
 function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
+	local arachnaB = Mod.Character.ARACHNA_B:IsArachnaB(player)
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
 	local minSpiders, maxSpiders = 2, 4
+
 	if arachnaBirthright then
 		minSpiders = minSpiders + 1
 		maxSpiders = maxSpiders + 1
 	end
 
-	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) then
+	if not eggFlags then
+		return minSpiders, maxSpiders
+	end
+
+	if Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) then
 		minSpiders = minSpiders - 1
 		maxSpiders = maxSpiders - 2
 	end
 
-	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN) then
+	if Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
+		minSpiders = minSpiders * 2
+		maxSpiders = maxSpiders + 2
+	end
+
+	if arachnaB and not Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
 		minSpiders = Mod.math.max(1, Mod.math.floor(minSpiders / 2))
 		maxSpiders = Mod.math.max(1, Mod.math.floor(maxSpiders / 2))
 	end
@@ -78,10 +97,13 @@ function SPIDER_EGG:GetSpiderBonusChances(player, eggFlags)
 	if arachnaBirthright then
 		bonusColorChance = bonusColorChance + 0.15
 	end
-	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
+	if not eggFlags then
+		return bonusColorChance, bigChance
+	end
+	if Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
 		bigChance = bigChance + 0.5
 	end
-	if Mod.Character.ARACHNA_B:IsArachnaB(player) and not (eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN)) then
+	if Mod.Character.ARACHNA_B:IsArachnaB(player) and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
 		bigChance = bigChance + 0.25
 	end
 	return bonusColorChance, bigChance
@@ -151,9 +173,7 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 	local egg = Mod.Spawn.Effect(SPIDER_EGG.ID, spiderColor, pos, nil, player)
 	Mod:GetData(egg).EggFlags = eggFlags
 	if Mod.Character.ARACHNA_B:IsArachnaB(player) and isLegacy then
-		egg:SetTimeout(600)
-	elseif Mod.Character.ARACHNA:IsArachna(player) then
-		egg:SetTimeout(SPIDER_EGG.MAX_EGG_TIMEOUT)
+		egg:SetTimeout(500)
 	end
 end
 
@@ -251,15 +271,13 @@ function SPIDER_EGG:Explode(egg, rewards)
 	end
 	local player = egg.SpawnerEntity and egg.SpawnerEntity:ToPlayer()
 	if not player then player = Isaac.GetPlayer() end
-	local spiderCount = 0
 	local rng = egg:GetDropRNG()
 	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
 	---@type SpiderEggFlag
 	local eggFlags = Mod:GetData(egg).EggFlags
-	local minSpiders, maxSpiders = SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
+	local spiderCount = SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
 	local forcedColor = egg.SubType > 0 and egg.SubType or nil
 
-	spiderCount = Mod:RandomNum(minSpiders, maxSpiders, rng)
 	SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, spiderCount, nil, eggFlags, false, forcedColor)
 
 	if arachnaBirthright and rng:RandomFloat() < SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE then

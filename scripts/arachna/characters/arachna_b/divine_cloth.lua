@@ -110,18 +110,29 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 	end
 	local duration = DIVINE_CLOTH.BITE_DURATION
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
-	if Mod:IsLegacyGameplayEnabled() and player and Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
-		duration = 250
-	end
-	local source = player and EntityRef(player) or EntityRef(web)
-
-	Mod.Foreach.NPCInRadius(web.Position, web.Size, function(npc, index)
-		DIVINE_CLOTH:ApplyBitten(npc, source, duration)
-	end, nil, nil, { UseEnemySearchParams = true })
 
 	if web:GetSprite():IsFinished("Poof") then
 		web:Remove()
 	end
+
+	if not player then return end
+
+	if Mod:IsLegacyGameplayEnabled() and Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
+		duration = 250
+	end
+	local source = EntityRef(player)
+	local data = Mod:GetData(web)
+	data.HitList = data.HitList or {}
+
+	Mod.Foreach.NPCInRadius(web.Position, web.Size, function(npc, index)
+		local ptrHash = GetPtrHash(npc)
+		if not data.HitList[ptrHash] then
+			local damage = player.Damage * 0.5
+			data.HitList[ptrHash] = true
+			npc:TakeDamage(damage, 0, source, 0)
+		end
+		DIVINE_CLOTH:ApplyBitten(npc, source, duration)
+	end, nil, nil, { UseEnemySearchParams = true })
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, DIVINE_CLOTH.BiteEnemiesInEffectRadius, DIVINE_CLOTH.DIVINE_WEB_VAR)

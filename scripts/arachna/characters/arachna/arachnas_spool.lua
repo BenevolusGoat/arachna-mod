@@ -273,13 +273,14 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 		data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
 
 		if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
-			local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCountRange(player)
 			if StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
 				local dist = player.Position:Distance(npc.Position)
 				local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(-45, 45))
 				local tear = Mod.Item.GRAB:FireEgg(npc.Position, vel, player, npc)
 				tear.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 			else
+				local rng = ent:GetDropRNG()
+				local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng)
 				local dist = npc.Size + 80
 				Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, npc.Position, spiderCount, dist, nil, true)
 			end
@@ -378,10 +379,9 @@ function ARACHNAS_SPOOL:OnNPCDeath(npc)
 		local eggFlags
 		local SPIDER_EGG = Mod.Entities.SPIDER_EGG
 		if npc:IsBoss() then
+			eggFlags = SPIDER_EGG.EggFlag.BOSS
 			if npc.Parent or npc.Child then
-				eggFlags = SPIDER_EGG.EggFlag.SMALL
-			else
-				eggFlags = SPIDER_EGG.EggFlag.BOSS
+				eggFlags = eggFlags | SPIDER_EGG.EggFlag.SMALL
 			end
 		elseif not npc:IsBoss() and npc.SpawnerEntity and npc.SpawnerEntity:IsBoss() then
 			eggFlags = SPIDER_EGG.EggFlag.SMALL

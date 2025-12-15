@@ -66,27 +66,25 @@ return function(modifiers)
 			Name = "Arachna's Spool",
 			Description = {
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
-				"#{{StatusWebbed}} Enemies on the web will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
+				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders and resets the meter",
-				"#{{Timer}} Spider Eggs break on their own after 10 seconds, spawning nothing",
+				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders"
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Inflicts Spider Bite on nearby enemies. They will be {{Slow}} slowed, receive less knockback, and drop a spider egg on death, or if too small, one friendly spider",
+				"{{StatusSpiderBite}} Inflicts Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x Isaac's damage on nearby enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns a spider egg and resets the meter",
-				"#Spider Eggs can spawn with a {{ColorRainbow}}special{{CR}} color. All spiders hatched from these eggs will be the same matching color, having unique effects",
+				"#{{BossRoom}} Damaging Spider Bitten bosses charges a meter. When filled, spawns a spider egg"
 			}
 		},
 		[Item.GRAB.ID] = {
 			Name = "Grab (placeholder!)",
 			Description = {
-				"{{Throwable}} Grab and throw spider eggs spawned by enemies",
-				"#Thrown spider eggs hatch into half of the amount of spiders they normally spawn",
-				"#Triggers {{ColorRainbow}}special{{CR}} effects depending on the color of the egg when landing on the ground or hitting an enemy"
+				"{{Throwable}} Grab and throw spider eggs",
+				"#{{AracBlueSpider}} Hatches spiders as normal and triggers {{ColorRainbow}}special{{CR}} color-specific effects when the egg hits an obstacle, the floor, or an enemy",
+				"↑ An egg hitting an enemy negates T. Arachna's reduced spider count and can hatch larger spiders",
 			}
 		},
 		[Item.YARN.ID] = {
