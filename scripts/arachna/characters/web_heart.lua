@@ -103,7 +103,7 @@ CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callback
 	---@param player EntityPlayer
 	function(player, flags, _, _, key, hp, hpToRemove)
 		if key == WEB_HEART.KEY and hpToRemove >= hp then
-			local numGoldens = CustomHealthAPI.Library.GetHPOfKey(player, "GOLDEN_HEART", nil, nil, true)
+			local numGoldens = CustomHealthAPI.Library.GetHPOfKey(player, "GOLDEN_HEART", false, false, true)
 			local data = Mod:GetData(player)
 			if numGoldens > 0 and not data.HadGoldenWebHeart then
 				data.HadGoldenWebHeart = true
