@@ -53,7 +53,7 @@ end
 local function setEggTimeout(args)
 	local timeout = tonumber(args)
 	if timeout then
-		Mod.Entities.SPIDER_EGG.EGG_TIMEOUT = timeout * 30
+		Mod.Entities.SPIDER_EGG.EGG_TIMEOUT = Mod.math.floor(timeout * 30)
 	end
 end
 
