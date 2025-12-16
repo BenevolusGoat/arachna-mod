@@ -15,12 +15,12 @@ SPIDER_EGG.ID_SMALL = Isaac.GetEntityVariantByName("Spider Egg (Small)")
 SPIDER_EGG.BIRTHRIGHT_WEB_HEART_CHANCE = 0.05
 SPIDER_EGG.RARE_SPRITE_CHANCE = 0.001
 
-SPIDER_EGG.MAX_EGG_TIMEOUT = 500 --16.6 seconds
+SPIDER_EGG.EGG_TIMEOUT = 0
 
 ---@enum SpiderEggFlag
 SPIDER_EGG.EggFlag = {
-	SMALL = 1 << 0, --Produce less spiders
-	BOSS = 1 << 1, --+50% chance to spawn big spiders, produces more spiders
+	SMALL = 1 << 0,   --Produce less spiders
+	BOSS = 1 << 1,    --+50% chance to spawn big spiders, produces more spiders
 	THROWN_HIT = 1 << 2, --Was an egg that was thrown by T. Arachna that hit an enemy. Negates T. Arachna's spider count debuff and +25% chance to spawn big spiders
 }
 
@@ -171,9 +171,15 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 	end
 	local spiderColor = eggSubtype and eggSubtype % 10 or 0
 	local egg = Mod.Spawn.Effect(SPIDER_EGG.ID, spiderColor, pos, nil, player)
-	Mod:GetData(egg).EggFlags = eggFlags
+	local data = Mod:GetData(egg)
+	data.EggFlags = eggFlags
+	local timeout = SPIDER_EGG.EGG_TIMEOUT
 	if Mod.Character.ARACHNA_B:IsArachnaB(player) and isLegacy then
-		egg:SetTimeout(500)
+		timeout = 500
+	end
+	if timeout > 0 then
+		data.EggMaxTimeout = timeout
+		egg:SetTimeout(timeout)
 	end
 end
 
@@ -257,7 +263,7 @@ end
 ---@param egg EntityEffect
 ---@param rewards? boolean
 function SPIDER_EGG:Explode(egg, rewards)
-	local color = SPIDER_EGG:GetEggColor(egg.SubType) or Color(1,1,1,1,1,1,1)
+	local color = SPIDER_EGG:GetEggColor(egg.SubType) or Color(1, 1, 1, 1, 1, 1, 1)
 	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, color)
 	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 	if not rewards then
@@ -359,13 +365,14 @@ for i = 0, 2 do
 end
 eggTimerSprite:LoadGraphics()
 
----@param effect EntityEffect
-function SPIDER_EGG:RenderTimer(effect, offset)
-	local renderPos = Mod:GetEntityRenderPosition(effect, offset)
-	local nullFrame = effect:GetSprite():GetNullFrame("timer")
-	if nullFrame and nullFrame:IsVisible() and effect.Timeout > 0 then
+---@param egg EntityEffect
+function SPIDER_EGG:RenderTimer(egg, offset)
+	local renderPos = Mod:GetEntityRenderPosition(egg, offset)
+	local nullFrame = egg:GetSprite():GetNullFrame("timer")
+	if nullFrame and nullFrame:IsVisible() and egg.Timeout > 0 then
+		local data = Mod:GetData(egg)
 		renderPos = renderPos + nullFrame:GetPos()
-		local frameNum = floor(effect.Timeout / SPIDER_EGG.MAX_EGG_TIMEOUT * 100) - 1
+		local frameNum = floor(egg.Timeout / data.EggMaxTimeout * 100) - 1
 		eggTimerSprite:SetFrame("Charging", frameNum)
 		eggTimerSprite:Render(renderPos)
 	end

@@ -188,7 +188,8 @@ local tools = {
 local core = {
 	"customhealthapi.core",
 	"entity_replacements",
-	"custom_callbacks"
+	"custom_callbacks",
+	"console_commands"
 }
 
 local config = {

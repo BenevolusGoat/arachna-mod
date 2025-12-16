@@ -20,7 +20,8 @@ DIVINE_CLOTH.RADIUS = 120
 local identifier = "ARACHNA_BITTEN"
 local statusSprite = Sprite("gfx/indicator_arachna_b.anm2", false)
 statusSprite:Play("Float")
-DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, statusSprite, nil, EntityFlag.FLAG_SLOW, true)
+DIVINE_CLOTH.STATUS_BITTEN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(identifier, statusSprite, nil,
+	EntityFlag.FLAG_SLOW, true)
 DIVINE_CLOTH.STATUS_BITTEN = StatusEffectLibrary.StatusFlag[identifier]
 
 --#endregion
@@ -47,7 +48,7 @@ local function legacyEggInteraction(pos, size)
 	Mod.Foreach.EffectInRadius(pos, size, function(egg, index)
 		shouldPlayGood = true
 		if egg.Timeout > 0 then
-			egg:SetTimeout(Mod.math.min(Mod.Entities.SPIDER_EGG.MAX_EGG_TIMEOUT,
+			egg:SetTimeout(Mod.math.min(Mod.Entities.SPIDER_EGG.LEGACY_EGG_TIMEOUT,
 				egg.Timeout + 100))
 		end
 		Mod.Spawn.Notification(egg.Position, 0)
@@ -154,7 +155,8 @@ function DIVINE_CLOTH:OverrideWebbedCountdown(ent)
 	end
 end
 
-StatusEffectLibrary.Callbacks.AddPriorityCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT, CallbackPriority.EARLY,
+StatusEffectLibrary.Callbacks.AddPriorityCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT,
+	CallbackPriority.EARLY,
 	DIVINE_CLOTH.OverrideWebbedCountdown, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 function DIVINE_CLOTH:PostAddBite(ent)
