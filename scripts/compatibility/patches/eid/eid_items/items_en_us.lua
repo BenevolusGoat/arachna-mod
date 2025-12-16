@@ -74,7 +74,7 @@ return function(modifiers)
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Inflicts Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x Isaac's damage on nearby enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death",
+				"{{StatusSpiderBite}} Inflicts Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{BossRoom}} Damaging Spider Bitten bosses charges a meter. When filled, spawns a spider egg"
 			}
