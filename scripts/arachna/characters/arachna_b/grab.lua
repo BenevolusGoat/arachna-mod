@@ -281,12 +281,14 @@ function GRAB:OnEggDeath(tear)
 
 	if player then
 		local rng = player:GetCollectibleRNG(GRAB.ID)
-		local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
+
 		if #tear:GetHitList() == 0 then
 			GRAB:OnEggDamage(nil, nil, nil, EntityRef(tear))
 		else
 			eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)
 		end
+		local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
+
 		if tear.SubType == Mod.Entities.COLORED_SPIDERS.SpiderSubtype.CONQUEST then
 			spiderCount = Mod.math.ceil(spiderCount * 1.5)
 		end

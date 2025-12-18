@@ -67,24 +67,21 @@ function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
 		maxSpiders = maxSpiders + 1
 	end
 
-	if not eggFlags then
-		return minSpiders, maxSpiders
-	end
-
-	if Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) then
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) then
 		minSpiders = minSpiders - 1
 		maxSpiders = maxSpiders - 2
 	end
 
-	if Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
 		minSpiders = minSpiders * 2
 		maxSpiders = maxSpiders + 2
 	end
 
-	if arachnaB and not Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
+	if arachnaB and (not eggFlags or not Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)) then
 		minSpiders = Mod.math.max(1, Mod.math.floor(minSpiders / 2))
 		maxSpiders = Mod.math.max(1, Mod.math.floor(maxSpiders / 2))
 	end
+
 	return minSpiders, maxSpiders
 end
 
@@ -97,13 +94,11 @@ function SPIDER_EGG:GetSpiderBonusChances(player, eggFlags)
 	if arachnaBirthright then
 		bonusColorChance = bonusColorChance + 0.15
 	end
-	if not eggFlags then
-		return bonusColorChance, bigChance
-	end
-	if Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
+
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
 		bigChance = bigChance + 0.5
 	end
-	if Mod.Character.ARACHNA_B:IsArachnaB(player) and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
+	if eggFlags and Mod.Character.ARACHNA_B:IsArachnaB(player) and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
 		bigChance = bigChance + 0.25
 	end
 	return bonusColorChance, bigChance
