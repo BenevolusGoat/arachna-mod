@@ -33,11 +33,28 @@ end
 ---@param playerType PlayerType
 ---@param args string
 local function setMarkCommand(playerType, args)
+	local strStartAll, strEndAll = string.find(args, "All")
+	if strStartAll and strEndAll then
+		local value = tonumber(string.sub(args, strEndAll + 2))
+		if value and value >= 0 and value <= 2 then
+			local marks = Isaac.GetCompletionMarks(playerType)
+			for name, _ in pairs(marks) do
+				if name ~= "PlayerType" then
+					if name == "UltraGreedier" and value == 1 then
+						marks[name] = 0
+					else
+						marks[name] = value
+					end
+				end
+			end
+			Isaac.SetCompletionMarks(marks)
+		end
+		return
+	end
 	for name, completionType in pairs(nameToMark) do
 		local strStart, strEnd = string.find(args, name)
 		if strStart and strEnd then
-			args = string.sub(args, strEnd + 2)
-			local value = tonumber(args)
+			local value = tonumber(string.sub(args, strEnd + 2))
 			if value and value >= 0 and value <= 2 then
 				Isaac.SetCompletionMark(playerType, completionType, value)
 				break
@@ -75,7 +92,7 @@ local commands = {
 
 local helpText = {
 	["setmark"] =
-		"<completiontype>: [MomsHeart|Isaac|Satan|BossRush|BlueBaby|Lamb|MegaSatan|UltraGreed|Hush|Delirium|Mother|Beast]\n"
+		"<completiontype>: [All|MomsHeart|Isaac|Satan|BossRush|BlueBaby|Lamb|MegaSatan|UltraGreed|Hush|Delirium|Mother|Beast]\n"
 		.. "<value>: [0: Locked|1: Normal|2: Hard]\n"
 		.. "Examples:\n"
 		.. "(arachnaMod setmark MomsHeart 0) will set the Mom's Heart/It Lives completion mark to Locked.\n"
@@ -133,7 +150,8 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 		return
 	end
 	for _, commandTable in ipairs(commands) do
-		if string.find(params, commandTable[1]) then
+		local strStart, strEnd = string.find(params, commandTable[1])
+		if strStart and strEnd and string.sub(params, strEnd + 1, strEnd + 1) == " " then
 			local args = string.gsub(params, commandTable[1] .. " ", "")
 			commandFuncs[commandTable[1]](args)
 		end
