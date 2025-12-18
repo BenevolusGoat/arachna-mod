@@ -19,7 +19,7 @@ return function()
 				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
 				"#Not affected by cowbebs",
 				"#{{Poison}} 25% chance to shoot poison tears",
-				"#↓ Less spiders from spider eggs",
+				"#↓ Smaller spider eggs",
 				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x damage",
 				"#{{StatusSpiderBite}} Spider Bite causes spider eggs to only drop spiders of its own color",
 			}

@@ -7,6 +7,8 @@ ARACHNAMOD.Item.GRAB = GRAB
 GRAB.ID = Isaac.GetItemIdByName("Grab")
 GRAB.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
 
+local GRAB_RANGE = 40
+
 ---@param player EntityPlayer
 function GRAB:GetEggTearDamage(player)
 	return player.Damage * 2 + (Mod.Level():GetStage() * 0.5)
@@ -22,7 +24,6 @@ function GRAB:FireEgg(pos, vel, player, spawner)
 	eggTear.CollisionDamage = GRAB:GetEggTearDamage(player)
 	eggTear.FallingSpeed = -5.5
 	eggTear.FallingAcceleration = 0.5
-	eggTear:GetSprite():Play("Stone5Move")
 	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
 	local weapon = player:GetWeapon(1)
 	local playerFlags = player:GetTearHitParams(weapon and weapon:GetWeaponType() or WeaponType.WEAPON_TEARS, 1, 1,
@@ -37,8 +38,8 @@ function GRAB:FireEgg(pos, vel, player, spawner)
 
 	if spawner and spawner:ToNPC() then
 		eggTear.SubType = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
-		tearData.EggOnLand = true
-		tearData.EggPlayer = EntityPtr(player)
+		tearData.EggOnLandPlayer = EntityPtr(player)
+		tearData.EggFlags = Mod.Entities.SPIDER_EGG.EggFlag.SMALL | Mod.Entities.SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE
 	elseif spawner and spawner:ToPlayer() then
 		if data.HeldEggColor then
 			tearData.EggFlags = data.HeldEggFlags
@@ -47,6 +48,9 @@ function GRAB:FireEgg(pos, vel, player, spawner)
 			data.HeldEggColor = nil
 		end
 	end
+	local isSmall = tearData.EggFlags and Mod:HasBitFlags(tearData.EggFlags, Mod.Entities.SPIDER_EGG.EggFlag.SMALL)
+	local animationSize = isSmall and "4" or "5"
+	eggTear:GetSprite():Play("Stone" .. animationSize .. "Move")
 	local color = Mod.Entities.SPIDER_EGG:GetEggColor(eggTear.SubType)
 	if color then
 		eggTear.Color = color
@@ -59,31 +63,21 @@ ThrowableItemLib:RegisterThrowableItem({
 	Type = ThrowableItemLib.Type.ACTIVE,
 	Identifier = "Arachna Spider Eggs",
 	Flags = ThrowableItemLib.Flag.DISABLE_HIDE | ThrowableItemLib.Flag.PERSISTENT,
-	HoldCondition = function (player, config)
-		local eggToRemove
-		Mod.Foreach.EffectInRadius(player.Position, 40, function(egg, index)
-			if egg:GetSprite():IsPlaying("Idle") then
-				if not eggToRemove
-					or egg.Position:DistanceSquared(player.Position) < eggToRemove.Position:DistanceSquared(player.Position)
-				then
-					eggToRemove = egg
-				end
-			end
-		end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
-		if eggToRemove then
-			Mod:GetData(player).QueuedEggLift = EntityPtr(eggToRemove)
+	HoldCondition = function(player, config)
+		local data = Mod:GetData(player)
+		if data.ClosestEgg and data.ClosestEgg.Ref then
 			return ThrowableItemLib.HoldConditionReturnType.ALLOW_HOLD
 		else
 			return ThrowableItemLib.HoldConditionReturnType.DISABLE_USE
 		end
 	end,
-	ThrowFn = function (player, vect, slot, mimic)
+	ThrowFn = function(player, vect, slot, mimic)
 		GRAB:FireEgg(player.Position, Mod:AddTearVelocity(vect, 12, player), player, player)
 	end,
-	LiftFn = function (player, continued, slot, mimic)
+	LiftFn = function(player, continued, slot, mimic)
 		local data = Mod:GetData(player)
 		if not continued then
-			local egg = data.QueuedEggLift and data.QueuedEggLift.Ref
+			local egg = data.ClosestEgg and data.ClosestEgg.Ref
 			if not egg then return end
 			local eggData = Mod:GetData(egg)
 			data.HeldEggFlags = (eggData.EggFlags or 0)
@@ -93,19 +87,21 @@ ThrowableItemLib:RegisterThrowableItem({
 		local spiderColor = data.HeldEggColor
 		local sprite = player:GetHeldSprite()
 		sprite:Load("gfx/002.027_egg tear.anm2", true)
-		sprite:Play("Stone5Idle")
+		local isSmall = Mod:HasBitFlags(data.HeldEggFlags, Mod.Entities.SPIDER_EGG.EggFlag.SMALL)
+		local animationSize = isSmall and "4" or "5"
+		sprite:Play("Stone" .. animationSize .. "Idle")
 		sprite.Offset = Vector(0, -10)
 		local color = Mod.Entities.SPIDER_EGG:GetEggColor(spiderColor)
 		if color then
 			sprite.Color = color
 		end
 	end,
-	HideFn = function (player, slot, mimic)
+	HideFn = function(player, slot, mimic)
 		local data = Mod:GetData(player)
 		data.HeldEggFlags = nil
 		data.HeldEggColor = nil
 	end,
-	AnimateFn = function (player, state)
+	AnimateFn = function(player, state)
 		if state == ThrowableItemLib.State.THROW then
 			player:AnimateCollectible(1, "HideItem")
 			player:GetHeldSprite().Color.A = 0
@@ -113,6 +109,33 @@ ThrowableItemLib:RegisterThrowableItem({
 		end
 	end
 })
+
+---@param player EntityPlayer
+function GRAB:MarkNearestEgg(player)
+	if not player:HasCollectible(GRAB.ID) then return end
+	local closestEgg
+	Mod.Foreach.EffectInRadius(player.Position, GRAB_RANGE, function(egg, index)
+		if egg:GetSprite():IsPlaying("Idle") then
+			if not closestEgg
+				or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
+			then
+				closestEgg = egg
+			end
+		end
+	end, Mod.Entities.SPIDER_EGG.ID_SMALL, nil, nil, true)
+	local data = Mod:GetData(player)
+	if closestEgg then
+		if not data.ClosestEgg then
+			data.ClosestEgg = EntityPtr(closestEgg)
+		elseif not data.ClosestEgg.Ref or not Mod:IsSameEntity(data.ClosestEgg.Ref, closestEgg) then
+			data.ClosestEgg:SetReference(closestEgg)
+		end
+	else
+		data.ClosestEgg = nil
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, GRAB.MarkNearestEgg)
 
 ---@param player? EntityPlayer
 local function getNecroDamage(player)
@@ -146,7 +169,7 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 		if ent then
 			ent:AddPoison(playerSource, 150, damage)
 		end
-		elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.FAMINE and ent then
+	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.FAMINE and ent then
 		if ent:IsBoss() then
 			ent:AddConfusion(playerSource, 300)
 		else
@@ -157,7 +180,7 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 		poof.Color = source.Entity.Color
 		poof.SpriteScale = Vector(0.8, 0.8)
 		Mod.sfxman:Play(SoundEffect.SOUND_DEATH_CARD)
-		Mod.Foreach.NPCInRadius(source.Position, 80, function (npc, index)
+		Mod.Foreach.NPCInRadius(source.Position, 80, function(npc, index)
 			if npc:IsActiveEnemy(false) and npc:IsVulnerableEnemy() and not npc:IsInvincible() then
 				npc:TakeDamage(getNecroDamage(player), 0, playerSource, 0)
 			end
@@ -172,7 +195,7 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 		local poof = Mod.Spawn.Poof02(1, source.Position, source.Entity)
 		poof.Color = source.Entity.Color
 		poof.SpriteScale = Vector(0.8, 0.8)
-		Mod.Foreach.NPCInRadius(source.Position, 80, function (npc, index)
+		Mod.Foreach.NPCInRadius(source.Position, 80, function(npc, index)
 			if npc:IsActiveEnemy(false) then
 				npc:AddCharmed(playerSource, 150)
 			end
@@ -181,7 +204,7 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 		local clouds = Mod.Spawn.DustClouds(source.Position, nil, source.Entity, nil, 3)
 		for _, cloud in ipairs(clouds) do
 			cloud.Velocity = Vector(Mod:RandomNum(3, 5), 0):Rotated(Mod:RandomNum(360))
-			cloud:GetSprite():GetLayer(0):SetColor(Color(1,1,1,0.4,0.8,0.9,1))
+			cloud:GetSprite():GetLayer(0):SetColor(Color(1, 1, 1, 0.4, 0.8, 0.9, 1))
 		end
 		if ent and not ent:IsBoss() then
 			ent:AddEntityFlags(EntityFlag.FLAG_ICE)
@@ -297,9 +320,9 @@ function GRAB:OnEggDeath(tear)
 		end
 		Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, tear.Position, spiderCount, nil, eggFlags, false, tear.SubType)
 	elseif npc then
-		player = data and data.EggPlayer and data.EggPlayer.Ref and data.EggPlayer.Ref:ToPlayer()
+		player = data and data.EggOnLandPlayer and data.EggOnLandPlayer.Ref and data.EggOnLandPlayer.Ref:ToPlayer()
 		if not player then return end
-		SPIDER_EGG:TrySpawnEgg(tear.Position, npc, player, nil, tear.SubType)
+		SPIDER_EGG:TrySpawnEgg(tear.Position, npc, player, eggFlags, tear.SubType)
 	end
 	poof.Color = poofColor
 end

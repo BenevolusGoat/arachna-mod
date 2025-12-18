@@ -19,9 +19,10 @@ SPIDER_EGG.EGG_TIMEOUT = 0
 
 ---@enum SpiderEggFlag
 SPIDER_EGG.EggFlag = {
-	SMALL = 1 << 0,   --Produce less spiders
-	BOSS = 1 << 1,    --+50% chance to spawn big spiders, produces more spiders
-	THROWN_HIT = 1 << 2, --Was an egg that was thrown by T. Arachna that hit an enemy. Negates T. Arachna's spider count debuff and +25% chance to spawn big spiders
+	SMALL = 1 << 0,           --Produce less spiders
+	BOSS = 1 << 1,            --+50% chance to spawn big spiders, produces more spiders
+	THROWN_HIT = 1 << 2,      --Was an egg that was thrown by T. Arachna that hit an enemy. Negates T. Arachna's spider count debuff and +25% chance to spawn big spiders
+	NO_INSTANT_EXPLODE = 1 << 3, --Prevents small spider eggs from exploding during their Idle animation
 }
 
 SPIDER_EGG.EggColors = {
@@ -58,26 +59,17 @@ end
 ---@param player EntityPlayer
 ---@param eggFlags? SpiderEggFlag
 function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
-	local arachnaB = Mod.Character.ARACHNA_B:IsArachnaB(player)
-	local arachnaBirthright = Mod.Character.ARACHNA:ArachnaHasBirthright(player)
 	local minSpiders, maxSpiders = 2, 4
-
-	if arachnaBirthright then
-		minSpiders = minSpiders + 1
-		maxSpiders = maxSpiders + 1
-	end
-
-	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) then
-		minSpiders = minSpiders - 1
-		maxSpiders = maxSpiders - 2
-	end
 
 	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
 		minSpiders = minSpiders * 2
 		maxSpiders = maxSpiders + 2
 	end
 
-	if arachnaB and (not eggFlags or not Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)) then
+	if eggFlags
+		and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL)
+		and not Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)
+	then
 		minSpiders = Mod.math.max(1, Mod.math.floor(minSpiders / 2))
 		maxSpiders = Mod.math.max(1, Mod.math.floor(maxSpiders / 2))
 	end
@@ -114,7 +106,7 @@ function SPIDER_EGG:ShouldNotSpawnEgg(npc)
 			or npc.SpawnerEntity ~= EntityType.ENTITY_NULL
 	end
 	return hitPoints < 10
-		or (npc.SpawnerType ~= EntityType.ENTITY_NULL and (not npc.SpawnerEntity or not npc.SpawnerEntity:IsBoss()))
+		or npc.SpawnerType ~= EntityType.ENTITY_NULL and not npc:IsBoss()
 end
 
 ---@param player EntityPlayer
@@ -161,11 +153,15 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 		end
 		return
 	end
-	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) and isLegacy then
-		return
+	local eggID = SPIDER_EGG.ID
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL) then
+		if isLegacy then
+			return
+		end
+		eggID = SPIDER_EGG.ID_SMALL
 	end
 	local spiderColor = eggSubtype and eggSubtype % 10 or 0
-	local egg = Mod.Spawn.Effect(SPIDER_EGG.ID, spiderColor, pos, nil, player)
+	local egg = Mod.Spawn.Effect(eggID, spiderColor, pos, nil, player)
 	local data = Mod:GetData(egg)
 	data.EggFlags = eggFlags
 	local timeout = SPIDER_EGG.EGG_TIMEOUT
@@ -245,7 +241,8 @@ local function rewardLegacy(egg)
 			and rng:RandomInt(3) == 1
 		then
 			--Even though its passing 0.2 for big chance, legacy only checks if its above 0 to do its own calculations
-			spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(nil, nil, Mod.Entities.COLORED_SPIDERS.BIG_SPIDER_CHANCE)
+			spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(nil, nil,
+				Mod.Entities.COLORED_SPIDERS.BIG_SPIDER_CHANCE)
 		end
 		COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, egg.Position)
 	end
@@ -306,8 +303,18 @@ function SPIDER_EGG:OnUpdate(egg)
 	if sprite:IsFinished("Appear") then
 		sprite:Play("Idle")
 	end
+	local data = Mod:GetData(egg)
 
-	if (Mod.Room():IsClear() or egg.Variant == SPIDER_EGG.ID_SMALL) and (sprite:IsPlaying("Idle")) then
+	if sprite:IsPlaying("Idle")
+		and (
+			Mod.Room():IsClear()
+			or (
+				egg.Variant == SPIDER_EGG.ID_SMALL
+				and data.EggFlags
+				and not Mod:HasBitFlags(data.EggFlags, SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE)
+			)
+		)
+	then
 		sprite:Play("Explode")
 	end
 

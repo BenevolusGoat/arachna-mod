@@ -94,7 +94,8 @@ Arachna:
 * Birthright adjusted. Instead of +1 to spawned spiders, chance is increased for spider eggs spawning colored spiders
 
 Tainted Arachna:
-* Replaced inherent +1 guaranteed spider spawn from Spider Eggs with decreased spider count
+* Removed inherent +1 guaranteed spider spawn from Spider Eggs
+* All spider eggs are smaller
 * Can no longer get random spider colors from spider spawns
 * Removed timer mechanic on spider eggs
 * Spider eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color

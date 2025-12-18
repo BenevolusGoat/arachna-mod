@@ -82,6 +82,14 @@ function ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
 	return ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD + stageModifier * ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE
 end
 
+---@param npc EntityNPC
+---@param source EntityRef
+---@param duration? integer
+function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
+	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration or 2, source, nil,
+		{ OriginalMass = npc.Mass })
+end
+
 --#endregion
 
 --#region Arachna's Spool
@@ -191,7 +199,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, ARACHNAS_SPOOL.OnWebUpdate, 
 
 --#endregion
 
---#region Webbed status
+--#region Pre/Post Add Webbed
 
 ---@param npc EntityNPC
 function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
@@ -215,17 +223,25 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_A
 	ARACHNAS_SPOOL.PreAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param ent Entity
-function ARACHNAS_SPOOL:PostAddWeb(ent)
+---@param statusEffectData StatusEffectData
+function ARACHNAS_SPOOL:PostAddWeb(ent, _, statusEffectData)
 	local data = Mod:GetData(ent)
 	if not data.WebbedStatusSprite then
 		local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
 		sprite:Play("Idle")
 		data.WebbedStatusSprite = sprite
 	end
+	if not Mod:IsLegacyGameplayEnabled() then
+		ent.Mass = statusEffectData.CustomData.OriginalMass * 2
+	end
 end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
 	ARACHNAS_SPOOL.PostAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
+
+--#endregion
+
+--#region Webbed Boss Chargebar
 
 ---@param ent Entity
 ---@param amount number
@@ -329,15 +345,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderBossCharge
 
 --#endregion
 
---#region Webbed Status
-
----@param npc EntityNPC
----@param source EntityRef
----@param duration? integer
-function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration or 2, source, nil,
-		{ OriginalMass = npc.Mass })
-end
+--#region Webbed Update/On Death
 
 ---We want this on POST_NPC_DEATH but StatusEffectLibrary (yes the library I coded) removes all status effect data when an entity is removed, like it should.
 ---
@@ -376,36 +384,28 @@ function ARACHNAS_SPOOL:OnNPCDeath(npc)
 		local source = data.SpiderEggSource
 		local player = source and source.Entity and source.Entity:ToPlayer()
 		if not player then return end
-		local eggFlags
+		local eggFlags = 0
 		local SPIDER_EGG = Mod.Entities.SPIDER_EGG
 		if npc:IsBoss() then
 			eggFlags = SPIDER_EGG.EggFlag.BOSS
-			if npc.Parent or npc.Child then
-				eggFlags = eggFlags | SPIDER_EGG.EggFlag.SMALL
+			if npc.Parent or npc.Child or npc.SpawnerType ~= EntityType.ENTITY_NULL then
+				eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL)
 			end
-		elseif not npc:IsBoss() and npc.SpawnerEntity and npc.SpawnerEntity:IsBoss() then
-			eggFlags = SPIDER_EGG.EggFlag.SMALL
 		end
+		if Mod.Character.ARACHNA_B:IsArachnaB(player) and not Mod:IsLegacyGameplayEnabled() then
+			eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL | SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE)
+		end
+
 		local spiderColor
 		if data.SpiderBitten and not Mod:IsLegacyGameplayEnabled() then
 			spiderColor = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype()
 		end
+		---@cast eggFlags SpiderEggFlag
 		SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player, eggFlags, spiderColor)
 	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNAS_SPOOL.OnNPCDeath)
-
----@param ent Entity
----@param statusEffectData StatusEffectData
-function ARACHNAS_SPOOL:PostAddWebbed(ent, _, statusEffectData)
-	if not Mod:IsLegacyGameplayEnabled() then
-		ent.Mass = statusEffectData.CustomData.OriginalMass * 2
-	end
-end
-
-StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
-	ARACHNAS_SPOOL.PostAddWebbed, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param ent Entity
 ---@param statusEffectData StatusEffectData

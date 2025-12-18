@@ -84,7 +84,7 @@ return function(modifiers)
 			Description = {
 				"{{Throwable}} Grab and throw spider eggs",
 				"#{{AracBlueSpider}} Hatches spiders as normal and triggers {{ColorRainbow}}special{{CR}} color-specific effects when the egg hits an obstacle, the floor, or an enemy",
-				"↑ An egg hitting an enemy negates T. Arachna's reduced spider count and can hatch larger spiders",
+				"↑ Hitting an enemy with an egg may spawn more and larger spiders",
 			}
 		},
 		[Item.YARN.ID] = {

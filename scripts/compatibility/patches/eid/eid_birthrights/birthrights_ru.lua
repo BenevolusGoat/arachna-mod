@@ -14,10 +14,7 @@ return function(modifiers)
 		[Mod.PlayerType.ARACHNA_B] = {
 			Name = "Tainted Arachna",
 			Description = {
-				"↑ Duration of {{StatusSpiderBite}} Spider Bite status extended by +25%",
-				"#↑ Radius of {{Collectible" .. Item.DIVINE_CLOTH.ID .. "}} Divine Cloth extended by +33%",
-				"#{{Timer}} Using {{Collectible" ..
-				Item.DIVINE_CLOTH.ID .. "}} Divine Cloth increases lifetime of nearby Spider Eggs by +3 seconds"
+				"N/A for now"
 			}
 		},
 	}
