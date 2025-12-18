@@ -25,14 +25,6 @@ function GRAB:FireEgg(pos, vel, player, spawner)
 	eggTear.FallingSpeed = -5.5
 	eggTear.FallingAcceleration = 0.5
 	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
-	local weapon = player:GetWeapon(1)
-	local playerFlags = player:GetTearHitParams(weapon and weapon:GetWeaponType() or WeaponType.WEAPON_TEARS, 1, 1,
-		eggTear).TearFlags
-	for _, tearFlag in ipairs(Mod.Item.ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS) do
-		if Mod:HasBitFlags(playerFlags, tearFlag) then
-			eggTear:AddTearFlags(tearFlag)
-		end
-	end
 	local data = Mod:GetData(player)
 	local tearData = Mod:GetData(eggTear)
 
@@ -322,7 +314,8 @@ function GRAB:OnEggDeath(tear)
 	elseif npc then
 		player = data and data.EggOnLandPlayer and data.EggOnLandPlayer.Ref and data.EggOnLandPlayer.Ref:ToPlayer()
 		if not player then return end
-		SPIDER_EGG:TrySpawnEgg(tear.Position, npc, player, eggFlags, tear.SubType)
+		local fixedPos = Mod.Room():GetClampedPosition(tear.Position, 20)
+		SPIDER_EGG:TrySpawnEgg(fixedPos, npc, player, eggFlags, tear.SubType)
 	end
 	poof.Color = poofColor
 end

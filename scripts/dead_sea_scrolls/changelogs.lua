@@ -138,7 +138,6 @@ Other:
 - 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
-- Arachna's Spool now copies the following tear effects from the player: Spectral, Homing, Wiggle Worm, Brain Worm, Lost Contact, Continuum, and Tractor Beam
 - Reduced collision size of Mechanical Eye, The Yarn, and Arachnid Grip's Spider Egg orbitals
 - Mechanical Eye now respects unlocks for what active items can be used
 - Mechanical Eye can now be used with throwable actives, such as Bob's Rotten Head and Black Hole, and activates when the actives are discharged

@@ -15,16 +15,6 @@ local identifier = "ARACHNA_WEBBED"
 StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
 ARACHNAS_SPOOL.STATUS_WEBBED = StatusEffectLibrary.StatusFlag[identifier]
 
-ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS = {
-	TearFlags.TEAR_SPECTRAL,
-	TearFlags.TEAR_HOMING,
-	TearFlags.TEAR_WIGGLE,
-	TearFlags.TEAR_TURN_HORIZONTAL,
-	TearFlags.TEAR_SHIELDED,
-	TearFlags.TEAR_CONTINUUM,
-	TearFlags.TEAR_TRACTOR_BEAM
-}
-
 ARACHNAS_SPOOL.MINIBOSS = Mod:Set({
 	tostring(EntityType.ENTITY_SLOTH) .. ".0.0",
 	tostring(EntityType.ENTITY_LUST) .. ".0.0",
@@ -54,17 +44,6 @@ function ARACHNAS_SPOOL:FireSpool(pos, vel, spawner)
 	spoolTear.FallingAcceleration = 0.5
 	if Mod:IsLegacyGameplayEnabled() then
 		spoolTear:SetSize(8, Vector.One, 8)
-	end
-	local player = spawner and spawner:ToPlayer()
-	if player then
-		local weapon = player:GetWeapon(1)
-		local playerFlags = player:GetTearHitParams(weapon and weapon:GetWeaponType() or WeaponType.WEAPON_TEARS, 1, 1,
-			spoolTear).TearFlags
-		for _, tearFlag in ipairs(ARACHNAS_SPOOL.INHERITED_TEAR_FLAGS) do
-			if Mod:HasBitFlags(playerFlags, tearFlag) then
-				spoolTear:AddTearFlags(tearFlag)
-			end
-		end
 	end
 end
 
