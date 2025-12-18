@@ -8,7 +8,7 @@ ARACHNAMOD.ModCallbacks = {
 	POST_ROCKET_EXPLODE = "ARACHNA_POST_ROCKET_EXPLODE",
 
 	--(Entity Entity, number DamageAmount, Flags DamageFlags, EntityFamiliar Spider, integer CountdownFrames): See ENTITY_TAKE_DMG, Optional Arg: ColoredSpiderSubtype - Called before an enemy takes damage from a colored spider. Has the same return values as MC_ENTITY_TAKE_DMG.
-	PRE_ENEMY_TAKE_DMG_FROM_SPIDER = "ARACHNA_POST_ENEMY_TAKE_DMG_FROM_SPIDER",
+	PRE_ENEMY_TAKE_DMG_FROM_SPIDER = "ARACHNA_PRE_ENEMY_TAKE_DMG_FROM_SPIDER",
 
 	--(Entity Entity, number DamageAmount, Flags DamageFlags, EntityFamiliar Spider, integer CountdownFrames), Optional Arg: ColoredSpiderSubtype - Called after an enemy takes damage from a colored spider.
 	POST_ENEMY_TAKE_DMG_FROM_SPIDER = "ARACHNA_POST_ENEMY_TAKE_DMG_FROM_SPIDER",
