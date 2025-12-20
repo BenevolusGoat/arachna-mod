@@ -371,7 +371,7 @@ function GEPTAMERON:OnNPCDeath(npc)
 	if data.QueueLocustDrop then
 		for i = 1, GEPTAMERON.LOCUST_SPAWN_NUM do
 			local locust = rng:RandomInt(1, 5)
-			Mod.Game:Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.BLUE_FLY, npc.Position, Vector.Zero, nil, locust, rng:Next())
+			Mod.Spawn.Familiar(FamiliarVariant.BLUE_FLY, locust, npc.Position, nil, nil, rng:Next())
 		end
 	end
 end

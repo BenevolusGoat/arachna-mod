@@ -1,3 +1,5 @@
+--#region Mod identifiers
+
 ---@meta
 ---@diagnostic disable: lowercase-global
 -- This file only exists to tell the code editor what exists outside of the mod folder to stop it complaining
@@ -67,6 +69,10 @@ BirthcakeRebaked = {}
 Epiphany = {}
 UniqueMinisaacs = {}
 
+--#endregion
+
+--#region EID
+
 ---@class EID_DescObj
 ---@field ObjType integer
 ---@field ObjVariant integer
@@ -111,14 +117,179 @@ function EID:addGoldenTrinketTable(trinketId, trinketTable) end
 -- Example usage: EID:addCondition(myDevilishItemID, EID.IsGreedMode, "{{GreedMode}} Reduces shop prices by 1 for each optional Nightmare wave completed")
 ---@param ID CollectibleType | string | table @ID and ownedID can be a collectible ID or a full item string (like "5.350.54"). For convenience, ID can be a table of IDs that will all get the condition applied
 ---@param ownedID integer | function @ownedID can also be a function rather than just an ID; if it returns true, the text will be displayed
----@param text string @The text will be added as a new line, with the owned item's icon at the start
----@param replaceText? string @If you pass in replaceText, instead the text is found in the description and replaced with replaceText
+---@param text string @The text will be added as a new line (except with `replaceText`), with the owned item's icon at the start
+---@param replaceText? string @Will use `text` as a reference. If the text is found in the description, will replace it with `replaceText`
 ---@param language? string
 ---@param extraTable? table
 function EID:addCondition(ID, ownedID, text, replaceText, language, extraTable) end
 
+-- Shortcut function for when you have two items that have a synergy with each other
+--
+-- Example usage: EID:addSynergyCondition(myHappyLittleItemID, {CollectibleType.COLLECTIBLE_BRIMSTONE, CollectibleType.COLLECTIBLE_SULFUR}, "Turns your laser into a smiley face that charms enemies")
+---@param ID1 CollectibleType[] | CollectibleType @ID1 will have text1 added to its description if you own ID2
+---@param ID2 CollectibleType[] | CollectibleType @ID2 will have text2 (or text1, if text2 isn't given) added to its description if you own ID1
+---@param text1 string
+---@param text2? string
+---@param language? string
+---@param extraTable? table
+function EID:addSynergyCondition(ID1, ID2, text1, text2, language, extraTable)
+end
+
+-- Function for adding text to a pedestal's description when you're playing a specific character
+--
+-- Example usage: EID:addPlayerCondition(myAngstyItemID, PlayerType.PLAYER_EVE, "Gives Eve extra mascara (2x Damage multiplier)")
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param playerID PlayerType | PlayerType[]
+---@param text string @The text will be added as a new line (except with `replaceText`), with the player's head icon at the start
+---@param replaceText? string @Will use `text` as a reference. If the text is found in the description, will replace it with `replaceText`
+---@param language? string
+---@param extraTable? table
+---@param includeTainted? boolean @default: `true`. Set to `false` to not include this description on the tainted version of the character
+function EID:addPlayerCondition(ID, playerID, text, replaceText, language, extraTable, includeTainted)
+end
+
+-- Shortcut function for adding Repentance Tarot Cloth conditions
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+function EID:addTarotClothBuffsCondition(ID, text, numberToDouble, newNumber, language)
+end
+
+-- Shortcut function for adding car battery conditions
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+function EID:addCarBatteryCondition(ID, text, numberToDouble, newNumber, language)
+end
+
+-- Shortcut function for adding abyss synergies conditions
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+function EID:addAbyssSynergiesCondition(ID, text, numberToDouble, newNumber, language)
+end
+
+-- Shortcut function for adding book of belial conditions
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+function EID:addBookOfBelialBuffsCondition(ID, text, numberToDouble, newNumber, language)
+end
+
+-- Shortcut function for adding binge eater conditions
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+function EID:addBingeEaterBuffsCondition(ID, text, numberToDouble, newNumber, language)
+end
+
+-- Shortcut function for adding BFFS conditions; this is slightly more complex since it supports trinkets
+--
+-- Example usage: EID:addBFFSCondition(myBasicFamiliarID, nil, 3.5)
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+function EID:addBFFSCondition(ID, text, numberToDouble, newNumber, language)
+end
+
+-- Shortcut function for adding Hive Mind conditions; by default, it will show with BFFS too, unless you pass in allowBFFS as false
+---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
+---@param text string
+---@param numberToDouble? number[] @Dictates the number do multiply by 2
+---@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param language? string
+---@param allowBFFS? boolean @default: `true`
+function EID:addHiveMindCondition(ID, text, numberToDouble, newNumber, language, allowBFFS)
+end
+
+-- Actives that have no additional effect from Car Battery. Adds a "No effect" line
+---@type {[CollectibleType]: boolean}
+EID.CarBatteryNoSynergy = {}
+-- Items that should show their Car Battery synergy while looking at a Car Battery pedestal
+---@type {[CollectibleType]: boolean}
+EID.CarBatteryPedestalWhitelist = {}
+-- Familiars that have no effect from BFFS!
+---@type {[CollectibleType]: boolean}
+EID.BFFSNoSynergy = {}
+-- Items that should show their BFFS / Hive Mind synergy while looking at a BFFS / Hive Mind pedestal
+---@type {[CollectibleType]: boolean}
+EID.BFFSPedestalWhitelist = {}
+-- Familiars that count for Hive Mind in Repentance (although it could give them No Effect if it just increases size)
+---@type {[CollectibleType]: boolean}
+EID.HiveMindFamiliars = {}
+-- Tainted character's respective normal version ID, for conditionals that apply to both versions of the character
+-- To help with other character pairs, Esau = Jacob, Dead Tainted Lazarus = Tainted Lazarus, Tainted Soul = Tainted Forgotten
+---@type {[PlayerType]: PlayerType}
+EID.TaintedToRegularID = {}
+---@alias HeartType "Red"|"Soul"|"Black"|"Coin"|"None"|string
+-- lookup table of all characters with a given heart type
+---@type {[HeartType]: PlayerType[]}
+EID.SpecialHeartPlayers = {}
+-- Lookup table for the type of health each player has
+---@type {[PlayerType]: HeartType}
+EID.CharacterToHeartType = {}
+-- Characters with the listed health types remove any lines that start with {{HealingRed}} or {{HealingHalfRed}}
+---@type {[HeartType]: boolean}
+EID.HealthTypesWithoutHealing = {}
+-- Character IDs that have a pocket active (0 = normal, 1 = timed, 2 = special). For 4.5 Volt
+---@type {[PlayerType]: CollectibleType}
+EID.PocketActivePlayerIDs = {}
+-- Number of Health Ups you get from a Health Up item
+-- (Pill ID is off by +1 because of EID one-indexed pill effects)
+--
+-- Usage: EID.HealthUpData["`type`.`variant`.`subtype`"] = `numberOfHearts`
+--
+-- Examples:
+--
+-- EID.HealthUpData["5.70.7"] = -1 (Health Down Pill)
+--
+-- EID.HealthUpData["5.100.12"] = 1 (Magic Mushroom)
+---@type {[string]: integer}
+EID.HealthUpData = {}
+-- Items with a healing effect that can have the healing line removed for non-red HP characters. Indicated lines start with {{HealingRed}} or {{HealingHalfRed}} for the bullet point
+-- (Pill ID is off by +1 because of EID one-indexed pill effects)
+--
+-- Usage: EID.HealingItemData["`type`.`variant`.`subtype`"] = `numberOfHearts`
+--
+-- Examples:
+--
+-- EID.HealingItemData["5.70.37"] = true (Power Pill!)
+--
+-- EID.HealingItemData["5.100.45"] = true (Yum Heart)
+---@type {[string]: boolean}
+EID.HealingItemData = {}
+-- Items that are removed from Isaac after use. Adds a "! SINGLE USE !" line to the description
+EID.SingleUseCollectibles = {}
+-- Indicates Wisps created by items, that only last 1 room
+---@type{[CollectibleType]: boolean}
+EID.WispData.SingleRoom = {}
+-- Indicates items, that dont create any wisps at all
+---@type{[CollectibleType]: boolean}
+EID.WispData.NoWisp = {}
+---For displaying descriptions with Book of Virtues. Table is formatted as follows:
+---
+---{`number` hp, `integer` layer, `number` damage, `number` stageDamage, `number` damageMultiplier2, `number` shotSpeed, `number` fireDelay, `number` procChance, `boolean` canshoot, `integer` amount, `TearFlags[]` tearFlags, `TearFlags[]` tearFlags2}
+---@type {[CollectibleType]: table}
+EID.XMLWisps = {}
+
+--#endregion
+
+--#region MinimapAPI
+
 ---@param id string
----@param icon string @Same ID you used in :AddIcon()
+---@param icon string @Same ID you used in MinimapAPI:AddIcon()
 ---@param entType EntityType
 ---@param variant integer
 ---@param subtype integer
@@ -171,25 +342,11 @@ MinimapAPI.PickupSlotMachineNotBroken = function() return true end
 MinimapAPI.PickupChestNotCollected = function() return true end
 MinimapAPI.PickupNotCollected = function() return true end
 
+--#endregion
+
+--#region Misc
+
 include = require
-
----@return Vector
-function RandomVector() end
-
----@param callback ModCallbacks | integer | string
----@param func function
----@param ... any
-function Epiphany:AddCallback(callback, func, ...) end
-
----@param callback ModCallbacks | integer
----@param priority CallbackPriority
----@param func function
----@param param integer?
-function Epiphany:AddPriorityCallback(callback, priority, func, param) end
-
----@param callback ModCallbacks
----@param func function
-function Epiphany:RemoveCallback(callback, func) end
 
 ---@type string
 MOD_PATH = nil
@@ -204,3 +361,5 @@ BLOOD_CHEST = Isaac.GetEntityVariantByName("Blood Chest")
 PENITENT_CHEST = Isaac.GetEntityVariantByName("Penitent Chest")
 
 _ = {} ---@type any
+
+--#endregion

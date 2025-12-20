@@ -132,7 +132,7 @@ Other:
 - Poison tears from Arachnid's Grip now work on all weapon types
 - Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
-- Redesigned Best Bud Ball. 8 charges, only has a chance to capture bosses that scales with its HP and luck, isn't removed when capturing a boss, only one Best Bud Ball capture at a time
+- Redesigned Best Bud Ball. 8 charges, only has a chance to capture bosses that scales with its HP and luck, isn't removed when capturing a boss, only one Best Bud Ball capture at a time. Can no longer capture major story bosses
 - Redesigned Geptameron. Still retains its shifting 7 day effects, but all days have been given new effects or had their effects tweaked. No longer grants flight or stats
 - Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
 - 3D Glasses now works for all weapon types
@@ -166,13 +166,16 @@ Other:
 - Arachna and Tainted Arachna have the same laser color as Spider Bite
 - Moved Geptameron's day of the week counter to the active item sprite with a new look
 
+## EID CHANGES
+- Created all new English descriptions from scratch. Previous translations will need to be re-implemented! You can go to the GitHub repository and make a fork in order to submit a PR with your translations
+- Fixed White String's description incorrectly mentioning it increased Web Heart chances. Spindle now correctly mentions this effect
+- Added mod icon
+- Moved Merged Card's description into a unique "TAB description", where you can expand the list of effects separated by pages
+- Arachna and Tainted Arachna are recognized as soul heart-only characters, updating descriptions mentioning health ups or healing health
+
 ## MOD COMPATIBILITY
-- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs
-- Updated all English EID descriptions. Previous translations will need to be re-implemented! You can go to the GitHub repository and make a fork in order to submit a PR with your translations
-- Fixed White String's EID description incorrectly mentioning it increased Web Heart chances. Spindle now correctly mentions this effect
-- Added mod icon for EID
-- Moved Merged Card's EID description into a unique "TAB description", where you can expand the list of effects separated by pages
 - Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
+- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs
 - TR Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
 
 ## INTERNAL CHANGES

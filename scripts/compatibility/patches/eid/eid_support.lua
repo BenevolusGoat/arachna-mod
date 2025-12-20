@@ -22,9 +22,30 @@ function ARC_EID:ClosestPlayerTo(entity) --This seems to error for some people s
 	end
 end
 
-if EID.SingleUseCollectibles then
-	EID.SingleUseCollectibles[Item.TESTAMENT.ID] = true
-end
+--#region Data tables
+
+EID.PocketActivePlayerIDs[Mod.PlayerType.ARACHNA] = Mod.Item.ARACHNAS_SPOOL.ID
+EID.PocketActivePlayerIDs[Mod.PlayerType.ARACHNA_B] = Mod.Item.GRAB.ID
+
+EID.CharacterToHeartType[Mod.PlayerType.ARACHNA] = "Web"
+EID.CharacterToHeartType[Mod.PlayerType.ARACHNA_B] = "Web"
+
+EID.SpecialHeartPlayers["Web"] = {Mod.PlayerType.ARACHNA, Mod.PlayerType.ARACHNA_B}
+
+EID.HealthTypesWithoutHealing["Web"] = true
+
+Mod:AddToDictionary(EID.CarBatteryNoSynergy, {
+	Mod.Item.ARACHNAS_SPOOL.ID,
+	Mod.Item.DIVINE_CLOTH.ID,
+	Mod.Item.BEST_BUD_BALL.ID,
+	Mod.Item.TESTAMENT.ID
+})
+
+EID.SingleUseCollectibles[Item.TESTAMENT.ID] = true
+
+EID.TaintedToRegularID[Mod.PlayerType.ARACHNA_B] = Mod.PlayerType.ARACHNA
+
+--#endregion
 
 --#region Icons
 
@@ -63,7 +84,7 @@ EID:addIcon("SpiderBeggar", "Spider Beggar", 0, 11, 11, 0, 0, eid_icons)
 
 --#region Helper functions
 
----@function
+---@param table
 function ARC_EID:GetTranslatedString(strTable)
 	local lang = EID.getLanguage() or "en_us"
 	local desc = strTable[lang] or strTable["en_us"] -- default to english description if there's no translation
@@ -74,6 +95,122 @@ function ARC_EID:GetTranslatedString(strTable)
 
 	return desc
 end
+
+---@param player EntityPlayer
+---@param trinketId TrinketType
+function ARC_EID:TrinketMulti(player, trinketId)
+	local multi = 1
+	if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
+		multi = multi + 1
+	end
+	if Mod:HasBitFlags(trinketId, TrinketType.TRINKET_GOLDEN_FLAG) then
+		multi = multi + 1
+	end
+
+	return multi
+end
+
+---@param multiplier integer
+---@param ... string
+function ARC_EID:TrinketMultiStr(multiplier, ...)
+	return ({ ... })[multiplier] or ""
+end
+
+---@param descObj EID_DescObj
+---@param desc string | number
+---@param multRequirement? boolean | number If a boolean is passed, will only modify text is the object is a golden trinket. If a number is passed, will check that the multiplier is above or equal to this number
+---@param emptyIfFailed? boolean Will return an empty string if multiplier isn't above 1 (Or if `multRequirement` is true, it's a golden)
+---@param icon? string
+function ARC_EID:TrinketMultiGoldStr(descObj, desc, multRequirement, emptyIfFailed, icon)
+	icon = icon or ""
+	local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
+	local trinketID = descObj.ObjSubType
+	local mult = ARC_EID:TrinketMulti(player, trinketID)
+	if multRequirement and
+		(type(multRequirement) == "boolean" and trinketID > TrinketType.TRINKET_GOLDEN_FLAG)
+		or type(multRequirement) == "number" and mult >= multRequirement
+		or not multRequirement and mult > 1
+	then
+		return "#" .. icon .. " {{ColorGold}}" .. desc .. "{{CR}}"
+	elseif emptyIfFailed then
+		return ""
+	else
+		return tostring(desc)
+	end
+end
+
+local min = math.min
+local max = math.max
+local floor = math.floor
+
+---@param player EntityPlayer
+---@param modifier TearModifier
+---@param chanceMult integer
+function ARC_EID:GetTearModifierMaxLuckChance(player, modifier, chanceMult)
+	local luck = player.Luck
+	player.Luck = 0
+	local minChance = modifier:GetChance(player, true, chanceMult)
+	player.Luck = luck
+	local maxLuck = modifier.MaxLuck
+	local luckWorth = (modifier.MaxChance - modifier.MinChance) / (modifier.MaxLuck - modifier.MinLuck)
+	local maxChance = minChance + (luckWorth * modifier.MaxLuck)
+	if maxChance > 1 then
+		local luckSavedInChance = floor((maxChance - 1) / luckWorth)
+		maxLuck = max(0, maxLuck - luckSavedInChance)
+	end
+	return maxChance, maxLuck
+end
+
+---@param str string
+---@param player EntityPlayer
+---@param modifier TearModifier
+---@param chanceMult integer
+function ARC_EID:LuckChanceStr(str, player, modifier, chanceMult)
+	local maxChance, maxLuck = ARC_EID:GetTearModifierMaxLuckChance(player, modifier, chanceMult)
+	local maxChanceCapped = min(1, maxChance)
+	local maxChanceStr = (tostring(floor(maxChanceCapped * 100)))
+	local maxLuckStr = tostring(maxLuck)
+	--So that a golden glow doesn't trigger at 100% chance
+	if maxChanceCapped > modifier.MaxChance then
+		maxChanceStr = "{{ColorGold}}" .. maxChanceStr .. "{{CR}}"
+	end
+	if maxLuck < modifier.MaxLuck then
+		maxLuckStr = "{{ColorGold}}" .. maxLuckStr .. "{{CR}}"
+	end
+	return str:format(maxChanceStr .. "%", maxLuckStr)
+end
+
+---@param descObj EID_DescObj
+function ARC_EID.GetFallbackDescription(descObj)
+	return EID:getDescriptionObj(5, 100, descObj.ObjSubType, nil, false).Description
+end
+
+---@param id CollectibleType | string
+---@param descData {[string]: string[]}
+---@param lang string
+function ARC_EID:TryAddSynergyDescriptions(id, descData, lang)
+	for name, desc in pairs(descData) do
+		--print(id, name)
+		local description = ARC_EID.DynamicDescriptions:MakeMinimizedDescription(desc)[1]
+		---@cast description string
+		if name == "TarotCloth" then
+			EID:addTarotClothBuffsCondition(id, description, nil, nil, lang)
+		elseif name == "CarBattery" then
+			EID:addCarBatteryCondition(id, description, nil, nil, lang)
+		elseif name == "Abyss" then
+			EID:addAbyssSynergiesCondition(id, description, nil, nil, lang)
+		elseif name == "BookOfBelial" then
+			EID:addBookOfBelialBuffsCondition(id, description, nil, nil, lang)
+		elseif name == "BingeEater" then
+			EID:addBingeEaterBuffsCondition(id, description, nil, nil, lang)
+		elseif name == "BFFS" then
+			EID:addBFFSCondition(id, description, nil, nil, lang)
+		elseif name == "HiveMind" then
+			EID:addHiveMindCondition(id, description, nil, nil, lang)
+		end
+	end
+end
+
 
 --#endregion
 
@@ -239,102 +376,14 @@ ARC_EID.DynamicDescriptions = DD
 
 --#endregion
 
----@param player EntityPlayer
----@param trinketId TrinketType
-function ARC_EID:TrinketMulti(player, trinketId)
-	local multi = 1
-	if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_BOX) then
-		multi = multi + 1
-	end
-	if Mod:HasBitFlags(trinketId, TrinketType.TRINKET_GOLDEN_FLAG) then
-		multi = multi + 1
-	end
-
-	return multi
-end
-
----@param multiplier integer
----@param ... string
-function ARC_EID:TrinketMultiStr(multiplier, ...)
-	return ({ ... })[multiplier] or ""
-end
-
----@param descObj EID_DescObj
----@param desc string | number
----@param multRequirement? boolean | number If a boolean is passed, will only modify text is the object is a golden trinket. If a number is passed, will check that the multiplier is above or equal to this number
----@param emptyIfFailed? boolean Will return an empty string if multiplier isn't above 1 (Or if `multRequirement` is true, it's a golden)
----@param icon? string
-function ARC_EID:TrinketMultiGoldStr(descObj, desc, multRequirement, emptyIfFailed, icon)
-	icon = icon or ""
-	local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
-	local trinketID = descObj.ObjSubType
-	local mult = ARC_EID:TrinketMulti(player, trinketID)
-	if multRequirement and
-		(type(multRequirement) == "boolean" and trinketID > TrinketType.TRINKET_GOLDEN_FLAG)
-		or type(multRequirement) == "number" and mult >= multRequirement
-		or not multRequirement and mult > 1
-	then
-		return "#" .. icon .. " {{ColorGold}}" .. desc .. "{{CR}}"
-	elseif emptyIfFailed then
-		return ""
-	else
-		return tostring(desc)
-	end
-end
-
-local min = math.min
-local max = math.max
-local floor = math.floor
-
----@param player EntityPlayer
----@param modifier TearModifier
----@param chanceMult integer
-function ARC_EID:GetTearModifierMaxLuckChance(player, modifier, chanceMult)
-	local luck = player.Luck
-	player.Luck = 0
-	local minChance = modifier:GetChance(player, true, chanceMult)
-	player.Luck = luck
-	local maxLuck = modifier.MaxLuck
-	local luckWorth = (modifier.MaxChance - modifier.MinChance) / (modifier.MaxLuck - modifier.MinLuck)
-	local maxChance = minChance + (luckWorth * modifier.MaxLuck)
-	if maxChance > 1 then
-		local luckSavedInChance = floor((maxChance - 1) / luckWorth)
-		maxLuck = max(0, maxLuck - luckSavedInChance)
-	end
-	return maxChance, maxLuck
-end
-
----@param str string
----@param player EntityPlayer
----@param modifier TearModifier
----@param chanceMult integer
-function ARC_EID:LuckChanceStr(str, player, modifier, chanceMult)
-	local maxChance, maxLuck = ARC_EID:GetTearModifierMaxLuckChance(player, modifier, chanceMult)
-	local maxChanceCapped = min(1, maxChance)
-	local maxChanceStr = (tostring(floor(maxChanceCapped * 100)))
-	local maxLuckStr = tostring(maxLuck)
-	--So that a golden glow doesn't trigger at 100% chance
-	if maxChanceCapped > modifier.MaxChance then
-		maxChanceStr = "{{ColorGold}}" .. maxChanceStr .. "{{CR}}"
-	end
-	if maxLuck < modifier.MaxLuck then
-		maxLuckStr = "{{ColorGold}}" .. maxLuckStr .. "{{CR}}"
-	end
-	return str:format(maxChanceStr .. "%", maxLuckStr)
-end
-
----@param descObj EID_DescObj
-function ARC_EID.GetFallbackDescription(descObj)
-	return EID:getDescriptionObj(5, 100, descObj.ObjSubType, nil, false).Description
-end
-
 local eidCategory = {
 	"items",
 	"trinkets",
 	"cards",
 	"entities",
 	"characters",
-	"birthrights"
+	"birthrights",
+	"extras"
 }
 
 for _, category in ipairs(eidCategory) do

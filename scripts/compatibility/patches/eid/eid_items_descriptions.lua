@@ -74,6 +74,8 @@ for id, collectibleDescData in pairs(allDescData) do
 			fallbackDesc = nil
 		end
 
+		ARC_EID:TryAddSynergyDescriptions(id, descData, language)
+
 		local minimized = DD:MakeMinimizedDescription(description)
 		local minimizedFallback = fallbackDesc and DD:MakeMinimizedDescription(fallbackDesc)
 
