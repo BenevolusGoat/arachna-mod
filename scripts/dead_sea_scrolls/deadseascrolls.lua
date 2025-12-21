@@ -2,6 +2,8 @@ local Mod = ARACHNAMOD
 local DSSModName = "Dead Sea Scrolls (Arachna)"
 local DSSCoreVersion = 7
 
+local BREAK_LINE = { str = "", fsize = 1, nosel = true }
+
 -- auto split tooltips into multiple lines optimally
 ---@param str string
 ---@param title? string
@@ -27,18 +29,45 @@ local function GenerateTooltip(str, title, len)
 	return { strset = endTable }
 end
 
----@param ... string
+---Returns a buttons table that converts any strings into strset tables that fit within the primary paper view
+---@param ... string|table
 local function GenerateDescription(...)
 	local strList = table.pack(...)
-	local str = table.concat(strList, " ")
-	local desc = GenerateTooltip(str, nil, 35)
-	desc.fsize = 1
-	return desc
+	local tableList = {}
+	for _, strOrTable in ipairs(strList) do
+		local desc
+		if type(strOrTable) == "string" then
+			desc = GenerateTooltip(strOrTable, nil, 35)
+			desc.fsize = 1
+		else
+			desc = strOrTable
+		end
+		tableList[#tableList+1] = desc
+	end
+	return {table.unpack(tableList)}
+end
+
+---Returns a buttons table that converts any strings into strset tables that fit within the primary paper view. Strings will not be able to be selected
+---@param ... string|table
+local function GenerateNoSelDescription(...)
+	local strList = table.pack(...)
+	local tableList = {}
+	for _, strOrTable in ipairs(strList) do
+		local desc
+		if type(strOrTable) == "string" then
+			desc = GenerateTooltip(strOrTable, nil, 35)
+			desc.fsize = 1
+			desc.nosel = true
+		else
+			desc = strOrTable
+		end
+		tableList[#tableList+1] = desc
+	end
+	return {table.unpack(tableList)}
 end
 
 local DSSInitializerFunction = require("scripts.dead_sea_scrolls.vendor.dssmenucore")
 local dssmod = DSSInitializerFunction(DSSModName, DSSCoreVersion, Mod.SaveManager.MenuProvider)
-local BREAK_LINE = { str = "", fsize = 1, nosel = true }
 local areYouSureText = ""
 local areYouSureAction = function() end
 
@@ -157,6 +186,7 @@ local arachnaDssDirectory = {
 
 				if info.Name == Mod.Setting.LegacyGameplay then
 					table.insert(menu.buttons, {str= "legacy info", dest= "legacyinfo", fsize = 1, tooltip = GenerateTooltip("more information on legacy gameplay")})
+					table.insert(menu.buttons, BREAK_LINE)
 				end
 			end
 		end,
@@ -228,56 +258,64 @@ local arachnaDssDirectory = {
 			}
 		},
 	},
+	rgonpopup = {
+		title = "arachna",
+		fsize = 1,
+		buttons = GenerateNoSelDescription(
+            {str = "repentogon+ required", nosel = true, fsize = 2},
+            BREAK_LINE,
+			"sorry! the arachna mod cannot run without the latest version of repentogon.",
+			BREAK_LINE,
+			"ensure you have the official repentance+ dlc installed and enabled and the latest version of repentogon from repentogon.com",
+			BREAK_LINE,
+			{
+				str = "i understand",
+				action = "resume",
+				fsize = 3,
+				glowcolor = 3,
+			}
+		),
+	},
 	legacyinfo = {
 		title = "legacy gameplay",
 		tooltip = GenerateTooltip("changes that are enabled with legacy gameplay"),
-		buttons = {
+		buttons = GenerateDescription(
 			{str = "info", fsize = 2},
-			GenerateDescription(
-				"legacy gameplay returns arachna, tainted arachna, and some features of their pocket actives to before the v2.0 update.",
-				"this setting exists for those who prefer the older gameplay, as many changes have been made for a more balanced gameplay experience.",
-				"the list of the exact changes can be found below:"
-			),
+			"legacy gameplay returns arachna, tainted arachna, and some features of their pocket actives to before the v2.0 update. this setting exists for those who prefer the older gameplay, as many changes have been made for a more balanced gameplay experience. the list of the exact changes can be found below:",
 			BREAK_LINE,
 			{str = "arachna", fsize = 2},
-			GenerateDescription("- arachna's birthright has +1 to spawned spiders instead of increased chance for spider eggs spawning colored spiders"),
-			GenerateDescription("- can get slowed by cobwebs on the ground"),
+			"- arachna's birthright has +1 to spawned spiders instead of increased chance for spider eggs spawning colored spiders",
+			"- can get slowed by cobwebs on the ground",
 			BREAK_LINE,
 			{str = "tainted arachna", fsize = 2},
-			GenerateDescription("- +1 guaranteed spider spawn from spider eggs"),
-			GenerateDescription("- spider eggs are regular sized, like arachna's"),
-			GenerateDescription("- can obtain random spider colors from spider eggs, but all eggs are the default color."),
-			GenerateDescription("- spider eggs break after 16 seconds, yeilding no rewards"),
-			GenerateDescription("- removes the divine cloth double-tap action and sets it as your pocket active"),
-			GenerateDescription("- 1.00 damage"),
-			GenerateDescription("- 0.75 speed"),
-			GenerateDescription("- can get slowed by cobwebs on the ground"),
+			"- +1 guaranteed spider spawn from spider eggs",
+			"- spider eggs are regular sized, like arachna's",
+			"- can obtain random spider colors from spider eggs, but all eggs are the default color.",
+			"- spider eggs break after 16 seconds, yeilding no rewards",
+			"- removes the divine cloth double-tap action and sets it as your pocket active",
+			"- 1.00 damage",
+			"- 0.75 speed",
+			"- can get slowed by cobwebs on the ground",
 			BREAK_LINE,
-			{str = "arachna's spool/divine cloth", fsize = 2},
-			GenerateDescription("- decreases arachna's spool tear's collission radius by half"),
-			GenerateDescription("- arachna's spool's web no longer reduces knockback to enemies"),
-			GenerateDescription("- arachna's spool's web affects enemies that are above pits"),
-			GenerateDescription("- if arachna's spool's tear kills an enemy, it will not count as them being webbed to spawn a spider egg"),
-			GenerateDescription("- decreases recharge time of both items to 3 seconds"),
-			GenerateDescription("- how many spiders spawn from spider eggs are influenced by the current stage and number of web hearts"),
-			GenerateDescription("- bosses, enemies with a max hp below 10, or enemies spawned by other enemies no longer drop spider eggs or spiders"),
-			GenerateDescription("- bosses are immune to the webbed and spider bitten status effects"),
-			GenerateDescription("- decreases divine cloth's radius by -25%"),
-			GenerateDescription("- spider eggs no longer explode on challenge/boss rush wave clears"),
-			GenerateDescription("- adjusts logic for determining chances for spiders to spawn")
-		}
+			{str = "arachna's spool", fsize = 2},
+			{str = "and divine cloth", fsize = 2, nosel = true},
+			"- decreases arachna's spool tear's collission radius by half",
+			"- arachna's spool's web no longer reduces knockback to enemies",
+			"- arachna's spool's web affects enemies that are above pits",
+			"- if arachna's spool's tear kills an enemy, it will not count as them being webbed to spawn a spider egg",
+			"- decreases recharge time of both items to 3 seconds",
+			"- how many spiders spawn from spider eggs are influenced by the current stage and number of web hearts",
+			"- bosses, enemies with a max hp below 10, or enemies spawned by other enemies no longer drop spider eggs or spiders",
+			"- bosses are immune to the webbed and spider bitten status effects",
+			"- decreases divine cloth's radius by -25%",
+			"- spider eggs no longer explode on challenge/boss rush wave clears",
+			"- adjusts logic for determining chances for spiders to spawn"
+		)
 	}
 }
 
 ARACHNAMOD.DSS_DIRECTORY = arachnaDssDirectory
 ARACHNAMOD.DSS_MOD = dssmod
-
-local DSSUnlockManager = include("scripts.dead_sea_scrolls.dss_unlock_manager")
-local unlock_catalog = include("scripts.dead_sea_scrolls.arachna_unlock_catalog")
-local achievement_viewer = include("scripts.dead_sea_scrolls.dss_achievement_viewer")
-local catalog = unlock_catalog(DSSUnlockManager)
-DSSUnlockManager:GenerateDSSMenu(catalog)
-achievement_viewer(DSSUnlockManager, arachnaDssDirectory, catalog)
 
 local exampledirectorykey = {
 	Item = arachnaDssDirectory.main, -- This is the initial item of the menu, generally you want to set it to your main item

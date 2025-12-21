@@ -23,7 +23,11 @@ ARACHNAMOD:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	local seed = ARACHNAMOD.Game:GetSeeds():GetStartSeed()
 	ARACHNAMOD.GENERIC_RNG:SetSeed(seed, 35)
 	if Mod.ShowNewPopup then
-		DeadSeaScrollsMenu.QueueMenuOpen("Arachna", "arachnapopup", 0, true)
+		if REPENTOGON and REPENTANCE_PLUS then
+			DeadSeaScrollsMenu.QueueMenuOpen("Arachna", "arachnapopup", 0, true)
+		else
+			DeadSeaScrollsMenu.QueueMenuOpen("Arachna", "rgonpopup", 0, true)
+		end
 		Mod.ShowNewPopup = nil
 	end
 end)
@@ -206,7 +210,6 @@ Mod.LoopInclude(tools, "scripts.tools")
 Mod.LoopInclude(helpers, "scripts.helpers")
 Mod.LoopInclude(core, "scripts.arachna.core")
 Mod.LoopInclude(config, "scripts.arachna.config")
---Mod.Include("scripts.ARACHNAMOD.api")
 
 ARACHNAMOD.CHAPI_ID = "ArachnaMOD"
 if CustomHealthAPI and CustomHealthAPI.Library and CustomHealthAPI.Library.UnregisterCallbacks then
@@ -223,9 +226,11 @@ ARACHNAMOD.Trinket = {}
 ARACHNAMOD.Slot = {}
 ARACHNAMOD.Entities = {}
 include("flags")
-include("scripts.arachna.core.detect_repentogon")
 include("scripts.arachna.core.save_upgrade")
+include("scripts/dead_sea_scrolls/deadseascrolls")
 if not REPENTOGON or not REPENTANCE_PLUS then
+	Mod:Log("Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com")
+	Mod.ShowNewPopup = true
 	return
 end
 
@@ -310,7 +315,13 @@ Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, Mod.HandleDoubleTap)
 
 --!End of file
 
-include("scripts/dead_sea_scrolls/deadseascrolls")
+local DSSUnlockManager = include("scripts.dead_sea_scrolls.dss_unlock_manager")
+local unlock_catalog = include("scripts.dead_sea_scrolls.arachna_unlock_catalog")
+local achievement_viewer = include("scripts.dead_sea_scrolls.dss_achievement_viewer")
+local catalog = unlock_catalog(DSSUnlockManager)
+DSSUnlockManager:GenerateDSSMenu(catalog)
+achievement_viewer(DSSUnlockManager, Mod.DSS_DIRECTORY, catalog)
+
 Mod.Include("scripts.compatibility.patches.eid.eid_support")
 Mod.Include("scripts.compatibility.patches_loader")
 
