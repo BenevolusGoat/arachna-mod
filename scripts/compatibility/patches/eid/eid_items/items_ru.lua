@@ -69,6 +69,9 @@ return function(modifiers)
 				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders"
+			},
+			BookOfBelial = {
+				"Spool projectile and spider web inflict {{Burning}} Burn on enemies"
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
@@ -77,6 +80,9 @@ return function(modifiers)
 				"{{StatusSpiderBite}} Inflicts Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
 				"#{{BossRoom}} Damaging Spider Bitten bosses charges a meter. When filled, spawns a spider egg"
+			},
+			BookOfBelial = {
+				"Inflicts {{Burning}} Burn on nearby enemies"
 			}
 		},
 		[Item.GRAB.ID] = {

@@ -28,6 +28,19 @@ DIVINE_CLOTH.STATUS_BITTEN = StatusEffectLibrary.StatusFlag[identifier]
 
 --#region Helpers
 
+local function setJudasColor(sprite)
+	local layer = sprite:GetLayer(0)
+	if not layer then
+		return
+	end
+	layer:GetBlendMode():SetMode(BlendType.ADDITIVE)
+
+	local color = layer:GetColor()
+	color:Reset()
+	color:SetTint(5.0, 0.5, 0.2, 1.0)
+	layer:SetColor(color)
+end
+
 ---@param pos Vector
 ---@param spawner? Entity
 function DIVINE_CLOTH:SpawnSwirl(pos, spawner)
@@ -35,6 +48,10 @@ function DIVINE_CLOTH:SpawnSwirl(pos, spawner)
 	swirl:GetSprite():Load("gfx/effect_webpoof.anm2", true)
 	swirl:GetSprite():Play("Poof")
 	swirl.SpriteScale = swirl.SpriteScale * 0.8
+	local player = spawner and spawner:ToPlayer()
+	if player and Mod:IsJudasBirthrightActive(player) then
+		setJudasColor(swirl:GetSprite())
+	end
 	return swirl
 end
 
@@ -75,7 +92,14 @@ function DIVINE_CLOTH:OnUse(itemId, rng, player, useFlags, slot, customBarData)
 
 	local floorWeb = Mod.Spawn.Effect(DIVINE_CLOTH.DIVINE_WEB_VAR, DIVINE_CLOTH.DIVINE_WEB_SUB, player.Position, nil,
 		player)
-	floorWeb.Color = Color(1, 1, 1, 0.45, 0, 0, 0)
+	if Mod:IsJudasBirthrightActive(player) then
+		Mod.Spawn.JudasBelialFlamePillar(player.Position, player)
+		Mod.Spawn.JudasBelialPoof(player, 1)
+		setJudasColor(floorWeb:GetSprite())
+		Mod.sfxman:Play(SoundEffect.SOUND_CANDLE_LIGHT)
+	else
+		floorWeb.Color = Color(1, 1, 1, 0.45)
+	end
 	floorWeb.SpriteScale = floorWeb.SpriteScale * spriteSize
 	floorWeb:SetSize(size, Vector.One, 8)
 
@@ -131,6 +155,9 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 			local damage = player.Damage * 0.5
 			data.HitList[ptrHash] = true
 			npc:TakeDamage(damage, 0, source, 0)
+			if Mod:IsJudasBirthrightActive(player) then
+				npc:AddBurn(source, 150, player.Damage)
+			end
 		end
 		DIVINE_CLOTH:ApplyBitten(npc, source, duration)
 	end, nil, nil, { UseEnemySearchParams = true })
@@ -173,11 +200,6 @@ end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_REMOVE_ENTITY_STATUS_EFFECT,
 	DIVINE_CLOTH.PostRemoveWebbed, ARACHNAS_SPOOL.STATUS_WEBBED)
-
---#endregion
-
---#region Throwable Eggs
-
 
 --#endregion
 

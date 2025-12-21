@@ -289,6 +289,17 @@ function ARACHNAMOD:IsJudasBirthrightActive(player)
 		player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
 
+---@param player EntityPlayer
+---@return SoundEffect | integer sound
+function ARACHNAMOD:GetBelialSound(player)
+	local temporaryEffects = player:GetEffects()
+	if temporaryEffects:HasCollectibleEffect(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL) or temporaryEffects:HasNullEffect(NullItemID.ID_JUDAS_BIRTHRIGHT) then
+		return SoundEffect.SOUND_CANDLE_LIGHT
+	end
+
+	return SoundEffect.SOUND_DEVIL_CARD
+end
+
 ---Takes an EntityPlayer and returns how many hits they should be able to sustain
 ---@param player EntityPlayer
 function ARACHNAMOD:GetEffectiveHitPoints(player)

@@ -45,6 +45,15 @@ function ARACHNAS_SPOOL:FireSpool(pos, vel, spawner)
 	if Mod:IsLegacyGameplayEnabled() then
 		spoolTear:SetSize(8, Vector.One, 8)
 	end
+	local player = spawner and spawner:ToPlayer()
+	if player and Mod:IsJudasBirthrightActive(player) then
+		spoolTear:AddTearFlags(TearFlags.TEAR_BURN)
+		spoolTear:Update()
+		local color = spoolTear.Color
+		color:SetColorize(2, 0.25, 0, 1)
+		spoolTear.Color = color
+		Mod:GetData(spoolTear).JudasBirthright = true
+	end
 end
 
 ---@param pos Vector
@@ -96,9 +105,12 @@ function ARACHNAS_SPOOL:OnTearUpdate(tear)
 	end
 	if tear.FrameCount % 2 == 0 then
 		local pos = Vector(tear.Position.X, tear.Position.Y + 1.1 + tear.Height)
-		local trail = Mod.Spawn.Effect(EffectVariant.HAEMO_TRAIL, 0, pos, nil, tear)
-		trail:GetSprite().Color = Color(1, 1, 1, 1, 1, 1, 1)
-		trail:Update()
+		if Mod:GetData(tear).JudasBirthright then
+			Mod.Spawn.JudasBelialFlame(pos, nil, tear)
+		else
+			local trail = Mod.Spawn.Effect(EffectVariant.HAEMO_TRAIL, 0, pos, nil, tear)
+			trail:GetSprite().Color = Color(1, 1, 1, 1, 1, 1, 1)
+		end
 	end
 end
 
@@ -131,7 +143,11 @@ function ARACHNAS_SPOOL:OnSpoolDeath(tear)
 		table.remove(ownedWebs, 1)
 	end
 	local fixedPos = Mod.Room():GetClampedPosition(tear.Position, 45)
-	ARACHNAS_SPOOL:SpawnWeb(fixedPos, tear.SpawnerEntity)
+	local web = ARACHNAS_SPOOL:SpawnWeb(fixedPos, tear.SpawnerEntity)
+	if Mod:GetData(tear).JudasBirthright then
+		Mod:GetData(web).JudasBirthright = true
+		web.Color = tear.Color
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, ARACHNAS_SPOOL.OnSpoolDeath, ARACHNAS_SPOOL.TEAR)
@@ -171,6 +187,9 @@ function ARACHNAS_SPOOL:OnWebUpdate(web)
 			return
 		end
 		ARACHNAS_SPOOL:ApplyWebbed(npc, source, 2)
+		if Mod:GetData(web).JudasBirthright and not npc:HasEntityFlags(EntityFlag.FLAG_BURN) then
+			npc:AddBurn(source, 150, player and player.Damage or 3.5)
+		end
 	end, nil, nil, { UseEnemySearchParams = true, Dead = true })
 end
 

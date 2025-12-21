@@ -2,10 +2,36 @@
 local game = Game()
 local Spawn = {}
 local max = math.max
+local min = math.min
 
 local function randomSeed()
 	return max(Random(), 1) -- seed being 0 causes a crash
 end
+
+---@param value number
+---@param numMin number
+---@param numMax number
+---@return number clampedValue
+local function Clamp(value, numMin, numMax)
+	return max(min(value, numMax),  numMin)
+end
+
+---@param value number
+---@param previousRange number[]
+---@param newRange number[]
+---@param clamp boolean
+---@return number remappedNumber
+local function MapToRange(value, previousRange, newRange, clamp)
+	assert(previousRange[1] ~= previousRange[2], "invalid range")
+
+	local normalizedForm = (value - previousRange[1]) / (previousRange[2] - previousRange[1])
+	if clamp then
+		normalizedForm = Clamp(normalizedForm, 0.0, 1.0)
+	end
+
+	return newRange[1] + normalizedForm * (newRange[2] - newRange[1])
+end
+
 
 --#region Pickups
 
@@ -347,6 +373,90 @@ function Spawn.HolyBeam(beamType, pos, spawner, parent, damage)
 	beam.CollisionDamage = damage
 	beam:Update()
 	return beam
+end
+
+---@return Color newColor
+local function get_belial_poof_color()
+	local color = Color()
+	color:SetTint(0.2, 0.2, 0.2, 0.6)
+	color:SetColorize(1.0, 1.0, 1.0, 1.0)
+	color:SetOffset(0.0, 0.0, 0.0)
+
+	return color
+end
+
+---@param player EntityPlayer
+---@param charge integer
+function Spawn.JudasBelialPoof(player, charge)
+	if charge < 4 then
+		local effect = game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, player.Position, Vector(0, 0), nil, 0, Random())
+		effect.Color = get_belial_poof_color()
+		effect:Update()
+	else
+		player:MakeGroundPoof(player.Position, get_belial_poof_color(), 1.0)
+	end
+end
+
+---@param count integer
+---@return Vector velocity
+local function get_belial_flame_speed(count)
+	local randomFloat = Random() * (1 / 2^32) -- the same as rng:RandomFloat but without initializing an RNG object
+	local baseVelocity = Vector(0.0, randomFloat * -6.0 - 10.0)
+	baseVelocity = baseVelocity * (count * 0.7 * 0.25 + 0.3)
+
+	randomFloat = Random() * (1 / 2^32)
+	local angle = randomFloat * 10.0 - 5.0
+
+	local speedModifier = MapToRange(count, {0.0, 12.0}, {0.6, 2.0}, true)
+	return baseVelocity:Rotated(angle) * speedModifier
+end
+
+---@param flameEffect EntityEffect
+local function post_process_belial_flame(flameEffect)
+	local sprite = flameEffect:GetSprite()
+	local layer = sprite:GetLayer(0)
+	if not layer then
+		return
+	end
+	layer:GetBlendMode():SetMode(BlendType.ADDITIVE)
+
+	local color = layer:GetColor()
+	color:Reset()
+	color:SetTint(5.0, 0.5, 0.2, 1.0)
+	layer:SetColor(color)
+
+	local randomFloat = Random() * (1 / 2^32)
+	flameEffect.Rotation = randomFloat * 10.0 + 2.0
+
+	local randomInt = Random() % 10 + 10 -- RandomInt(10) + 10
+	flameEffect.Timeout = randomInt
+	flameEffect.LifeSpan = randomInt
+
+	randomFloat = Random() * (1 / 2^32)
+	local scale = randomFloat * 0.4 + 0.2
+	sprite.Scale = Vector(1, 1) * scale * flameEffect.SpriteScale
+
+	flameEffect.RenderZOffset = -600
+end
+
+---@param pos Vector
+---@param velocity? VectorOrNil
+---@param spawner? Entity
+function Spawn.JudasBelialFlame(pos, velocity, spawner)
+	local flameEffect = spawnEffect(EffectVariant.DUST_CLOUD, 0, pos, velocity, spawner)
+	post_process_belial_flame(flameEffect)
+	return flameEffect
+end
+
+---Spawns a pillar of flames, akin to Judas using an active item with their Birthright's Book of Belial
+---@param pos Vector
+---@param spawner? Entity
+function Spawn.JudasBelialFlamePillar(pos, spawner)
+	for i = 1, 5 do
+		local velocity = get_belial_flame_speed(i - 1)
+		local startPosition = (velocity * 2) + pos
+		Spawn.JudasBelialFlame(startPosition, velocity, spawner)
+	end
 end
 
 --#endregion
