@@ -62,10 +62,13 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 - Changed Tainted Arachna's multishot to use REPENTOGON instead of an item wisp. Among other things, this allows their multishot to be utilized in the Mines chase sequence
 - Removed GiantBookAPI utility in favor of REPENTOGON implementation
 - Changed how Lil Arachna functions to be a more naturally integrated shooter familiar. They now obey all shooter familiar interactions (Lilith birthrights, shooter priority, etc.)
+- Added Hive Mind synergy to Lil Arachna, giving BFFS! benefits
+- Added "spider" tag to Lil Arachna, contributing to the Spider Baby transformation
 - Changed how Web Hearts, Spider Beggars, and Golden Shopkeepers randomly replace entities. Web Hearts are now better integrated into the "pickup pool" to have spawn rules that better match the vanilla game. Spider Beggars and Golden Shopkeepers only replace their respective replacements when part of a newly entered room
 - Changed Soul of Arachna and Merged Card announcer sfx to respect user's announcer settings instead of playing 100% of the time
 - Added slight delays to when the aforementioned announcer sfx plays
 - Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
+- Added BFFS! synergy to Mechanical Eye
 - Changed how orbitals are added to the player. They will have differing speeds/distances compared to before, but now occupy the same layers as other orbitals
 - Removed the small delay The Yarn had dropping its Web Heart
 - Improved handling of Dad's Newspaper's "club"

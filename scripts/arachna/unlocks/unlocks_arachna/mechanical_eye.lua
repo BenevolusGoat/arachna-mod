@@ -173,6 +173,9 @@ function MECHANICAL_EYE:PostDischarge(itemId, removed, player, slot)
 		local generatedItem = familiar_run_save.MechanicalActive
 
 		player:UseActiveItem(generatedItem, UseFlag.USE_NOANIM, -1)
+		if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+			player:UseActiveItem(generatedItem, UseFlag.USE_NOANIM | UseFlag.USE_CARBATTERY, -1)
+		end
 
 		local poof = Mod.Spawn.Effect(MECHANICAL_EYE.EFFECT_VAR, MECHANICAL_EYE.EFFECT_SUB, familiar.Position, nil, familiar)
 		poof.SpriteScale = familiar.SpriteScale

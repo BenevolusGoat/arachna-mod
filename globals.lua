@@ -150,65 +150,65 @@ end
 
 -- Shortcut function for adding Repentance Tarot Cloth conditions
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 function EID:addTarotClothBuffsCondition(ID, text, numberToDouble, newNumber, language)
 end
 
 -- Shortcut function for adding car battery conditions
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 function EID:addCarBatteryCondition(ID, text, numberToDouble, newNumber, language)
 end
 
 -- Shortcut function for adding abyss synergies conditions
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 function EID:addAbyssSynergiesCondition(ID, text, numberToDouble, newNumber, language)
 end
 
 -- Shortcut function for adding book of belial conditions
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 function EID:addBookOfBelialBuffsCondition(ID, text, numberToDouble, newNumber, language)
 end
 
 -- Shortcut function for adding binge eater conditions
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 function EID:addBingeEaterBuffsCondition(ID, text, numberToDouble, newNumber, language)
 end
 
 -- Shortcut function for adding BFFS conditions; this is slightly more complex since it supports trinkets
 --
--- Example usage: EID:addBFFSCondition(myBasicFamiliarID, nil, 3.5)
+-- Example usage: EID:addBFFSCondition(myFamiliarCollectibleID, nil, 3.5)
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 function EID:addBFFSCondition(ID, text, numberToDouble, newNumber, language)
 end
 
 -- Shortcut function for adding Hive Mind conditions; by default, it will show with BFFS too, unless you pass in allowBFFS as false
 ---@param ID string | CollectibleType @string format: "`type`.`variant`.`subtype`"
----@param text string
----@param numberToDouble? number[] @Dictates the number do multiply by 2
----@param newNumber? number[] @Will replace `numberToDouble` instead of multiplying
+---@param text? string
+---@param numberToDouble? number @Dictates the number do multiply by 2
+---@param newNumber? number @Will replace `numberToDouble` instead of multiplying
 ---@param language? string
 ---@param allowBFFS? boolean @default: `true`
 function EID:addHiveMindCondition(ID, text, numberToDouble, newNumber, language, allowBFFS)
@@ -283,6 +283,68 @@ EID.WispData.NoWisp = {}
 ---{`number` hp, `integer` layer, `number` damage, `number` stageDamage, `number` damageMultiplier2, `number` shotSpeed, `number` fireDelay, `number` procChance, `boolean` canshoot, `integer` amount, `TearFlags[]` tearFlags, `TearFlags[]` tearFlags2}
 ---@type {[CollectibleType]: table}
 EID.XMLWisps = {}
+
+-- Color reference!
+
+--ColorText
+--ColorTransform
+--ColorError
+--ColorObjName
+--ColorReset
+
+-- Basic Colors
+--ColorEIDText
+--ColorEIDTransform
+--ColorEIDError
+--ColorEIDObjName
+--ColorBlack
+--ColorWhite
+--ColorRed
+--ColorLime
+--ColorBlue
+--ColorYellow
+--ColorCyan
+--ColorPink
+--ColorSilver
+--ColorGray
+--ColorMaroon
+--ColorOlive
+--ColorGreen
+--ColorPurple
+--ColorTeal
+--ColorNavy
+--ColorOrange
+--ColorPastelBlue
+--ColorLavender
+--ColorLightOrange
+--ColorLightYellow
+--ColorBagComplete
+--ColorBagOverfill
+
+--ColorIsaac
+--ColorCard -- actually taken from Ouija Board, real card brown would be too dark for descriptions
+--ColorPill
+
+-- Swag Colors
+-- Rainbow color effect
+--ColorRainbow
+-- Gold rainbow color effect
+--ColorGold
+-- Yellow to green/red for positive/negative car battery effects
+--BlinkYellowGreen
+--BlinkYellowRed
+-- Silver to gray, for Black Feather?
+--BlinkGray
+-- Pink for BFFs <3, the two shades come from Nancy Bombs and Eraser
+--BlinkPink
+-- Blue for Hive Mind, the two shades come from Hive Mind
+--BlinkBlue
+-- Subtle glow between green from Luck Clover and from the Quality 1 shield
+--BlinkGreen
+-- Shiny purple color effect
+--ColorShinyPurple
+-- Blink between the two shades of tan on Birthright
+--BlinkBirthright
 
 --#endregion
 

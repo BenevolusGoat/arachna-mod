@@ -131,6 +131,9 @@ return function(modifiers)
 				"#Displays a random active item with the same amount of charges as Isaac's current active item",
 				"#Using an active item will also use the displayed item",
 				"#Displayed item rerolls when entering a new room or using an active item"
+			},
+			BFFS = {
+				"Triggers the effect twice, like {{Collectible" .. CollectibleType.COLLECTIBLE_CAR_BATTERY .. "}} Car Battery"
 			}
 		},
 		[Item.GEPTAMERON.ID] = {
@@ -177,9 +180,8 @@ return function(modifiers)
 			Description = {
 				"{{Slow}} Shoots slowing and quad-split tears",
 				"#Deals 3.5 damage per tear",
-				"#{{StatusSpiderBite}} 25% chance for tears to inflict Spider Bite, having enemies drop Spider Eggs on death",
-				"#{{Timer}} Spider Eggs drop nothing after 16 seconds or {{ColorRainbow}}special{{CR}} friendly spiders on room clear"
-			}
+				"#{{AracBlueSpider}} 25% chance for tears to inflict {{StatusSpiderBite}} Spider Bite and {{StatusWebbed}} Webbed. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death that burst into friendly spiders"
+			},
 		},
 		[Item.DADS_NEWSPAPER.ID] = {
 			Name = "Dad's Newspaper",
