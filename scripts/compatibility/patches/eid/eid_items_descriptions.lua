@@ -36,19 +36,6 @@ local modifiers = {
 			end
 		end
 	},
---[[ 	[Item.LIL_ARACHNA.ID] = {
-		_modifier = function (descObj, str)
-			local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
-			local hasBffs = player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS)
-			local hasHiveMind = player:HasCollectible(CollectibleType.COLLECTIBLE_HIVE_MIND)
-			if hasBffs or hasHiveMind then
-				local color = hasHiveMind and "{{BlinkBlue}}" or "{{BlinkPink}}"
-				str = string.gsub(str, "3.5", color .. "7{{CR}}")
-				str = string.gsub(str, "25", color .. "50{{CR}}")
-			end
-			return str
-		end
-	} ]]
 }
 local descriptions = {
 	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_items.items_en_us")(modifiers),

@@ -15,13 +15,7 @@ function LIL_ARACHNA:FireTear(tear)
 	if not familiar then return end
 	local rng = familiar:GetDropRNG()
 	local roll = rng:RandomFloat()
-	local player = familiar.Player
-	local hasBffs = player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS)
 	local chance = LIL_ARACHNA.BITE_CHANCE
-
-	if hasBffs then
-		chance = chance * 2
-	end
 
 	if roll < chance then
 		Mod:GetData(tear).LilArachnaBite = true
@@ -35,20 +29,6 @@ function LIL_ARACHNA:FireTear(tear)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_FAMILIAR_FIRE_PROJECTILE, LIL_ARACHNA.FireTear, LIL_ARACHNA.FAMILIAR)
-
----Apparently this also activates their BFFS size up???
----@param familiar EntityFamiliar
----@param mult number
----@param player EntityPlayer
-function LIL_ARACHNA:HiveMindSynergy(familiar, mult, player)
-	if player:HasCollectible(CollectibleType.COLLECTIBLE_HIVE_MIND)
-		and not player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS)
-	then
-		return mult * 2
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_EVALUATE_FAMILIAR_MULTIPLIER, LIL_ARACHNA.HiveMindSynergy, LIL_ARACHNA.FAMILIAR)
 
 ---@param familiar EntityFamiliar
 function LIL_ARACHNA:OnFamiliarUpdate(familiar)
