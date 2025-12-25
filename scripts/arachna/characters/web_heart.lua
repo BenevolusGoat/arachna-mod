@@ -76,10 +76,11 @@ function WEB_HEART:GetWebHearts(player)
 	return amount
 end
 
+---@param count? integer @Specify how many Web Hearts an Arachna needs to have
 ---@return EntityPlayer?
-function WEB_HEART:AnyArachanaHasWebHearts()
+function WEB_HEART:AnyArachanaHasWebHearts(count)
 	return Mod.Foreach.Player(function (player, index)
-		if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) > 0 then
+		if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) >= (count or 0) then
 			return player
 		end
 	end)
@@ -335,13 +336,16 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.PotatoPeelerUse, Collectible
 
 --#region Devil Deals
 
-local SUPPORTED_PRICES = Mod:Set({
+local WEB_HEART_PRICES = Mod:Set({
 	PickupPrice.PRICE_ONE_HEART,
 	PickupPrice.PRICE_ONE_HEART_AND_ONE_SOUL_HEART,
 	PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS,
 	PickupPrice.PRICE_TWO_HEARTS
 })
 
+---The three soul hearts price is something that overrides the current price if you have no soul hearts,
+---which in our case, shows up all the time if its just Arachna as they're a soul heart character,
+---so we force the price manually
 ---@param pickup EntityPickup
 function WEB_HEART:ForcePrice(pickup)
 	if pickup.Price == PickupPrice.PRICE_THREE_SOULHEARTS
@@ -349,7 +353,10 @@ function WEB_HEART:ForcePrice(pickup)
 		and WEB_HEART:AnyArachanaHasWebHearts()
 	then
 		local price = Mod.Room():GetShopItemPrice(pickup.Variant, pickup.SubType, pickup.ShopItemId)
-		if SUPPORTED_PRICES[price] then
+		if WEB_HEART_PRICES[price] then
+			if price == PickupPrice.PRICE_TWO_HEARTS and not WEB_HEART:AnyArachanaHasWebHearts(2) then
+				price = PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS
+			end
 			pickup.Price = price
 			pickup:GetPriceSprite():ReplaceSpritesheet(1, "gfx/items/shop/price_web.png", true)
 		end
@@ -363,6 +370,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.ForcePrice, Pickup
 function WEB_HEART:TryPayWebHeartPrice(pickup, player)
 	local webHearts = WEB_HEART:GetWebHearts(player)
 	local webHeartRequirement = 1
+	local soulHeartPrice = 0
 	local price = pickup.Price
 	if price == PickupPrice.PRICE_TWO_HEARTS then
 		webHeartRequirement = 2
@@ -370,8 +378,16 @@ function WEB_HEART:TryPayWebHeartPrice(pickup, player)
 	if webHearts < webHeartRequirement then
 		return false
 	end
+	if price == PickupPrice.PRICE_ONE_HEART_AND_ONE_SOUL_HEART then
+		soulHeartPrice = 2
+	elseif price == PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS then
+		soulHeartPrice = 4
+	end
 	pickup.Price = PickupPrice.PRICE_FREE
 	WEB_HEART:AddWebHearts(player, -webHeartRequirement)
+	if soulHeartPrice > 0 then
+		player:AddSoulHearts(-soulHeartPrice)
+	end
 end
 
 ---@param pickup EntityPickup
@@ -380,7 +396,8 @@ function WEB_HEART:OnDevilDealCollision(pickup, collider)
 	local player = collider:ToPlayer()
 	if player
 		and Mod:IsAnyArachna(player)
-		and SUPPORTED_PRICES[pickup.Price]
+		and WEB_HEART:GetWebHearts(player) > 0
+		and WEB_HEART_PRICES[pickup.Price]
 		and player:CanPickupItem()
 		and player.ItemHoldCooldown == 0
 		and player:IsExtraAnimationFinished()
