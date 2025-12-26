@@ -185,10 +185,77 @@ function ARC_EID.GetFallbackDescription(descObj)
 	return EID:getDescriptionObj(5, 100, descObj.ObjSubType, nil, false).Description
 end
 
----@param id CollectibleType | string
+---{`number` hp, `integer` layer, `number` damage, `number` stageDamage, `number` damageMultiplier2, `number` shotSpeed, `number` fireDelay, `number` procChance, `boolean` canshoot, `integer` amount, `TearFlags[]` tearFlags, `TearFlags[]` tearFlags2}
+
+---@class EID_BoV
+---@field HP number
+---@field Layer number
+---@field Damage number
+---@field StageDamage number?
+---@field DamageMult number?
+---@field ShotSpeed number?
+---@field FireDelay number?
+---@field ProcChance number?
+---@field CanShoot boolean?
+---@field Amount integer?
+---@field TearFlags TearFlags[]?
+---@field TearFlagsOnChance TearFlags[]?
+
+local function EID_addBookOfVirtuesCondition(id, text, numberToDouble, newNumber, language)
+	EID:addGenericCondition(id, "bookOfVirtuesWisps", text, numberToDouble, newNumber, language)
+end
+
+local function translateNumberString(numStr)
+	local out = {}
+	local length = string.len(numStr)
+	local strStart = 1
+	local strEnd = 1
+	while strEnd <= length do
+		--If a space-separation is on the next character or we're at the end of the string
+		if string.sub(strEnd + 1, strEnd + 1) == " " or strEnd == length then
+			local number = tonumber(string.sub(numStr, strStart, strEnd))
+			if number then
+				Mod.Insert(out, number)
+			end
+			strEnd = strEnd + 1
+			strStart = strEnd
+		else
+			strEnd = strEnd + 1
+		end
+	end
+	return out
+end
+
+local DEFAULT_WISP_TABLE = {2, 2, 3, 0, 1, 1, 30, 0, true, 1, {-1}, {-1}}
+
+---@param id CollectibleType
 ---@param descData {[string]: string[]}
 ---@param lang string
 function ARC_EID:TryAddSynergyDescriptions(id, descData, lang)
+	local wispData = XMLData.GetEntryById(XMLNode.WISP, id)
+	if wispData then
+		local hp = tonumber(wispData.hp)
+		local layer = tonumber(wispData.layer)
+		local damage = tonumber(wispData.damage)
+		local stageDamage = 0
+		local damageMultiplier2 = tonumber(wispData.damageMultiplier2) or 1
+		local shotSpeed = tonumber(wispData.shotspeed) or 1
+		local fireDelay = tonumber(wispData.firedelay) or 30
+		local procChance = tonumber(wispData.procchance) or 0
+		local canShoot = wispData.canshoot ~= "false" and fireDelay ~= -1
+		local amount = tonumber(wispData.count) or 1
+		local tearFlags = {-1}
+		local tearFlags2 = {-1}
+		if wispData.tearflags then
+			tearFlags = translateNumberString(wispData.tearflags)
+		end
+		if wispData.tearflags2 then
+			tearFlags2 = translateNumberString(wispData.tearflags2)
+		end
+		EID.XMLWisps[id] = {hp, layer, damage, stageDamage, damageMultiplier2, shotSpeed, fireDelay, procChance, canShoot, amount, tearFlags, tearFlags2}
+	elseif Mod.ItemConfig:GetCollectible(id).Type == ItemType.ITEM_ACTIVE then
+		EID.XMLWisps[id] = DEFAULT_WISP_TABLE
+	end
 	for name, desc in pairs(descData) do
 		--print(id, name)
 		local description = ARC_EID.DynamicDescriptions:MakeMinimizedDescription(desc)[1]
@@ -207,6 +274,8 @@ function ARC_EID:TryAddSynergyDescriptions(id, descData, lang)
 			EID:addBFFSCondition(id, description, nil, nil, lang)
 		elseif name == "HiveMind" then
 			EID:addHiveMindCondition(id, description, nil, nil, lang)
+		elseif name == "BookOfVirtues" then
+			EID_addBookOfVirtuesCondition(id, description, nil, nil, lang)
 		end
 	end
 end
