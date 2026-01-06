@@ -80,7 +80,7 @@ end
 ---@return EntityPlayer?
 function WEB_HEART:AnyArachanaHasWebHearts(count)
 	return Mod.Foreach.Player(function (player, index)
-		if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) >= (count or 0) then
+		if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) >= (count or 1) then
 			return player
 		end
 	end)
@@ -363,7 +363,7 @@ function WEB_HEART:ForcePrice(pickup)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, WEB_HEART.ForcePrice, PickupVariant.PICKUP_COLLECTIBLE)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, CallbackPriority.EARLY, WEB_HEART.ForcePrice, PickupVariant.PICKUP_COLLECTIBLE)
 
 ---@param pickup EntityPickup
 ---@param player EntityPlayer
