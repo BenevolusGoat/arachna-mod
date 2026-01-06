@@ -1,9 +1,5 @@
 local Mod = ARACHNAMOD
 
---[[
-"arachnaMarksAlt":{"Witness":0,"Satan":0,"Two Paths":0,"Hush":0,"Mega Satan":0,"Beast":0,"All":0,"Chest":0,"Hush + BR":0,"Isaac":0,"Mom's Heart":0,"Dark Room":0,"Greed":0,"Tainted":0,"Boss Rush":0,"Delirium":0},"arachnaMarks"   :{"Witness":0,"Satan":0,"Two Paths":0,"Hush":0,"Mega Satan":0,"Beast":0,"All":0,"Chest":0,"Hush + BR":0,"Isaac":0,"Mom's Heart":0,"Dark Room":0,"Greed":0,"Tainted":1,"Boss Rush":0,"Delirium":0}
-]]
-
 local oldSaveDataLookup = {
 	MomsHeart = "Mom's Heart",
 	Isaac = "Isaac",
