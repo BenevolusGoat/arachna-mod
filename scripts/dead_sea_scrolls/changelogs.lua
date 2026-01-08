@@ -88,6 +88,7 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 ## GAMEPLAY CHANGES
 The newly available "Legacy Gameplay" option allows certain changes to be reverted to how they acted before this update.
 Changes that will be reverted with the setting set to Off are marked with a *.
+
 New Content:
 - Added 4 new items after unlocking Web Hearts: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
