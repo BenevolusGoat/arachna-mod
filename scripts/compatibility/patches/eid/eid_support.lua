@@ -84,7 +84,7 @@ EID:addIcon("SpiderBeggar", "Spider Beggar", 0, 11, 11, 0, 0, eid_icons)
 
 --#region Helper functions
 
----@param table
+---@param strTable table
 function ARC_EID:GetTranslatedString(strTable)
 	local lang = EID.getLanguage() or "en_us"
 	local desc = strTable[lang] or strTable["en_us"] -- default to english description if there's no translation
