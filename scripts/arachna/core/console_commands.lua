@@ -133,7 +133,7 @@ local description = "The following commands can be accessed by typing \"arachnaM
 for _, commandTable in ipairs(commands) do
 	description = description .. "\n  - " .. commandTable[1] .. " - " .. commandTable[2]
 	if helpText[commandTable[1]] then
-		description = description .. ". " .. helpText[commandTable[1]]
+		description = description .. ".\n" .. helpText[commandTable[1]]
 	end
 end
 
