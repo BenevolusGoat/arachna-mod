@@ -153,7 +153,7 @@ MERGED_CARD.CARD_EFFECTS = {
 		Mod.Spawn.Bomb(BombSubType.BOMB_TROLL, nearPos, nil, player, rng:Next())
 	end,
 	[Card.CARD_STARS] = function (player, rng)
-		local pos = Isaac.GetFreeNearPosition(player.Position, 40)
+		local pos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 		local chest = Mod.Spawn.Pickup(PickupVariant.PICKUP_LOCKEDCHEST, 0, pos, nil, player, rng:Next())
 		Mod.Spawn.Poof01(0, chest.Position)
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMONSOUND, 0.8, 0, false, 1)
