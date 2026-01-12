@@ -1954,12 +1954,21 @@ end
 ---@param allowSoulSave? boolean
 ---@return table
 local function getRespectiveSave(ent, noHourglass, initDataIfNotPresent, saveType, listIndex, allowSoulSave)
-	if not SaveManager.Utility.IsDataInitialized(not initDataIfNotPresent)
-		---@diagnostic disable-next-line: param-type-mismatch
-		or (ent and type(ent) == "userdata" and not SaveManager.Utility.IsEntitySaveAllowed(ent, saveType))
-	then
+	if not SaveManager.Utility.IsDataInitialized(not initDataIfNotPresent) then
 		---@diagnostic disable-next-line: missing-return-value
 		return
+	end
+	if ent then
+		---@diagnostic disable-next-line: param-type-mismatch
+		if (type(ent) == "userdata" and not SaveManager.Utility.IsEntitySaveAllowed(ent, saveType)) then
+			---@diagnostic disable-next-line: missing-return-value
+			return
+		--Technically it doesn't make sense to allow "grid saves" for run and floor saves but they're nothing more than arbitrary integers.
+		--So I'll allow it regardless of intent.
+		--[[ elseif type(ent) == "integer" and saveType ~= "room" and saveType ~= "temp" then
+			---@diagnostic disable-next-line: missing-return-value
+			return ]]
+		end
 	end
 	noHourglass = noHourglass or false
 
@@ -2045,7 +2054,7 @@ function SaveManager.TryGetFloorSave(ent, noHourglass, allowSoulSave)
 end
 
 ---Returns a save that lasts the duration of the current floor, but data is separated per-room.
----**NOTE:** If your data is a pickup, use SaveManager.GetRerollPickupSave/NoRerollPickupSave instead
+---**NOTE:** If your data is a pickup, use SaveManager.GetRerollPickupSave/NoRerollPickupSave instead.
 ---@param ent? Entity | integer @If an entity is provided, returns an entity specific save within the room save, which is a floor-lasting save that has unique data per-room. If a grid index is provided, returns a grid index specific save. Otherwise, returns arbitrary data in the save not attached to an entity.
 ---@param noHourglass? false|boolean @If true, it'll look in a separate game save that is not affected by the Glowing Hourglass.
 ---@param listIndex? integer @Returns data for the provided `listIndex` instead of the index of the current room.
@@ -2056,7 +2065,7 @@ function SaveManager.GetRoomSave(ent, noHourglass, listIndex, allowSoulSave)
 end
 
 ---Attempts to return a save that lasts the duration of the current floor, but data is separated per-room.
----**NOTE:** If your data is a pickup, use SaveManager.TryGetRerollPickupSave/TryGetNoRerollPickupSave instead
+---**NOTE:** If your data is a pickup, use SaveManager.TryGetRerollPickupSave/TryGetNoRerollPickupSave instead.
 ---@param ent? Entity | integer @If an entity is provided, returns an entity specific save within the room save, which is a floor-lasting save that has unique data per-room. If a grid index is provided, returns a grid index specific save. Otherwise, returns arbitrary data in the save not attached to an entity.
 ---@param noHourglass? false|boolean @If true, it'll look in a separate game save that is not affected by the Glowing Hourglass.
 ---@param listIndex? integer @Returns data for the provided `listIndex` instead of the index of the current room.
