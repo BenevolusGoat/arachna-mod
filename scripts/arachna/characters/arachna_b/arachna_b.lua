@@ -75,6 +75,7 @@ Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_STAT, CallbackPriority.IMPORTAN
 
 ---@param player EntityPlayer
 function ARACHNA_B:RechargeDoubleTap(player)
+	if not ARACHNA_B:IsArachnaB(player) then return end
 	local data = Mod:GetData(player)
 	Mod.sfxman:Play(SoundEffect.SOUND_BEEP)
 	player:SetColor(StatusEffectLibrary.StatusColor.SLOW, 15, 100, true, false)
