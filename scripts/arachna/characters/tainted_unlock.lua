@@ -8,32 +8,19 @@ local function checkArachnaTaintedLocked()
 	return playerType == Mod.PlayerType.ARACHNA and not Mod.PersistGameData:Unlocked(Mod.Character.ARACHNA_B.ACHIEVEMENT)
 end
 
-function TAINTED_UNLOCK:OnClosetEntry()
-	if not REPENTOGON then return end
+function TAINTED_UNLOCK:OnSlotSpawn(entType, variant, subtype, grid, seed)
 	local level = Mod.Level()
-	local room = Mod.Room()
-
 	if level:GetStage() == LevelStage.STAGE8 --Home
 		and level:GetCurrentRoomIndex() == 94 --Closet
-		and room:IsFirstVisit()
+		and entType == EntityType.ENTITY_SLOT
+		and variant == SlotVariant.HOME_CLOSET_PLAYER
 		and checkArachnaTaintedLocked()
 	then
-		local innerChild = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
-			CollectibleType.COLLECTIBLE_INNER_CHILD)[1]
-		local shopKeeper = Isaac.FindByType(EntityType.ENTITY_SHOPKEEPER)[1]
-
-		if innerChild then
-			innerChild:Remove()
-		elseif shopKeeper then
-			shopKeeper:Remove()
-		end
-
-		local player = Isaac.GetPlayer()
-		Mod.Spawn.Slot(SlotVariant.HOME_CLOSET_PLAYER, room:GetCenterPos(), player)
+		return {entType, variant, subtype}
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, TAINTED_UNLOCK.OnClosetEntry)
+Mod:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, TAINTED_UNLOCK.OnSlotSpawn)
 
 ---@param slot EntitySlot
 function TAINTED_UNLOCK:CryingTaintedSpriteOnInit(slot)
