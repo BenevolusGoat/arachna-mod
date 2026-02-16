@@ -5,7 +5,8 @@ local TAINTED_UNLOCK = {}
 local function checkArachnaTaintedLocked()
 	local player = Isaac.GetPlayer()
 	local playerType = player:GetPlayerType()
-	return playerType == Mod.PlayerType.ARACHNA and not Mod.PersistGameData:Unlocked(Mod.Character.ARACHNA_B.ACHIEVEMENT)
+	return playerType == Mod.PlayerType.ARACHNA
+		and	not Mod.PersistGameData():Unlocked(Mod.Character.ARACHNA_B.ACHIEVEMENT)
 end
 
 function TAINTED_UNLOCK:OnSlotSpawn(entType, variant, subtype, grid, seed)
@@ -16,7 +17,7 @@ function TAINTED_UNLOCK:OnSlotSpawn(entType, variant, subtype, grid, seed)
 		and variant == SlotVariant.HOME_CLOSET_PLAYER
 		and checkArachnaTaintedLocked()
 	then
-		return {entType, variant, subtype}
+		return { entType, variant, subtype }
 	end
 end
 
@@ -40,7 +41,7 @@ function TAINTED_UNLOCK:UnlockTainted(slot)
 		local unlock_table = Mod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA]
 		local tainted = unlock_table[Mod.CompletionType.TAINTED]
 		if sprite:IsFinished("PayPrize") then
-			Mod.PersistGameData:TryUnlock(tainted)
+			Mod.PersistGameData():TryUnlock(tainted)
 		end
 	end
 end

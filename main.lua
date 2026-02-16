@@ -12,7 +12,7 @@ ARACHNAMOD.SaveManager.Init(Mod)
 
 ARACHNAMOD.sfxman = SFXManager()
 ARACHNAMOD.Game = Game()
-ARACHNAMOD.PersistGameData = REPENTOGON and Isaac.GetPersistentGameData() or nil
+ARACHNAMOD.PersistGameData = function() return Isaac.GetPersistentGameData() end
 ARACHNAMOD.Room = function() return Mod.Game:GetRoom() end
 ARACHNAMOD.Level = function() return Mod.Game:GetLevel() end
 ARACHNAMOD.ItemConfig = Isaac.GetItemConfig()
@@ -128,7 +128,8 @@ function ARACHNAMOD:EveryoneIsArachna()
 end
 
 function ARACHNAMOD:AnyoneIsArachna()
-	return PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA) or PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA_B)
+	return PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA) or
+	PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA_B)
 end
 
 function ARACHNAMOD:UpdateLegacyGameplay()
@@ -229,7 +230,8 @@ include("flags")
 include("scripts.arachna.core.save_upgrade")
 include("scripts/dead_sea_scrolls/deadseascrolls")
 if not REPENTOGON or not REPENTANCE_PLUS then
-	Mod:Log("Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com")
+	Mod:Log(
+	"Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com")
 	Mod.ShowNewPopup = true
 	return
 end

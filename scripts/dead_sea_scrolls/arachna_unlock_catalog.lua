@@ -57,7 +57,7 @@ return function(DSSUnlockManager)
 				Desc = desc:lower(),
 				Gfx = xmlData.gfx,
 				Unlocked = function()
-					return Mod.PersistGameData:Unlocked(achievement)
+					return Mod.PersistGameData():Unlocked(achievement)
 				end,
 			},
 		}

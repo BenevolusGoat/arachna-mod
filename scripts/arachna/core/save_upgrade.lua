@@ -35,7 +35,7 @@ function ARACHNAMOD:TransferMarksToREPENTOGON(saveData)
 		end
 		Isaac.SetCompletionMarks(completionTable)
 		if normalMarks.Tainted > 0 then
-			Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT, true)
+			Mod.PersistGameData():TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT, true)
 			Mod:DebugLog("Tainted unlocked!")
 		end
 		for completionType, achievement in pairs(Mod.CompletionMarkToAchievement.ARACHNA) do

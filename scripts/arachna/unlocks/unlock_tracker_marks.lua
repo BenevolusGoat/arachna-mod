@@ -35,11 +35,11 @@ function ARACHNAMOD:TryUnlockCompletionMark(playerType, completionType)
 	if Mod.Game:AchievementUnlocksDisallowed() then return false end
 	local achievement = Mod:GetAchievement(playerType, completionType)
 	if achievement then
-		local result = Mod.PersistGameData:TryUnlock(achievement)
+		local result = Mod.PersistGameData():TryUnlock(achievement)
 
 		local completionTable = Mod.PlayerTypeToCompletionTable[playerType]
 		if Isaac.AllMarksFilled(playerType) == 2 and completionTable[Mod.CompletionType.ALL] then
-			Mod.PersistGameData:TryUnlock(completionTable[Mod.CompletionType.ALL])
+			Mod.PersistGameData():TryUnlock(completionTable[Mod.CompletionType.ALL])
 		end
 		return result
 	end

@@ -90,7 +90,7 @@ local function isEntityAvailable(funcOrInit)
 	if type(funcOrInit) == "function" then
 		isAvailable = funcOrInit()
 	elseif type(funcOrInit) == "number" then
-		isAvailable = Mod.PersistGameData:Unlocked(funcOrInit)
+		isAvailable = Mod.PersistGameData():Unlocked(funcOrInit)
 	end
 	return isAvailable
 end
@@ -123,7 +123,8 @@ local function pickupReplacement(_, pickup, variant, subtype, requestedVariant, 
 			and (not replacement_info.OldSubtype or replacement_info.OldSubtype[subtype])
 		then
 			local newSubtype = tryGetInt(replacement_info.NewSubtype, rng, subtype)
-			local xmlData = XMLData.GetEntityByTypeVarSub(EntityType.ENTITY_PICKUP, replacement_info.NewVariant, newSubtype)
+			local xmlData = XMLData.GetEntityByTypeVarSub(EntityType.ENTITY_PICKUP, replacement_info.NewVariant,
+				newSubtype)
 			local entName = "No name found"
 			if xmlData then
 				entName = xmlData.name
@@ -131,7 +132,8 @@ local function pickupReplacement(_, pickup, variant, subtype, requestedVariant, 
 			local replacementChance = tryGetInt(replacement_info.ReplacementChance)
 			local roll = rng:RandomFloat()
 
-			Mod:DebugLog("Attempting replacement for pickup", variant .. "." .. subtype, "with", replacement_info.NewVariant .. "." .. newSubtype, "(" .. entName .. ")")
+			Mod:DebugLog("Attempting replacement for pickup", variant .. "." .. subtype, "with",
+				replacement_info.NewVariant .. "." .. newSubtype, "(" .. entName .. ")")
 			Mod:DebugLog("Roll:", roll, "Chance:", replacementChance)
 
 			if roll <= replacementChance then
@@ -146,15 +148,15 @@ local function pickupReplacement(_, pickup, variant, subtype, requestedVariant, 
 				end
 				Mod:DebugLog("Roll failed for replacement")
 			end
-		--Only override if it's tied to an achievement specifically
+			--Only override if it's tied to an achievement specifically
 		elseif type(replacement_info.Achievement) == "string"
 			---@diagnostic disable-next-line: param-type-mismatch
-			and not Mod.PersistGameData:Unlocked(replacement_info.Achievement)
+			and not Mod.PersistGameData():Unlocked(replacement_info.Achievement)
 			and replacement_info.NewVariant == variant
 			and (not replacement_info.NewSubtype or type(replacement_info.NewSubtype) == "number" and replacement_info.NewSubtype == subtype)
 		then
-			local oldVariant = replacement_info.OldVariant and Mod:GetKeys(replacement_info.OldVariant) or {0}
-			local oldSubtype = replacement_info.OldSubtype and Mod:GetKeys(replacement_info.OldSubtype) or {0}
+			local oldVariant = replacement_info.OldVariant and Mod:GetKeys(replacement_info.OldVariant) or { 0 }
+			local oldSubtype = replacement_info.OldSubtype and Mod:GetKeys(replacement_info.OldSubtype) or { 0 }
 			table.sort(oldVariant)
 			table.sort(oldSubtype)
 			local selVar = oldVariant[1]
@@ -187,7 +189,8 @@ local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 		then
 			local rng = RNG(seed)
 			local newSubtype = tryGetInt(replacement_info.NewSubtype, rng, subtype)
-			local xmlData = XMLData.GetEntityByTypeVarSub(replacement_info.NewType, replacement_info.NewVariant, newSubtype)
+			local xmlData = XMLData.GetEntityByTypeVarSub(replacement_info.NewType, replacement_info.NewVariant,
+				newSubtype)
 			local entName = "No name found"
 			if xmlData then
 				entName = xmlData.name
@@ -196,13 +199,15 @@ local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 			local roll = rng:RandomFloat()
 
 			Mod:DebugLog("Attempting replacement for", entType .. "." .. variant .. "." .. subtype, "with",
-				replacement_info.NewType .. "." .. replacement_info.NewVariant .. "." .. newSubtype, "(" .. entName .. ")")
+				replacement_info.NewType .. "." .. replacement_info.NewVariant .. "." .. newSubtype,
+				"(" .. entName .. ")")
 			Mod:DebugLog("Roll:", roll, "Chance:", replacementChance)
 
 			if roll <= replacementChance then
 				Mod:DebugLog("Replacement successful!")
 				if replacement_info.PostRollReplacement then
-					replacement_info.PostRollReplacement(rng, true, replacement_info.NewType, replacement_info.NewVariant, newSubtype)
+					replacement_info.PostRollReplacement(rng, true, replacement_info.NewType, replacement_info
+					.NewVariant, newSubtype)
 				end
 				return { replacement_info.NewType, replacement_info.NewVariant, newSubtype }
 			else
@@ -211,24 +216,25 @@ local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 				end
 				Mod:DebugLog("Roll failed for replacement")
 			end
-		--Only override if it's tied to an achievement specifically
+			--Only override if it's tied to an achievement specifically
 		elseif type(replacement_info.Achievement) == "string"
 			---@diagnostic disable-next-line: param-type-mismatch
-			and not Mod.PersistGameData:Unlocked(replacement_info.Achievement)
+			and not Mod.PersistGameData():Unlocked(replacement_info.Achievement)
 			and replacement_info.NewType == entType
 			and replacement_info.NewVariant == variant
 			and (not replacement_info.NewSubtype or type(replacement_info.NewSubtype) == "number" and replacement_info.NewSubtype == subtype)
 		then
 			local oldType = Mod:GetKeys(replacement_info.OldType)
-			local oldVariant = replacement_info.OldVariant and Mod:GetKeys(replacement_info.OldVariant) or {0}
-			local oldSubtype = replacement_info.OldSubtype and Mod:GetKeys(replacement_info.OldSubtype) or {0}
+			local oldVariant = replacement_info.OldVariant and Mod:GetKeys(replacement_info.OldVariant) or { 0 }
+			local oldSubtype = replacement_info.OldSubtype and Mod:GetKeys(replacement_info.OldSubtype) or { 0 }
 			table.sort(oldType)
 			table.sort(oldVariant)
 			table.sort(oldSubtype)
 			local selType = oldType[1]
 			local selVar = oldVariant[1]
 			local selSub = oldSubtype[1]
-			Mod:DebugLog(entType .. "." .. variant .. "." .. subtype, "not unlocked! Replacing with", selType .. "." .. selVar .. "." .. selSub)
+			Mod:DebugLog(entType .. "." .. variant .. "." .. subtype, "not unlocked! Replacing with",
+				selType .. "." .. selVar .. "." .. selSub)
 			return { selType, selVar, selSub }
 		end
 	end

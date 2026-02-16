@@ -23,7 +23,7 @@ local function manageAchievements(shouldUnlock)
 
 	for i = startAch, endAch do
 		if shouldUnlock then
-			Mod.PersistGameData:TryUnlock(i, true)
+			Mod.PersistGameData():TryUnlock(i, true)
 		else
 			Isaac.ExecuteCommand("lockachievement " .. i)
 		end
@@ -87,7 +87,7 @@ local commands = {
 	{ "lockall",        "Locks all mod achievements" },
 	{ "setmark",        "Args: <string completiontype> <int value>. Updates a completion mark for Arachna" },
 	{ "setmarktainted", "Args: <string completiontype> <int value>. Updates a completion mark for Tainted Arachna" },
-	{ "seteggtimeout",  "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders"}
+	{ "seteggtimeout",  "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders" }
 }
 
 local helpText = {
@@ -102,17 +102,17 @@ local helpText = {
 	["setmarktainted"] = "Arguments are identical to setmark's arguments.",
 	["seteggtimeout"] =
 		"<timeout>: The number in seconds the timeout should be set to.\n"
-		.."Examples:\n"
-		.."(arachnaMod seteggtimeout 5) will have eggs explode after 5 seconds.\n"
-		.."(arachnaMod seteggtimeout 7.5) will have eggs explode after 7.5 seconds.\n"
-		.."(arachnaMod seteggtimeout 0) will stop the timer mechanic.\n"
+		.. "Examples:\n"
+		.. "(arachnaMod seteggtimeout 5) will have eggs explode after 5 seconds.\n"
+		.. "(arachnaMod seteggtimeout 7.5) will have eggs explode after 7.5 seconds.\n"
+		.. "(arachnaMod seteggtimeout 0) will stop the timer mechanic.\n"
 	,
 }
 
 ---@type {[string]: fun(args: string)}
 local commandFuncs = {
 	["unlocktainted"] = function()
-		Mod.PersistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT)
+		Mod.PersistGameData():TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT)
 	end,
 	["unlockall"] = function()
 		manageAchievements(true)
