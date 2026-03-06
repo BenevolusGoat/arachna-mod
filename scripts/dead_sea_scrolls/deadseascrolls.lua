@@ -80,7 +80,12 @@ local arachnaDssDirectory = {
 			{str = 'resume game', action = 'resume'},
 			{str = 'unlocks', dest = 'unlocks', tooltip = GenerateTooltip("view and manage unlocks")},
 			dssmod.changelogsButton,
-			{str = 'settings', dest = 'settings', tooltip = GenerateTooltip("edit various settings")},
+			{str = 'settings', dest = 'arachnaSettings', tooltip = GenerateTooltip("edit various settings"), displayif = function()
+				return DeadSeaScrollsMenu.CanOpenGlobalMenu()
+			end},
+			{str = 'settings', dest = 'settings', tooltip = GenerateTooltip("edit various settings"), displayif = function()
+				return not DeadSeaScrollsMenu.CanOpenGlobalMenu()
+			end,},
 			{str = 'credits', dest = 'credits', tooltip = GenerateTooltip("view the credits")},
 		},
 
@@ -119,6 +124,23 @@ local arachnaDssDirectory = {
 		}
 	},
 	settings = {
+		title = "settings",
+		buttons = {
+			{str = "menu settings", dest = "menuSettings", tooltip = GenerateTooltip("edit menu settings")},
+			{str = "arachna settings", dest = "arachnaSettings", tooltip = GenerateTooltip("edit arachna settings")},
+		},
+	},
+	menuSettings = {
+		title = "menu settings",
+		buttons = {
+			dssmod.gamepadToggleButton,
+			dssmod.menuKeybindButton,
+			dssmod.paletteButton,
+			dssmod.menuHintButton,
+			dssmod.menuBuzzerButton,
+		},
+	},
+	arachnaSettings = {
 		title = "settings",
 		buttons = {},
 		generate = function(menu)
