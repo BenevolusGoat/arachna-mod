@@ -19,6 +19,8 @@ local ends = {
 	["9"] = "th",
 }
 
+local UPLOAD_DATE = os.date("!*t", os.time({year = 2022, month = 4, day = 29}))
+
 function SPIDER_CAKE:ShouldSpawnCake()
 	local anniversarySetting = Mod.GetSetting(Mod.Setting.AnniversaryOverride)
 	if anniversarySetting == 3 then
@@ -31,8 +33,14 @@ function SPIDER_CAKE:ShouldSpawnCake()
 end
 
 function SPIDER_CAKE:GetYearDifference()
-	local diff = Mod.math.max(1, tonumber(os.date("%Y")) - 2022)
-	return diff
+	local curDate = os.date("!*t")
+	local curDotY = curDate.yday
+	local yearDiff = curDate.year - UPLOAD_DATE.year
+	--Same year, hasn't reached the day yet.
+	if curDotY < UPLOAD_DATE.yday then
+		yearDiff = yearDiff - 1
+	end
+	return yearDiff
 end
 
 ---@param isContinued boolean
