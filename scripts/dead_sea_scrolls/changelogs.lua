@@ -48,7 +48,7 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
 
-#2.0.0 (??/??/2025)
+#2.0.0 (??/??/2026)
 
 ## Major Mod Rewrite
 
@@ -69,9 +69,9 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 - Added slight delays to when the aforementioned announcer sfx plays
 - Changed Mechanical Eye to no longer look at your secondary held active for displaying an active item to use
 - Added BFFS! synergy to Mechanical Eye
-- Changed how orbitals are added to the player. They will have differing speeds/distances compared to before, but now occupy the same layers as other orbitals
+- Changed how the mod's orbitals are added to the player. They will have differing speeds/distances compared to before, but now occupy the same layers as other orbitals
 - Removed the small delay The Yarn had dropping its Web Heart
-- Improved handling of Dad's Newspaper's "club"
+- Improved melee handling of Dad's Newspaper
 
 ## BUG FIXES
 - Fixed Testament crashing the game
