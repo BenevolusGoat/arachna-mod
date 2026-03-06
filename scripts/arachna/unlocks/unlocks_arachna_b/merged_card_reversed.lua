@@ -138,7 +138,9 @@ MERGED_CARD_REVERSED.CARD_EFFECTS = {
 		player:AddCollectibleEffect(CollectibleType.COLLECTIBLE_BIBLE, true)
 	end,
 	[Card.CARD_REVERSE_TOWER] = function(player, rng)
-		--TODO: Manually recreate Reverse Tower or...something.
+		for i = 1, 2 do
+			MERGED_CARD_REVERSED:SpawnReverseExplosion(player, rng, 40)
+		end
 	end,
 	[Card.CARD_REVERSE_STARS] = function(player, rng)
 		local history = player:GetHistory():GetCollectiblesHistory()
@@ -416,6 +418,32 @@ function MERGED_CARD_REVERSED:OnReverseSunRemove(player)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, MERGED_CARD_REVERSED.OnReverseSunRemove, REVERSE_SUN_NULL_CONFIG)
+
+--#endregion
+
+--#region Reverse Tower
+
+---@param player EntityPlayer
+---@param rng RNG
+---@param radius number
+function MERGED_CARD_REVERSED:SpawnReverseExplosion(player, rng, radius)
+	local room = Mod.Room()
+	local pos = room:GetClampedPosition(Isaac.GetRandomPosition(), -40)
+	local topLeftIndex =  room:GetGridIndex(pos + Vector(-radius, 0))
+	local topRightIndex = room:GetGridIndex(pos + Vector(radius, 0))
+	local length = topRightIndex - topLeftIndex
+	local width = room:GetGridWidth()
+	Mod.Spawn.Effect(EffectVariant.REVERSE_EXPLOSION, 0, pos, nil, player)
+	for x = topLeftIndex, topRightIndex do
+		for y = 0, length do
+			local gridIndex = x + (y * width)
+			local grid = room:GetGridEntity(gridIndex)
+			if not grid then
+				Mod.Spawn.Effect(EffectVariant.REVERSE_EXPLOSION, 1, room:GetGridPosition(gridIndex), nil, player, rng:Next())
+			end
+		end
+	end
+end
 
 --#endregion
 

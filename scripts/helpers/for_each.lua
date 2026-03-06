@@ -439,15 +439,14 @@ end
 ---@param gridVariant? integer
 ---@return V?
 function Foreach.GridInRadius(pos, radius, func, gridType, gridVariant)
-	local topLeft = pos + Vector(-radius, -radius)
-	local bottomRight = pos + Vector(radius, radius)
-	topLeft = Vector(topLeft.X, topLeft.Y)
-	bottomRight = Vector(bottomRight.X, bottomRight.Y)
 	local room = game:GetRoom()
-
-	for x = topLeft.X, bottomRight.X do
-		for y = topLeft.Y, bottomRight.Y do
-			local gridIndex = room:GetGridIndex(Vector(x, y))
+	local topLeftIndex =  room:GetGridIndex(pos + Vector(-radius, 0))
+	local topRightIndex = room:GetGridIndex(pos + Vector(radius, 0))
+	local length = topRightIndex - topLeftIndex
+	local width = room:GetGridWidth()
+	for x = topLeftIndex, topRightIndex do
+		for y = 0, length do
+			local gridIndex = x + (y * width)
 			local grid = room:GetGridEntity(gridIndex)
 			if grid
 				and (not gridType or grid:GetType() == gridType)
