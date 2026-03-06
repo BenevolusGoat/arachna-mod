@@ -104,7 +104,7 @@ Tainted Arachna:
 * Removed timer mechanic on spider eggs
 * Spider eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color
 * Divine Cloth has been moved to a double-tap action and now deals damage
-* New Pocket Active: Grab (placeholder name!). Grab and throw your eggs, which come with benefits when thrown and moreso when they hit enemies
+* New Pocket Active: Egg Toss. Grab and throw your eggs, which come with benefits when thrown and moreso when they hit enemies
 * Increased starting damage to 2.00 (from 1.00)
 * Increased starting speed to 1.00 (from 0.75)
 

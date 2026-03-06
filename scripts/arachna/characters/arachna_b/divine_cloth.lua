@@ -9,8 +9,6 @@ ARACHNAMOD.Item.DIVINE_CLOTH = DIVINE_CLOTH
 
 DIVINE_CLOTH.ID = Isaac.GetItemIdByName("Divine Cloth")
 
-DIVINE_CLOTH.ID_GRAB = Isaac.GetItemIdByName("Grab")
-
 DIVINE_CLOTH.DIVINE_WEB_VAR = Isaac.GetEntityVariantByName("Divine Web")
 DIVINE_CLOTH.DIVINE_WEB_SUB = Isaac.GetEntitySubTypeByName("Divine Web")
 

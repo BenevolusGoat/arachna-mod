@@ -32,8 +32,8 @@ local playerTypeToGroup = {
 
 return function(DSSUnlockManager)
 	local catalogTable = {}
-	DSSUnlockManager:RegisterGroup("arachna", nil, "group_icons/group_arachna.png")
-	DSSUnlockManager:RegisterGroup("tainted arachna", nil, "group_icons/group_arachna_b.png")
+	DSSUnlockManager:RegisterGroup("arachna", nil, "group_icons/icon_arachna.png")
+	DSSUnlockManager:RegisterGroup("tainted arachna", nil, "group_icons/icon_arachna_b.png")
 
 	local function makeUnlockTable(groupName, completionType, achievement)
 		local xmlData = XMLData.GetEntryById(XMLNode.ACHIEVEMENT, achievement)

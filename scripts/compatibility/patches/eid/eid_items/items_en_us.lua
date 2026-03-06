@@ -68,7 +68,7 @@ return function(modifiers)
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
 				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{BossRoom}} Damaging Webbed bosses charges a meter. When filled, spawns several friendly spiders"
+				"#{{BossRoom}} Damaging webbed bosses charges a meter. When filled, spawns several friendly spiders"
 			},
 			BookOfBelial = {
 				"Spool projectile and spider web inflict {{Burning}} Burn on enemies"
@@ -77,19 +77,20 @@ return function(modifiers)
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Inflicts Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death",
+				"{{StatusSpiderBite}} Ensnares enemies and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop small spider eggs on death",
 				"#{{AracBlueSpider}} Spider Eggs break on room clear, spawning several friendly spiders",
-				"#{{BossRoom}} Damaging Spider Bitten bosses charges a meter. When filled, spawns a spider egg"
+				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
+				"#{{BossRoom}} Damaging ensnared bosses charges a meter. When filled, spawns a spider egg"
 			},
 			BookOfBelial = {
 				"Inflicts {{Burning}} Burn on nearby enemies"
 			}
 		},
-		[Item.GRAB.ID] = {
-			Name = "Grab (placeholder!)",
+		[Item.EGG_TOSS.ID] = {
+			Name = "Egg Toss",
 			Description = {
 				"{{Throwable}} Grab and throw spider eggs",
-				"#{{AracBlueSpider}} Hatches spiders as normal and triggers {{ColorRainbow}}special{{CR}} color-specific effects when the egg hits an obstacle, the floor, or an enemy",
+				"#{{AracBlueSpider}} Hatches spiders as normal and triggers {{ColorRainbow}}special{{CR}} color-specific effects when the egg hits something",
 				"#↑ Hitting an enemy with an egg may spawn more and larger spiders",
 			}
 		},
@@ -133,17 +134,21 @@ return function(modifiers)
 				"#Displayed item rerolls when entering a new room or using an active item"
 			},
 			BFFS = {
-				"Triggers the effect twice, like {{Collectible" .. CollectibleType.COLLECTIBLE_CAR_BATTERY .. "}} Car Battery"
+				"Triggers the effect twice, like {{Collectible" ..
+				CollectibleType.COLLECTIBLE_CAR_BATTERY .. "}} Car Battery"
 			}
 		},
 		[Item.GEPTAMERON.ID] = {
 			Name = "Getameron",
 			Description = {
 				"Triggers an effect based on the indicator on the item:",
-				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" .. CollectibleType.COLLECTIBLE_DADS_KEY .. "}}",
+				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" ..
+				CollectibleType.COLLECTIBLE_DADS_KEY .. "}}",
 				"#{{2}} Spawns temporary friendly companions that chase enemies. May leave 1 {{RottenHeart}} on death",
-				"#{{3}} 50% chance to {{Charm}} charm all enemies or have them spawn 3 {{Trinket" .. TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} locusts on death",
-				"#{{4}} Gain 2 {{Collectible" .. CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantle}} mantle shield for the room",
+				"#{{3}} 50% chance to {{Charm}} charm all enemies or have them spawn 3 {{Trinket" ..
+				TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} locusts on death",
+				"#{{4}} Gain 2 {{Collectible" ..
+				CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantle}} mantle shield for the room",
 				"#{{5}} All enemies in the room will drop {{Coin}} disappearing coins on death",
 				"#{{6}} Missiles rain down in random locations for 10 seconds",
 				"#{{7}} 1-3 enemies marked to drop a random disappearing pickup on death, which passes the mark to another enemy"

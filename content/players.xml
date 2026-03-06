@@ -8,7 +8,7 @@
           portrait="playerportrait_arachna.png" skinColor="1" costumeSuffix="arachna" noshake="true"
 		  birthright="More Web, More Friends, More Health!" />
 	<player name="Arachna" skin="character_arachna_b.png" hp="6" armor="2" healthtype="1"
-		  pocketActive="Grab" modcostume="1" hurtsound="Arachna Hurt" deathsound="Arachna Death"
+		  pocketActive="Egg Toss" modcostume="1" hurtsound="Arachna Hurt" deathsound="Arachna Death"
 		  luckmodifier="0.8" firedelaymodifier="-2.3" damagemodifier="-1.5"
 		  achievement="The Wretched"
           nameimage="playername_arachna.png"

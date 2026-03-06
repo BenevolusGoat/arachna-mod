@@ -12,23 +12,23 @@ ARACHNAS_SPOOL.TEAR = Isaac.GetEntityVariantByName("Spool Tear")
 ARACHNAS_SPOOL.WEB_EFFECT = Isaac.GetEntityVariantByName("Spider Web")
 
 local identifier = "ARACHNA_WEBBED"
-StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW, true)
+StatusEffectLibrary.RegisterStatusEffect(identifier, nil, StatusEffectLibrary.StatusColor.SLOW, EntityFlag.FLAG_SLOW,
+	true)
 ARACHNAS_SPOOL.STATUS_WEBBED = StatusEffectLibrary.StatusFlag[identifier]
 
-ARACHNAS_SPOOL.MINIBOSS = Mod:Set({
-	tostring(EntityType.ENTITY_SLOTH) .. ".0.0",
-	tostring(EntityType.ENTITY_LUST) .. ".0.0",
-	tostring(EntityType.ENTITY_WRATH) .. ".0.0",
-	tostring(EntityType.ENTITY_GLUTTONY) .. ".0.0",
-	tostring(EntityType.ENTITY_GREED) .. ".0.0",
-	tostring(EntityType.ENTITY_ENVY) .. ".0.0",
-	tostring(EntityType.ENTITY_ENVY) .. ".10.0",
-	tostring(EntityType.ENTITY_ENVY) .. ".20.0",
-	tostring(EntityType.ENTITY_ENVY) .. ".30.0",
-	tostring(EntityType.ENTITY_PRIDE) .. ".0.0",
-})
 ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD = 50
 ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE = 5
+
+local SIZE_THRESHOLDS = {
+	20,
+	40,
+	100
+}
+
+ARACHNAS_SPOOL.WEB_SPRITE_OFFSET = {
+	[tostring(EntityType.ENTITY_BEAST) .. ".0.0"] = 70,
+	[tostring(EntityType.ENTITY_HUSH) .. ".0.0"] = 30,
+}
 
 --#endregion
 
@@ -220,15 +220,37 @@ end
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.PRE_ADD_ENTITY_STATUS_EFFECT,
 	ARACHNAS_SPOOL.PreAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
 
+local function updateWebbedScale(sprite, ent, data)
+	local scale = 1
+	for i, size in ipairs(SIZE_THRESHOLDS) do
+		if ent.Size >= size then
+			scale = i
+		end
+	end
+	sprite:Play("Idle" .. scale)
+	local offset = Vector.Zero
+	local entString
+	local deli = ent:ToDelirium()
+	if deli then
+		entString = tostring(deli.BossType) .. "." .. tostring(deli.BossVariant) .. ".0"
+	else
+		entString = Mod:TypeVarSubToString(ent)
+	end
+	local entOffset = ARACHNAS_SPOOL.WEB_SPRITE_OFFSET[entString]
+	if entOffset then
+		offset = Vector(0, entOffset)
+	end
+	data.WebbedOffset = offset
+	data.WebbedScale = scale
+end
+
 ---@param ent Entity
 ---@param statusEffectData StatusEffectData
 function ARACHNAS_SPOOL:PostAddWeb(ent, _, statusEffectData)
 	local data = Mod:GetData(ent)
-	if not data.WebbedStatusSprite then
-		local sprite = Sprite("gfx/indicator_arachna_b.anm2", true)
-		sprite:Play("Idle")
-		data.WebbedStatusSprite = sprite
-	end
+	local sprite = Sprite("gfx/indicator_webbed.anm2", true)
+	updateWebbedScale(sprite, ent, data)
+	data.WebbedStatusSprite = sprite
 	if not Mod:IsLegacyGameplayEnabled() then
 		ent.Mass = statusEffectData.CustomData.OriginalMass * 2
 	end
@@ -236,6 +258,17 @@ end
 
 StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_ADD_ENTITY_STATUS_EFFECT,
 	ARACHNAS_SPOOL.PostAddWeb, ARACHNAS_SPOOL.STATUS_WEBBED)
+
+---@param npc EntityNPC
+function ARACHNAS_SPOOL:NPCMorph(npc)
+	local data = Mod:TryGetData(npc)
+	if data and data.WebbedStatusSprite then
+		updateWebbedScale(data.WebbedStatusSprite, npc, data)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_NPC_MORPH, ARACHNAS_SPOOL.NPCMorph)
+Mod:AddCallback(DeliriumCallbacks.POST_TRANSFORMATION, ARACHNAS_SPOOL.NPCMorph)
 
 --#endregion
 
@@ -289,8 +322,9 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 		if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
 			if StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
 				local dist = player.Position:Distance(npc.Position)
-				local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(-45, 45))
-				local tear = Mod.Item.GRAB:FireEgg(npc.Position, vel, player, npc)
+				local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(
+				-45, 45))
+				local tear = Mod.Item.EGG_TOSS:FireEgg(npc.Position, vel, player, npc)
 				tear.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 			else
 				local rng = ent:GetDropRNG()
@@ -314,8 +348,9 @@ function ARACHNAS_SPOOL:RenderBossCharge(npc, offset)
 	if hasWebbed and data and data.WebbedStatusSprite then
 		---@type Sprite
 		local sprite = data.WebbedStatusSprite
-		sprite.Scale = (npc.Size / 15) * npc.SpriteScale
-		sprite:Render(renderPos)
+		local scale = data.WebbedScale
+		sprite.Scale = (npc.Size / (SIZE_THRESHOLDS[scale] - (5 * scale))) * npc.SpriteScale
+		sprite:Render(renderPos + data.WebbedOffset)
 		if Mod:ShouldUpdateSprite() then
 			sprite:Update()
 		end
@@ -332,7 +367,8 @@ function ARACHNAS_SPOOL:RenderBossCharge(npc, offset)
 			local progress = data.SpiderBossCharge / data.SpiderBossChargeDMGNeeded
 			local percent = Mod.math.floor(progress * 100)
 			local frameNum = Mod:Clamp(percent - 1, 0, 99)
-			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A, hasWebbed and 1 or 0.5, 0.2)
+			data.SpiderBossChargeSprite.Color.A = Mod:Lerp(data.SpiderBossChargeSprite.Color.A, hasWebbed and 1 or 0.5,
+				0.2)
 			data.SpiderBossChargeSprite:SetFrame("Charging", frameNum)
 			data.SpiderBossChargeSprite:Render(renderPos)
 		end

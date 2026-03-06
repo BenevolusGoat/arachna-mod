@@ -25,12 +25,12 @@ end
 --#region Data tables
 
 EID.PocketActivePlayerIDs[Mod.PlayerType.ARACHNA] = Mod.Item.ARACHNAS_SPOOL.ID
-EID.PocketActivePlayerIDs[Mod.PlayerType.ARACHNA_B] = Mod.Item.GRAB.ID
+EID.PocketActivePlayerIDs[Mod.PlayerType.ARACHNA_B] = Mod.Item.EGG_TOSS.ID
 
 EID.CharacterToHeartType[Mod.PlayerType.ARACHNA] = "Web"
 EID.CharacterToHeartType[Mod.PlayerType.ARACHNA_B] = "Web"
 
-EID.SpecialHeartPlayers["Web"] = {Mod.PlayerType.ARACHNA, Mod.PlayerType.ARACHNA_B}
+EID.SpecialHeartPlayers["Web"] = { Mod.PlayerType.ARACHNA, Mod.PlayerType.ARACHNA_B }
 
 EID.HealthTypesWithoutHealing["Web"] = true
 
@@ -226,7 +226,7 @@ local function translateNumberString(numStr)
 	return out
 end
 
-local DEFAULT_WISP_TABLE = {2, 2, 3, 0, 1, 1, 30, 0, true, 1, {-1}, {-1}}
+local DEFAULT_WISP_TABLE = { 2, 2, 3, 0, 1, 1, 30, 0, true, 1, { -1 }, { -1 } }
 
 ---@param id CollectibleType
 ---@param descData {[string]: string[]}
@@ -244,15 +244,16 @@ function ARC_EID:TryAddSynergyDescriptions(id, descData, lang)
 		local procChance = tonumber(wispData.procchance) or 0
 		local canShoot = wispData.canshoot ~= "false" and fireDelay ~= -1
 		local amount = tonumber(wispData.count) or 1
-		local tearFlags = {-1}
-		local tearFlags2 = {-1}
+		local tearFlags = { -1 }
+		local tearFlags2 = { -1 }
 		if wispData.tearflags then
 			tearFlags = translateNumberString(wispData.tearflags)
 		end
 		if wispData.tearflags2 then
 			tearFlags2 = translateNumberString(wispData.tearflags2)
 		end
-		EID.XMLWisps[id] = {hp, layer, damage, stageDamage, damageMultiplier2, shotSpeed, fireDelay, procChance, canShoot, amount, tearFlags, tearFlags2}
+		EID.XMLWisps[id] = { hp, layer, damage, stageDamage, damageMultiplier2, shotSpeed, fireDelay, procChance,
+			canShoot, amount, tearFlags, tearFlags2 }
 	elseif Mod.ItemConfig:GetCollectible(id).Type == ItemType.ITEM_ACTIVE then
 		EID.XMLWisps[id] = DEFAULT_WISP_TABLE
 	end
@@ -279,7 +280,6 @@ function ARC_EID:TryAddSynergyDescriptions(id, descData, lang)
 		end
 	end
 end
-
 
 --#endregion
 

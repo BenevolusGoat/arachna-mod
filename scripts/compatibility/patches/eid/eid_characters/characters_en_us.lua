@@ -20,8 +20,8 @@ return function()
 				"#Not affected by cowbebs",
 				"#{{Poison}} 25% chance to shoot poison tears",
 				"#↓ Smaller spider eggs",
-				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key inflicts {{StatusSpiderBite}} Spider Bite, {{StatusWebbed}} Webbed, and deals 0.5x damage",
-				"#{{StatusSpiderBite}} Spider Bite causes spider eggs to only drop spiders of its own color",
+				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key {{StatusSpiderBite}} ensnares enemies and deals 0.5x damage",
+				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
 			}
 		},
 	}

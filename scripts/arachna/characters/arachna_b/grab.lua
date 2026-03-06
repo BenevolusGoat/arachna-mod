@@ -1,16 +1,16 @@
 local Mod = ARACHNAMOD
 
-local GRAB = {}
+local EGG_TOSS = {}
 
-ARACHNAMOD.Item.GRAB = GRAB
+ARACHNAMOD.Item.EGG_TOSS = EGG_TOSS
 
-GRAB.ID = Isaac.GetItemIdByName("Grab")
-GRAB.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
+EGG_TOSS.ID = Isaac.GetItemIdByName("Egg Toss")
+EGG_TOSS.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
 
 local GRAB_RANGE = 40
 
 ---@param player EntityPlayer
-function GRAB:GetEggTearDamage(player)
+function EGG_TOSS:GetEggTearDamage(player)
 	return player.Damage * 2 + (Mod.Level():GetStage() * 0.5)
 end
 
@@ -18,10 +18,10 @@ end
 ---@param vel Vector
 ---@param player EntityPlayer
 ---@param spawner? Entity
-function GRAB:FireEgg(pos, vel, player, spawner)
+function EGG_TOSS:FireEgg(pos, vel, player, spawner)
 	Mod.sfxman:Play(SoundEffect.SOUND_TEARS_FIRE, 0, 2)
-	local eggTear = Mod.Spawn.Tear(GRAB.TEAR, pos, vel, nil, spawner)
-	eggTear.CollisionDamage = GRAB:GetEggTearDamage(player)
+	local eggTear = Mod.Spawn.Tear(EGG_TOSS.TEAR, pos, vel, nil, spawner)
+	eggTear.CollisionDamage = EGG_TOSS:GetEggTearDamage(player)
 	eggTear.FallingSpeed = -5.5
 	eggTear.FallingAcceleration = 0.5
 	Mod.sfxman:Play(SoundEffect.SOUND_FETUS_JUMP, 0.8)
@@ -51,7 +51,7 @@ function GRAB:FireEgg(pos, vel, player, spawner)
 end
 
 ThrowableItemLib:RegisterThrowableItem({
-	ID = GRAB.ID,
+	ID = EGG_TOSS.ID,
 	Type = ThrowableItemLib.Type.ACTIVE,
 	Identifier = "Arachna Spider Eggs",
 	Flags = ThrowableItemLib.Flag.DISABLE_HIDE | ThrowableItemLib.Flag.PERSISTENT,
@@ -64,7 +64,7 @@ ThrowableItemLib:RegisterThrowableItem({
 		end
 	end,
 	ThrowFn = function(player, vect, slot, mimic)
-		GRAB:FireEgg(player.Position, Mod:AddTearVelocity(vect, 12, player), player, player)
+		EGG_TOSS:FireEgg(player.Position, Mod:AddTearVelocity(vect, 12, player), player, player)
 	end,
 	LiftFn = function(player, continued, slot, mimic)
 		local data = Mod:GetData(player)
@@ -103,8 +103,8 @@ ThrowableItemLib:RegisterThrowableItem({
 })
 
 ---@param player EntityPlayer
-function GRAB:MarkNearestEgg(player)
-	if not player:HasCollectible(GRAB.ID) then return end
+function EGG_TOSS:MarkNearestEgg(player)
+	if not player:HasCollectible(EGG_TOSS.ID) then return end
 	local closestEgg
 	Mod.Foreach.EffectInRadius(player.Position, GRAB_RANGE, function(egg, index)
 		if egg:GetSprite():IsPlaying("Idle") then
@@ -127,7 +127,7 @@ function GRAB:MarkNearestEgg(player)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, GRAB.MarkNearestEgg)
+Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, EGG_TOSS.MarkNearestEgg)
 
 ---@param player? EntityPlayer
 local function getNecroDamage(player)
@@ -143,7 +143,7 @@ end
 ---@param source EntityRef
 ---@param playerSource EntityRef
 ---@param damage number
-function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
+function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
 	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	Mod:DebugLog("Activated effect", spiderColor)
 	if spiderColor == COLORED_SPIDERS.SpiderSubtype.WRATH then
@@ -151,7 +151,8 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 			ent:AddBurn(playerSource, 150, damage)
 		end
 		if player then
-			local candle = Mod.Spawn.Effect(EffectVariant.RED_CANDLE_FLAME, 0, source.Position, nil, player, source.Entity:GetDropRNG():Next())
+			local candle = Mod.Spawn.Effect(EffectVariant.RED_CANDLE_FLAME, 0, source.Position, nil, player,
+				source.Entity:GetDropRNG():Next())
 			candle.CollisionDamage = 23
 		end
 	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.PESTILENCE then
@@ -180,7 +181,8 @@ function GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource,
 	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.GOLDEN then
 		for _ = 1, 5 do
 			local rng = source.Entity:GetDropRNG()
-			local coin = Mod.Spawn.Coin(0, source.Position, EntityPickup.GetRandomPickupVelocity(source.Position, rng), player, rng:Next())
+			local coin = Mod.Spawn.Coin(0, source.Position, EntityPickup.GetRandomPickupVelocity(source.Position, rng),
+				player, rng:Next())
 			coin.Timeout = 60
 		end
 	elseif spiderColor == COLORED_SPIDERS.SpiderSubtype.LOVE then
@@ -214,10 +216,10 @@ end
 
 ---@param ent? Entity
 ---@param source EntityRef
-function GRAB:OnEggDamage(ent, amount, flags, source, countdown)
+function EGG_TOSS:OnEggDamage(ent, amount, flags, source, countdown)
 	if source.Entity
 		and source.Type == EntityType.ENTITY_TEAR
-		and source.Variant == GRAB.TEAR
+		and source.Variant == EGG_TOSS.TEAR
 	then
 		---@type ColoredSpiderSubtype
 		local spiderColor = source.Entity.SubType
@@ -244,22 +246,22 @@ function GRAB:OnEggDamage(ent, amount, flags, source, countdown)
 			local colorIndex = rng:RandomInt(#randomColors) + 1
 			spiderColor = randomColors[colorIndex]
 			table.remove(randomColors, colorIndex)
-			GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
+			EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
 			spiderColor = randomColors[rng:RandomInt(#randomColors) + 1]
 		end
-		GRAB:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
+		EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, GRAB.OnEggDamage)
+Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, EGG_TOSS.OnEggDamage)
 
 ---@param player EntityPlayer
-function GRAB:RainbowColorHold(player)
+function EGG_TOSS:RainbowColorHold(player)
 	local data = Mod:GetData(player)
 	if data.HeldEggColor and data.HeldEggColor == Mod.Entities.COLORED_SPIDERS.SpiderSubtype.RAINBOW then
 		local throwConfig = ThrowableItemLib.Utility:GetLiftedItem(player)
 		if throwConfig.Type == ThrowableItemLib.Type.ACTIVE
-			and throwConfig.ID == GRAB.ID
+			and throwConfig.ID == EGG_TOSS.ID
 		then
 			local r, g, b = table.unpack(Mod.Entities.COLORED_SPIDERS:GetRainbowColor())
 			player:GetHeldSprite().Color:SetColorize(r, g, b, 0.5)
@@ -267,20 +269,20 @@ function GRAB:RainbowColorHold(player)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, GRAB.RainbowColorHold)
+Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, EGG_TOSS.RainbowColorHold)
 
 ---@param tear EntityTear
-function GRAB:RainbowColorTear(tear)
+function EGG_TOSS:RainbowColorTear(tear)
 	if tear.SubType == Mod.Entities.COLORED_SPIDERS.SpiderSubtype.RAINBOW then
 		local r, g, b = table.unpack(Mod.Entities.COLORED_SPIDERS:GetRainbowColor())
 		tear:GetSprite().Color:SetColorize(r, g, b, 0.5)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, GRAB.RainbowColorTear, GRAB.TEAR)
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, EGG_TOSS.RainbowColorTear, EGG_TOSS.TEAR)
 
 ---@param tear EntityTear
-function GRAB:OnEggDeath(tear)
+function EGG_TOSS:OnEggDeath(tear)
 	local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
 	local npc = tear.SpawnerEntity and tear.SpawnerEntity:ToNPC()
 	local poof = Mod.Spawn.Effect(EffectVariant.TEAR_POOF_A, 0, tear.Position)
@@ -295,10 +297,10 @@ function GRAB:OnEggDeath(tear)
 	Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 
 	if player then
-		local rng = player:GetCollectibleRNG(GRAB.ID)
+		local rng = player:GetCollectibleRNG(EGG_TOSS.ID)
 
 		if #tear:GetHitList() == 0 then
-			GRAB:OnEggDamage(nil, nil, nil, EntityRef(tear))
+			EGG_TOSS:OnEggDamage(nil, nil, nil, EntityRef(tear))
 		else
 			eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)
 		end
@@ -320,4 +322,4 @@ function GRAB:OnEggDeath(tear)
 	poof.Color = poofColor
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, GRAB.OnEggDeath, GRAB.TEAR)
+Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, EGG_TOSS.OnEggDeath, EGG_TOSS.TEAR)
