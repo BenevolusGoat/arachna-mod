@@ -1,5 +1,5 @@
 <ItemPools>
-    <Pool Name="treasure">
+	<Pool Name="treasure">
 		<Item Name="Arachna's Spool" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Divine Cloth" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -15,44 +15,44 @@
 		<Item Name="3D Glasses" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="boss">
+	</Pool>
+	<Pool Name="boss">
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name=" Spider Donut " Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Spider Donut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Old Shoebox" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="angel">
+	</Pool>
+	<Pool Name="angel">
 		<Item Name="Geptameron" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="secret">
+	</Pool>
+	<Pool Name="secret">
 		<Item Name="Best Bud Ball" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Testament" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="library">
+	</Pool>
+	<Pool Name="library">
 		<Item Name="Geptameron" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="goldenChest">
+	</Pool>
+	<Pool Name="goldenChest">
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Newspaper" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="redChest">
+	</Pool>
+	<Pool Name="redChest">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Mutagen" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="curse">
+	</Pool>
+	<Pool Name="curse">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Mutagen" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="greedBoss">
+	</Pool>
+	<Pool Name="greedBoss">
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name=" Spider Donut " Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Spider Donut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Old Shoebox" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="greedTreasure">
+	</Pool>
+	<Pool Name="greedTreasure">
 		<Item Name="Arachna's Spool" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Divine Cloth" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -65,31 +65,31 @@
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Testament" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="greedShop">
+	</Pool>
+	<Pool Name="greedShop">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="The Yarn" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dad's Newspaper" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="greedSecret">
+	</Pool>
+	<Pool Name="greedSecret">
 		<Item Name="Testament" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="greedCurse">
+	</Pool>
+	<Pool Name="greedCurse">
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Mutagen" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="babyShop">
+	</Pool>
+	<Pool Name="babyShop">
 		<Item Name="Lil Arachna" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="oldChest">
+	</Pool>
+	<Pool Name="oldChest">
 		<Item Name="Dad's Newspaper" Weight="0.2" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
-    <Pool Name="craneGame">
+	</Pool>
+	<Pool Name="craneGame">
 		<Item Name="3D Glasses" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Mechanical Eye" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="The Yarn" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
+	</Pool>
 	<Pool Name="spiderBeggar">
 		<!-- Box of Spiders -->
 		<Item Id="288" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -121,5 +121,5 @@
 		<Item Id="575" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-    </Pool>
+	</Pool>
 </ItemPools>

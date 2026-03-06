@@ -9,16 +9,15 @@
 	<active id="5" name="Best Bud Ball" description="Find your very best friend!" achievement="Best Bud Ball" gfx="best-bud-ball.png" activegfx="hud_best_bud_ball.png" maxcharges="8" tags="nochallenge noeden" quality="4"/>
 	<familiar id="6" name="The Yarn" description="Static shock!" achievement="The Yarn" gfx="the-yarn.png" tags="baby" quality="2"/>
 	<passive id="7" name="Mechanical Eye" description="Active expansion" achievement="Mechanical Eye" gfx="mechanical-eye.png" cache="familiars" tags="tech" quality="3"/>
-	<passive id="8" name="Arachnid's Grip" description="Infested!" achievement="Arachnid's Grip" gfx="arachnid-grips.png" tags="spider" quality="3"/> <!-- ::::) -->
+	<passive id="8" name="Arachnid's Grip" description="Infested!" achievement="Arachnid's Grip" gfx="arachnid-grips.png" tags="spider" quality="3"/>
+	<!-- ::::) -->
 	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" achievement="Dad's Newspaper" gfx="dads-newspaper.png" quality="3"/>
 	<active id="10" name="The Testament" description="Leave the inheritance for your descendants" achievement="The Testament" gfx="lastwill.png" maxcharges="0" tags="nochallenge noeden" quality="4" cooldown="20" persistent="true"/>
 	<active id="11" name="Geptameron" description="Ever changing holy tome" achievement="Geptameron" gfx="geptameron.png" maxcharges="4" tags="book" quality="3" />
 	<passive id="12" name="3D Glasses" description="I'm seeing double..." achievement="3D Glasses" gfx="3dglasses.png" quality="2"/>
-	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4"
-		effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1"
-	/>
+	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4" effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1" />
 
-	<passive id="14" name=" Spider Donut " description="HP Up?" achievement="Web Hearts" gfx="spider-donut.png" damage="0.69" quality="2"/>
+	<passive id="14" name="Spider Donut" description="HP Up?" achievement="Web Hearts" gfx="spider-donut.png" damage="0.69" quality="2"/>
 	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." achievement="Web Hearts" gfx="candy-floss.png" quality="2" cache="tearcolor"/>
 	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" achievement="Web Hearts" gfx="gummy-spiders.png" tears="0.61" quality="2"/>
 	<passive id="17" name="Old Shoebox" description="What could be inside?" achievement="Web Hearts" gfx="old-box.png" tears="0.33" speed="0.15" quality="2"/>
