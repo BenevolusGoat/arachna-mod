@@ -5,7 +5,7 @@ local ARACHNA_B = {}
 ARACHNAMOD.Character.ARACHNA_B = ARACHNA_B
 
 Mod.Include("scripts.arachna.characters.arachna_b.divine_cloth")
-Mod.Include("scripts.arachna.characters.arachna_b.grab")
+Mod.Include("scripts.arachna.characters.arachna_b.egg_toss")
 
 CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA_B] = Mod.Pickup.WEB_HEART.KEY
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA_B] = true
