@@ -330,7 +330,7 @@ local arachnaDssDirectory = {
 			"- decreases recharge time of both items to 3 seconds",
 			"- how many spiders spawn from spider eggs are influenced by the current stage and number of web hearts",
 			"- bosses, enemies with a max hp below 10, or enemies spawned by other enemies no longer drop spider eggs or spiders",
-			"- bosses are immune to the webbed and spider bitten status effects",
+			"- bosses are immune to the webbed and ensnared status effects",
 			"- decreases divine cloth's radius by -25%",
 			"- spider eggs no longer explode on challenge/boss rush wave clears",
 			"- adjusts logic for determining chances for spiders to spawn"
