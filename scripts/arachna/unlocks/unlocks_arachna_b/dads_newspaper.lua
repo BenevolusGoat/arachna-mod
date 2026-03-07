@@ -180,7 +180,7 @@ function DADS_NEWSPAPER:OnHitboxUpdate(effect)
 			then
 				local tags = ent:GetEntityConfigEntity():GetEntityTags()
 				if Mod:HasBitFlags(tags, EntityTag.FLY) or Mod:HasBitFlags(tags, EntityTag.SPIDER) then
-					Mod.Game:SpawnParticles(ent.Position, 5, Mod:RandomNum(6, 10), 7)
+					Mod.Game:SpawnParticles(ent.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(6, 10), 7)
 					Mod.sfxman:Play(SoundEffect.SOUND_PUNCH, 1, 0, false, 1)
 					Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 0, false, 1.25)
 					ent:Die()

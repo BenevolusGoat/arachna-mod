@@ -136,10 +136,6 @@
 	<entity id="1000" variant="2004" name="Best Bud Ball" anm2path="best_bud_ball.anm2"
 		collisionMass="1" collisionRadius="18" friction="1" numGridCollisionPoints="8" shadowSize="8">
 	</entity>
-    <entity id="1000" variant="2007" name="Holy Shot Target (Geptameron)" anm2path="holytarget.anm2"
-		collisionMass="3" collisionRadius="12" friction="0">
-        <gibs amount="4" blood="0" bone="1" eye="0" gut="0" large="0"/>
-    </entity>
 
 	<!-- Golden Shopkeeper -->
 	<entity id="17" variant="2000" name="Golden Shopkeeper" anm2path="shopkeeper_gold.anm2"
