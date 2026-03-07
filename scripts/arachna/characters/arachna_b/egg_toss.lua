@@ -6,6 +6,7 @@ ARACHNAMOD.Item.EGG_TOSS = EGG_TOSS
 
 EGG_TOSS.ID = Isaac.GetItemIdByName("Egg Toss")
 EGG_TOSS.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
+EGG_TOSS.SFX_LIFT = Isaac.GetSoundIdByName("Egg Toss Lift")
 
 local GRAB_RANGE = 40
 
@@ -83,6 +84,7 @@ ThrowableItemLib:RegisterThrowableItem({
 		local animationSize = isSmall and "4" or "5"
 		sprite:Play("Stone" .. animationSize .. "Idle")
 		sprite.Offset = Vector(0, -10)
+		Mod.sfxman:Play(EGG_TOSS.SFX_LIFT, 1, 2, false, 1 + 0.1 * math.random(-1, 1))
 		local color = Mod.Entities.SPIDER_EGG:GetEggColor(spiderColor)
 		if color then
 			sprite.Color = color
