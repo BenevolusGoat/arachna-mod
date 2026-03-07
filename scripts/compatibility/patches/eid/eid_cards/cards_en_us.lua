@@ -35,11 +35,11 @@ return function(modifiers)
 						Card.CARD_HERMIT .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} Keeper's Box"
 						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Portable Slot 3 times",
 
-						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} For one room: Gain {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} Odd Mushroom"
+						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} Receive for the room: {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} Odd Mushroom"
 						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} Destroys all rocks and fills all pits in the room"
 						.. "#{{Card" .. Card.CARD_DEATH .. "}} Deals 20 damage to all enemies in the room"
 						.. "#{{Card" .. Card.CARD_TEMPERANCE .. "}} Spawns a {{DemonBeggar}} Demon Beggar"
-						.. "#{{Card" .. Card.CARD_DEVIL .. "}} {{Timer}} For one room: {{Damage}} +1 Damage"
+						.. "#{{Card" .. Card.CARD_DEVIL .. "}} {{Timer}} Receive for the room: {{Damage}} +1 Damage"
 						.. "#{{Card" .. Card.CARD_TOWER .. "}} Spawns 3 Troll Bombs",
 
 						"#{{Card" .. Card.CARD_STARS .. "}} Spawns a {{GoldenChest}} golden chest"
@@ -73,7 +73,7 @@ return function(modifiers)
 						.. "#{{Card" .. Card.CARD_REVERSE_HIEROPHANT .. "}} Spawns 1 {{EmptyBoneHeart}} Bone Heart"
 						.. "#{{Card" .. Card.CARD_REVERSE_LOVERS .. "}} {{BrokenHeart}} +1 Broken Heart, {{Damage}} +0.25 Damage"
 						.. "#{{Card" ..
-						Card.CARD_REVERSE_CHARIOT .. "}} {{Timer}} For 10 seconds: {{Speed}} x0.5 Speed multiplier, {{Tears}} x2 Tears multiplier"
+						Card.CARD_REVERSE_CHARIOT .. "}} {{Timer}} Receive for 10 seconds: {{Speed}} x0.5 Speed multiplier, {{Tears}} x2 Tears multiplier"
 						.. "#{{Card" .. Card.CARD_REVERSE_JUSTICE .. "}} Spawns 1-2 {{GoldenChest}} golden chests"
 						.. "#{{Card" ..
 						Card.CARD_REVERSE_HERMIT ..
@@ -81,7 +81,7 @@ return function(modifiers)
 
 						"#{{Card" .. Card.CARD_REVERSE_WHEEL_OF_FORTUNE .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_D8 .. "}} D8, {{Collectible" .. CollectibleType.COLLECTIBLE_D10 .. "}} D10, or {{Collectible" .. CollectibleType.COLLECTIBLE_D12 .. "}} D12"
 						.. "#{{Card" .. Card.CARD_REVERSE_STRENGTH .. "}} {{Timer}} For 30 seconds: Half of all enemies in the room receive {{Weakness}} weakness"
-						.. "#{{Card" .. Card.CARD_REVERSE_HANGED_MAN .. "}} {{Timer}} Receive for 30 seconds: {{Collectible" .. CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER .. "}}, {{Damage}} x1.5 Damage multiplier"
+						.. "#{{Card" .. Card.CARD_REVERSE_HANGED_MAN .. "}} {{Timer}} Receive for 30 seconds: {{Collectible" .. CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER .. "}} Head of the Keeper, {{Damage}} x1.5 Damage multiplier"
 						.. "#{{Card" .. Card.CARD_REVERSE_DEATH .. "}} {{Friendly}} Spawns a random friendly bone enemy"
 						.. "#{{Card" .. Card.CARD_REVERSE_TEMPERANCE .. "}} Uses a random {{Pill}} pill"
 						.. "#{{Card" .. Card.CARD_REVERSE_DEVIL .. "}} Flight for the room",

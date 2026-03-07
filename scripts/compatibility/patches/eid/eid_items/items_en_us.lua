@@ -34,7 +34,7 @@ return function(modifiers)
 			Description = {
 				"{{WebHeart}} +1 Web Heart",
 				"#↑ {{Damage}} +0.69 Damage",
-				"#{{AracBlueSpider}} Grants 2-3 big purple spiders"
+				"#{{AracBlueSpider}} Spawns 2-3 big purple spiders"
 			}
 		},
 		[Item.OLD_SHOEBOX.ID] = {
@@ -43,7 +43,7 @@ return function(modifiers)
 				"{{WebHeart}} Spawns 1 Web Heart",
 				"#↑ {{Speed}} +0.15 Speed",
 				"#↑ {{Tears}} +0.33 Tears",
-				"#{{AracBlueSpider}} Grants 7-14 blue spiders"
+				"#{{AracBlueSpider}} Spawns 7-14 blue spiders"
 			}
 		},
 		[Item.GUMMY_SPIDERS.ID] = {
@@ -51,7 +51,7 @@ return function(modifiers)
 			Description = {
 				"{{WebHeart}} +2 Web Hearts",
 				"#↑ {{Tears}} +0.61 Tears",
-				"#{{AracBlueSpider}} Grants several {{ColorRainbow}}special{{CR}} friendly spiders"
+				"#{{AracBlueSpider}} Spawns several {{ColorRainbow}}special{{CR}} friendly spiders"
 			}
 		},
 		[Item.CANDY_FLOSS.ID] = {
@@ -116,7 +116,7 @@ return function(modifiers)
 			FallbackDescription = {
 				"{{Poison}} 25% chance to shoot poison tears",
 				"#Enemies may drop a spider egg pickup on death that grant a fragile orbital on pickup",
-				"#Orbital may break when blocking projectiles or dealing damage, spawning a {{AracBlueSpider}} Blue Spider",
+				"#Orbital may break when blocking projectiles or dealing damage, spawning a {{AracBlueSpider}} blue spider",
 			}
 		},
 		[Item.YARN_HEART.ID] = {
@@ -129,7 +129,8 @@ return function(modifiers)
 			Name = "Mechanical Eye",
 			Description = {
 				"Orbital",
-				"#Displays a random active item with the same amount of charges as Isaac's current active item",
+				"#Blocks projectiles",
+				"#Displays a random active item with the same amount of maximum charges as Isaac's current active item",
 				"#Using an active item will also use the displayed item",
 				"#Displayed item rerolls when entering a new room or using an active item"
 			},
@@ -141,17 +142,17 @@ return function(modifiers)
 		[Item.GEPTAMERON.ID] = {
 			Name = "Getameron",
 			Description = {
-				"Triggers an effect based on the indicator on the item:",
+				"Triggers effect based on counter:",
 				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" ..
 				CollectibleType.COLLECTIBLE_DADS_KEY .. "}}",
-				"#{{2}} Spawns temporary friendly companions that chase enemies. May leave 1 {{RottenHeart}} on death",
-				"#{{3}} 50% chance to {{Charm}} charm all enemies or have them spawn 3 {{Trinket" ..
+				"#{{2}} Spawns temporary friendly dead Isaacs. May leave 1 {{RottenHeart}} on death",
+				"#{{3}} All enemies are either {{Charm}} charmed or spawn 3 {{Trinket" ..
 				TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} locusts on death",
-				"#{{4}} Gain 2 {{Collectible" ..
-				CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantle}} mantle shield for the room",
-				"#{{5}} All enemies in the room will drop {{Coin}} disappearing coins on death",
-				"#{{6}} Missiles rain down in random locations for 10 seconds",
-				"#{{7}} 1-3 enemies marked to drop a random disappearing pickup on death, which passes the mark to another enemy"
+				"#{{4}} {{Timer}} For the room: Gain 2 {{Collectible" ..
+				CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantleSmall}} mantle shield",
+				"#{{5}} All enemies drop {{Coin}} disappearing coins on death",
+				"#{{6}} Fires missiles in random locations for 10 seconds",
+				"#{{7}} 1-3 enemies drop a random disappearing pickup on death, which passes the mark to another enemy"
 			}
 		},
 		[Item.GLASSES_3D.ID] = {
@@ -185,7 +186,7 @@ return function(modifiers)
 			Description = {
 				"{{Slow}} Shoots slowing and quad-split tears",
 				"#Deals 3.5 damage per tear",
-				"#{{AracBlueSpider}} 25% chance for tears to inflict {{StatusSpiderBite}} Spider Bite and {{StatusWebbed}} Webbed. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death that burst into friendly spiders"
+				"#{{AracBlueSpider}} 25% chance for tears to {{StatusSpiderBite}} ensnare enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death that burst into friendly spiders"
 			},
 		},
 		[Item.DADS_NEWSPAPER.ID] = {
@@ -194,14 +195,14 @@ return function(modifiers)
 				"Isaac holds a newspaper in front of him",
 				"#Double-tap shoot to swing",
 				"#{{Confusion}} Deals moderate damage and inflicts confusion on hit",
-				"#Instantly kills fly enemies"
+				"#Instantly kills fly and spider enemies"
 			}
 		},
 		[Item.BEST_BUD_BALL.ID] = {
 			Name = "Best Bud Ball",
 			Description = {
 				"{{Throwable}} Can be thrown at bosses in an attempt to capture them",
-				"#{{Luck}} Chances of catching scales with boss' health and Isaac's luck",
+				"#{{LuckSmall}} Chances of catching scales with boss' health and Isaac's luck",
 				"#{{Friendly}} Using the item after successfully capturing a boss spawns the capture as a friendly companion",
 				"#Walking over the ball after a capture instantly recharges the item",
 				"#!!! Only one boss can be active at a time"
