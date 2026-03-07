@@ -305,7 +305,7 @@ local arachnaDssDirectory = {
 		tooltip = GenerateTooltip("changes that are enabled with legacy gameplay"),
 		buttons = GenerateDescription(
 			{str = "info", fsize = 2},
-			"legacy gameplay returns arachna, tainted arachna, and some features of their pocket actives to before the v2.0 update. this setting exists for those who prefer the older gameplay, as many changes have been made for a more balanced gameplay experience. the list of the exact changes can be found below:",
+			"legacy gameplay returns arachna, tainted arachna, and some features of their pocket actives to before the v2.0 update. this setting exists for those who prefer the older gameplay, as many changes have been made for a more balanced gameplay experience. eid support and tutorial sprites will not be updated to reflect legacy gameplay. the list of the exact changes can be found below:",
 			BREAK_LINE,
 			{str = "arachna", fsize = 2},
 			"- arachna's birthright has +1 to spawned spiders instead of increased chance for spider eggs spawning colored spiders",
