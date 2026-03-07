@@ -35,7 +35,8 @@ function ARACHNAMOD:TransferMarksToREPENTOGON(saveData)
 		end
 		Isaac.SetCompletionMarks(completionTable)
 		if normalMarks.Tainted > 0 then
-			Mod.PersistGameData():TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT, true)
+			local persistGameData = Isaac.GetPersistentGameData()
+			persistGameData:TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT, true)
 			Mod:DebugLog("Tainted unlocked!")
 		end
 		for completionType, achievement in pairs(Mod.CompletionMarkToAchievement.ARACHNA) do
@@ -84,7 +85,7 @@ ARACHNAMOD:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_LOAD, ARACHNAMOD.
 ---@param saveData table
 function ARACHNAMOD:ConvertSaveData(saveData)
 	if saveData.arachnaMarks then
-		Mod:Log("Old save format found. Transfered completion marks to new location.")
+		print("[Arachna] Old save format found. Transfered completion marks to new location.")
 		local newSave = Mod.SaveManager.Utility.PatchSaveFile({}, Mod.SaveManager.DEFAULT_SAVE)
 		newSave.file.other.arachnaMarks = saveData.arachnaMarks
 		newSave.file.other.arachnaMarksAlt = saveData.arachnaMarksAlt

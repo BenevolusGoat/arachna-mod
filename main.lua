@@ -12,7 +12,6 @@ ARACHNAMOD.SaveManager.Init(Mod)
 
 ARACHNAMOD.sfxman = SFXManager()
 ARACHNAMOD.Game = Game()
-ARACHNAMOD.PersistGameData = function() return Isaac.GetPersistentGameData() end
 ARACHNAMOD.Room = function() return Mod.Game:GetRoom() end
 ARACHNAMOD.Level = function() return Mod.Game:GetLevel() end
 ARACHNAMOD.ItemConfig = Isaac.GetItemConfig()
@@ -31,6 +30,18 @@ ARACHNAMOD:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 		Mod.ShowNewPopup = nil
 	end
 end)
+
+include("scripts.arachna.core.save_upgrade")
+include("scripts.dead_sea_scrolls.deadseascrolls")
+include("scripts.arachna.core.customhealthapi.core")
+
+if not REPENTOGON or not REPENTANCE_PLUS then
+	local msg = "[Arachna] Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com"
+	print(msg)
+	Isaac.DebugString(msg)
+	Mod.ShowNewPopup = true
+	return
+end
 
 ARACHNAMOD.RANGE_BASE_MULT = 40
 
@@ -191,7 +202,6 @@ local tools = {
 }
 
 local core = {
-	"customhealthapi.core",
 	"entity_replacements",
 	"custom_callbacks",
 	"console_commands"
@@ -227,14 +237,6 @@ ARACHNAMOD.Trinket = {}
 ARACHNAMOD.Slot = {}
 ARACHNAMOD.Entities = {}
 include("flags")
-include("scripts.arachna.core.save_upgrade")
-include("scripts/dead_sea_scrolls/deadseascrolls")
-if not REPENTOGON or not REPENTANCE_PLUS then
-	Mod:Log(
-	"Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com")
-	Mod.ShowNewPopup = true
-	return
-end
 
 local entities = {
 	"colored_spiders",

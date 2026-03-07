@@ -20,10 +20,11 @@ local nameToMark = {
 local function manageAchievements(shouldUnlock)
 	local startAch = Mod.Pickup.WEB_HEART.ACHIEVEMENT
 	local endAch = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT
+	local persistGameData = Isaac.GetPersistentGameData()
 
 	for i = startAch, endAch do
 		if shouldUnlock then
-			Mod.PersistGameData():TryUnlock(i, true)
+			persistGameData:TryUnlock(i, true)
 		else
 			Isaac.ExecuteCommand("lockachievement " .. i)
 		end
@@ -112,7 +113,7 @@ local helpText = {
 ---@type {[string]: fun(args: string)}
 local commandFuncs = {
 	["unlocktainted"] = function()
-		Mod.PersistGameData():TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT)
+		Isaac.GetPersistentGameData():TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT)
 	end,
 	["unlockall"] = function()
 		manageAchievements(true)

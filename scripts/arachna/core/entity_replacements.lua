@@ -90,7 +90,8 @@ local function isEntityAvailable(funcOrInit)
 	if type(funcOrInit) == "function" then
 		isAvailable = funcOrInit()
 	elseif type(funcOrInit) == "number" then
-		isAvailable = Mod.PersistGameData():Unlocked(funcOrInit)
+		local persistGameData = Isaac.GetPersistentGameData()
+		isAvailable = persistGameData:Unlocked(funcOrInit)
 	end
 	return isAvailable
 end
@@ -151,7 +152,7 @@ local function pickupReplacement(_, pickup, variant, subtype, requestedVariant, 
 			--Only override if it's tied to an achievement specifically
 		elseif type(replacement_info.Achievement) == "string"
 			---@diagnostic disable-next-line: param-type-mismatch
-			and not Mod.PersistGameData():Unlocked(replacement_info.Achievement)
+			and not Isaac.GetPersistentGameData():Unlocked(replacement_info.Achievement)
 			and replacement_info.NewVariant == variant
 			and (not replacement_info.NewSubtype or type(replacement_info.NewSubtype) == "number" and replacement_info.NewSubtype == subtype)
 		then
@@ -219,7 +220,7 @@ local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 			--Only override if it's tied to an achievement specifically
 		elseif type(replacement_info.Achievement) == "string"
 			---@diagnostic disable-next-line: param-type-mismatch
-			and not Mod.PersistGameData():Unlocked(replacement_info.Achievement)
+			and not Isaac.GetPersistentGameData():Unlocked(replacement_info.Achievement)
 			and replacement_info.NewType == entType
 			and replacement_info.NewVariant == variant
 			and (not replacement_info.NewSubtype or type(replacement_info.NewSubtype) == "number" and replacement_info.NewSubtype == subtype)
