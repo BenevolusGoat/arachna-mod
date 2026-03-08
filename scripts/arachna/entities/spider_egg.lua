@@ -118,6 +118,12 @@ end
 ---@param forceColor? ColoredSpiderSubtype @default: `nil`. If set with a specific spider subtype, the burst will spawn all spiders of the provided color. Spiders still go through the random chance of being a big spider.
 function SPIDER_EGG:SpawnSpiderBurst(player, pos, numSpiders, dist, eggFlags, obscureInEgg, forceColor)
 	local bonusColorChance, bigChance = SPIDER_EGG:GetSpiderBonusChances(player, eggFlags)
+	local flagNames = Mod:GetNamesInBitmask(SPIDER_EGG.EggFlag, eggFlags or 0, SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE)
+	if #flagNames == 0 then
+		Mod:DebugLog("Spawned", numSpiders, "spiders with no flags")
+	else
+		Mod:DebugLog("Spawned", numSpiders, "spiders with flags", table.concat(flagNames, ", "))
+	end
 	for _ = 1, numSpiders do
 		local spiderSubtype = COLORED_SPIDERS.SpiderSubtype.NORMAL
 		if forceColor then
@@ -197,6 +203,9 @@ function SPIDER_EGG:OnInit(egg)
 	local color = SPIDER_EGG:GetEggColor(egg.SubType)
 	if color then
 		egg.Color = color
+	end
+	if egg.Variant == SPIDER_EGG.ID_SMALL then
+		Mod:GetData(egg).EggFlags = SPIDER_EGG.EggFlag.SMALL
 	end
 end
 
@@ -288,6 +297,8 @@ end
 
 --#region Effect Update
 
+SPIDER_EGG.NoAutoHatch = false
+
 ---@param egg EntityEffect
 function SPIDER_EGG:OnUpdate(egg)
 	local sprite = egg:GetSprite()
@@ -306,6 +317,7 @@ function SPIDER_EGG:OnUpdate(egg)
 	local data = Mod:GetData(egg)
 
 	if sprite:IsPlaying("Idle")
+		and not SPIDER_EGG.NoAutoHatch
 		and (
 			Mod.Room():IsClear()
 			or (

@@ -50,7 +50,7 @@ local function setMarkCommand(playerType, args)
 			end
 			Isaac.SetCompletionMarks(marks)
 		end
-		return
+		return true
 	end
 	for name, completionType in pairs(nameToMark) do
 		local strStart, strEnd = string.find(args, name)
@@ -58,10 +58,11 @@ local function setMarkCommand(playerType, args)
 			local value = tonumber(string.sub(args, strEnd + 2))
 			if value and value >= 0 and value <= 2 then
 				Isaac.SetCompletionMark(playerType, completionType, value)
-				break
+				return true
 			end
 		end
 	end
+	return false
 end
 
 --#endregion
@@ -72,6 +73,9 @@ local function setEggTimeout(args)
 	local timeout = tonumber(args)
 	if timeout then
 		Mod.Entities.SPIDER_EGG.EGG_TIMEOUT = Mod.math.floor(timeout * 30)
+		return true
+	else
+		return false
 	end
 end
 
@@ -88,7 +92,8 @@ local commands = {
 	{ "lockall",        "Locks all mod achievements" },
 	{ "setmark",        "Args: <string completiontype> <int value>. Updates a completion mark for Arachna" },
 	{ "setmarktainted", "Args: <string completiontype> <int value>. Updates a completion mark for Tainted Arachna" },
-	{ "seteggtimeout",  "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders" }
+	{ "seteggtimeout",  "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders" },
+	{ "stopegghatch",   "Stop spider eggs from auto-hatching" }
 }
 
 local helpText = {
@@ -110,24 +115,31 @@ local helpText = {
 	,
 }
 
----@type {[string]: fun(args: string)}
+---@type {[string]: fun(args: string): string|boolean}
 local commandFuncs = {
 	["unlocktainted"] = function()
 		Isaac.GetPersistentGameData():TryUnlock(Mod.Character.ARACHNA_B.ACHIEVEMENT)
+		return "Unlocked Tainted Arachna"
 	end,
 	["unlockall"] = function()
 		manageAchievements(true)
+		return "All Arachna achievements unlocked"
 	end,
 	["lockall"] = function()
 		manageAchievements(false)
+		return "All Arachna achievements locked"
 	end,
 	["setmark"] = function(args)
-		setMarkCommand(Mod.PlayerType.ARACHNA, args)
+		return setMarkCommand(Mod.PlayerType.ARACHNA, args)
 	end,
 	["setmarktainted"] = function(args)
-		setMarkCommand(Mod.PlayerType.ARACHNA_B, args)
+		return setMarkCommand(Mod.PlayerType.ARACHNA_B, args)
 	end,
-	["seteggtimeout"] = setEggTimeout
+	["seteggtimeout"] = setEggTimeout,
+	["stopegghatch"] = function()
+		Mod.Entities.SPIDER_EGG.NoAutoHatch = not Mod.Entities.SPIDER_EGG.NoAutoHatch
+		return "AutoHatch set to " .. tostring(not Mod.Entities.SPIDER_EGG.NoAutoHatch)
+	end
 }
 
 local description = "The following commands can be accessed by typing \"arachnaMod <command name>\""
@@ -152,9 +164,17 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 	end
 	for _, commandTable in ipairs(commands) do
 		local strStart, strEnd = string.find(params, commandTable[1])
-		if strStart and strEnd and string.sub(params, strEnd + 1, strEnd + 1) == " " then
-			local args = string.gsub(params, commandTable[1] .. " ", "")
-			commandFuncs[commandTable[1]](args)
+		if strStart and strEnd then
+			local args = string.len(commandTable[1]) < string.len(params) and
+				string.gsub(params, commandTable[1] .. " ", "") or ""
+			local returnPrint = commandFuncs[commandTable[1]](args)
+			if type(returnPrint) == "string" then
+				Mod:Log(returnPrint)
+			elseif returnPrint == true then
+				Mod:Log("Ran command successfully!")
+			else
+				Mod:Log("Failed to run command!")
+			end
 		end
 	end
 end)

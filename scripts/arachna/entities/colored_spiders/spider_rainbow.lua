@@ -4,6 +4,17 @@ local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 local BOSS_HEALTH_DIV = 8
 local BOSS_HEALTH_DIV_BIG = 4
 
+---@param pos Vector
+---@param color Color
+function COLORED_SPIDERS:SpawnRainbowFart(pos, color)
+	local fart = Mod.Spawn.Effect(EffectVariant.FART, 0, pos)
+	fart:GetSprite().Color = color
+	local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, fart.Position, nil, fart)
+	glow:GetSprite().Color = color
+	glow.SpriteScale = glow.SpriteScale / 2
+	glow:SetTimeout(18)
+end
+
 ---@param _ any
 ---@param ent Entity
 ---@param amount number
@@ -11,12 +22,7 @@ local BOSS_HEALTH_DIV_BIG = 4
 ---@param spider EntityFamiliar
 ---@param countdown integer
 local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdown)
-	local fart = Mod.Spawn.Effect(EffectVariant.FART, 0, spider.Position, nil, spider)
-	fart:GetSprite().Color = spider:GetSprite().Color
-	local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, fart.Position, nil, fart)
-	glow:GetSprite().Color = spider:GetSprite().Color
-	glow.SpriteScale = glow.SpriteScale / 2
-	glow:SetTimeout(18)
+	COLORED_SPIDERS:SpawnRainbowFart(spider.Position, spider:GetSprite().Color)
 	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 
 	local isBig = COLORED_SPIDERS:IsBigSpider(spider)

@@ -58,8 +58,9 @@ end
 
 ---@param pos Vector
 ---@param spawner? Entity
-function ARACHNAS_SPOOL:SpawnWeb(pos, spawner)
-	return Mod.Spawn.Effect(ARACHNAS_SPOOL.WEB_EFFECT, 0, pos, nil, spawner)
+---@param color? ColoredSpiderSubtype
+function ARACHNAS_SPOOL:SpawnWeb(pos, spawner, color)
+	return Mod.Spawn.Effect(ARACHNAS_SPOOL.WEB_EFFECT, color or 0, pos, nil, spawner)
 end
 
 ---How much damage is required in order to fill the chargebar on a boss to spawn a Spider Egg
@@ -128,7 +129,10 @@ function ARACHNAS_SPOOL:OnSpoolDeath(tear)
 	end
 	local ownedWebs = {}
 	Mod.Foreach.Effect(function(web, index)
-		if web.SpawnerEntity and Mod:IsSameEntity(web.SpawnerEntity, tear.SpawnerEntity) then
+		if web.SpawnerEntity
+			and Mod:IsSameEntity(web.SpawnerEntity, tear.SpawnerEntity)
+			and not Mod:GetData(web).ArachnaBBirthright
+		then
 			Mod.Insert(ownedWebs, web)
 		end
 	end, ARACHNAS_SPOOL.WEB_EFFECT)
@@ -165,9 +169,61 @@ function ARACHNAS_SPOOL:OnWebInit(web)
 	if rng:RandomInt(2) == 0 then sprite.FlipY = true end
 	web.SortingLayer = SortingLayer.SORTING_BACKGROUND
 	web:GetSprite():Play("Appear", true)
+	local color = Mod.Entities.SPIDER_EGG:GetEggColor(web.SubType)
+	if color then
+		web.Color = color
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, ARACHNAS_SPOOL.OnWebInit, ARACHNAS_SPOOL.WEB_EFFECT)
+
+---@param web EntityEffect
+---@param npc EntityNPC
+---@param source EntityRef
+function ARACHNAS_SPOOL:UniqueWebEffects(web, npc, source)
+	local SpiderSubType = Mod.Entities.COLORED_SPIDERS.SpiderSubtype
+	if Mod:GetData(web).JudasBirthright or web.SubType == SpiderSubType.WRATH then
+		npc:AddBurn(source, 30, 3.5)
+	end
+	if web.SubType == SpiderSubType.PESTILENCE then
+		npc:AddPoison(source, 30, 3.5)
+	elseif web.SubType == SpiderSubType.FAMINE then
+		npc.Velocity = npc.Velocity * 0.5
+	elseif web.SubType == SpiderSubType.DEATH then
+		if npc.FrameCount % 2 == 0 then
+			npc:TakeDamage(1, 0, source, 0)
+		end
+		if npc:HasMortalDamage() and not npc:IsDead() then
+			Mod.Spawn.Familiar(FamiliarVariant.BONE_SPUR, 0, npc.Position, nil, source.Entity, npc.DropSeed)
+		end
+	elseif web.SubType == SpiderSubType.GOLDEN and npc:HasMortalDamage() and not npc:IsDead() then
+		for _ = 1, 2 do
+			local rng = npc:GetDropRNG()
+			local coin = Mod.Spawn.Coin(NullPickupSubType.ANY, source.Position, EntityPickup.GetRandomPickupVelocity(source.Position, rng),
+				npc, rng:Next())
+			coin.Timeout = 60
+		end
+	elseif web.SubType == SpiderSubType.LOVE and npc:HasMortalDamage() and not npc:IsBoss() then
+		npc:SetDead(false)
+		npc.HitPoints = npc.MaxHitPoints
+		npc:AddCharmed(source, -1)
+		local poof = Mod.Spawn.Poof01(0, npc.Position, source.Entity)
+		poof.Color = web:GetSprite().Color
+	elseif web.SubType == SpiderSubType.ICE then
+		npc:AddIce(source, 30)
+	elseif web.SubType == SpiderSubType.RAINBOW then
+		if npc:IsBoss() then
+			if npc:GetWeaknessCountdown() == 0 then
+				npc:AddWeakness(source, 2)
+			else
+				npc:SetWeaknessCountdown(npc:GetWeaknessCountdown() + 1)
+			end
+		elseif not npc:IsDead() then
+			Mod.Entities.COLORED_SPIDERS:SpawnRainbowFart(npc.Position, web:GetSprite().Color)
+			npc:Die()
+		end
+	end
+end
 
 ---@param web EntityEffect
 function ARACHNAS_SPOOL:OnWebUpdate(web)
@@ -181,15 +237,23 @@ function ARACHNAS_SPOOL:OnWebUpdate(web)
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
 	local source = player and EntityRef(player) or EntityRef(web)
 	local room = Mod.Room()
+	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
+	if web.SubType == COLORED_SPIDERS.SpiderSubtype.RAINBOW then
+		local r, g, b = table.unpack(COLORED_SPIDERS:GetRainbowColor())
+		web:GetSprite().Color:SetColorize(r, g, b, 0.5)
+	elseif web.SubType == COLORED_SPIDERS.SpiderSubtype.GOLDEN then
+		if web.FrameCount % 2 == 0 then
+			local variance = Vector(Mod:RandomNum(-web.Size, web.Size), Mod:RandomNum(-web.Size, web.Size))
+			COLORED_SPIDERS:SpawnSparkle(web.Position + variance)
+		end
+	end
 	Mod.Foreach.NPCInRadius(web.Position, web.Size, function(npc, index)
 		local grid = room:GetGridEntityFromPos(npc.Position)
 		if grid and grid:ToPit() and not Mod:IsLegacyGameplayEnabled() then
 			return
 		end
 		ARACHNAS_SPOOL:ApplyWebbed(npc, source, 2)
-		if Mod:GetData(web).JudasBirthright and not npc:HasEntityFlags(EntityFlag.FLAG_BURN) then
-			npc:AddBurn(source, 150, player and player.Damage or 3.5)
-		end
+		ARACHNAS_SPOOL:UniqueWebEffects(web, npc, source)
 	end, nil, nil, { UseEnemySearchParams = true, Dead = true })
 end
 
@@ -345,6 +409,7 @@ function ARACHNAS_SPOOL:RenderBossCharge(npc, offset)
 	local data = Mod:TryGetData(npc)
 	local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
 	local renderPos = Mod:GetEntityRenderPosition(npc, offset)
+
 	if hasWebbed and data and data.WebbedStatusSprite then
 		---@type Sprite
 		local sprite = data.WebbedStatusSprite
