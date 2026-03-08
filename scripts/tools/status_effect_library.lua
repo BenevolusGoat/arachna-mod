@@ -82,7 +82,10 @@ local function InitMod()
 	StatusEffectLibrary.AddedCallbacks = {} -- for any vanilla callback functions added by this library
 	StatusEffectLibrary.Callbacks = {}
 	---@type table<string, StatusCallback[]>
-	StatusEffectLibrary.Callbacks.RegisteredCallbacks = game:GetFrameCount() == 0 and CACHED_CALLBACKS or {}
+	StatusEffectLibrary.Callbacks.RegisteredCallbacks = {}
+	if game:GetFrameCount() == 0 and CACHED_CALLBACKS then
+		StatusEffectLibrary.Callbacks.RegisteredCallbacks = CACHED_CALLBACKS
+	end
 
 	-- Unregister previous callbacks
 	for callback, funcs in pairs(CACHED_MOD_CALLBACKS or {}) do
