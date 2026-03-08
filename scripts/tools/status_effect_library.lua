@@ -85,7 +85,7 @@ local function InitMod()
 	StatusEffectLibrary.Callbacks.RegisteredCallbacks = game:GetFrameCount() == 0 and CACHED_CALLBACKS or {}
 
 	-- Unregister previous callbacks
-	for callback, funcs in pairs(CACHED_MOD_CALLBACKS) do
+	for callback, funcs in pairs(CACHED_MOD_CALLBACKS or {}) do
 		for i = 1, #funcs do
 			StatusEffectLibrary:RemoveCallback(callback, funcs[i])
 		end
