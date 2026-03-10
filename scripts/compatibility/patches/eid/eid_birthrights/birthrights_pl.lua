@@ -6,19 +6,19 @@ return function(modifiers)
 		[Mod.PlayerType.ARACHNA] = {
 			Name = "Arachna",
 			Description = {
-				"{{Collectible" .. Item.ARACHNAS_SPOOL.ID .. "}} Can have up to 2 webs active at a time",
-				"#↑ Increased chance of spider eggs spawning {{ColorRainbow}}special{{CR}} friendly spiders",
-				"#{{WebHeart}} 5% chance for spider eggs to drop a Web Heart upon hatching"
+				"{{Collectible" .. Item.ARACHNAS_SPOOL.ID .. "}} Może mieć do 2 aktywnych pajęczyn naraz",
+				"#↑ Pajęcze jaja mają większe szansy by wytworzyć {{ColorRainbow}}specjalne{{CR}} przyjazne pająki ",
+				"#{{WebHeart}} mają 5% na pojawienie się z wyklutych pajęczych jaj"
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
-			Name = "Tainted Arachna",
+			Name = "Skażona Arachna",
 			Description = {
-				"{{StatusWebbed}} Thrown eggs drop small spider webs",
-				"#Can have up to 3 webs active at a time",
-				"#Spider webs have {{ColorRainbow}}special{{CR}} effects corresponding with the egg's color",
-				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
-				"#!!! These new spider eggs will not have special colors"
+				"{{StatusWebbed}} Wyrzucone jaja wypuszczają małe pajęczyny",
+				"#Może mieć aż do 3 aktywnych pajęczyn naraz",
+				"#Pajęczyny mają {{ColorRainbow}}specjalne{{CR}} effekty według kolorów jaj",
+				"#{{StatusWebbed}} Przeciwnicy w pajęczynach są {{Slow}} wolniejsi, otrzymują mniej odrzutu, oraz upuszczają pajęcze jaja po śmierci",
+				"#!!! Te nowe jaja nie będą miały specjalnych efektów"
 			}
 		},
 	}
