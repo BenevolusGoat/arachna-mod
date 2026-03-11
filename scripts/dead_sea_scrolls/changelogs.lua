@@ -58,7 +58,7 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 - Added a Dead Sea Scrolls menu where you can check settings, achievements, current and past changelogs, and credits
 - Added new mod settings. Available in the DSS menu
 - Arachna's console commands now have autofill thanks to REPENTOGON
-- Added a new debug commmand: arachnaMod setmark and arachnaMod setmarktainted
+- Added multiple new debug commands
 - Changed Tainted Arachna's multishot to use REPENTOGON instead of an item wisp. Among other things, this allows their multishot to be utilized in the Mines chase sequence
 - Removed GiantBookAPI utility in favor of REPENTOGON implementation
 - Changed how Lil Arachna functions to be a more naturally integrated shooter familiar. They now obey all shooter familiar interactions (Lilith birthrights, shooter priority, etc.)
@@ -72,6 +72,7 @@ The mod has been entirely rewritten from the ground up by benevolusgoat/Benny! T
 - Changed how the mod's orbitals are added to the player. They will have differing speeds/distances compared to before, but now occupy the same layers as other orbitals
 - Removed the small delay The Yarn had dropping its Web Heart
 - Improved melee handling of Dad's Newspaper
+- A multitude of items are now available to Tainted Lost, Lemegeton, and Modeling Clay
 
 ## BUG FIXES
 - Fixed Testament crashing the game
