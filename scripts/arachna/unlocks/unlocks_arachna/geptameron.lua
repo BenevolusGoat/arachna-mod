@@ -161,7 +161,7 @@ function GEPTAMERON:OnUse(itemId, rng, player, useFlags, slot, customVarData)
 		ItemOverlay.Show(GEPTAMERON.OVERLAY, 3, player)
 	end
 	Mod.sfxman:Play(SoundEffect.SOUND_SUPERHOLY)
-	local week = Mod:HasBitFlags(useFlags, UseFlag.USE_CUSTOMVARDATA) and customVarData or player:GetActiveItemDesc(slot).VarData
+	local week = GEPTAMERON:GetDayOfTheWeek()
 	GEPTAMERON:ActivateEffect(player, week)
 	if not Mod:HasBitFlags(useFlags, UseFlag.USE_NOHUD) then
 		Mod.Game:GetHUD():ShowItemText(GEPTAMERON.WeekName[week])
@@ -200,13 +200,13 @@ Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, GEPTAMERON.UpdateVarDataOn
 --#region Update day on room clear/greed wave
 
 function GEPTAMERON:OnRoomClear()
-	if not PlayerManager.AnyoneHasCollectible(GEPTAMERON.ID) then return end
 	local nextDay = GEPTAMERON:GetDayOfTheWeek() + 1
 	if nextDay >= GEPTAMERON.WeekEffect.NUM_EFFECTS then
 		nextDay = GEPTAMERON.WeekEffect.MONDAY
 	end
 	local run_save = Mod.SaveManager.GetRunSave()
 	run_save.GeptameronWeek = nextDay
+	if not PlayerManager.AnyoneHasCollectible(GEPTAMERON.ID) then return end
 	Mod.Foreach.Player(function (player, index)
 		local slots = Mod:GetActiveItemSlots(player, GEPTAMERON.ID)
 		for _, slot in ipairs(slots) do

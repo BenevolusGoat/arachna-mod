@@ -2,7 +2,7 @@
 	<!--ITEMS-->
 	<active id="0" name="Arachna's Spool" description="Web design tool" achievement="Arachna's Spool" gfx="spool.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
 	<active id="1" name="Divine Cloth" description="Enemy infestation" achievement="Divine Cloth" gfx="divine-cloth.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
-	<active id="18" name="Egg Toss" description="Grab and throw eggs" gfx="collectible_eggtoss.png" maxcharges="90" chargetype="timed" quality="0"/>
+	<active id="18" name="Egg Toss" description="Grab and throw eggs" gfx="collectible_eggtoss.png" maxcharges="90" chargetype="timed" tags="noeden" quality="0"/>
 	<active id="2" name="Yarn Heart" description="Reusable web protection" achievement="Yarn Heart" gfx="yarn-heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
 	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." achievement="Mutagen" gfx="mutagen.png" flatdamage="1" quality="2" tags="offensive summonable"/>
 	<familiar id="4" name="Lil Arachna" description="Spider friend" achievement="Lil Arachna" gfx="lil-arachna.png" tags="baby spider monstermanual summonable" quality="3"/>
@@ -15,12 +15,12 @@
 	<active id="10" name="The Testament" description="Leave the inheritance for your descendants" achievement="The Testament" gfx="lastwill.png" maxcharges="0" tags="nochallenge noeden nocantrip offensive" quality="4" cooldown="20" persistent="true"/>
 	<active id="11" name="Geptameron" description="Ever changing holy tome" achievement="Geptameron" gfx="geptameron.png" maxcharges="4" tags="book offensive" quality="3" />
 	<passive id="12" name="3D Glasses" description="I'm seeing double..." achievement="3D Glasses" gfx="3dglasses.png"  tags="offensive summonable" quality="2"/>
+	<!-- v2.0 -->
 	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4" effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1" />
-
 	<passive id="14" name="Spider Donut" description="HP Up?" achievement="Web Hearts" gfx="collectible_spiderdonut.png" damage="0.69" tags="offensive summonable" quality="2"/>
 	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." achievement="Web Hearts" gfx="collectible_candyfloss.png" tags="offensive summonable" quality="2" cache="tearcolor"/>
 	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" achievement="Web Hearts" gfx="collectible_gummyspiders.png" tears="0.61" tags="offensive summonable" quality="2"/>
-	<passive id="17" name="Old Shoebox" description="What could be inside?" achievement="Web Hearts" gfx="collectible_oldshoebox.png" tears="0.33" speed="0.15" tags="offensive" quality="2"/>
+	<passive id="17" name="Old Shoebox" description="What could be inside?" achievement="Web Hearts" gfx="collectible_oldshoebox.png" tears="0.33" speed="0.15" tags="offensive summonable" quality="2"/>
 
 	<!--TRINKETS-->
 	<trinket name="White String" description="Spider's little gift" achievement="White String" gfx="white-string.png" />
