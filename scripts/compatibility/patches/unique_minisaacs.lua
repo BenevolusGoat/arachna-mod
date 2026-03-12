@@ -6,6 +6,10 @@ local function uniqueMinisaacsPatch()
 		Filename = "arachna",
 		AppendSkinColor = false
 	}
+	UniqueMinisaacs.CharacterData[Mod.PlayerType.ARACHNA] = {
+		Filename = "arachna_b",
+		AppendSkinColor = false
+	}
 end
 
 loader:RegisterPatch("UniqueMinisaacs", uniqueMinisaacsPatch)

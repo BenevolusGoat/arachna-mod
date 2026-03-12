@@ -159,6 +159,7 @@ Other:
 - Added support for multiple uses of Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before Testament instead spawns Eden's Blessing
 - Merged Card's Wheel of Fortune effect now uses Portable Slot instead of its own custom logic
 - Mutagen's ability to turn blue spiders from select items into colored spiders now affects all non-spider egg blue spider spawns
+- Updated item pools
 
 ## VISUAL CHANGES
 - All new achievement page sprites by damagaz
@@ -180,7 +181,7 @@ Other:
 
 ## MOD COMPATIBILITY
 - Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
-- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs
+- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs, Specialist Dance
 - TR Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
 
 ## INTERNAL CHANGES
