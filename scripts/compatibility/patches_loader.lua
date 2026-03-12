@@ -48,7 +48,9 @@ local patches = {
 	"stageapi",
 	"fiend_folio",
 	"future",
-	"no_costumes"
+	"no_costumes",
+	"specialist_fix",
+	"specialist_dance"
 }
 
 for _, fileName in ipairs(patches) do
