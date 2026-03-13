@@ -12,6 +12,9 @@ WEB_HEART.CLOT_FAMILIAR = Isaac.GetEntitySubTypeByName("Web Heart Baby")
 WEB_HEART.PICKUP_SFX = SoundEffect.SOUND_SPIDER_SPIT_ROAR
 WEB_HEART.KEY = "WEB_HEART"
 
+WEB_HEART.REPLACEMENT_CHANCE = 0.2
+WEB_HEART.DOUBLE_REPLACEMENT_CHANCE = 0.05
+
 WEB_HEART.HeartsToReplace = Mod:Set({
 	HeartSubType.HEART_ETERNAL,
 	HeartSubType.HEART_BONE,
@@ -25,7 +28,7 @@ CustomHealthAPI.Library.RegisterSoulHealth(WEB_HEART.KEY, {
 	SortOrder = 90,
 	AddPriority = 125,
 	AnimationFilename = "gfx/web_heart_ui.anm2",
-	AnimationName = {"UI"},
+	AnimationName = { "UI" },
 	HealFlashRO = 240 / 255,
 	HealFlashGO = 240 / 255,
 	HealFlashBO = 240 / 255,
@@ -79,7 +82,7 @@ end
 ---@param count? integer @Specify how many Web Hearts an Arachna needs to have
 ---@return EntityPlayer?
 function WEB_HEART:AnyArachanaHasWebHearts(count)
-	return Mod.Foreach.Player(function (player, index)
+	return Mod.Foreach.Player(function(player)
 		if Mod:IsAnyArachna(player) and WEB_HEART:GetWebHearts(player) >= (count or 1) then
 			return player
 		end
@@ -223,10 +226,10 @@ function WEB_HEART:ForceReplaceHearts(pickup, variant, subtype, requestedVariant
 	then
 		local rng = pickup:GetDropRNG()
 		Mod:DebugLog("Force-replaced heart subtype", subtype, "with Web Heart")
-		if rng:RandomFloat() < 0.05 then
-			return {PickupVariant.PICKUP_HEART, WEB_HEART.ID_DOUBLE, true}
+		if rng:RandomFloat() < WEB_HEART.DOUBLE_REPLACEMENT_CHANCE then
+			return { PickupVariant.PICKUP_HEART, WEB_HEART.ID_DOUBLE, true }
 		else
-			return {PickupVariant.PICKUP_HEART, WEB_HEART.ID, true}
+			return { PickupVariant.PICKUP_HEART, WEB_HEART.ID, true }
 		end
 	end
 end
@@ -256,7 +259,7 @@ Mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.IMPOR
 function WEB_HEART:Abaddon(itemID, charge, firstTime, slot, varData, player)
 	local numWebHearts = WEB_HEART:GetWebHearts(player)
 	if numWebHearts > 0
-		--and Mod:IsLegacyGameplayEnabled()
+	--and Mod:IsLegacyGameplayEnabled()
 	then
 		player:AddBlackHearts(numWebHearts * 2)
 		WEB_HEART:AddWebHearts(player, -numWebHearts)
@@ -441,13 +444,13 @@ Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.IMPORTANT - 1
 function WEB_HEART:OnReverseFool(card, player)
 	local data = Mod:GetData(player)
 	if data.WebHeartReverseFool then
-		Mod.Foreach.Pickup(function (pickup, index)
+		Mod.Foreach.Pickup(function(pickup)
 			if pickup.FrameCount == 0 and Mod:IsSameEntity(player, pickup.SpawnerEntity) then
 				pickup:Remove()
 				data.WebHeartReverseFool = data.WebHeartReverseFool - 1
 				if data.WebHeartReverseFool == 0 then return true end
 			end
-		end, PickupVariant.PICKUP_HEART, WEB_HEART.ID, {Inverse = true})
+		end, PickupVariant.PICKUP_HEART, WEB_HEART.ID, { Inverse = true })
 		data.WebHeartReverseFool = nil
 	end
 end

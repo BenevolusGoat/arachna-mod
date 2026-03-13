@@ -9,6 +9,8 @@ ARACHNAMOD.Slot.SPIDER_BEGGAR = SPIDER_BEGGAR
 SPIDER_BEGGAR.ID = Isaac.GetEntityVariantByName("Spiderboi (beggar)")
 SPIDER_BEGGAR.POOL = Isaac.GetPoolIdByName("spiderBeggar")
 
+SPIDER_BEGGAR.REPLACEMENT_CHANCE = 0.2
+
 --Type, Variant
 SPIDER_BEGGAR.SPIDERS = {
 	{EntityType.ENTITY_BLISTER, 0},

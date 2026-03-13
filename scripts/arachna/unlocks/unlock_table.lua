@@ -87,7 +87,7 @@ Mod:RegisterReplacementEntity({
 	OldVariant = { SlotVariant.BEGGAR, SlotVariant.KEY_MASTER },
 	NewType = EntityType.ENTITY_SLOT,
 	NewVariant = Mod.Slot.SPIDER_BEGGAR.ID,
-	ReplacementChance = 0.2,
+	ReplacementChance = Mod.Slot.SPIDER_BEGGAR.REPLACEMENT_CHANCE,
 	Achievement = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT
 })
 
@@ -96,7 +96,7 @@ Mod:RegisterReplacementEntity({
 	OldVariant = { 1, 2, 3, 4 }, --Normal/Hanging Keepers and their Special variants
 	NewType = EntityType.ENTITY_SHOPKEEPER,
 	NewVariant = Mod.Entities.GOLDEN_SHOPKEEPER.ID,
-	ReplacementChance = 0.2,
+	ReplacementChance = Mod.Entities.GOLDEN_SHOPKEEPER.REPLACEMENT_CHANCE,
 	Achievement = Mod.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT
 })
 
@@ -105,7 +105,7 @@ Mod:RegisterReplacementPickup({
 	OldSubtype = { HeartSubType.HEART_BLACK, HeartSubType.HEART_BLENDED, HeartSubType.HEART_BONE, HeartSubType.HEART_ROTTEN },
 	NewVariant = PickupVariant.PICKUP_HEART,
 	NewSubtype = function(rng, subtype)
-		if rng:RandomFloat() < 0.05 then
+		if rng:RandomFloat() < Mod.Pickup.WEB_HEART.DOUBLE_REPLACEMENT_CHANCE then
 			return Mod.Pickup.WEB_HEART.ID_DOUBLE
 		else
 			return Mod.Pickup.WEB_HEART.ID
@@ -113,9 +113,9 @@ Mod:RegisterReplacementPickup({
 	end,
 	ReplacementChance = function()
 		if PlayerManager.AnyoneHasTrinket(Mod.Trinket.SPINDLE.ID) then
-			return 0.3
+			return Mod.Trinket.SPINDLE.WEB_HEART_REPLACEMENT_CHANCE
 		else
-			return 0.2
+			return Mod.Pickup.WEB_HEART.REPLACEMENT_CHANCE
 		end
 	end,
 	Achievement = Mod.Pickup.WEB_HEART.ACHIEVEMENT

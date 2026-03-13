@@ -6,6 +6,8 @@ ARACHNAMOD.Trinket.SPINDLE = SPINDLE
 
 SPINDLE.ID = Isaac.GetTrinketIdByName("Spindle")
 
+SPINDLE.WEB_HEART_REPLACEMENT_CHANCE = 0.3
+
 ---@param ent Entity
 ---@param damage integer
 ---@param flags DamageFlag
