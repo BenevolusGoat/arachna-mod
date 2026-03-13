@@ -4,25 +4,25 @@ local Trinket = Mod.Trinket
 return function(modifiers)
 	return {
 		[Trinket.INFESTED_PENNY.ID] = {
-			Name = "Infested Penny",
+			Name = "寄生硬币",
 			Description = {
-				"{{AracBlueSpider}} Picking up a coin spawns a blue spider",
-				"#{{WebHeart}} Additional 5% chance to spawn a Web Heart",
-				"#Higher chance from nickels and dimes"
+				"{{AracBlueSpider}} 拾取硬币后生成蓝蜘蛛",
+				"#{{WebHeart}} 同时有5%概率生成网心",
+				"#面值更高的硬币概率也会更高"
 			},
 		},
 		[Trinket.SPINDLE.ID] = {
-			Name = "Spindle",
+			Name = "纺锤",
 			Description = {
-				"{{StatusSpiderBite}} Touching enemies inflicts them with Spider Bite, spawning Spider Eggs on death",
-				"#{{Timer}} Spider Eggs drop nothing after 16 seconds or {{ColorRainbow}}special{{CR}} friendly spiders on room clear",
-				"#{{WebHeart}} Increases spawn chance of Web Hearts by +10%"
+				"{{StatusSpiderBite}} 网捕接触的敌人, 使其死亡后生成蜘蛛卵",
+				"#蜘蛛卵会在清理房间后生成{{ColorRainbow}}特殊{{CR}}友好蜘蛛",
+				"#{{WebHeart}} 网心的生成概率+10%"
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {
-			Name = "White String",
+			Name = "白丝线",
 			Description = {
-				"{{WebHeart}} Entering a new floor grants +1 Web Heart"
+				"{{WebHeart}} 进入新楼层后获得1网心"
 			}
 		},
 	}

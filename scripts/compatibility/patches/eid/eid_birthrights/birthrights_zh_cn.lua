@@ -4,21 +4,21 @@ local Item = Mod.Item
 return function(modifiers)
 	return {
 		[Mod.PlayerType.ARACHNA] = {
-			Name = "Arachna",
+			Name = "阿拉克娜",
 			Description = {
-				"{{Collectible" .. Item.ARACHNAS_SPOOL.ID .. "}} Can have up to 2 webs active at a time",
-				"#↑ Increased chance of spider eggs spawning {{ColorRainbow}}special{{CR}} friendly spiders",
-				"#{{WebHeart}} 5% chance for spider eggs to drop a Web Heart upon hatching"
+				"{{Collectible" .. Item.ARACHNAS_SPOOL.ID .. "}} 同时可以存在两张网",
+				"#↑ 提升蜘蛛卵生成{{ColorRainbow}}特殊{{CR}}友好蜘蛛的概率、",
+				"#{{WebHeart}} 蜘蛛卵孵化后有5%的概率生成网心"
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
-			Name = "Tainted Arachna",
+			Name = "堕化阿拉克娜",
 			Description = {
-				"{{StatusWebbed}} Thrown eggs drop small spider webs",
-				"#Can have up to 3 webs active at a time",
-				"#Spider webs have {{ColorRainbow}}special{{CR}} effects corresponding with the egg's color",
-				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
-				"#!!! These new spider eggs will not have special colors"
+				"{{StatusWebbed}} 投掷的蜘蛛卵会生成小型蛛网",
+				"#同时可以存在三张网",
+				"#根据蜘蛛卵的颜色, 蛛网也会具有{{ColorRainbow}}特殊{{CR}}效果",
+				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成蜘蛛卵",
+				"#!!! 这些新生成的蜘蛛卵不会拥有特殊颜色"
 			}
 		},
 	}

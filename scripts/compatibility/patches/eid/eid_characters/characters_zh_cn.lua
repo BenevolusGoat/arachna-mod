@@ -3,26 +3,26 @@ local Mod = ARACHNAMOD
 return function()
 	return {
 		[Mod.PlayerType.ARACHNA] = {
-			Name = "Arachna",
+			Name = "阿拉克娜",
 			Description = {
-				"Can't have Red Hearts",
-				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
-				"#Not affected by cobwebs",
-				"#{{Poison}} 25% chance to shoot poison tears",
-				"#Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}}, having unique effects",
+				"无法拾取红心",
+				"#{{WebHeart}} 生命上升的效果会提供{{ColorObjName}}网心{{CR}}, 可以作为心之容器使用",
+				"#免疫蛛网",
+				"#{{Poison}} 25%概率发射毒性泪弹",
+				"#蜘蛛卵生成的蜘蛛可能会变为效果各异的{{ColorRainbow}}特殊蜘蛛{{CR}}",
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
-			Name = "Tainted Arachna",
+			Name = "堕化阿拉克娜",
 			Description = {
-				"Can't have Red Hearts",
-				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
-				"#Not affected by cobwebs",
-				"#{{Poison}} 25% chance to shoot poison tears",
-				"#↓ Smaller spider eggs",
-				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key {{StatusSpiderBite}} ensnares enemies in a radius and deals 0.5x damage",
-				"#{{StatusSpiderBite}} Ensnaring shares all the attributes of being {{StatusWebbed}} webbed",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
+				"无法拾取红心",
+				"#{{WebHeart}} 生命上升的效果会提供{{ColorObjName}}网心{{CR}}, 可以作为心之容器使用",
+				"#免疫蛛网",
+				"#{{Poison}} 25%概率发射毒性泪弹",
+				"#↓ 更小的蜘蛛卵",
+				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} 双击攻击键{{StatusSpiderBite}}网捕一定范围内的敌人并造成50%伤害",
+				"#{{StatusSpiderBite}} 网捕状态与{{StatusWebbed}}蛛网缠身状态类似",
+				"#{{StatusSpiderBite}} 蜘蛛卵可以变为生成特殊蜘蛛的{{ColorRainbow}}特殊蛛卵{{CR}}",
 			}
 		},
 	}

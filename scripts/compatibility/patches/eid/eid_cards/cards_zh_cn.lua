@@ -3,98 +3,98 @@ local Mod = ARACHNAMOD
 return function(modifiers)
 	return {
 		[Mod.Card.SOUL_OF_ARACHNA.ID] = {
-			Name = "Soul of Arachna",
+			Name = "阿拉克娜的魂石",
 			Description = {
-				"{{StatusSpiderBite}} Ensnares all enemies, inflicting slow and causing eggs to drop on death",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
+				"{{StatusSpiderBite}} 网捕所有敌人, 施加减速并使其死亡后生成蜘蛛卵",
+				"#{{StatusSpiderBite}} 蜘蛛卵可以变为生成特殊蜘蛛的{{ColorRainbow}}特殊蛛卵{{CR}}",
 			}
 		},
 		[Mod.Card.MERGED_CARD.ID] = {
-			Name = "Merged Card",
+			Name = "融合卡",
 			Description = {
 				function(descObj)
 					return modifiers[Mod.Card.MERGED_CARD.ID]._modifier(descObj,
-					"Triggers 2 random effects based on tarot cards"
-					.. "#(Hold {{ButtonSelect}} to show effects)",
-					"{{Blank}} {{ButtonX}} Effect List %s/%s {{ButtonB}}",
+					"触发2个随机的基于塔罗牌的效果"
+					.. "#(长按{{ButtonSelect}}查看效果)",
+					"{{Blank}} {{ButtonX}} 效果一览 %s/%s {{ButtonB}}",
 					{
-						"#{{Card" .. Card.CARD_FOOL .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_D7 .. "}} D7"
-						.. "#{{Card" .. Card.CARD_MAGICIAN .. "}} {{Slow}} Slow all enemies in the room"
-						.. "#{{Card" .. Card.CARD_HIGH_PRIESTESS .. "}} {{MomBossSmall}} Mom's foot stomps Isaac"
+						"#{{Card" .. Card.CARD_FOOL .. "}} 使用{{Collectible" .. CollectibleType.COLLECTIBLE_D7 .. "}} 七面骰"
+						.. "#{{Card" .. Card.CARD_MAGICIAN .. "}} {{Slow}} 减速房间内的所有敌人"
+						.. "#{{Card" .. Card.CARD_HIGH_PRIESTESS .. "}} {{MomBossSmall}} 妈妈的腿践踏角色"
 						.. "#{{Card" ..
-						Card.CARD_EMPRESS .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_THE_NAIL .. "}} The Nail"
-						.. "#{{Card" .. Card.CARD_EMPEROR .. "}} Reveals the {{BossRoom}} Boss Room"
-						.. "#{{Card" .. Card.CARD_HIEROPHANT .. "}} Spawns 2 {{HalfSoulHeart}} Half Soul Hearts",
+						Card.CARD_EMPRESS .. "}} 使用{{Collectible" .. CollectibleType.COLLECTIBLE_THE_NAIL .. "}} 钉子"
+						.. "#{{Card" .. Card.CARD_EMPEROR .. "}} 揭示{{BossRoom}} 头目房"
+						.. "#{{Card" .. Card.CARD_HIEROPHANT .. "}} 生成2个{{HalfSoulHeart}} 半魂心",
 
-						"#{{Card" .. Card.CARD_LOVERS .. "}} Spawns 2 {{HalfHeart}} Half Hearts"
+						"#{{Card" .. Card.CARD_LOVERS .. "}} 生成2个{{HalfHeart}} 半红心"
 						.. "#{{Card" ..
-						Card.CARD_CHARIOT .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_UNICORN_STUMP ..
-						"}} Unicorn Stump"
-						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} Spawns any 2 of the following pickups: A {{Coin}} coin, {{Key}} key, {{Bomb}} bomb, or {{Heart}} heart"
+						Card.CARD_CHARIOT .. "}} 使用{{Collectible" .. CollectibleType.COLLECTIBLE_UNICORN_STUMP ..
+						"}} 独角兽的残角"
+						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} 生成下列掉落物中的两种: {{Coin}} 硬币, {{Key}} 钥匙, {{Bomb}} 炸弹或{{Heart}} 心"
 						.. "#{{Card" ..
-						Card.CARD_HERMIT .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} Keeper's Box"
-						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Portable Slot 3 times",
+						Card.CARD_HERMIT .. "}} 使用{{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} 店主的盒子"
+						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} 使用三次{{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} 便携式老虎机",
 
-						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} Receive for the room: {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} Odd Mushroom"
-						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} Destroys all rocks and fills all pits in the room"
-						.. "#{{Card" .. Card.CARD_DEATH .. "}} Deals 20 damage to all enemies in the room"
-						.. "#{{Card" .. Card.CARD_TEMPERANCE .. "}} Spawns a {{DemonBeggar}} Demon Beggar"
-						.. "#{{Card" .. Card.CARD_DEVIL .. "}} {{Timer}} Receive for the room: {{Damage}} +1 Damage"
-						.. "#{{Card" .. Card.CARD_TOWER .. "}} Spawns 3 Troll Bombs",
+						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} 在当前房间内获得: {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} 怪异蘑菇"
+						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} 摧毁房间内的所有石头, 填补所有沟壑"
+						.. "#{{Card" .. Card.CARD_DEATH .. "}} 对房间内的所有敌人造成20伤害"
+						.. "#{{Card" .. Card.CARD_TEMPERANCE .. "}} 生成一个{{DemonBeggar}}恶魔乞丐"
+						.. "#{{Card" .. Card.CARD_DEVIL .. "}} {{Timer}} 在当前房间内获得: {{Damage}} +1伤害"
+						.. "#{{Card" .. Card.CARD_TOWER .. "}} 生成3个即爆炸弹",
 
-						"#{{Card" .. Card.CARD_STARS .. "}} Spawns a {{GoldenChest}} golden chest"
-						.. "#{{Card" .. Card.CARD_MOON .. "}} Reveals all {{SecretRoom}}{{SuperSecretRoom}}{{UltraSecretRoom}} secret-type rooms"
+						"#{{Card" .. Card.CARD_STARS .. "}} 生成一个{{GoldenChest}} 金箱子"
+						.. "#{{Card" .. Card.CARD_MOON .. "}} 揭示所有{{SecretRoom}}{{SuperSecretRoom}}{{UltraSecretRoom}} 隐藏房"
 						.. "#{{Card" ..
 						Card.CARD_SUN ..
-						"}} Reveals the {{TreasureRoom}} Treasure Room and {{Planetarium}} Planetarium, {{HealingRed}} heals 1 heart, deals 5 damage to all enemies in the room"
-						.. "#{{Card" .. Card.CARD_JUDGEMENT .. "}} Spawns a shopkeeper"
-						.. "#{{Card" .. Card.CARD_WORLD .. "}} Reveals the {{TreasureRoom}} Treasure Room and {{Planetarium}} Planetarium"
+						"}} 揭示{{TreasureRoom}} 宝箱房和{{Planetarium}} 星象房, {{HealingRed}} 治疗1红心, 对房间内的所有敌人造成5伤害"
+						.. "#{{Card" .. Card.CARD_JUDGEMENT .. "}} 生成一个店主"
+						.. "#{{Card" .. Card.CARD_WORLD .. "}} 揭示{{TreasureRoom}} 宝箱房和{{Planetarium}} 星象房"
 					}
 				)
 				end
 			}
 		},
 		[Mod.Card.MERGED_CARD_REVERSED.ID] = {
-			Name = "Merged Card?",
+			Name = "融合卡?",
 			Description = {
 				function(descObj)
 					return modifiers[Mod.Card.MERGED_CARD.ID]._modifier(descObj,
-					"Triggers 2 random effects based on reverse tarot cards"
-					.. "#(Hold {{ButtonSelect}} to show effects)",
-					"{{Blank}} {{ButtonX}} Effect List %s/%s {{ButtonB}}",
+					"触发2个随机的基于逆位塔罗牌的效果"
+					.. "#(长按{{ButtonSelect}}查看效果)",
+					"{{Blank}} {{ButtonX}} 效果一览 %s/%s {{ButtonB}}",
 					{
-						"#{{Card" .. Card.CARD_REVERSE_FOOL .. "}} Drops all of Isaac's {{Coin}} coins, {{Bomb}} bombs, or {{Key}} keys on the floor"
-						.. "#{{Card" .. Card.CARD_REVERSE_MAGICIAN .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_TELEKINESIS .. "}} Telekinesis 2 times"
-						.. "#{{Card" .. Card.CARD_REVERSE_HIGH_PRIESTESS .. "}} {{Timer}} {{MomBossSmall}} Mom's Foot tries to stomp Isaac for 15 seconds"
+						"#{{Card" .. Card.CARD_REVERSE_FOOL .. "}} 将角色的所有{{Coin}} 硬币, {{Bomb}} 炸弹或{{Key}} 钥匙丢在地上"
+						.. "#{{Card" .. Card.CARD_REVERSE_MAGICIAN .. "}} 连续触发两次{{Collectible" .. CollectibleType.COLLECTIBLE_TELEKINESIS .. "}} 念力"
+						.. "#{{Card" .. Card.CARD_REVERSE_HIGH_PRIESTESS .. "}} {{Timer}} {{MomBossSmall}} 妈妈的腿会尝试在15秒内践踏角色"
 						.. "#{{Card" ..
-						Card.CARD_REVERSE_EMPRESS .. "}} {{Timer}} Receive for the room: +1 {{Heart}} Health, {{Tears}} +0.75 Tears, {{Speed}} -0.05 Speed",
+						Card.CARD_REVERSE_EMPRESS .. "}} {{Timer}} 在当前房间内: +1 {{Heart}} 心之容器, {{Tears}} +0.75射速, {{Speed}} -0.05移速",
 
-						"#{{Card" .. Card.CARD_REVERSE_EMPEROR .. "}} Spawns a {{ColorRainbow}}rainbow{{CR}} champion of a random enemy on the floor"
-						.. "#{{Card" .. Card.CARD_REVERSE_HIEROPHANT .. "}} Spawns 1 {{EmptyBoneHeart}} Bone Heart"
-						.. "#{{Card" .. Card.CARD_REVERSE_LOVERS .. "}} {{BrokenHeart}} +1 Broken Heart, {{Damage}} +0.25 Damage"
+						"#{{Card" .. Card.CARD_REVERSE_EMPEROR .. "}} 生成一个来自本层的{{ColorRainbow}}彩色{{CR}}变种的随机敌人"
+						.. "#{{Card" .. Card.CARD_REVERSE_HIEROPHANT .. "}} 生成1个{{EmptyBoneHeart}} 骨心"
+						.. "#{{Card" .. Card.CARD_REVERSE_LOVERS .. "}} {{BrokenHeart}} 获得1碎心, {{Damage}} +0.25伤害"
 						.. "#{{Card" ..
-						Card.CARD_REVERSE_CHARIOT .. "}} {{Timer}} Receive for 10 seconds: {{Speed}} x0.5 Speed multiplier, {{Tears}} x2 Tears multiplier"
-						.. "#{{Card" .. Card.CARD_REVERSE_JUSTICE .. "}} Spawns 1-2 {{GoldenChest}} golden chests"
+						Card.CARD_REVERSE_CHARIOT .. "}} {{Timer}} 在10秒内: {{Speed}} x0.5移速倍率, {{Tears}} x2 射速倍率"
+						.. "#{{Card" .. Card.CARD_REVERSE_JUSTICE .. "}} 生成1-2个{{GoldenChest}} 金箱子"
 						.. "#{{Card" ..
 						Card.CARD_REVERSE_HERMIT ..
-						"}} Spawns 1-5 random {{Coin}} coins",
+						"}} 生成1-5个随机{{Coin}} 硬币",
 
-						"#{{Card" .. Card.CARD_REVERSE_WHEEL_OF_FORTUNE .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_D8 .. "}} D8, {{Collectible" .. CollectibleType.COLLECTIBLE_D10 .. "}} D10, or {{Collectible" .. CollectibleType.COLLECTIBLE_D12 .. "}} D12"
-						.. "#{{Card" .. Card.CARD_REVERSE_STRENGTH .. "}} {{Timer}} For 30 seconds: Half of all enemies in the room receive {{Weakness}} weakness"
-						.. "#{{Card" .. Card.CARD_REVERSE_HANGED_MAN .. "}} {{Timer}} Receive for 30 seconds: {{Collectible" .. CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER .. "}} Head of the Keeper, {{Damage}} x1.5 Damage multiplier"
-						.. "#{{Card" .. Card.CARD_REVERSE_DEATH .. "}} {{Friendly}} Spawns a random friendly bone enemy"
-						.. "#{{Card" .. Card.CARD_REVERSE_TEMPERANCE .. "}} Uses a random {{Pill}} pill"
-						.. "#{{Card" .. Card.CARD_REVERSE_DEVIL .. "}} Flight for the room",
+						"#{{Card" .. Card.CARD_REVERSE_WHEEL_OF_FORTUNE .. "}} 触发{{Collectible" .. CollectibleType.COLLECTIBLE_D8 .. "}} 八面骰, {{Collectible" .. CollectibleType.COLLECTIBLE_D10 .. "}} 十面骰或 {{Collectible" .. CollectibleType.COLLECTIBLE_D12 .. "}} 十二面骰"
+						.. "#{{Card" .. Card.CARD_REVERSE_STRENGTH .. "}} {{Timer}} 在30秒内: 半数的敌人被施加{{Weakness}}虚弱"
+						.. "#{{Card" .. Card.CARD_REVERSE_HANGED_MAN .. "}} {{Timer}} 在30秒内获得: {{Collectible" .. CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER .. "}} 店主的头, {{Damage}} x1.5伤害倍率"
+						.. "#{{Card" .. Card.CARD_REVERSE_DEATH .. "}} {{Friendly}} 生成一个随机的骷髅类敌人"
+						.. "#{{Card" .. Card.CARD_REVERSE_TEMPERANCE .. "}} 触发一个随机的{{Pill}} 药丸"
+						.. "#{{Card" .. Card.CARD_REVERSE_DEVIL .. "}} 在当前房间内获得飞行",
 
-						"#{{Card" .. Card.CARD_REVERSE_TOWER .. "}} Spawns a cluster of random rocks and obstacles"
-						.. "#{{Card" .. Card.CARD_REVERSE_STARS .. "}} Removes Isaac's oldest passive item (ignoring starting items) and spawns 1 random item from the current room's pool"
-						.. "#{{Card" .. Card.CARD_REVERSE_MOON .. "}} Spawns {{Card" .. Card.CARD_CRACKED_KEY .. "}} Cracked Key, reveals the {{UltraSecretRoom}} Ultra Secret Room",
+						"#{{Card" .. Card.CARD_REVERSE_TOWER .. "}} 生成一组随机石头和障碍物"
+						.. "#{{Card" .. Card.CARD_REVERSE_STARS .. "}} 失去角色最早持有的一个道具(初始道具不算入)并生成当前房间道具池的一个随机道具"
+						.. "#{{Card" .. Card.CARD_REVERSE_MOON .. "}} 生成{{Card" .. Card.CARD_CRACKED_KEY .. "}} 红钥匙碎片, 揭示{{UltraSecretRoom}} 究极隐藏房",
 
 						"#{{Card" ..
 						Card.CARD_REVERSE_SUN ..
-						"}} {{Timer}} Receive for the room: {{Collectible" .. CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT .. "}} Spirit of the Night, {{Damage}} +1.5 Damage, darkened room"
-						.. "#{{Card" .. Card.CARD_REVERSE_JUDGEMENT .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_D6 .. "}} D6 and {{Collectible" .. CollectibleType.COLLECTIBLE_D20 .. "}} D20"
-						.. "#{{Card" .. Card.CARD_REVERSE_WORLD .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_WE_NEED_TO_GO_DEEPER .. "}} We Need To Go Deeper!"
+						"}} {{Timer}} 在当前房间内获得: {{Collectible" .. CollectibleType.COLLECTIBLE_SPIRIT_OF_THE_NIGHT .. "}} 子夜幽魂, {{Damage}} +1.5伤害, 房间变暗"
+						.. "#{{Card" .. Card.CARD_REVERSE_JUDGEMENT .. "}} 触发{{Collectible" .. CollectibleType.COLLECTIBLE_D6 .. "}} 六面骰和{{Collectible" .. CollectibleType.COLLECTIBLE_D20 .. "}} 20面骰"
+						.. "#{{Card" .. Card.CARD_REVERSE_WORLD .. "}} 触发{{Collectible" .. CollectibleType.COLLECTIBLE_WE_NEED_TO_GO_DEEPER .. "}} 我们需要深入挖掘!"
 					}
 				)
 				end
