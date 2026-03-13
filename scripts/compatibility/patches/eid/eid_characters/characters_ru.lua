@@ -3,26 +3,26 @@ local Mod = ARACHNAMOD
 return function()
 	return {
 		[Mod.PlayerType.ARACHNA] = {
-			Name = "Arachna",
+			Name = "Арахна",
 			Description = {
-				"Can't have Red Hearts",
-				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
-				"#Not affected by cobwebs",
-				"#{{Poison}} 25% chance to shoot poison tears",
-				"#Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}}, having unique effects",
+				"Не может иметь Красных Сердец",
+				"#{{WebHeart}} Повышения Здоровья дают Паутинные Сердца, заменяющие контейнеры сердец",
+				"#Паутины не действуют на вас",
+				"#{{Poison}} 25% шанс выстрелить отравленной слезой",
+				"#Пауки из паучьих яиц могут быть {{ColorRainbow}}особыми{{CR}} и иметь уникальные эффекты",
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
-			Name = "Tainted Arachna",
+			Name = "Порченная Арахна",
 			Description = {
-				"Can't have Red Hearts",
-				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
-				"#Not affected by cobwebs",
-				"#{{Poison}} 25% chance to shoot poison tears",
-				"#↓ Smaller spider eggs",
-				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key {{StatusSpiderBite}} ensnares enemies in a radius and deals 0.5x damage",
-				"#{{StatusSpiderBite}} Ensnaring shares all the attributes of being {{StatusWebbed}} webbed",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
+				"Не может иметь Красных Сердец",
+				"#{{WebHeart}} Повышения Здоровья дают Паутинные Сердца, заменяющие контейнеры сердец",
+				"#Паутины не действуют на вас",
+				"#{{Poison}} 25% шанс выстрелить отравленной слезой",
+				"#↓ Паучьи яйца меньшего размера",
+				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Двойное нажатие кнопки стрельбы {{StatusSpiderBite}} опутывает врагов в радиусе и наносит 0.5x урона",
+				"#{{StatusSpiderBite}} Опутанные враги имеют те же эффекты, что и враги в {{StatusWebbed}} паутине",
+				"#{{StatusSpiderBite}} Яйца могут быть {{ColorRainbow}}особыми{{CR}}, создавая особых пауков",
 			}
 		},
 	}

@@ -4,25 +4,25 @@ local Trinket = Mod.Trinket
 return function(modifiers)
 	return {
 		[Trinket.INFESTED_PENNY.ID] = {
-			Name = "Infested Penny",
+			Name = "Заражённый Пенни",
 			Description = {
-				"{{AracBlueSpider}} Picking up a coin spawns a blue spider",
-				"#{{WebHeart}} Additional 5% chance to spawn a Web Heart",
-				"#Higher chance from nickels and dimes"
+				"{{AracBlueSpider}} При подборе монеты создаёт синего паука",
+				"#{{WebHeart}} Дополнительный 5% шанс получить Паутинное Сердце",
+				"#Шанс больше при подборе пятаков и червонцев"
 			},
 		},
 		[Trinket.SPINDLE.ID] = {
-			Name = "Spindle",
+			Name = "Веретено",
 			Description = {
-				"{{StatusSpiderBite}} Touching enemies ensnares them, {{slow}} slowing them and spawning Spider Eggs on death",
-				"#Spider Eggs drop {{ColorRainbow}}special{{CR}} friendly spiders on room clear",
-				"#{{WebHeart}} Increases spawn chance of Web Hearts by +10%"
+				"{{StatusSpiderBite}} При касании опутывает врагов, замедляя их и превращая в Паучьи Яйца при смерти",
+				"#{{Timer}} Паучьи Яйца создают {{ColorRainbow}}особых{{CR}} дружественных пауков при зачистке комнаты",
+				"#{{WebHeart}} Увеличивает шанс получения Паутинных Сердец на 10%"
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {
-			Name = "White String",
+			Name = "Белая Нить",
 			Description = {
-				"{{WebHeart}} Entering a new floor grants +1 Web Heart"
+				"{{WebHeart}} При переходе на новый этаж даёт 1 Паутинное Сердце"
 			}
 		},
 	}
