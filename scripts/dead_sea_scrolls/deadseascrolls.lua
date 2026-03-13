@@ -232,6 +232,7 @@ local arachnaDssDirectory = {
 			{str = "shapatsmith", fsize = 2, tooltip = GenerateTooltip("voiceover for pocket items")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("playtesting, sprites for several costumes")},
 			{str = "steamjek", fsize = 2, tooltip = GenerateTooltip("mod thumbnail art as a commission")},
+			{str = "ferpe", fsize = 2, tooltip = GenerateTooltip("various sprites as a commission")},
 		},
 	},
 	areyousure = {

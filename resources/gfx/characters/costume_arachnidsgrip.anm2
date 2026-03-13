@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="11.02.2023 11:46:34" Version="105" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="3/13/2026 12:14:02 AM" Version="106" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="costumes\costume_arachnids_grip.png" Id="0"/>
+			<Spritesheet Path="costumes\costume_arachnidsgrip.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="head1" Id="0" SpritesheetId="0"/>
