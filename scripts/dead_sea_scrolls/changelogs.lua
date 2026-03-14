@@ -160,6 +160,8 @@ Other:
 - Merged Card's Wheel of Fortune effect now uses Portable Slot instead of its own custom logic
 - Mutagen's ability to turn blue spiders from select items into colored spiders now affects all non-spider egg blue spider spawns
 - Updated item pools
+- Web Heart Clots now have a 25% chance to shoot slowing tears
+- Using Yarn Heart with coin health characters (e.g. Keeper) spawns 2 blue spiders
 
 ## VISUAL CHANGES
 - All new achievement page sprites by damagaz

@@ -458,3 +458,25 @@ end
 Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY, WEB_HEART.OnReverseFool, Card.CARD_REVERSE_FOOL)
 
 --#endregion
+
+--#region Web Clot
+
+---@param player EntityPlayer
+---@param params TearParams
+---@param source Entity
+function WEB_HEART:WebClotFire(player, params, weaponType, scale, displacement, source)
+	local familiar = source:ToFamiliar()
+	if familiar
+		and familiar.Variant == FamiliarVariant.BLOOD_BABY
+		and familiar.SubType == WEB_HEART.CLOT_FAMILIAR
+	then
+		params.TearColor = Color(2, 2, 2, 1, 0.196, 0.196, 0.196)
+		if player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_SPIDER_BITE):RandomInt(4) + 1 == 1 then
+			params.TearFlags = params.TearFlags | TearFlags.TEAR_SLOW
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, WEB_HEART.WebClotFire)
+
+--#endregion

@@ -1,8 +1,8 @@
 local Mod = ARACHNAMOD
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
-local BOSS_HEALTH_DIV = 8
-local BOSS_HEALTH_DIV_BIG = 4
+local BOSS_HEALTH_DIV = 10
+local BOSS_HEALTH_DIV_BIG = 8
 
 ---@param pos Vector
 ---@param color Color

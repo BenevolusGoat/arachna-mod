@@ -90,7 +90,7 @@ function SPIDER_EGG:GetSpiderBonusChances(player, eggFlags)
 	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
 		bigChance = bigChance + 0.5
 	end
-	if eggFlags and Mod.Character.ARACHNA_B:IsArachnaB(player) and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT) then
 		bigChance = bigChance + 0.25
 	end
 	return bonusColorChance, bigChance
@@ -250,8 +250,7 @@ local function rewardLegacy(egg)
 			and rng:RandomInt(3) == 1
 		then
 			--Even though its passing 0.2 for big chance, legacy only checks if its above 0 to do its own calculations
-			spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(nil, nil,
-				Mod.Entities.COLORED_SPIDERS.BIG_SPIDER_CHANCE)
+			spiderSubtype = COLORED_SPIDERS:GetRandomSpiderSubtype(nil, nil, 0.2)
 		end
 		COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, egg.Position)
 	end

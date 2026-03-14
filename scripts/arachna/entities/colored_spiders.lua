@@ -23,7 +23,7 @@ COLORED_SPIDERS.SpiderSubtype = {
 	LOVE = getSub("Love"),
 	ICE = getSub("Ice"),
 	BIG_FLAG = 10,
-	NUM_COLORED_SPIDERS = 19
+	LAST_SPIDER_SUBTYPE = 19
 }
 
 COLORED_SPIDERS.SpiderColors = {
@@ -44,7 +44,6 @@ COLORED_SPIDERS.ShinySubtypes = Mod:Set({
 })
 
 COLORED_SPIDERS.COLORED_SPIDER_CHANCE = 0.35
-COLORED_SPIDERS.BIG_SPIDER_CHANCE = 0.2
 
 local WOP = WeightedOutcomePicker()
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 2)
@@ -119,7 +118,7 @@ end
 ---@param checkBig? boolean @default: `nil`. Set to `true` to only check big spiders. Set to `false` to only check small spiders.
 function COLORED_SPIDERS:IsColoredSpider(spider, checkBig)
 	local isColored = spider.SubType > 0
-		and spider.SubType <= COLORED_SPIDERS.SpiderSubtype.NUM_COLORED_SPIDERS
+		and spider.SubType <= COLORED_SPIDERS.SpiderSubtype.LAST_SPIDER_SUBTYPE
 		and spider.SubType ~= COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 	local isBig = spider.SubType > COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 	if checkBig then
