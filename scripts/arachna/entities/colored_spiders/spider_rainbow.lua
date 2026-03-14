@@ -4,6 +4,9 @@ local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 local BOSS_HEALTH_DIV = 10
 local BOSS_HEALTH_DIV_BIG = 8
 
+local BOSS_HEALTH_DIV_LEGACY = 8
+local BOSS_HEALTH_DIV_BIG_LEGACY = 4
+
 ---@param pos Vector
 ---@param color Color
 function COLORED_SPIDERS:SpawnRainbowFart(pos, color)
@@ -27,6 +30,9 @@ local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdow
 
 	local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 	local div = isBig and BOSS_HEALTH_DIV_BIG or BOSS_HEALTH_DIV
+	if Mod:IsLegacyGameplayEnabled() then
+		div = isBig and BOSS_HEALTH_DIV_BIG_LEGACY and BOSS_HEALTH_DIV_LEGACY
+	end
 
 	if ent:IsBoss() then
 		return {Damage = amount + (ent.HitPoints / div)}
