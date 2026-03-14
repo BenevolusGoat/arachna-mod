@@ -3,8 +3,6 @@ local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 local DURATION = 120
 local DURATION_BIG = 180
-local DAMAGE = 2
-local DAMAGE_BIG = 3.5
 
 ---@param _ any
 ---@param ent Entity
@@ -16,7 +14,10 @@ local function postEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdo
 	local player = spider.Player
 	local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 	local duration = isBig and DURATION_BIG or DURATION
-	local damage = isBig and DAMAGE_BIG or DAMAGE
+	local damage = player.Damage
+	if not isBig then
+		damage = damage * 0.57
+	end
 	ent:AddPoison(EntityRef(player), duration, damage)
 end
 

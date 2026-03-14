@@ -1,8 +1,8 @@
 local Mod = ARACHNAMOD
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
-local DURATION = 600
-local DURATION_BIG = 900
+local DURATION = 75
+local DURATION_BIG = 150
 local SLOW_VALUE = 0.5
 local COLOR = StatusEffectLibrary.StatusColor.SLOW
 
