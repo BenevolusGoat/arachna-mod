@@ -9,7 +9,7 @@
 	<costume anm2path="costume_mutagen.anm2" type="passive" id="3" />
 	<costume anm2path="costume_arachnidsgrip.anm2" type="passive" id="8" />
 	<costume anm2path="costume_3dglasses.anm2" type="passive" id="12" />
-	<costume anm2path="costume_spidercake.anm2" type="passive" id="13" />
+	<costume anm2path="costume_spidercake.anm2" type="passive" id="13" hasSkinAlt="true" />
 	<costume anm2path="costume_candyfloss.anm2" type="passive" id="15" />
 	<costume anm2path="costume_shoebox.anm2" type="passive" id="17" />
 </costumes>
