@@ -12,7 +12,9 @@ MECHANICAL_EYE.FAMILIAR = Isaac.GetEntityVariantByName("Mechanical Eye (orbital)
 MECHANICAL_EYE.EFFECT_VAR = Isaac.GetEntityVariantByName("Mechanical Eye Effect")
 MECHANICAL_EYE.EFFECT_SUB = Isaac.GetEntitySubTypeByName("Mechanical Eye Effect")
 
-MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST = Mod:Set({
+MECHANICAL_EYE.ITEM_TAG = "arachna_nomechanicaleye"
+
+MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST = {
 	CollectibleType.COLLECTIBLE_BLANK_CARD,
 	CollectibleType.COLLECTIBLE_PLACEBO,
 	CollectibleType.COLLECTIBLE_CLEAR_RUNE,
@@ -25,7 +27,11 @@ MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST = Mod:Set({
 	CollectibleType.COLLECTIBLE_RED_KEY,
 	CollectibleType.COLLECTIBLE_D4,
 	CollectibleType.COLLECTIBLE_D100
-})
+}
+
+for _, itemID in ipairs(MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST) do
+	Mod.ItemConfig:GetCollectible(itemID):AddCustomTag(MECHANICAL_EYE.ITEM_TAG)
+end
 
 ---A list of every valid active, mapped by its max charge
 local activeList = {}
@@ -48,7 +54,7 @@ function MECHANICAL_EYE:GenerateActiveChargeList()
 	for itemId = 1, numCollectibles do
 		local itemConfig = Mod.ItemConfig:GetCollectible(itemId)
 		if MECHANICAL_EYE:IsValidItem(itemConfig)
-			and not MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST[itemId]
+			and not itemConfig:HasCustomTag(MECHANICAL_EYE.ITEM_TAG)
 			and not itemConfig.Hidden
 			and not itemConfig:HasTags(ItemConfig.TAG_QUEST)
 		then
@@ -63,8 +69,11 @@ end
 function MECHANICAL_EYE:HasValidActive(player)
 	local itemId = player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
 	local itemConfig = Mod.ItemConfig:GetCollectible(itemId)
+	local curCharge = player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY)
+		+ player:GetBloodCharge()
+		+ player:GetSoulCharge()
 	return MECHANICAL_EYE:IsValidItem(itemConfig)
-		and player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY) == player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY)
+		and curCharge >= player:GetActiveMinUsableCharge(ActiveSlot.SLOT_PRIMARY)
 end
 
 ---@param familiar EntityFamiliar
@@ -86,7 +95,10 @@ function MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	if not MECHANICAL_EYE:IsValidItem(Mod.ItemConfig:GetCollectible(primaryActive)) then
 		return
 	end
-	local desiredCharge = player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY)
+	local curCharge = player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY)
+		+ player:GetBloodCharge()
+		+ player:GetSoulCharge()
+	local desiredCharge = math.min(curCharge, player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY))
 	--Make a copy of the list and remove the currently held active
 	local chargeList = Mod:CopyTable(activeList[desiredCharge])
 	chargeList = Mod:FilterList(chargeList, function (val, key)
@@ -143,7 +155,12 @@ function MECHANICAL_EYE:OnFamiliarUpdate(familiar)
 		Mod.sfxman:Play(SoundEffect.SOUND_MIRROR_EXIT, 0.6, 2, false, 1.8)
 	end
 
-	if sprite:IsFinished("Opening") or sprite:IsPlaying("Opened") and (data.MechEyeCurReferenceActive or 0) ~= player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) then
+	if sprite:IsFinished("Opening") or
+		(
+			sprite:IsPlaying("Opened")
+			and player:IsExtraAnimationFinished()
+			and (data.MechEyeCurReferenceActive or 0) ~= player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
+		) then
 		MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	end
 
