@@ -465,7 +465,7 @@ Mod:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY, WEB_HE
 ---@param params TearParams
 ---@param source Entity
 function WEB_HEART:WebClotFire(player, params, weaponType, scale, displacement, source)
-	local familiar = source:ToFamiliar()
+	local familiar = source and source:ToFamiliar()
 	if familiar
 		and familiar.Variant == FamiliarVariant.BLOOD_BABY
 		and familiar.SubType == WEB_HEART.CLOT_FAMILIAR

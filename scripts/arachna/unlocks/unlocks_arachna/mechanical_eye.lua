@@ -95,10 +95,7 @@ function MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	if not MECHANICAL_EYE:IsValidItem(Mod.ItemConfig:GetCollectible(primaryActive)) then
 		return
 	end
-	local curCharge = player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY)
-		+ player:GetBloodCharge()
-		+ player:GetSoulCharge()
-	local desiredCharge = math.min(curCharge, player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY))
+	local desiredCharge = player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY)
 	--Make a copy of the list and remove the currently held active
 	local chargeList = Mod:CopyTable(activeList[desiredCharge])
 	chargeList = Mod:FilterList(chargeList, function (val, key)
