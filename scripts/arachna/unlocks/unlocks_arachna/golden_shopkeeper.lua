@@ -10,6 +10,7 @@ GOLDEN_SHOPKEEPER.SPRITES_NUM = 16
 GOLDEN_SHOPKEEPER.MIN_BOMBS = 3
 GOLDEN_SHOPKEEPER.MAX_BOMBS = 5
 GOLDEN_SHOPKEEPER.REPLACEMENT_CHANCE = 0.2
+GOLDEN_SHOPKEEPER.GOLD_TRINKET_CHANCE = 0.05
 
 ---@param npc EntityNPC
 function GOLDEN_SHOPKEEPER:KeeperInit(npc)
@@ -71,7 +72,9 @@ function GOLDEN_SHOPKEEPER:ShopkeeperTakeDamage(ent, amount, flags, source, coun
 		else
 			local rng = npc:GetDropRNG()
 			npc:GetSprite():Play("Break")
-			if rng:RandomFloat() < 0.05 then
+			if Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
+				and rng:RandomFloat() < GOLDEN_SHOPKEEPER.GOLD_TRINKET_CHANCE
+			then
 				Mod.Spawn.Trinket(Mod.Game:GetItemPool():GetTrinket() + TrinketType.TRINKET_GOLDEN_FLAG, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng), npc, rng:Next())
 			else
 				local coinAmount = Mod:RandomNum(3, 5, rng)

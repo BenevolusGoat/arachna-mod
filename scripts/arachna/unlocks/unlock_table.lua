@@ -93,7 +93,7 @@ Mod:RegisterReplacementEntity({
 
 Mod:RegisterReplacementEntity({
 	OldType = { EntityType.ENTITY_SHOPKEEPER },
-	OldVariant = { 1, 2, 3, 4 }, --Normal/Hanging Keepers and their Special variants
+	OldVariant = { 0, 1, 3, 4 }, --Normal/Hanging Keepers and their Special variants
 	NewType = EntityType.ENTITY_SHOPKEEPER,
 	NewVariant = Mod.Entities.GOLDEN_SHOPKEEPER.ID,
 	ReplacementChance = Mod.Entities.GOLDEN_SHOPKEEPER.REPLACEMENT_CHANCE,
