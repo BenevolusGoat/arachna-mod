@@ -16,6 +16,9 @@
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Candy Floss" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
+	<Pool Name="shop">
+		<Item Name="Spider Donut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
 	<Pool Name="boss">
 		<Item Name="Gummy Spiders" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Spider Donut" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>

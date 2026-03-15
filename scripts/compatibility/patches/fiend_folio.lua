@@ -6,6 +6,9 @@ local function ffPatch()
 	Mod:AppendTable(FiendFolio.ReferenceItems.Actives, {
 		{ ID = Item.BEST_BUD_BALL.ID, 		Reference = "Pokemon" , Partial = false},
 	})
+	Mod:AppendTable(FiendFolio.ReferenceItems.Passives, {
+		{ ID = Item.SPIDER_DONUT.ID, 		Reference = "Undertale" , Partial = false},
+	})
 	FiendFolio:AddStackableItems({
 		Item.ARACHNIDS_GRIP.ID,
 		Item.LIL_ARACHNA.ID,

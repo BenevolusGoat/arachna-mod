@@ -24,3 +24,21 @@ function SPIDER_DONUT:OnCollectibleAdd(itemId, charge, firstTime, slot, varData,
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, SPIDER_DONUT.OnCollectibleAdd, SPIDER_DONUT.ID)
+
+---@param title string
+---@param subtitle string
+---@param sticky boolean
+---@param curse boolean
+function SPIDER_DONUT:UndertaleQuote(title, subtitle, sticky, curse)
+	if title == "Spider Donut"
+		and subtitle == "HP Up?"
+		and not sticky
+		and not curse
+		and Isaac.GetPlayer():GetCollectibleRNG(SPIDER_DONUT.ID):RandomFloat() < 0.1
+	then
+		Game():GetHUD():ShowItemText(title, "Don't worry, Spider didn't", false, true)
+		return false
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_ITEM_TEXT_DISPLAY, SPIDER_DONUT.UndertaleQuote)
