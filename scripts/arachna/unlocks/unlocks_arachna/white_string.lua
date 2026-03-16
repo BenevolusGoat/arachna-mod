@@ -13,7 +13,7 @@ function WHITE_STRING:WebHeartOnNewFloor(player, fromPlayerUpdate, postLevelInit
 		and Mod.Pickup.WEB_HEART:CanPickup(player)
 		and postLevelInitFinished
 	then
-		Mod.Pickup.WEB_HEART:AddWebHearts(player, 1)
+		Mod.Pickup.WEB_HEART:AddWebHearts(player, player:GetTrinketMultiplier(WHITE_STRING.ID))
 	end
 end
 

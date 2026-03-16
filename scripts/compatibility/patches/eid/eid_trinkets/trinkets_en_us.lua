@@ -7,7 +7,7 @@ return function(modifiers)
 			Name = "Infested Penny",
 			Description = {
 				"{{AracBlueSpider}} Picking up a coin spawns a blue spider",
-				"#{{WebHeart}} Additional 5% chance to spawn a Web Heart",
+				"#{{WebHeart}} Additional 20% chance to spawn a Web Heart",
 				"#Higher chance from nickels and dimes"
 			},
 		},

@@ -7,7 +7,7 @@ return function(modifiers)
 			Name = "寄生硬币",
 			Description = {
 				"{{AracBlueSpider}} 拾取硬币后生成蓝蜘蛛",
-				"#{{WebHeart}} 同时有5%概率生成网心",
+				"#{{WebHeart}} 同时有20%概率生成网心",
 				"#面值更高的硬币概率也会更高"
 			},
 		},
