@@ -13,7 +13,8 @@ local function getWebHeartChance(coinWorth, trinketMult)
 	if coinWorth > 99 then
 		coinWorth = 1
 	end
-	return 1 - (0.95 * trinketMult ^ coinWorth)
+	local baseChance = 0.80 - (0.18 * (trinketMult - 1))
+	return 1 - (baseChance ^ coinWorth)
 end
 
 ---@param coin EntityPickup
