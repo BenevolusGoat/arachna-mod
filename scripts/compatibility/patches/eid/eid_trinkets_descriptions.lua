@@ -13,7 +13,7 @@ local descriptions = {
 }
 
 EID:addGoldenTrinketTable(Trinket.WHITE_STRING.ID, {t = {1}})
-EID:addGoldenTrinketTable(Trinket.INFESTED_PENNY.ID, {t = {20}, mult = {1.9, 2.8}})
+EID:addGoldenTrinketTable(Trinket.INFESTED_PENNY.ID, {t = {20}, mults = {1.9, 2.8}})
 
 local allDescData = {}
 for lang, desc in pairs(descriptions) do
