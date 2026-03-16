@@ -7,8 +7,8 @@ local function SpecialistDancePatch()
 	Mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
 		local costume = Isaac.GetCostumeIdByPath("gfx/characters/arachna_dance.anm2")
 		SpecialistModAPI:AddDanceCostume(Mod.PlayerType.ARACHNA, costume, true)
-		--[[ local costume_b = Isaac.GetCostumeIdByPath("gfx/characters/arachna_b_dance.anm2")
-		SpecialistModAPI:AddDanceCostume(Mod.PlayerType.ARACHNA_B, costume_b, true) ]]
+		local costume_b = Isaac.GetCostumeIdByPath("gfx/characters/arachna_b_dance.anm2")
+		SpecialistModAPI:AddDanceCostume(Mod.PlayerType.ARACHNA_B, costume_b, true)
 	end)
 end
 
