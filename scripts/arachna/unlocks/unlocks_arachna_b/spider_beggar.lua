@@ -56,6 +56,7 @@ SPIDER_BEGGAR.PAYOUT_EVENTS = {
 		Mod.Spawn.Collectible(itemId, pos, beggar, rng:Next())
 		beggar:GetSprite():Play("Teleport", true)
 		beggar:SetState(SlotState.PAYOUT)
+		Mod.Level():SetStateFlag(LevelStateFlag.STATE_BUM_LEFT, true)
 	end),
 }
 
