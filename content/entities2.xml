@@ -105,7 +105,7 @@
 	</entity>
 
 	<!-- Slots -->
-	<entity id="6" variant="2000" name="Spiderboi (beggar)" anm2path="spider_beggar.anm2"
+	<entity id="6" variant="2000" name="Spider Beggar" anm2path="spider_beggar.anm2"
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="15">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>

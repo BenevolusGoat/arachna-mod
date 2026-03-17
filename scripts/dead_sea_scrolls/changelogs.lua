@@ -162,24 +162,25 @@ Other:
 - Updated item pools
 - Web Heart Clots now have a 25% chance to shoot slowing tears
 - Using Yarn Heart with coin health characters (e.g. Keeper) spawns 2 blue spiders
+- Lil Arachna, Soul of Arachna, and Spindle inflict Webbed instead of Ensnared
 
 ## VISUAL CHANGES
 - All new achievement page sprites by damagaz
-- The "webbed" sprite from Divine Cloth has been moved to enemies webbed by Arachna's Spool. Divine Cloth's "Spider Bite" status has a new icon to compensate
-- Size of web on enemies now scale with the enemy's size
+- Divine Cloth's "Spider Bite" status (now renamed to Ensnared) has a new icon to differenciate it from the Webbed status from Arachna's Spool
+- Size and sprite of webbed enemies now scale with the enemy's size
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
 - Changed poison tears from Arachnid's Grip to be colored green
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
 - Changed the floor web from Arachna's Spool to render below grid entities, similarly to creep
-- Arachna and Tainted Arachna have the same laser color as Spider Bite
+- Arachna and Tainted Arachna have the same laser color as the Spider Bite item
 - Moved Geptameron's day of the week counter to the active item sprite with a new look
 
 ## EID CHANGES
-- Created all new English descriptions from scratch. Previous translations will need to be re-implemented! You can go to the GitHub repository and make a fork in order to submit a PR with your translations
+- Created all new English descriptions from scratch, which have been translated into Polish, Ukrainian, Russian, and Chinese. You can go to the GitHub repository and make a fork in order to submit a PR if you wish to contribute more languages.
 - Fixed White String's description incorrectly mentioning it increased Web Heart chances. Spindle now correctly mentions this effect
 - Added mod icon
 - Moved Merged Card's description into a unique "TAB description", where you can expand the list of effects separated by pages
-- Arachna and Tainted Arachna are recognized as soul heart-only characters, updating descriptions mentioning health ups or healing health
+- Arachna and Tainted Arachna are recognized as soul heart-only characters, updating descriptions mentioning health ups or healing red hearts
 
 ## MOD COMPATIBILITY
 - Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
@@ -189,8 +190,8 @@ Other:
 ## INTERNAL CHANGES
 Important changes for modders to be aware of for updating compatibility with Arachna
 - Arachna now requires REPENTOGON on Repentance+ to function. REPENTOGON on regular Repentance will not work
-- The entire mod's code was rewritten from the ground up. Everything on the mod is now properly attached to the "ARACHNAMOD" global
-- Save data is now handled through IsaacSaveManager. Previous save data on completion marks should be automatically transferred to REPENTOGON's own save data for completion marks and achievements
+- The entire mod's code was rewritten from the ground up. Nearly everything on the mod is now properly attached to the "ARACHNAMOD" global
+- Save data is now handled through the Isaac Save Manager library. Previous save data on completion marks should have automatically transferred to REPENTOGON's own save data for completion marks and achievements
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
 - Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility
 - Status effects now utilize StatusEffectLibrary for general improvements and cross-MOD compatibility
@@ -199,6 +200,7 @@ Important changes for modders to be aware of for updating compatibility with Ara
 - Best Bud Ball's effect variant is now a unique number instead of being a subtype of Friendly Ball
 - The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON, named "spiderBeggar"
 - Completion marks and achievements for Arachna MOD's content are now deleted when the save file is deleted
+- "Spiderboi (beggar)" renamed to "Spider Beggar"
 - "Testament" renamed to "The Testament"
 - "Sprindle" renamed to "Spindle"]])
 )

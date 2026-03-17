@@ -6,7 +6,7 @@ local SPIDER_BEGGAR = {}
 
 ARACHNAMOD.Slot.SPIDER_BEGGAR = SPIDER_BEGGAR
 
-SPIDER_BEGGAR.ID = Isaac.GetEntityVariantByName("Spiderboi (beggar)")
+SPIDER_BEGGAR.ID = Isaac.GetEntityVariantByName("Spider Beggar")
 SPIDER_BEGGAR.POOL = Isaac.GetPoolIdByName("spiderBeggar")
 
 SPIDER_BEGGAR.REPLACEMENT_CHANCE = 0.2
