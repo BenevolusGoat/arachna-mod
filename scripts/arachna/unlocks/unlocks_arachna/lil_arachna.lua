@@ -7,7 +7,8 @@ ARACHNAMOD.Item.LIL_ARACHNA = LIL_ARACHNA
 LIL_ARACHNA.ID = Isaac.GetItemIdByName("Lil Arachna")
 LIL_ARACHNA.FAMILIAR = Isaac.GetEntityVariantByName("Lil Arachna")
 
-LIL_ARACHNA.BITE_CHANCE = 0.25
+LIL_ARACHNA.WEB_CHANCE = 0.25
+LIL_ARACHNA.WEB_DURATION = 150
 
 ---@param tear EntityTear
 function LIL_ARACHNA:FireTear(tear)
@@ -15,7 +16,7 @@ function LIL_ARACHNA:FireTear(tear)
 	if not familiar then return end
 	local rng = familiar:GetDropRNG()
 	local roll = rng:RandomFloat()
-	local chance = LIL_ARACHNA.BITE_CHANCE
+	local chance = LIL_ARACHNA.WEB_CHANCE
 
 	if roll < chance then
 		Mod:GetData(tear).LilArachnaBite = true
@@ -47,7 +48,7 @@ function LIL_ARACHNA:ApplyBite(npc, pos, flags, source, damage)
 		local data = Mod:TryGetData(source)
 		local familiar = source.SpawnerEntity and source.SpawnerEntity:ToFamiliar()
 		if familiar and familiar.Player and data and data.LilArachnaBite then
-			Mod.Item.DIVINE_CLOTH:ApplyBitten(npc, source)
+			Mod.Item.ARACHNAS_SPOOL:ApplyWebbed(npc, source, LIL_ARACHNA.WEB_DURATION)
 		end
 	end
 end

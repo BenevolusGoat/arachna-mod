@@ -7,6 +7,8 @@ ARACHNAMOD.Card.SOUL_OF_ARACHNA = SOUL_OF_ARACHNA
 SOUL_OF_ARACHNA.ID = Isaac.GetCardIdByName("Soul of Arachna")
 SOUL_OF_ARACHNA.SFX = Isaac.GetSoundIdByName("Soul of Arachna")
 
+SOUL_OF_ARACHNA.WEBBED_DURATION = 300
+
 ---@param card Card
 ---@param player EntityPlayer
 ---@param useFlags UseFlag
@@ -14,7 +16,7 @@ function SOUL_OF_ARACHNA:OnUse(card, player, useFlags)
 	local source = EntityRef(player)
 
 	Mod.Foreach.NPC(function (npc, index)
-		Mod.Item.DIVINE_CLOTH:ApplyBitten(npc, source, 150)
+		Mod.Item.ARACHNAS_SPOOL:ApplyWebbed(npc, source, SOUL_OF_ARACHNA.WEBBED_DURATION)
 		Mod.Game:SpawnParticles(npc.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
 	end, nil, nil, nil, {UseEnemySearchParams = true})
 

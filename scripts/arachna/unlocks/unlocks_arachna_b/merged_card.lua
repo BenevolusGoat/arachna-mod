@@ -42,7 +42,6 @@ MERGED_CARD.CARD_EFFECTS = {
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 2, 0, false, 1)
 	end,
 	[Card.CARD_MAGICIAN] = function (player, rng)
-		local source = EntityRef(player)
 		Mod.Foreach.NPC(function (npc, index)
 			if not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS) then
 				npc:AddEntityFlags(EntityFlag.FLAG_SLOW)

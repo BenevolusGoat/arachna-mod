@@ -5,8 +5,9 @@ return function(modifiers)
 		[Mod.Card.SOUL_OF_ARACHNA.ID] = {
 			Name = "Soul of Arachna",
 			Description = {
-				"{{StatusSpiderBite}} Ensnares all enemies, inflicting slow and causing eggs to drop on death",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
+				"{{StatusWebbed}} Inflicts Webbed on all enemies for 10 seconds",
+				"{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
 			}
 		},
 		[Mod.Card.MERGED_CARD.ID] = {

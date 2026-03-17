@@ -14,6 +14,10 @@ local modifiers = {
 			if not EID.holdTabPlayer then
 				return noTabDesc
 			end
+			local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
+			if player:HasCollectible(CollectibleType.COLLECTIBLE_TAROT_CLOTH) then
+				noTabDesc = string.gsub(noTabDesc, "2", "{{ColorShinyPurple}}3{{CR}}")
+			end
 			local maxNum = #descriptions
 			if Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, EID.holdTabPlayer.ControllerIndex) then
 				currentList = currentList - 1

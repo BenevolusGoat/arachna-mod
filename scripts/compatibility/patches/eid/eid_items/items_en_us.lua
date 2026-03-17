@@ -66,8 +66,8 @@ return function(modifiers)
 			Name = "Arachna's Spool",
 			Description = {
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
-				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
+				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several blue spiders",
 				"#{{BossRoom}} Damaging webbed bosses charges a meter. When filled, spawns several friendly spiders"
 			},
 			BookOfBelial = {
@@ -77,10 +77,10 @@ return function(modifiers)
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "Divine Cloth",
 			Description = {
-				"{{StatusSpiderBite}} Ensnares enemies and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop small spider eggs on death",
+				"{{StatusSpiderBite}} Ensnares enemies and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a small Spider Egg on death",
 				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
-				"#{{BossRoom}} Damaging ensnared bosses charges a meter. When filled, spawns a spider egg"
+				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, which hatch {{ColorRainbow}}special{{CR}} spiders of the same color",
+				"#{{BossRoom}} Damaging ensnared bosses charges a meter. When filled, spawns a Spider Egg"
 			},
 			BookOfBelial = {
 				"Inflicts {{Burning}} Burn on nearby enemies"
@@ -89,7 +89,7 @@ return function(modifiers)
 		[Item.EGG_TOSS.ID] = {
 			Name = "Egg Toss",
 			Description = {
-				"{{Throwable}} Grab and throw spider eggs",
+				"{{Throwable}} Grab and throw Spider Eggs",
 				"#{{AracBlueSpider}} Hatches spiders as normal and triggers {{ColorRainbow}}special{{CR}} color-specific effects when the egg hits something",
 				"#↑ Hitting an enemy with an egg may spawn more and larger spiders",
 			}
@@ -168,7 +168,7 @@ return function(modifiers)
 			Description = {
 				"↑ {{Damage}} +1 Damage",
 				"#{{AracBlueSpider}} 20% chance to spawn 3-5 {{ColorRainbow}}special{{CR}} friendly spiders when entering a new room",
-				"#{{AracBlueSpider}} All spiders spawned outside of spider eggs have a chance to be {{ColorRainbow}}special{{CR}}"
+				"#{{AracBlueSpider}} All spiders spawned outside of Spider Eggs have a chance to be {{ColorRainbow}}special{{CR}}"
 			}
 		},
 		[Item.TESTAMENT.ID] = {
@@ -186,7 +186,9 @@ return function(modifiers)
 			Description = {
 				"{{Slow}} Shoots slowing and quad-split tears",
 				"#Deals 3.5 damage per tear",
-				"#{{AracBlueSpider}} 25% chance for tears to {{StatusSpiderBite}} ensnare enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death that burst into friendly spiders"
+				"#{{AracBlueSpider}} 25% chance for tears to inflict {{StatusWebbed}} Webbed on enemies",
+				"{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
 			},
 		},
 		[Item.DADS_NEWSPAPER.ID] = {
