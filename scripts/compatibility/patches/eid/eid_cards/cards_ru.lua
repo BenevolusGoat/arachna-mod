@@ -33,7 +33,7 @@ return function(modifiers)
 						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} Создаёт 2 любых предмета из следующих: {{Coin}} монета, {{Key}} ключ, {{Bomb}} бомба или {{Heart}} сердце"
 						.. "#{{Card" ..
 						Card.CARD_HERMIT .. "}} Использует {{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} Коробок Хранителя"
-						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Использует {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Переносной Автомат 3 раза",
+						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Использует {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Переносной Автомат 5 раза",
 
 						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} Эффект {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} Странного Гриба на комнату"
 						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} Разрушает все камни и заполняет все ямы в комнате"

@@ -33,7 +33,7 @@ return function(modifiers)
 						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} 生成下列掉落物中的两种: {{Coin}} 硬币, {{Key}} 钥匙, {{Bomb}} 炸弹或{{Heart}} 心"
 						.. "#{{Card" ..
 						Card.CARD_HERMIT .. "}} 使用{{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} 店主的盒子"
-						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} 使用三次{{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} 便携式老虎机",
+						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} 使用五次{{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} 便携式老虎机",
 
 						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} 在当前房间内获得: {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} 怪异蘑菇"
 						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} 摧毁房间内的所有石头, 填补所有沟壑"

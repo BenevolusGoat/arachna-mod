@@ -34,7 +34,7 @@ return function(modifiers)
 						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} Spawns any 2 of the following pickups: A {{Coin}} coin, {{Key}} key, {{Bomb}} bomb, or {{Heart}} heart"
 						.. "#{{Card" ..
 						Card.CARD_HERMIT .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} Keeper's Box"
-						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Portable Slot 3 times",
+						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Uses {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Portable Slot 5 times",
 
 						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} Receive for the room: {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} Odd Mushroom"
 						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} Destroys all rocks and fills all pits in the room"
