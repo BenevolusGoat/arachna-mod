@@ -14,17 +14,22 @@ return function(modifiers)
 		[Trinket.SPINDLE.ID] = {
 			Name = "Spindle",
 			Description = {
-				"{{StatusWebbed}} Touching enemies inflicts Webbed on them",
-				"{{StatusSpiderBite}} Enemies are {{slow}} slowed, receive less knockback, and drop a Spider Egg on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
-				"#{{WebHeart}} Increases spawn chance of Web Hearts by +10%"
+				"{{StatusWebbed}} Touching enemies inflicts Webbed on them for 5 seconds",
+				"#{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several blue spiders",
+				"#{{WebHeart}} Increases spawn chance of Web Hearts by +10%",
+				function(descObj)
+					return modifiers[Trinket.SPINDLE.ID]._modifier(descObj,
+						"#{{Collectible" .. CollectibleType.COLLECTIBLE_MIDAS_TOUCH .. "}} Spider Eggs are {{ColorGold}}golden{{CR}} and hatch into golden spiders"
+					)
+				end
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {
 			Name = "White String",
 			Description = {
 				"{{WebHeart}} Entering a new floor grants +1 Web Heart"
-			}
+			},
 		},
 	}
 end

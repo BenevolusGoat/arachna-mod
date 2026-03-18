@@ -3,7 +3,18 @@ local Trinket = Mod.Trinket
 local ARC_EID = Mod.EID_Support
 local DD = ARC_EID.DynamicDescriptions
 
-local modifiers = {}
+local modifiers = {
+	[Trinket.SPINDLE.ID] = {
+		---@param descObj EID_DescObj
+		---@param str string
+		_modifier = function(descObj, str)
+			local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
+			if player:HasCollectible(CollectibleType.COLLECTIBLE_MIDAS_TOUCH) then
+				return str
+			end
+		end
+	}
+}
 
 local descriptions = {
 	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_en_us")(modifiers),

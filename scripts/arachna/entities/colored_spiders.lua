@@ -336,19 +336,23 @@ Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, COLORED_SPIDERS.ShinySpiderUpda
 function COLORED_SPIDERS:RenderEggOnSpider(familiar, offset)
 	local data = Mod:TryGetData(familiar)
 	if data and data.EggCoveredSpider then
-		if not data.EggSprite then
-			data.EggSprite = Sprite("gfx/002.027_egg tear.anm2", true)
+		local sprite = data.EggSprite
+		if not sprite then
+			sprite = Sprite("gfx/002.027_egg tear.anm2", true)
+			local color = Mod.Entities.SPIDER_EGG:GetEggColor(familiar.SubType % 10)
+			sprite.Color = color or sprite.Color
 			local sizeNum = familiar.SubType >= COLORED_SPIDERS.SpiderSubtype.BIG_FLAG and "4" or "3"
-			data.EggSprite:Play("Stone" .. sizeNum .. "Move")
+			sprite:Play("Stone" .. sizeNum .. "Move")
+			data.EggSprite = sprite
 		end
-		data.EggSprite:Render(Mod:GetEntityRenderPosition(familiar, offset))
+		sprite:Render(Mod:GetEntityRenderPosition(familiar, offset))
 		if Mod:ShouldUpdateSprite() then
-			data.EggSprite:Update()
+			sprite:Update()
 		end
 		--The frame they land
 		if familiar.FrameCount >= 21 then
 			local poof = Mod.Spawn.Effect(EffectVariant.TEAR_POOF_A, 0, familiar.Position)
-			poof.Color = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
+			poof.Color = COLORED_SPIDERS:IsColoredSpider(familiar) and familiar.Color or Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
 			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
 			data.EggSprite = nil
 			data.EggCoveredSpider = nil

@@ -7,6 +7,7 @@ ARACHNAMOD.Trinket.SPINDLE = SPINDLE
 SPINDLE.ID = Isaac.GetTrinketIdByName("Spindle")
 
 SPINDLE.WEB_HEART_REPLACEMENT_CHANCE = 0.3
+SPINDLE.WEBBED_DURATION = 150
 
 ---@param ent Entity
 ---@param damage integer
@@ -19,7 +20,7 @@ function SPINDLE:OnTakeDamage(ent, damage, flags, source, countdown)
 	if sourceEnt and player and player:HasTrinket(SPINDLE.ID) then
 		local npc = sourceEnt:ToNPC()
 		if npc then --Status effect automatically does the rest of the checks for if the effect can be applied
-			Mod.Item.DIVINE_CLOTH:ApplyBitten(npc, EntityRef(ent:ToPlayer()))
+			Mod.Item.ARACHNAS_SPOOL:ApplyWebbed(npc, EntityRef(player), SPINDLE.WEBBED_DURATION)
 		end
 	end
 end

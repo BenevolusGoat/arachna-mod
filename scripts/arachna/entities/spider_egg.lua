@@ -147,6 +147,7 @@ end
 ---@param eggSubtype? ColoredSpiderSubtype @default: `0`. Spawns an egg that will only spawn the appropriate color of spiders. A SubType of `0` will have normal behaviour of spawning any spider color at random.
 function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 	local isLegacy = Mod:IsLegacyGameplayEnabled()
+	local spiderColor = eggSubtype and eggSubtype % 10 or 0
 	if SPIDER_EGG:ShouldNotSpawnEgg(npc) then
 		if not isLegacy then
 			local count = 1
@@ -154,7 +155,7 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 				count = 2
 			end
 			local dist = npc.Size + 40
-			SPIDER_EGG:SpawnSpiderBurst(player, pos, count, dist, nil, true)
+			SPIDER_EGG:SpawnSpiderBurst(player, pos, count, dist, nil, true, spiderColor)
 			Mod:DebugLog(Mod:TypeVarSubToString(npc), "spawning regular spider instead of egg")
 		end
 		return
@@ -166,7 +167,6 @@ function SPIDER_EGG:TrySpawnEgg(pos, npc, player, eggFlags, eggSubtype)
 		end
 		eggID = SPIDER_EGG.ID_SMALL
 	end
-	local spiderColor = eggSubtype and eggSubtype % 10 or 0
 	local egg = Mod.Spawn.Effect(eggID, spiderColor, pos, nil, player)
 	local data = Mod:GetData(egg)
 	data.EggFlags = eggFlags

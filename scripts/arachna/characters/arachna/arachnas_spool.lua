@@ -501,6 +501,9 @@ function ARACHNAS_SPOOL:OnNPCDeath(npc)
 		if Mod.Character.ARACHNA_B:IsArachnaB(player) and not Mod:IsLegacyGameplayEnabled() then
 			eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE)
 		end
+		if npc:HasEntityFlags(EntityFlag.FLAG_MIDAS_FREEZE) then
+			eggColor = Mod.Entities.COLORED_SPIDERS.SpiderSubtype.GOLDEN
+		end
 		---@cast eggFlags SpiderEggFlag
 		SPIDER_EGG:TrySpawnEgg(npc.Position, npc, player, eggFlags, eggColor)
 	end

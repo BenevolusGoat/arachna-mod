@@ -68,7 +68,7 @@ return function(modifiers)
 				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
 				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
 				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several blue spiders",
-				"#{{BossRoom}} Damaging webbed bosses charges a meter. When filled, spawns several friendly spiders"
+				"#{{BossRoom}} Damaging webbed bosses charges a meter. When filled, spawns several blue spiders"
 			},
 			BookOfBelial = {
 				"Spool projectile and spider web inflict {{Burning}} Burn on enemies"
@@ -78,7 +78,7 @@ return function(modifiers)
 			Name = "Divine Cloth",
 			Description = {
 				"{{StatusSpiderBite}} Ensnares enemies and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a small Spider Egg on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several blue spiders",
 				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, which hatch {{ColorRainbow}}special{{CR}} spiders of the same color",
 				"#{{BossRoom}} Damaging ensnared bosses charges a meter. When filled, spawns a Spider Egg"
 			},
@@ -187,8 +187,8 @@ return function(modifiers)
 				"{{Slow}} Shoots slowing and quad-split tears",
 				"#Deals 3.5 damage per tear",
 				"#{{AracBlueSpider}} 25% chance for tears to inflict {{StatusWebbed}} Webbed on enemies",
-				"{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
+				"#{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several blue spiders",
 			},
 		},
 		[Item.DADS_NEWSPAPER.ID] = {

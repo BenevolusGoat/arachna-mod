@@ -6,8 +6,8 @@ return function(modifiers)
 			Name = "Soul of Arachna",
 			Description = {
 				"{{StatusWebbed}} Inflicts Webbed on all enemies for 10 seconds",
-				"{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
+				"#{{StatusWebbed}} Enemies are {{Slow}} slowed, receive less knockback, and drop a Spider Egg on death",
+				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several blue spiders",
 			}
 		},
 		[Mod.Card.MERGED_CARD.ID] = {
