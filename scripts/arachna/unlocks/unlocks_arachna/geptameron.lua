@@ -162,9 +162,16 @@ function GEPTAMERON:OnUse(itemId, rng, player, useFlags, slot, customVarData)
 	end
 	Mod.sfxman:Play(SoundEffect.SOUND_SUPERHOLY)
 	local week = GEPTAMERON:GetDayOfTheWeek()
+	local week2
 	GEPTAMERON:ActivateEffect(player, week)
+	if LibraryExpanded and player:HasCollectible(LibraryExpanded.Item.TBOATB.ID) then
+		local days = {0, 1, 2, 3, 4, 5, 6}
+		table.remove(days, week + 1)
+		week2 = days[rng:RandomInt(#days) + 1]
+		GEPTAMERON:ActivateEffect(player, week2)
+	end
 	if not Mod:HasBitFlags(useFlags, UseFlag.USE_NOHUD) then
-		Mod.Game:GetHUD():ShowItemText(GEPTAMERON.WeekName[week])
+		Mod.Game:GetHUD():ShowItemText(GEPTAMERON.WeekName[week], week2 and "+ " .. GEPTAMERON.WeekName[week2] or nil)
 	end
 	return true
 end

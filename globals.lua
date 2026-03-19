@@ -68,6 +68,9 @@ MASTEMA = {}
 BirthcakeRebaked = {}
 Epiphany = {}
 UniqueMinisaacs = {}
+TMplus = {}
+WardrobePlus = {}
+OWRP = {}
 
 --#endregion
 

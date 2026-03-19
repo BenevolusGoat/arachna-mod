@@ -50,7 +50,10 @@ local patches = {
 	"future",
 	"no_costumes",
 	"specialist_fix",
-	"specialist_dance"
+	"specialist_dance",
+	"wardrobe_plus",
+	"time_machine_plus",
+	"library_expanded"
 }
 
 for _, fileName in ipairs(patches) do

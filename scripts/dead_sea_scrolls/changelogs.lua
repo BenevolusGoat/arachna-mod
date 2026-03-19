@@ -184,9 +184,11 @@ Other:
 - Arachna and Tainted Arachna are recognized as soul heart-only characters, updating descriptions mentioning health ups or healing red hearts
 
 ## MOD COMPATIBILITY
-- Fixed TR Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
-- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs, Specialist Dance
-- TR Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
+- Fixed Tarnished Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
+- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs, Specialist Dance, The Future
+- Updated compatibility for the following mods: Time Machine PLUS, Library Expanded
+- Tarnished Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
+- Added compatibility for Throwing Bag from Epiphany. Many of Arachna's items can be bagged for specific types of bags
 
 ## INTERNAL CHANGES
 Important changes for modders to be aware of for updating compatibility with Arachna

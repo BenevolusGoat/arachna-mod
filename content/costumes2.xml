@@ -4,6 +4,7 @@
 	<costume anm2path="arachna_pog.anm2" priority="900" type="none" />
 	<costume anm2path="arachna_pog_b.anm2" priority="900" type="none" />
 	<costume anm2path="arachna_ugh.anm2" priority="900" type="none" />
+	<costume anm2path="arachna_ugh_b.anm2" priority="900" type="none" />
 	<costume anm2path="arachna_dance.anm2" isFlying="true" priority="969" type="none"/>
 	<costume anm2path="arachna_b_dance.anm2" isFlying="true" priority="969" type="none"/>
 	
