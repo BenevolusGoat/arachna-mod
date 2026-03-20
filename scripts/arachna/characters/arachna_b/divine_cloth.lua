@@ -46,6 +46,10 @@ function DIVINE_CLOTH:SpawnSwirl(pos, spawner)
 	swirl:GetSprite():Load("gfx/effect_webpoof.anm2", true)
 	swirl:GetSprite():Play("Poof")
 	swirl.SpriteScale = swirl.SpriteScale * 0.8
+	if spawner and not Mod:IsLegacyGameplayEnabled() then
+		swirl.Parent = spawner
+		swirl:FollowParent(spawner)
+	end
 	local player = spawner and spawner:ToPlayer()
 	if player and Mod:IsJudasBirthrightActive(player) then
 		setJudasColor(swirl:GetSprite())

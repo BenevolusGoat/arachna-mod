@@ -96,12 +96,14 @@ New Content:
 - Added Reversed Merged Card (suggestion by cadetpirx!). It's unlocked alongside the normal Merged Card
 
 Arachna:
-* Birthright adjusted. Instead of +1 to spawned spiders, chance is increased for spider eggs spawning colored spiders
+* Decreased chance for colored spiders from 50% to 35%
+* Birthright adjusted. Instead of +1 to spawned spiders, +15% chance for spider eggs spawning colored spiders
 
 Tainted Arachna:
 * Removed inherent +1 guaranteed spider spawn from Spider Eggs
 * All spider eggs are smaller
 * Can no longer get random spider colors from spider spawns
+* Can no longer get big spiders from eggs spawned by regular enemies
 * Removed timer mechanic on spider eggs
 * Spider eggs can now spawn as a specific color. Upon breaking, all spiders spawned from it are of the same color
 * Divine Cloth has been moved to a double-tap action and now deals damage
@@ -126,11 +128,13 @@ Arachna's Spool/Divine Cloth:
 * Removed stage multiplier and Web Heart interaction on how many spiders spawned from spider eggs
 * Bosses are no longer immune to the slowing effect by the Webbed status, but aren't slowed as much as a regular slowing effect
 * Increased Divine Cloth's radius to match Tainted Arachna's old birthright radius
+* Divine Cloth's swirl follows Isaac, which helps with affecting enemies Isaac is moving towards
 * Dealing damage to bosses with Webbed or Spider Bite will charge a meter above their head. When the meter is filled, it resets and spawns friendly spiders or a spider egg, depending on which status they have. Friendly spiders do not contribute to the meter
 * Spider Eggs now explode on challenge/boss rush wave clears
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Webbed Bosses can now drop a Spider Egg on death. 50% of the spawned spiders will be big spiders
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
+* Rainbow Spiders take off 1/10th of a boss' health (1/8th as a big spider), down from 1/8th (1/4th as a big spider)
 
 Other:
 - Removed item blacklist for Arachna and Tainted Arachna. They can now find Glass Cannon, Yuck Heart, Magic Skin, Genesis, and Brittle Bones again

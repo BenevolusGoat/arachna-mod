@@ -322,21 +322,23 @@ local arachnaDssDirectory = {
 			"legacy gameplay returns arachna, tainted arachna, and some features of their pocket actives to before the v2.0 update. this setting exists for those who prefer the older gameplay, as many changes have been made for a more balanced gameplay experience. eid support and tutorial sprites will not be updated to reflect legacy gameplay. the list of the exact changes can be found below:",
 			BREAK_LINE,
 			{str = "arachna", fsize = 2},
+			"- 50% chance for spiders to be a random color, up from 35%",
 			"- arachna's birthright has +1 to spawned spiders instead of increased chance for spider eggs spawning colored spiders",
 			"- can get slowed by cobwebs on the ground",
 			BREAK_LINE,
 			{str = "tainted arachna", fsize = 2},
 			"- +1 guaranteed spider spawn from spider eggs",
-			"- spider eggs are regular sized, like arachna's",
-			"- can obtain random spider colors from spider eggs, but all eggs are the default color.",
+			"- 33% chance for random colored spiders from spider eggs",
+			"- can obtain random colored spiders from spider eggs",
 			"- spider eggs break after 16 seconds, yeilding no rewards",
-			"- removes the divine cloth double-tap action and sets it as your pocket active",
+			"- removes the divine cloth double-tap action and sets it as her pocket active",
 			"- 1.00 damage",
 			"- 0.75 speed",
 			"- can get slowed by cobwebs on the ground",
 			BREAK_LINE,
 			{str = "arachna's spool", fsize = 2},
 			{str = "and divine cloth", fsize = 2, nosel = true},
+			"- adjusts weights for what colored spiders are chosen",
 			"- decreases arachna's spool tear's collission radius by half",
 			"- arachna's spool's web no longer reduces knockback to enemies",
 			"- arachna's spool's web affects enemies that are above pits",
@@ -347,7 +349,10 @@ local arachnaDssDirectory = {
 			"- bosses are immune to the webbed and ensnared status effects",
 			"- decreases divine cloth's radius by -25%",
 			"- spider eggs no longer explode on challenge/boss rush wave clears",
-			"- adjusts logic for determining chances for spiders to spawn"
+			"- divine cloth's swirl that ensnares enemies no longer follows the player",
+			"- spider eggs are regular sized",
+			"- spider eggs cannot be special colors",
+			"- rainbow spiders take off more of a boss' health"
 		)
 	}
 }
