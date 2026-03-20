@@ -61,17 +61,17 @@ end
 function SPIDER_EGG:GetSpiderCountRange(player, eggFlags)
 	local minSpiders, maxSpiders = 2, 4
 
-	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
-		minSpiders = minSpiders * 2
-		maxSpiders = maxSpiders + 2
-	end
-
 	if eggFlags
 		and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.SMALL)
 		and not Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)
 	then
-		minSpiders = Mod.math.max(1, Mod.math.floor(minSpiders / 2))
-		maxSpiders = Mod.math.max(1, Mod.math.floor(maxSpiders / 2))
+		minSpiders = 1
+		maxSpiders = 2
+	end
+
+	if eggFlags and Mod:HasBitFlags(eggFlags, SPIDER_EGG.EggFlag.BOSS) then
+		minSpiders = minSpiders * 2
+		maxSpiders = maxSpiders + 2
 	end
 
 	return minSpiders, maxSpiders
