@@ -119,6 +119,15 @@ function EGG_TOSS:MarkNearestEgg(player)
 			end
 		end
 	end, Mod.Entities.SPIDER_EGG.ID_SMALL, nil, nil, true)
+	Mod.Foreach.EffectInRadius(player.Position, EGG_TOSS.GRAB_RANGE, function(egg, index)
+		if egg:GetSprite():IsPlaying("Idle") then
+			if not closestEgg
+				or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
+			then
+				closestEgg = egg
+			end
+		end
+	end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
 	local data = Mod:GetData(player)
 	if closestEgg then
 		if not data.ClosestEgg then
@@ -146,23 +155,25 @@ end
 ---@param player? EntityPlayer
 ---@param source EntityRef @Egg tear
 ---@param playerSource EntityRef
----@param damage number
-function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
+function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource)
 	local SpiderSubType = Mod.Entities.COLORED_SPIDERS.SpiderSubtype
-	Mod:DebugLog("Activated effect", spiderColor)
+	Mod:DebugLog("Activated egg effect", spiderColor)
+	local damage = source.Entity.CollisionDamage
 	if spiderColor == SpiderSubType.WRATH then
-		if ent then
-			ent:AddBurn(playerSource, 150, damage)
-		end
 		if player then
-			local candle = Mod.Spawn.Effect(EffectVariant.RED_CANDLE_FLAME, 0, source.Position, nil, player,
-				source.Entity:GetDropRNG():Next())
-			candle.CollisionDamage = 23
+			local tearParams = player:GetTearHitParams(WeaponType.WEAPON_BOMBS, 1, 1, source.Entity:ToTear())
+			local color = Mod.Entities.SPIDER_EGG:GetEggColor(source.Entity.SubType)
+			Mod.Game:BombExplosionEffects(source.Position, 60, tearParams.TearFlags, color, player, 0.5)
+		else
+			Isaac.Explode(source.Position, source.Entity, damage)
 		end
+		local candle = Mod.Spawn.Effect(EffectVariant.RED_CANDLE_FLAME, 0, source.Position, nil, player,
+			source.Entity:GetDropRNG():Next())
+		candle.CollisionDamage = 23
 	elseif spiderColor == SpiderSubType.PESTILENCE then
 		local cloud = Mod.Spawn.Effect(EffectVariant.SMOKE_CLOUD, 0, source.Position, nil, player)
 		cloud:SetTimeout(150)
-		cloud.CollisionDamage = source.Entity.CollisionDamage / 2
+		cloud.CollisionDamage = damage / 2
 		if ent then
 			ent:AddPoison(playerSource, 150, damage)
 		end
@@ -178,16 +189,11 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 		poof.Color = source.Entity.Color
 		poof.SpriteScale = Vector(0.8, 0.8)
 		Mod.sfxman:Play(SoundEffect.SOUND_DEATH_CARD)
+		local necroDamage = player and getNecroDamage(player) or 40
 		Mod.Foreach.NPCInRadius(source.Position, 80, function(npc, index)
-			npc:TakeDamage(getNecroDamage(player), 0, playerSource, 0)
+			npc:TakeDamage(necroDamage, 0, playerSource, 0)
 		end, nil, nil, {UseEnemySearchParams = true})
 	elseif spiderColor == SpiderSubType.RAINBOW then
-		if ent and ent:IsBoss() then
-			ent:AddWeakness(source, 150)
-		elseif ent and not ent:IsDead() then
-			Mod.Entities.COLORED_SPIDERS:SpawnRainbowFart(ent.Position, source.Entity:GetSprite().Color)
-			ent:Die()
-		end
 		Mod.Foreach.NPCInRadius(source.Position, EGG_TOSS.THROWN_EGG_RADIUS, function(npc, index)
 			if npc:IsBoss() then
 				npc:AddWeakness(source, 150)
@@ -197,6 +203,9 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 			end
 		end, nil, nil, {UseEnemySearchParams = true})
 	elseif spiderColor == SpiderSubType.GOLDEN then
+		if ent then
+			ent:AddMidasFreeze(playerSource, 150)
+		end
 		for _ = 1, 5 do
 			local rng = source.Entity:GetDropRNG()
 			local coin = Mod.Spawn.Coin(NullPickupSubType.ANY, source.Position, EntityPickup.GetRandomPickupVelocity(source.Position, rng),
@@ -245,30 +254,7 @@ function EGG_TOSS:OnEggDamage(ent, amount, flags, source, countdown)
 		local spawnerEnt = source.Entity.SpawnerEntity
 		local player = spawnerEnt and spawnerEnt:ToPlayer()
 		local playerSource = EntityRef(player)
-		local damage = player and player.Damage or 3.5
---[[ 		local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
-		if spiderColor == COLORED_SPIDERS.SpiderSubtype.RAINBOW then
-			local noRainbowSelect = Mod:Set({
-				COLORED_SPIDERS.SpiderSubtype.BIG_FLAG,
-				COLORED_SPIDERS.SpiderSubtype.RAINBOW,
-				COLORED_SPIDERS.SpiderSubtype.CONQUEST,
-				COLORED_SPIDERS.SpiderSubtype.NORMAL,
-			})
-			local randomColors = Mod:GetValues(COLORED_SPIDERS.SpiderSubtype)
-			for i = #randomColors, 1, -1 do
-				local color = randomColors[i]
-				if noRainbowSelect[color] then
-					table.remove(randomColors, i)
-				end
-			end
-			local rng = source.Entity:GetDropRNG()
-			local colorIndex = rng:RandomInt(#randomColors) + 1
-			spiderColor = randomColors[colorIndex]
-			table.remove(randomColors, colorIndex)
-			EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
-			spiderColor = randomColors[rng:RandomInt(#randomColors) + 1]
-		end ]]
-		EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource, damage)
+		EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSource)
 	end
 end
 

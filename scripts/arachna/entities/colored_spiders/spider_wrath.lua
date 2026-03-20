@@ -18,7 +18,8 @@ local function postEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdo
 	local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 	local damage = isBig and DAMAGE_BIG or DAMAGE
 	local radius = isBig and RADIUS_MULT_BIG or RADIUS_MULT
-	Mod.Game:BombExplosionEffects(ent.Position, damage, tearParams.TearFlags, tearParams.TearColor, player, radius)
+	local color = Mod.Entities.SPIDER_EGG:GetEggColor(spider.SubType)
+	Mod.Game:BombExplosionEffects(ent.Position, damage, tearParams.TearFlags, color, player, radius)
 end
 
 Mod:AddCallback(Mod.ModCallbacks.POST_ENEMY_TAKE_DMG_FROM_SPIDER, postEnemyTakeDmgFromSpider, COLORED_SPIDERS.SpiderSubtype.WRATH)

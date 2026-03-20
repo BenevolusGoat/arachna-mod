@@ -128,7 +128,7 @@ function SPIDER_EGG:SpawnSpiderBurst(player, pos, numSpiders, dist, eggFlags, ob
 		local spiderSubtype = COLORED_SPIDERS.SpiderSubtype.NORMAL
 		if forceColor then
 			spiderSubtype = forceColor
-			if bigChance > 0 and Isaac.GetPlayer():GetCollectibleRNG(Mod.Item.MUTAGEN.ID):RandomFloat() < bigChance then
+			if bigChance > 0 and player:GetCollectibleRNG(Mod.Item.MUTAGEN.ID):RandomFloat() < bigChance then
 				spiderSubtype = spiderSubtype + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG
 			end
 		elseif Mod.Character.ARACHNA:IsArachna(player) or player:HasCollectible(Mod.Item.MUTAGEN.ID) then
