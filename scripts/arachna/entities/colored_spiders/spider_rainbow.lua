@@ -31,7 +31,7 @@ local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdow
 	local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 	local div = isBig and BOSS_HEALTH_DIV_BIG or BOSS_HEALTH_DIV
 	if Mod:IsLegacyGameplayEnabled() then
-		div = isBig and BOSS_HEALTH_DIV_BIG_LEGACY and BOSS_HEALTH_DIV_LEGACY
+		div = isBig and BOSS_HEALTH_DIV_BIG_LEGACY or BOSS_HEALTH_DIV_LEGACY
 	end
 
 	if ent:IsBoss() then
