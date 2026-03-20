@@ -12,5 +12,4 @@ local function tmPlusPatch()
 	Mod:AddCallback("TM+_REQUEST_COMPATIBILITY_DATA", TMplusCompatibility)
 end
 
-
 loader:RegisterPatch("TMplus", tmPlusPatch, "Time Machine PLUS")
