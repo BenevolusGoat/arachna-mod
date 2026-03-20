@@ -236,6 +236,7 @@ local arachnaDssDirectory = {
 			{str = "shapatsmith", fsize = 2, tooltip = GenerateTooltip("voiceover for pocket items")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("playtesting, sprites for several costumes")},
 			{str = "steamjek", fsize = 2, tooltip = GenerateTooltip("commissioned for v1.0 mod thumbnail art")},
+			{str = "picsel", fsize = 2, tooltip = GenerateTooltip("commissioned for v2.0 mod thumbnail art")},
 			{str = "damagaz", fsize = 2, tooltip = GenerateTooltip("v2.0 achievement papers")},
 			{str = "ferpe", fsize = 2, tooltip = GenerateTooltip("commissioned for various sprites")},
 			{str = "zvetaji6", fsize = 2, tooltip = GenerateTooltip("arachna and t. arachna 3d models")},
