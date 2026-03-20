@@ -121,9 +121,9 @@
 		<Item Id="377" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!-- Sticky Bombs -->
 		<Item Id="367" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<!-- Parasatoid -->
+		<!-- Parasitoid -->
 		<Item Id="461" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<!-- Intruder -->
+		<!-- The Intruder -->
 		<Item Id="575" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Yarn Heart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Arachnid's Grip" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
