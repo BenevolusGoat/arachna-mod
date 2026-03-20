@@ -304,8 +304,8 @@ function MERGED_CARD_REVERSED:HandleReverseEmperor(rng)
 	local room = Mod.Room()
 	local level = Mod.Level()
 	repeat
-		local roomConfig = RoomConfigHolder.GetRandomRoom(rng:Next(), false, Isaac.GetCurrentStageConfigId(),
-			RoomType.ROOM_DEFAULT)
+		local roomType = Mod.Game:IsGreedMode() and RoomType.ROOM_CHALLENGE or RoomType.ROOM_DEFAULT
+		local roomConfig = RoomConfig.GetRandomRoom(rng:Next(), false, Isaac.GetCurrentStageConfigId(), roomType)
 		local spawns = roomConfig.Spawns
 		for i = 0, #spawns - 1 do
 			local roomConfigSpawn = spawns:Get(i)
