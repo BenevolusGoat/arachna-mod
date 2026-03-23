@@ -5,8 +5,9 @@ return function(modifiers)
 		[Mod.Card.SOUL_OF_ARACHNA.ID] = {
 			Name = "阿拉克娜的魂石",
 			Description = {
-				"{{StatusSpiderBite}} 网捕所有敌人, 施加减速并使其死亡后生成蜘蛛卵",
-				"#{{StatusSpiderBite}} 蜘蛛卵可以变为生成特殊蜘蛛的{{ColorRainbow}}特殊蛛卵{{CR}}",
+				"{{StatusWebbed}} 对所有敌人施加蛛网缠身, 持续10秒",
+				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成一个蜘蛛卵",
+				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个蓝蜘蛛"
 			}
 		},
 		[Mod.Card.MERGED_CARD.ID] = {
@@ -33,7 +34,7 @@ return function(modifiers)
 						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} 生成下列掉落物中的两种: {{Coin}} 硬币, {{Key}} 钥匙, {{Bomb}} 炸弹或{{Heart}} 心"
 						.. "#{{Card" ..
 						Card.CARD_HERMIT .. "}} 使用{{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} 店主的盒子"
-						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} 使用五次{{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} 便携式老虎机",
+						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} 使用5次{{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} 便携式老虎机",
 
 						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} 在当前房间内获得: {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} 怪异蘑菇"
 						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} 摧毁房间内的所有石头, 填补所有沟壑"

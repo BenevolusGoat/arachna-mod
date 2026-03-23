@@ -66,9 +66,9 @@ return function(modifiers)
 			Name = "阿拉克娜的线轴",
 			Description = {
 				"{{Throwable}} 投掷一个线轴弹, 留下大片蛛网",
-				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成蜘蛛卵",
-				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个友好蜘蛛",
-				"#{{BossRoom}} 伤害蛛网缠身的头目会积攒一个充能条, 蓄满后生成数个友好蜘蛛"
+				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成一个蜘蛛卵",
+				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个蓝蜘蛛",
+				"#{{BossRoom}} 伤害蛛网缠身的头目会积攒一个充能条, 蓄满后生成数个蓝蜘蛛"
 			},
 			BookOfBelial = {
 				"线轴弹和蛛网会对敌人施加{{Burning}}灼烧"
@@ -79,7 +79,7 @@ return function(modifiers)
 			Description = {
 				"{{StatusSpiderBite}} 网捕敌人, 并对附近的敌人造成50%角色伤害. 敌人将被{{Slow}}减速, 受到更少的击退, 死亡后生成蜘蛛卵",
 				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个友好蜘蛛",
-				"#{{StatusSpiderBite}} 蜘蛛卵可以变为生成特殊蜘蛛的{{ColorRainbow}}特殊蛛卵{{CR}}",
+				"#{{StatusSpiderBite}} 蜘蛛卵可以变为{{ColorRainbow}}特殊蛛卵{{CR}}, 并孵化对应颜色的特殊蜘蛛",
 				"#{{BossRoom}} 伤害被网捕的头目会积攒一个充能条, 蓄满后生成蜘蛛卵"
 			},
 			BookOfBelial = {
@@ -186,7 +186,9 @@ return function(modifiers)
 			Description = {
 				"{{Slow}} 发射减速四重泪弹",
 				"#每发泪弹伤害为3.5",
-				"#{{AracBlueSpider}} 其泪弹有25%概率{{StatusSpiderBite}}网捕敌人, 使其{{Slow}}减速, 受到更少的击退, 死亡后掉落会生成友好蜘蛛的特殊蜘蛛卵"
+				"#{{AracBlueSpider}} 其泪弹有概率对敌人施加蛛网缠身",
+				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成一个蜘蛛卵",
+				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个蓝蜘蛛"
 			},
 		},
 		[Item.DADS_NEWSPAPER.ID] = {
