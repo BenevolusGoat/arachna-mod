@@ -187,9 +187,7 @@ function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, distOrTarget)
 		targetPos = Isaac.GetFreeNearPosition(pos + Vector(dist, 0):Rotated(Mod:RandomNum(360)), 0)
 	end
 	---@cast targetPos Vector
-	Mod:GetData(player).IgnoreMutagen = true
 	local spider = player:ThrowBlueSpider(pos, targetPos):ToFamiliar()
-	Mod:GetData(player).IgnoreMutagen = false
 	---@cast spider EntityFamiliar
 	if subtype == 0 then return spider end
 	spider.SubType = subtype
@@ -297,10 +295,13 @@ function COLORED_SPIDERS:PostTakeDamageFromSpider(ent, amount, flags, source, co
 			local vecRad = Mod:RandomNum(75, 100)
 			local vecAngle = Mod:RandomNum(360)
 			local pos = familiar.Position
+
+			Mod:GetData(player).IgnoreMutagen = true
 			COLORED_SPIDERS:ThrowFriendlySpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
 				Isaac.GetFreeNearPosition(pos + Vector.FromAngle(vecAngle):Resized(vecRad), 50))
 			COLORED_SPIDERS:ThrowFriendlySpider(player, familiar.SubType - COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, pos,
 				Isaac.GetFreeNearPosition(pos + Vector.FromAngle(vecAngle - 180):Resized(vecRad), 50))
+			Mod:GetData(player).IgnoreMutagen = false
 			Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH, 0.8)
 		end
 	end

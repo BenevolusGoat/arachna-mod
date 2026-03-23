@@ -124,6 +124,8 @@ function SPIDER_EGG:SpawnSpiderBurst(player, pos, numSpiders, dist, eggFlags, ob
 	else
 		Mod:DebugLog("Spawned", numSpiders, "spiders with flags", table.concat(flagNames, ", "))
 	end
+
+	Mod:GetData(player).IgnoreMutagen = true
 	for _ = 1, numSpiders do
 		local spiderSubtype = COLORED_SPIDERS.SpiderSubtype.NORMAL
 		if forceColor then
@@ -137,6 +139,7 @@ function SPIDER_EGG:SpawnSpiderBurst(player, pos, numSpiders, dist, eggFlags, ob
 		local spider = COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, pos, dist)
 		Mod:GetData(spider).EggCoveredSpider = obscureInEgg
 	end
+	Mod:GetData(player).IgnoreMutagen = false
 end
 
 ---Enemies spawned by other enemies will have a 50/50 chance to not spawn a Spider Egg, and in such case this function will return nothing.
