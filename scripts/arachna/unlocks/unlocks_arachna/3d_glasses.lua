@@ -33,11 +33,11 @@ end
 ---@param npc EntityNPC
 ---@param vel Vector
 ---@param color Color
-function GLASSES_3D:SpawnEnemyCopy(npc, vel, color)
-	local copy = Mod.Game:Spawn(npc.Type, npc.Variant, npc.Position, vel, npc, npc.SubType, npc.InitSeed):ToNPC()
+function GLASSES_3D:SpawnEnemyCopy(npc, vel, spawner, color)
+	local copy = Mod.Game:Spawn(npc.Type, npc.Variant, npc.Position, vel, spawner, npc.SubType, Mod:Random()):ToNPC()
 	---@cast copy EntityNPC
 	if npc:GetChampionColorIdx() ~= -1 then
-		copy:MakeChampion(npc.InitSeed, npc:GetChampionColorIdx(), true)
+		copy:MakeChampion(copy.InitSeed, npc:GetChampionColorIdx(), true)
 	end
 	---@cast copy EntityNPC
 	copy:GetSprite().Color = color
@@ -52,9 +52,11 @@ end
 
 function GLASSES_3D.MODIFIER:PostNpcHit(hitter, npc)
 	if not npc:IsBoss() then
+		local player = Mod:TryGetPlayer(hitter, {WeaponOwner = true})
+		---@cast player EntityPlayer
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 2, false, 3)
-		GLASSES_3D:SpawnEnemyCopy(npc, Vector(-15, 0), Color(0.5, 0.3, 0.3, 0.8, 0.3, 0, 0))
-		GLASSES_3D:SpawnEnemyCopy(npc, Vector(15, 0), Color(0.3, 0.3, 0.5, 0.8, 0, 0, 0.3))
+		GLASSES_3D:SpawnEnemyCopy(npc, Vector(-15, 0), player, Color(0.5, 0.3, 0.3, 0.8, 0.3, 0, 0))
+		GLASSES_3D:SpawnEnemyCopy(npc, Vector(15, 0), player, Color(0.3, 0.3, 0.5, 0.8, 0, 0, 0.3))
 		npc:Remove()
 	end
 end
