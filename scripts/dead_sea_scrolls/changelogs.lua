@@ -153,7 +153,7 @@ Other:
 - The Yarn no longer inherits the player's tear effects
 - The Yarn is now categorized as a defensive familiar, being closer to the player in the follower line
 - The Yarn and Geptameron's per-room effects now trigger for challenge and boss rush waves
-- Spider Beggar no longer drops pickups upon death, instead spawning 2 spiders similar to Devil Beggar
+- Spider Beggar no longer drops pickups upon death, instead spawning 2 blue spiders
 - Spider Beggar now follows the same rules and chances to reward the player as a regular beggar
 - Added the curse mist effect to The Testament's special room
 - The Testament can now be found and used in Greed Mode

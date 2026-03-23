@@ -184,8 +184,7 @@ function SPIDER_BEGGAR:BeggarDrops(beggar)
 		beggar:Remove()
 	end
 	for _ = 1, 2 do
-		local targetPos = Isaac.GetFreeNearPosition(beggar.Position, 120)
-		EntityNPC.ThrowSpider(beggar.Position, beggar, targetPos, false, -10)
+		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(Isaac.GetPlayer(), 0, beggar.Position)
 	end
 	return false
 end
