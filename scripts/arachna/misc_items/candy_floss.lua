@@ -70,10 +70,17 @@ Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, CANDY_FLOSS.ApplyTearH
 ---@param firstTime boolean
 function CANDY_FLOSS:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
 	local webHeartCount = 0
-	local redHearts = player:GetHearts()
-	if redHearts > 1 then
-		webHeartCount = Mod.math.ceil((redHearts - 1) / 2)
-		player:AddHearts(-1 * (redHearts - 1))
+	local redHearts = player:GetHearts() - Mod.math.floor(player:GetRottenHearts() / 2)
+	local healthType = player:GetHealthType()
+	if healthType == HealthType.COIN then
+		redHearts = (redHearts / 2)
+	elseif healthType == HealthType.RED and player:GetSoulHearts() == 0 and player:GetBoneHearts() == 0 then
+		--Leave half red heart if no soul/bone hearts
+		redHearts = redHearts - 1
+	end
+	if redHearts > 0 then
+		webHeartCount = Mod.math.ceil((redHearts) / 2)
+		player:AddHearts(-redHearts)
 	end
 	webHeartCount = Mod.math.max(webHeartCount, CANDY_FLOSS.MIN_WEB_HEARTS)
 	local room = Mod.Room()
