@@ -201,6 +201,7 @@ function TearModifier:GetResetColor(object)
 	end
 end
 
+---@param ent Entity
 function TearModifier:IsValidEnemyTarget(ent)
 	return ent
 		and ent:ToNPC()
@@ -209,7 +210,6 @@ function TearModifier:IsValidEnemyTarget(ent)
 		and not ent:IsDead()
 		and not ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
 		and ent.EntityCollisionClass ~= EntityCollisionClass.ENTCOLL_NONE
-		and (ent:ToNPC().CanShutDoors or ent.Type == EntityType.ENTITY_DUMMY)
 end
 
 local bloodTearTable = {
