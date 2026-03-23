@@ -415,16 +415,18 @@ function TESTAMENT:PrePedestalCollision(pedestal, collider)
 		and player.ItemHoldCooldown == 0
 		and not pedestal.Touched
 	then
-		Mod:DebugLog("Testament: Collected pedestal. Removing other pedestals and doors")
+		local item = pedestal.SubType
+		Mod:DebugLog("Testament: Collected pedestal item ID", item .. ".", "Removing other pedestals and doors")
 		if not Mod.Game:AchievementUnlocksDisallowed() then
 			local game_save = Mod.SaveManager.GetPersistentSave()
 			---@cast game_save table
 			game_save.TestamentItems = game_save.TestamentItems or {}
-			Mod.Insert(game_save.TestamentItems, pedestal.SubType)
+			Mod.Insert(game_save.TestamentItems, item)
 		end
-		local itemConfigItem = Mod.ItemConfig:GetCollectible(pedestal.SubType)
+		local itemConfigItem = Mod.ItemConfig:GetCollectible(item)
 		local effects = Mod.Room():GetEffects()
-		player:AnimateCollectible(pedestal.SubType)
+		player:AnimateCollectible(item)
+		player:RemoveCollectible(item)
 		Mod.Game:GetHUD():ShowItemText(player, itemConfigItem)
 		pedestal:TryRemoveCollectible()
 		pedestal:TriggerTheresOptionsPickup()

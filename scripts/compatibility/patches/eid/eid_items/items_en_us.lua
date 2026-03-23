@@ -176,8 +176,8 @@ return function(modifiers)
 			Description = {
 				"Transports Isaac to a floor that contains all of his current items",
 				"#Choosing an item from this floor transports Isaac back to the room he came from",
-				"#The chosen item will appear at the start of the next run",
-				"#Having no items will spawn {{Collectible" ..
+				"#The chosen item is removed from Isaac, but will appear at the start of the next run",
+				"#Having no items spawns {{Collectible" ..
 				CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} Eden's Blessing instead"
 			}
 		},
