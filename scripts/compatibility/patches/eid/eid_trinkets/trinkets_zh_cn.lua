@@ -14,9 +14,15 @@ return function(modifiers)
 		[Trinket.SPINDLE.ID] = {
 			Name = "纺锤",
 			Description = {
-				"{{StatusSpiderBite}} 网捕接触的敌人, 使其死亡后生成蜘蛛卵",
-				"#蜘蛛卵会在清理房间后生成{{ColorRainbow}}特殊{{CR}}友好蜘蛛",
-				"#{{WebHeart}} 网心的生成概率+10%"
+				"{{StatusWebbed}} 对接触的敌人施加蛛网缠身5秒",
+				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成一个蜘蛛卵",
+				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个蓝蜘蛛"
+				"#{{WebHeart}} 网心的生成概率+10%",
+				function(descObj)
+					return modifiers[Trinket.SPINDLE.ID]._modifier(descObj,
+						"#{{Collectible" .. CollectibleType.COLLECTIBLE_MIDAS_TOUCH .. "}}蜘蛛卵也会{{ColorGold}}变为金色{{CR}}并孵化金蜘蛛"
+					)
+				end
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {
