@@ -47,6 +47,7 @@ function MECHANICAL_EYE:IsValidItem(itemConfig)
 		and itemConfig.Type == ItemType.ITEM_ACTIVE
 		and itemConfig.ChargeType == ItemConfig.CHARGE_NORMAL
 		and itemConfig.MaxCharges > 0
+		and itemConfig.MaxCharges <= 12
 end
 
 function MECHANICAL_EYE:GenerateActiveChargeList()
@@ -55,14 +56,24 @@ function MECHANICAL_EYE:GenerateActiveChargeList()
 		local itemConfig = Mod.ItemConfig:GetCollectible(itemId)
 		if MECHANICAL_EYE:IsValidItem(itemConfig)
 			and not itemConfig:HasCustomTag(MECHANICAL_EYE.ITEM_TAG)
-			and not itemConfig.Hidden
 			and not itemConfig:HasTags(ItemConfig.TAG_QUEST)
+			and itemConfig:IsAvailable()
 		then
 			local maxCharges = itemConfig.MaxCharges
 			activeList[maxCharges] = (activeList[maxCharges] or {})
 			Mod.Insert(activeList[maxCharges], itemId)
 		end
 	end
+end
+
+---@param player EntityPlayer
+local function getChargeReference(player)
+	local curCharge = player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY)
+		+ player:GetBloodCharge()
+		+ player:GetSoulCharge()
+	local minCharge = player:GetActiveMinUsableCharge(ActiveSlot.SLOT_PRIMARY)
+	local maxCharge = player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY)
+	return Mod:Clamp(curCharge, minCharge, maxCharge)
 end
 
 ---@param player EntityPlayer
@@ -95,20 +106,30 @@ function MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	if not MECHANICAL_EYE:IsValidItem(Mod.ItemConfig:GetCollectible(primaryActive)) then
 		return
 	end
-	local desiredCharge = player:GetActiveMaxCharge(ActiveSlot.SLOT_PRIMARY)
 	--Make a copy of the list and remove the currently held active
-	local chargeList = Mod:CopyTable(activeList[desiredCharge])
-	chargeList = Mod:FilterList(chargeList, function (val, key)
-		local itemConfig = Mod.ItemConfig:GetCollectible(val)
-		--Does not allow the same item or achievement-locked or hidden items
-		return val ~= primaryActive and itemConfig:IsAvailable()
-	end)
+	local itemPool = Mod.Game:GetItemPool()
+	local chargeRef = getChargeReference(player)
+	local chargeList
+	repeat
+		Mod:DebugLog("Desired Mechanical Eye charge:", chargeRef)
+		chargeList = Mod:FilterList(activeList[chargeRef] or {}, function (val, key)
+			--Does not allow the same item or items removed from the pool
+			return val ~= primaryActive and itemPool:HasCollectible(val)
+		end)
+		Mod:DebugLog(#chargeList, "items available in list")
+		--If no charges available at the current charge, find charges below it
+		if #chargeList == 0 then
+			chargeRef = chargeRef - 1
+		end
+	until chargeRef == 0 or #chargeList > 0
+	local data = Mod:GetData(familiar)
 	local rng = player:GetCollectibleRNG(MECHANICAL_EYE.ID)
-	local itemId = chargeList[rng:RandomInt(#chargeList) + 1] or CollectibleType.COLLECTIBLE_POOP
+	local item = #chargeList > 0 and chargeList[rng:RandomInt(#chargeList) + 1] or CollectibleType.COLLECTIBLE_POOP
 	local familiar_run_save = Mod.SaveManager.GetRunSave(familiar)
-	familiar_run_save.MechanicalActive = itemId
-	local itemConfig = Mod.ItemConfig:GetCollectible(itemId)
-	Mod:GetData(familiar).MechEyeCurReferenceActive = primaryActive
+	familiar_run_save.MechanicalActive = item
+	local itemConfig = Mod.ItemConfig:GetCollectible(item)
+	data.MechEyeCurReferenceActive = primaryActive
+	data.MechEyeCurReferenceCharge = getChargeReference(player)
 	MECHANICAL_EYE:UpdateActiveGraphic(familiar, itemConfig.GfxFileName)
 end
 
@@ -126,7 +147,9 @@ function MECHANICAL_EYE:OnFamiliarInit(familiar)
 	local sprite = familiar:GetSprite()
 	if familiar_run_save.MechanicalActive then
 		local data = Mod:GetData(familiar)
-		data.MechEyeCurReferenceActive = familiar.Player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
+		local player = familiar.Player
+		data.MechEyeCurReferenceActive = player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
+		data.MechEyeCurReferenceCharge = getChargeReference(player)
 		sprite:Play("Opened")
 	else
 		sprite:Play("Closed")
@@ -152,12 +175,14 @@ function MECHANICAL_EYE:OnFamiliarUpdate(familiar)
 		Mod.sfxman:Play(SoundEffect.SOUND_MIRROR_EXIT, 0.6, 2, false, 1.8)
 	end
 
-	if sprite:IsFinished("Opening") or
-		(
+	if sprite:IsFinished("Opening")
+		 or (
 			sprite:IsPlaying("Opened")
 			and player:IsExtraAnimationFinished()
-			and (data.MechEyeCurReferenceActive or 0) ~= player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
-		) then
+			and ((data.MechEyeCurReferenceActive or 0) ~= player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
+			or (data.MechEyeCurReferenceCharge or 0) ~= getChargeReference(player))
+		)
+	then
 		MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	end
 

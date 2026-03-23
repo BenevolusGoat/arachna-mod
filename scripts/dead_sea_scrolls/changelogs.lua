@@ -141,15 +141,14 @@ Other:
 - Poison tears from Arachnid's Grip now work on all weapon types
 - Tainted Arachna's completion mark unlocks no longer require being on Hard Mode
 - Breaking Web Hearts on other characters no longer enact penalties, such as devil deal chance
-- Redesigned Best Bud Ball. 8 charges, only has a chance to capture bosses that scales with its HP and luck, isn't removed when capturing a boss, only one Best Bud Ball capture at a time. Can no longer capture major story bosses
-- Redesigned Geptameron. Still retains its shifting 7 day effects, but all days have been given new effects or had their effects tweaked. No longer grants flight or stats
+- Reworked Best Bud Ball. 8 charges, only has a chance to capture bosses that scales with its HP and luck, isn't removed when capturing a boss, only one Best Bud Ball capture at a time. Can no longer capture major story bosses
+- Reworked Geptameron. Still retains its shifting 7 day effects, but all days have been given new effects or had their effects tweaked. No longer grants flight or stats
 - Arachna and Tainted Arachna's base stats and item stats now respect damage and firerate multipliers
 - 3D Glasses now works for all weapon types
 - 3D Glasses now copies the champion color of the enemy for its 3D copies
 - Infested Penny's chance to spawn a Web Heart now scales with both the value of the coin and trinket multipliers
 - Reduced collision size of Mechanical Eye, The Yarn, and Arachnid Grip's Spider Egg orbitals
-- Mechanical Eye now respects unlocks for what active items can be used
-- Mechanical Eye can now be used with throwable actives, such as Bob's Rotten Head and Black Hole, and activates when the actives are discharged
+- Changed what actives Mechanical Eye can display and what actives it can copy a charge off of. This is vague for the sake of not making a long list, but aims to be more versatile
 - Added D4 and D100 to Mechanical Eye's blacklist
 - The Yarn no longer inherits the player's tear effects
 - The Yarn is now categorized as a defensive familiar, being closer to the player in the follower line
