@@ -39,6 +39,7 @@ local inTheRoom = false
 local testamentRoomIndex = 0
 local lastDir = Direction.NO_DIRECTION
 local doNotTeleport = false
+local musicman = MusicManager()
 
 --#endregion
 
@@ -135,6 +136,8 @@ function TESTAMENT:TeleportToTestamentRoom()
 	Mod.Game:ShowHallucination(5, 0)
 	Mod.sfxman:Play(SoundEffect.SOUND_STATIC, 0.8)
 	Isaac.ExecuteCommand("goto s.shop.20000")
+	musicman:Play(Music.MUSIC_DARK_CLOSET, 1)
+	musicman:UpdateVolume()
 end
 
 --#endregion
@@ -146,6 +149,7 @@ end
 ---@param useFlags UseFlag
 function TESTAMENT:PreUseItem(itemId, rng, player, useFlags, slot)
 	if Mod.Level():GetDimension() ~= Dimension.NORMAL then
+		player:AnimateCollectible(TESTAMENT.ID, "UseItem")
 		return true
 	end
 end
@@ -329,6 +333,12 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, TESTAMENT.ResetRoomStatus)
 
+function TESTAMENT:PreGameExit()
+	inTheRoom = false
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, TESTAMENT.PreGameExit)
+
 --#endregion
 
 --#region Exiting Dimension
@@ -467,5 +477,20 @@ function TESTAMENT:OnGameStart(isContinued)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, TESTAMENT.OnGameStart)
+
+--#endregion
+
+--#region
+
+---@param music MusicManager
+---@param volumeOrFade number
+---@param isFade boolean
+function TESTAMENT:UpdateMusic(music, volumeOrFade, isFade)
+	if TESTAMENT:IsInTestamentRoom() then
+		return Music.MUSIC_DARK_CLOSET
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_MUSIC_PLAY, TESTAMENT.UpdateMusic)
 
 --#endregion
