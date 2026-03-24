@@ -145,7 +145,7 @@ function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
 			Mod.Spawn.Poof01(3, npc.Position)
 		end
 	end, nil, nil, nil, {Inverse = true})
-	local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, player, cfg.Subtype, Random())
+	local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, player, cfg.Subtype, Mod:Random())
 	npc.MaxHitPoints = cfg.MaxHitPoints
 	npc.HitPoints = cfg.InitialCapture and cfg.MaxHitPoints or cfg.HitPoints
 	npc:AddCharmed(EntityRef(player), -1)
