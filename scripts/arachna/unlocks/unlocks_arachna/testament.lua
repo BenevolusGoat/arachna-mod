@@ -44,6 +44,15 @@ local doNotTeleport = false
 
 --#region Helpers
 
+---@param historyItem HistoryItem
+function TESTAMENT:IsValidTestamentItem(historyItem)
+	local item = historyItem:GetItemID()
+	return not historyItem:IsTrinket()
+		and historyItem:GetTime() > 0
+		and item ~= TESTAMENT.ID
+		and not Mod.ItemConfig:GetCollectible(historyItem:GetItemID()):HasTags(ItemConfig.TAG_QUEST)
+end
+
 ---@param player EntityPlayer
 function TESTAMENT:CanUseItem(player)
 	if Mod.Game:AchievementUnlocksDisallowed() then
@@ -59,7 +68,7 @@ function TESTAMENT:CanUseItem(player)
 	end
 	blacklist[TESTAMENT.ID] = true
 	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
-		if not historyItem:IsTrinket() and not blacklist[historyItem:GetItemID()] then
+		if TESTAMENT:IsValidTestamentItem(historyItem) and not blacklist[historyItem:GetItemID()] then
 			return true
 		end
 	end
@@ -83,7 +92,7 @@ end
 function TESTAMENT:CopyPlayerInventory(player)
 	local item_list = {}
 	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
-		if not historyItem:IsTrinket() and historyItem:GetItemID() ~= TESTAMENT.ID then
+		if TESTAMENT:IsValidTestamentItem(historyItem) then
 			Mod.Insert(item_list, historyItem:GetItemID())
 		end
 	end
@@ -136,22 +145,12 @@ end
 ---@param itemId CollectibleType
 ---@param useFlags UseFlag
 function TESTAMENT:PreUseItem(itemId, rng, player, useFlags, slot)
-	--[[ local canUse = TESTAMENT:CanUseItem(player)
-	if not canUse then
-		if not Mod:HasBitFlags(useFlags, UseFlag.USE_NOANIM) then
-			player:AnimateCollectible(itemId, "UseItem", "PlayerPickup")
-		end
-		Mod.sfxman:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ)
-		--Shouldn't be using this item as it serves no purpose otherwise
-		if Mod.Game:AchievementUnlocksDisallowed() and slot ~= -1 and player:GetActiveItem(slot) == itemId then
-			player:RemoveCollectible(itemId, false, slot, true)
-			Mod.Spawn.Poof01(0, player.Position)
-		end
+	if Mod.Level():GetDimension() ~= Dimension.NORMAL then
 		return true
-	end ]]
+	end
 end
 
---Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, TESTAMENT.PreUseItem)
+Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, TESTAMENT.PreUseItem, TESTAMENT.ID)
 
 ---@param itemId CollectibleType
 ---@param rng RNG

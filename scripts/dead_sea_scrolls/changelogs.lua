@@ -155,12 +155,13 @@ Other:
 - The Yarn and Geptameron's per-room effects now trigger for challenge and boss rush waves
 - Spider Beggar no longer drops pickups upon death, instead spawning 2 blue spiders
 - Spider Beggar now follows the same rules and chances to reward the player as a regular beggar
-- Added the curse mist effect to The Testament's special room
+- Added the curse mist effect to The Testament's special floor
 - The Testament can now be found and used in Greed Mode
 - The Testament can no longer be used in runs that do not allow achievements, instead spawning Eden's Blessing
 - The Testament pedestals for the next run no longer spawn in runs that do not allow achievements
 - Added support for multiple uses of The Testament, which will spawn all subsequently chosen items in the next valid run. The same item cannot be chosen again and an empty pedestal will appear in its place. A maximum of 2 items are allowed on the next run before The Testament instead spawns Eden's Blessing
 - The chosen item for The Testament now removes that item from the player's inventory
+- The Testament can no longer bring starting items or quest items to its special floor
 - Merged Card's Wheel of Fortune effect now uses Portable Slot instead of its own custom logic
 - Mutagen's ability to turn blue spiders from select items into colored spiders now affects all non-spider egg blue spider spawns
 - Updated item pools
