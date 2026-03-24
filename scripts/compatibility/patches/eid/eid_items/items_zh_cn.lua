@@ -105,15 +105,6 @@ return function(modifiers)
 		[Item.ARACHNIDS_GRIP.ID] = {
 			Name = "阿拉克娜之握",
 			Description = {
-				ARC_EID.GetFallbackDescription,
-				function(descObj)
-					return modifiers[Item.ARACHNIDS_GRIP.ID]._modifier(descObj,
-						"#{{Collectible" ..
-						Item.MUTAGEN.ID .. "}} 蜘蛛可能会变为{{ColorRainbow}}特殊蜘蛛{{CR}}且可能有更大的体型"
-					)
-				end
-			},
-			FallbackDescription = {
 				"{{Poison}} 25%概率发射毒性泪弹",
 				"#敌人死亡后可能掉落蜘蛛卵, 拾取后获得一个脆弱的环绕物",
 				"#该环绕物会在抵挡敌弹或造成伤害后破裂, 生成一个{{AracBlueSpider}} 蓝蜘蛛",

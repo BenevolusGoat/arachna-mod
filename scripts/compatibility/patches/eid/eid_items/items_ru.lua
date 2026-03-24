@@ -105,15 +105,6 @@ return function(modifiers)
 		[Item.ARACHNIDS_GRIP.ID] = {
 			Name = "Паучья Хватка",
 			Description = {
-				ARC_EID.GetFallbackDescription,
-				function(descObj)
-					return modifiers[Item.ARACHNIDS_GRIP.ID]._modifier(descObj,
-						"#{{Collectible" ..
-						Item.MUTAGEN.ID .. "}} Пауки могут быть {{ColorRainbow}}особыми{{CR}} и/или большими"
-					)
-				end
-			},
-			FallbackDescription = {
 				"{{Poison}} 25% шанс выстрелить отравленной слезой",
 				"#Враги могут создать подбираемое паучье яйцо при смерти, которое даёт хрупкое орбитальное яйцо при подборе",
 				"#Яйцо может сломаться, блокируя снаряды или нанося урон, создавая {{AracBlueSpider}} синего паука",

@@ -47,9 +47,6 @@ function ARACHNIDS_GRIP:TryKillSpiderEgg(familiar)
 	if rng:RandomFloat() < ARACHNIDS_GRIP.ORBITAL_KILL_CHANCE then
 		local player = familiar.Player
 		local spiderSubtype = 0
-		if player:HasCollectible(Mod.Item.MUTAGEN.ID) then
-			spiderSubtype = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
-		end
 		Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(player, spiderSubtype, familiar.Position)
 		local swirl = Mod.Item.DIVINE_CLOTH:SpawnSwirl(familiar.Position, familiar)
 		swirl.PositionOffset = Vector(0, -25 * familiar.SpriteScale.Y)

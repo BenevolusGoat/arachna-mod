@@ -105,15 +105,6 @@ return function(modifiers)
 		[Item.ARACHNIDS_GRIP.ID] = {
 			Name = "Arachnid's Grip",
 			Description = {
-				ARC_EID.GetFallbackDescription,
-				function(descObj)
-					return modifiers[Item.ARACHNIDS_GRIP.ID]._modifier(descObj,
-						"#{{Collectible" ..
-						Item.MUTAGEN.ID .. "}} Spiders can be {{ColorRainbow}}special{{CR}} and/or larger"
-					)
-				end
-			},
-			FallbackDescription = {
 				"{{Poison}} 25% chance to shoot poison tears",
 				"#Enemies may drop a spider egg pickup on death that grant a fragile orbital on pickup",
 				"#Orbital may break when blocking projectiles or dealing damage, spawning a {{AracBlueSpider}} blue spider",
