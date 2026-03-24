@@ -46,13 +46,13 @@ GEPTAMERON.WeekName = {
 local weekCircle = Sprite("gfx/ui/hud_geptameron.anm2", true)
 weekCircle:SetFrame("Idle", 0)
 
-local coinIcon = Sprite("gfx/geptameron_ui.anm2", false)
+local coinIcon = Sprite("gfx/geptameron_markers.anm2", false)
 coinIcon:Play("Coin")
 local coinIdentifier = "ARACHNA_TEMPCOINS"
 GEPTAMERON.STATUS_COIN_CONFIG = StatusEffectLibrary.RegisterStatusEffect(coinIdentifier, coinIcon, nil, nil, true)
 GEPTAMERON.STATUS_COIN = StatusEffectLibrary.StatusFlag[coinIdentifier]
 
-local sackIcon = Sprite("gfx/geptameron_ui.anm2", false)
+local sackIcon = Sprite("gfx/geptameron_markers.anm2", false)
 sackIcon:Play("Sack")
 local sackIdentifier = "ARACHNA_SACKS"
 GEPTAMERON.STATUS_SACK_CONFIG = StatusEffectLibrary.RegisterStatusEffect(sackIdentifier, sackIcon, nil, nil, true)
@@ -66,7 +66,7 @@ WOP:AddOutcomeFloat(PickupVariant.PICKUP_TAROTCARD, 0.07)
 WOP:AddOutcomeFloat(PickupVariant.PICKUP_LIL_BATTERY, 0.06)
 GEPTAMERON.SACK_WOP = WOP
 
-local locustIcon = Sprite("gfx/geptameron_ui.anm2", false)
+local locustIcon = Sprite("gfx/geptameron_markers.anm2", false)
 locustIcon:Play("Locust")
 local locustIdentifier = "ARACHNA_LOCUSTS"
 GEPTAMERON.STATUS_LOCUST_CONFIG = StatusEffectLibrary.RegisterStatusEffect(locustIdentifier, locustIcon, nil, nil, true)
@@ -182,25 +182,16 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, GEPTAMERON.OnUse, GEPTAMERON.ID)
 
 --#region Update sprite
 
----@param player EntityPlayer
----@param slot ActiveSlot
 ---@param alpha number
 ---@param scale number
-function GEPTAMERON:RenderCurrentDay(player, slot, offset, alpha, scale, chargebarOffset)
-	local varData = player:GetActiveItemDesc(slot).VarData
-	weekCircle:SetFrame(varData)
+function GEPTAMERON:RenderCurrentDay(_, _, offset, alpha, scale)
+	weekCircle:SetFrame(GEPTAMERON:GetDayOfTheWeek())
 	weekCircle.Color.A = alpha
 	weekCircle.Scale = Vector(scale, scale)
 	weekCircle:Render(offset)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYERHUD_RENDER_ACTIVE_ITEM, GEPTAMERON.RenderCurrentDay, GEPTAMERON.ID)
-
-function GEPTAMERON:UpdateVarDataOnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
-	player:SetActiveVarData(GEPTAMERON:GetDayOfTheWeek(), slot)
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, GEPTAMERON.UpdateVarDataOnCollectibleAdd)
 
 --#endregion
 
@@ -213,13 +204,6 @@ function GEPTAMERON:OnRoomClear()
 	end
 	local run_save = Mod.SaveManager.GetRunSave()
 	run_save.GeptameronWeek = nextDay
-	if not PlayerManager.AnyoneHasCollectible(GEPTAMERON.ID) then return end
-	Mod.Foreach.Player(function (player, index)
-		local slots = Mod:GetActiveItemSlots(player, GEPTAMERON.ID)
-		for _, slot in ipairs(slots) do
-			player:SetActiveVarData(nextDay, slot)
-		end
-	end)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, CallbackPriority.LATE, GEPTAMERON.OnRoomClear)
@@ -245,7 +229,7 @@ function GEPTAMERON:TimeBasedEffectsOnUpdate()
 		local cooldown = effects:GetNullEffect(GEPTAMERON.TUESDAY_NULL_ITEM).Cooldown
 		if cooldown % GEPTAMERON.GAPER_FREQUENCY == 0 and cooldown > 0 then
 			local pos = Isaac.GetFreeNearPosition(room:GetRandomPosition(40), 0)
-			local gaper = Mod.Game:Spawn(EntityType.ENTITY_GAPER, 1, pos, Vector.Zero, Isaac.GetPlayer(), 0, Random())
+			local gaper = Mod.Game:Spawn(EntityType.ENTITY_GAPER, 1, pos, Vector.Zero, Isaac.GetPlayer(), 0, Mod:Random())
 			local sprite = gaper:GetSprite()
 			sprite:Load(EntityConfig.GetEntity(EntityType.ENTITY_MOTHER, 20, 0):GetAnm2Path(), true)
 			sprite:Play("Appear", true)
@@ -321,7 +305,6 @@ Mod:AddCallback(ModCallbacks.MC_NPC_UPDATE, GEPTAMERON.FixGaperHeads, EntityType
 function GEPTAMERON:CanAddStatus(npc)
 	return not npc:HasEntityFlags(EntityFlag.FLAG_ICE_FROZEN)
 		and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
-		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
 		and npc:IsActiveEnemy(false)
 		and npc:IsVulnerableEnemy()
 end
