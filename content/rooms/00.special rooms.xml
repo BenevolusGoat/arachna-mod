@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <rooms>
-	<room variant="20000" name="[arachnaMod] lastWill" type="2" subtype="0" shape="3" width="13" height="7" difficulty="5" weight="0.0">
+	<room variant="20000" name="[arachnaMod] lastWill" type="13" subtype="0" shape="3" width="13" height="7" difficulty="5" weight="0.0">
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
 		<spawn x="3" y="-1">

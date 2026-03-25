@@ -109,6 +109,9 @@
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="15">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
+	<entity id="6" variant="2001" name="Testament Pedestal" anm2path="005.100_collectible.anm2"
+		collisionMass="30" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="16">
+    </entity>
 
 	<!-- Effects -->
 	<entity id="1000" variant="2000" name="Spider Web" anm2path="web_floor.anm2"

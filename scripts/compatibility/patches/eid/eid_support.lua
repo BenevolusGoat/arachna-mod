@@ -496,4 +496,25 @@ EID:addDescriptionModifier(
 	end
 )
 
+EID:addEntity(EntityType.ENTITY_SLOT, Mod.Item.TESTAMENT.PEDESTAL_VAR, 0, "", "", "en_us")
+
+EID:addDescriptionModifier(
+	"Arachna Testament Pedestal",
+	function(descObj)
+		return descObj.ObjType == EntityType.ENTITY_SLOT
+			and descObj.ObjVariant == Mod.Item.TESTAMENT.PEDESTAL_VAR
+			and descObj.ObjSubType == CollectibleType.COLLECTIBLE_NULL
+			and descObj.Entity
+	end,
+	---@param descObj EID_DescObj
+	function(descObj)
+		local item = Mod:GetData(descObj.Entity).TestamentItem
+		if not item then
+			return {Entity = descObj.Entity, Name = "", Description = ""}
+		end
+		local desc = EID:getDescriptionObj(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, descObj.Entity)
+		return desc
+	end
+)
+
 EID._currentMod = "Arachna Mod_reserved" -- to prevent other mods overriding Arachna mod items

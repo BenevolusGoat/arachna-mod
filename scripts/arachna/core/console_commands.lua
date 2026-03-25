@@ -93,7 +93,8 @@ local commands = {
 	{ "setmark",        "Args: <string completiontype> <int value>. Updates a completion mark for Arachna" },
 	{ "setmarktainted", "Args: <string completiontype> <int value>. Updates a completion mark for Tainted Arachna" },
 	{ "seteggtimeout",  "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders" },
-	{ "stopegghatch",   "Stop spider eggs from auto-hatching" }
+	{ "stopegghatch",   "Stop spider eggs from auto-hatching" },
+	{ "spawntestamentpedestal", "Args: <int CollectibleType>. Spawns a Testament pedestal" },
 }
 
 local helpText = {
@@ -139,6 +140,18 @@ local commandFuncs = {
 	["stopegghatch"] = function()
 		Mod.Entities.SPIDER_EGG.NoAutoHatch = not Mod.Entities.SPIDER_EGG.NoAutoHatch
 		return "AutoHatch set to " .. tostring(not Mod.Entities.SPIDER_EGG.NoAutoHatch)
+	end,
+	["spawntestamentpedestal"] = function(args)
+		if not Isaac.IsInGame() then
+			return false
+		end
+		print(args)
+		local item = tonumber(args)
+		if not item then return false end
+		local pos = Mod.Room():GetCenterPos()
+		pos = Mod.Room():FindFreePickupSpawnPosition(pos)
+		Mod.Item.TESTAMENT:SpawnPedestal(pos, item)
+		return true
 	end
 }
 
