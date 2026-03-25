@@ -322,7 +322,6 @@ Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, TESTAMENT.PostEnterTestamentRoom)
 ---@param player EntityPlayer
 ---@param newLevel boolean
 function TESTAMENT:PreExitRoom(player, newLevel)
-	print(RoomTransition.GetTransitionMode())
 	if newLevel
 		or not TESTAMENT:IsInTestamentRoom()
 		or RoomTransition.GetTransitionMode() == 1 --Exiting room normally, like doors
