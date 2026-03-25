@@ -38,7 +38,6 @@ BEST_BUD_BALL.BLACKLISTED_BOSSES = Mod:Set({
 ---@field ChampionColor ChampionColor
 ---@field MaxHitPoints integer
 ---@field HitPoints integer
----@field InitialCapture boolean
 
 ThrowableItemLib:RegisterThrowableItem({
 	Type = ThrowableItemLib.Type.ACTIVE,
@@ -88,7 +87,7 @@ function BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 	local data = Mod:GetData(ball)
 	local maxHpChance = Mod.math.max(0, (1.25 - (npc.MaxHitPoints / 600)) * 0.5) --+46% chance at 200 max HP, +29% at 400 max hp, and +12.5% at 600 max hp
 	local hpChance = (1 - (npc.HitPoints / npc.MaxHitPoints)) * 0.50 --Up to +50% capture chance based on health %
-	local luck = Mod.math.min(0.5, Mod.math.max(0, player.Luck) * 0.025) --+2.5% per luck, up to 50%
+	local luck = Mod:Clamp(player.Luck * 0.025, 0, 0.5) --+2.5% per luck, up to 50%
 	local roll = player:GetCollectibleRNG(BEST_BUD_BALL.ID):RandomFloat()
 	local chance = 0.01 + maxHpChance + hpChance + luck
 
@@ -112,8 +111,7 @@ function BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player, initialCapture)
 		Subtype = npc.SubType,
 		ChampionColor = npc:GetChampionColorIdx(),
 		MaxHitPoints = npc.MaxHitPoints,
-		HitPoints = npc.HitPoints,
-		InitialCapture = initialCapture or false
+		HitPoints = initialCapture and npc.MaxHitPoints or npc.HitPoints
 	}
 end
 
@@ -147,7 +145,7 @@ function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
 	end, nil, nil, nil, {Inverse = true})
 	local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, player, cfg.Subtype, Mod:Random())
 	npc.MaxHitPoints = cfg.MaxHitPoints
-	npc.HitPoints = cfg.InitialCapture and cfg.MaxHitPoints or cfg.HitPoints
+	npc.HitPoints = cfg.HitPoints
 	npc:AddCharmed(EntityRef(player), -1)
 	---@diagnostic disable-next-line: param-type-mismatch
 	npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL)
