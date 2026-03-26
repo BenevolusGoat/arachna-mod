@@ -496,20 +496,19 @@ EID:addDescriptionModifier(
 	end
 )
 
-EID:addEntity(EntityType.ENTITY_SLOT, Mod.Item.TESTAMENT.PEDESTAL_VAR, 0, "", "", "en_us")
+EID:addEntity(EntityType.ENTITY_SLOT, Mod.Item.TESTAMENT.PEDESTAL_VAR, -1, "", "", "en_us")
 
 EID:addDescriptionModifier(
 	"Arachna Testament Pedestal",
 	function(descObj)
 		return descObj.ObjType == EntityType.ENTITY_SLOT
 			and descObj.ObjVariant == Mod.Item.TESTAMENT.PEDESTAL_VAR
-			and descObj.ObjSubType == CollectibleType.COLLECTIBLE_NULL
 			and descObj.Entity
 	end,
 	---@param descObj EID_DescObj
 	function(descObj)
-		local item = Mod:GetData(descObj.Entity).TestamentItem
-		if not item then
+		local item = descObj.ObjSubType
+		if item == 0 then
 			return {Entity = descObj.Entity, Name = "", Description = ""}
 		end
 		local desc = EID:getDescriptionObj(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, descObj.Entity)

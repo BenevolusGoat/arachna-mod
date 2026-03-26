@@ -210,26 +210,6 @@ Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, TESTAMENT.Te
 
 --#region Enter Testament Room
 
----@param pos Vector
----@param itemId CollectibleType
-function TESTAMENT:SpawnPedestal(pos, itemId)
-	--EID doesn't work with any subtype so I'm just doing this instead
-	if itemId == CollectibleType.COLLECTIBLE_NULL then
-		local pedestal = Mod.Game:Spawn(EntityType.ENTITY_SLOT, TESTAMENT.PEDESTAL_VAR, pos, Vector.Zero, nil, 10, Mod:Random())
-		local sprite = pedestal:GetSprite()
-		sprite:ReplaceSpritesheet(4, "")
-		sprite:ReplaceSpritesheet(1, "")
-		sprite:LoadGraphics()
-	else
-		local pedestal = Mod.Game:Spawn(EntityType.ENTITY_SLOT, TESTAMENT.PEDESTAL_VAR, pos, Vector.Zero, nil, 0, Mod:Random())
-		local sprite = pedestal:GetSprite()
-		sprite:ReplaceSpritesheet(4, "gfx/items/lastwill-pedestal.png") -- empty shadow
-		EntityPickup.SetupCollectibleGraphics(sprite, 1, itemId, false, Mod:Random())
-		sprite:LoadGraphics()
-		Mod:GetData(pedestal).TestamentItem = itemId
-	end
-end
-
 ---@param entType EntityType
 ---@param variant integer
 ---@param subtype integer
@@ -255,7 +235,7 @@ function TESTAMENT:SetupRoom(entType, variant, subtype, gridIndex, seed)
 			local itemId = inventory[curInventoryIndex + i]
 			Mod:DebugLog("Testament: Spawning ID", tostring(itemId))
 			local pedestalSubtype = blacklist[itemId] and 0 or itemId
-			TESTAMENT:SpawnPedestal(spawnPositions[i + 1], pedestalSubtype)
+			Mod.Game:Spawn(EntityType.ENTITY_SLOT, TESTAMENT.PEDESTAL_VAR, spawnPositions[i + 1], Vector.Zero, nil, pedestalSubtype, Mod:Random())
 		end
 		local roomDesc = Mod.Level():GetRoomByIdx(GridRooms.ROOM_DEBUG_IDX, -1)
 		roomDesc.Flags = Mod:AddBitFlags(roomDesc.Flags, RoomDescriptor.FLAG_CURSED_MIST)
@@ -399,13 +379,14 @@ function TESTAMENT:OnSlotPedestalInit(pedestal)
 	sprite:SetFrame("Alternates", 0)
 	sprite:PlayOverlay("Idle")
 	sprite:ReplaceSpritesheet(5, "gfx/items/lastwill-pedestal.png") -- pedestal itself
---[[ 	if pedestal.SubType == 0 then
+	if pedestal.SubType == 0 then
 		sprite:ReplaceSpritesheet(4, "")
 		sprite:ReplaceSpritesheet(1, "")
 	else
 		sprite:ReplaceSpritesheet(4, "gfx/items/lastwill-pedestal.png") -- empty shadow
 		EntityPickup.SetupCollectibleGraphics(sprite, 1, pedestal.SubType, false, Mod:Random())
-	end ]]
+	end
+
 	sprite:LoadGraphics()
 end
 
@@ -415,14 +396,12 @@ Mod:AddCallback(ModCallbacks.MC_POST_SLOT_INIT, TESTAMENT.OnSlotPedestalInit, TE
 ---@param collider Entity
 function TESTAMENT:OnTestamentPedestalCollision(pedestal, collider)
 	local player = collider:ToPlayer()
-	local data = Mod:GetData(pedestal)
 	if player
-		and pedestal.SubType == 0
+		and pedestal.SubType > 0
 		and player:IsExtraAnimationFinished()
 		and player.ItemHoldCooldown == 0
-		and data.TestamentItem
 	then
-		local item = data.TestamentItem
+		local item = pedestal.SubType
 		local effects = Mod.Room():GetEffects()
 		if TESTAMENT:IsInTestamentRoom() then
 			Mod:DebugLog("Testament: Collected pedestal item ID", item .. ".", "Removing other pedestals and doors")
@@ -446,7 +425,7 @@ function TESTAMENT:OnTestamentPedestalCollision(pedestal, collider)
 		player:RemoveCollectible(item)
 		Mod.Game:GetHUD():ShowItemText(player, itemConfigItem)
 		Mod.sfxman:Play(SoundEffect.SOUND_CHOIR_UNLOCK, 0.5)
-		pedestal.SubType = 10
+		pedestal.SubType = 0
 		pedestal:GetSprite():ReplaceSpritesheet(1, "")
 		pedestal:GetSprite():ReplaceSpritesheet(4, "", true)
 		Mod.Foreach.Slot(function (slot, index)
@@ -522,8 +501,7 @@ function TESTAMENT:EmergencyExit()
 		local pedestals = Isaac.FindByType(EntityType.ENTITY_SLOT, TESTAMENT.PEDESTAL_VAR)
 		local hasItem = false
 		for _, ent in ipairs(pedestals) do
-			local data = Mod:GetData(ent)
-			if data.TestamentItem and data.TestamentItem > 0 then
+			if ent.SubType ~= 0 then
 				hasItem = true
 			end
 		end
