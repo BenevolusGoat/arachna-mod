@@ -16,7 +16,7 @@ return function(modifiers)
 			Description = {
 				"{{StatusSpiderBite}} Touching enemies ensnares them, {{slow}} slowing them and spawning Spider Eggs on death",
 				"#Spider Eggs drop {{ColorRainbow}}special{{CR}} friendly spiders on room clear",
-				"#{{WebHeart}} Increases spawn chance of Web Hearts by +10%"
+				"#{{WebHeart}} Increases spawn chance of Web Hearts by 10%"
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {

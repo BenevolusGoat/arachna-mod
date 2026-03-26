@@ -112,11 +112,9 @@ Mod:RegisterReplacementPickup({
 		end
 	end,
 	ReplacementChance = function()
-		if PlayerManager.AnyoneHasTrinket(Mod.Trinket.SPINDLE.ID) then
-			return Mod.Trinket.SPINDLE.WEB_HEART_REPLACEMENT_CHANCE
-		else
-			return Mod.Pickup.WEB_HEART.REPLACEMENT_CHANCE
-		end
+		local chance = Mod.Pickup.WEB_HEART.REPLACEMENT_CHANCE
+		chance = chance + Mod.Trinket.SPINDLE.WEB_HEART_REPLACEMENT_BONUS * PlayerManager.GetTotalTrinketMultiplier(Mod.Trinket.SPINDLE.ID)
+		return chance
 	end,
 	Achievement = Mod.Pickup.WEB_HEART.ACHIEVEMENT
 })
