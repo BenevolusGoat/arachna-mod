@@ -227,6 +227,7 @@ local arachnaDssDirectory = {
 			{str = "Saurtya", fsize = 2, tooltip = GenerateTooltip("v1.0 chinese translations")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("polish translations")},
 			{str = "jaro7126", fsize = 2, tooltip = GenerateTooltip("v2.0 russian translations")},
+			{str = "Nebuka", fsize = 2, tooltip = GenerateTooltip("korean translations")},
 			BREAK_LINE,
 			BREAK_LINE,
 			{str = "contributors", fsize = 3, tooltip = GenerateTooltip("contributed some amount to the mod")},

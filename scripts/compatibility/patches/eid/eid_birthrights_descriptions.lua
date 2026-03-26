@@ -9,6 +9,7 @@ local descriptions = {
 	pl = Mod.Include("scripts.compatibility.patches.eid.eid_birthrights.birthrights_pl")(modifiers),
 	ru = Mod.Include("scripts.compatibility.patches.eid.eid_birthrights.birthrights_ru")(modifiers),
 	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_birthrights.birthrights_zh_cn")(modifiers),
+	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_birthrights.birthrights_ko_kr")(modifiers),
 }
 
 local allDescData = {}

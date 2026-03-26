@@ -21,6 +21,7 @@ local descriptions = {
 	pl = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_pl")(modifiers),
 	ru = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_ru")(modifiers),
 	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_zh_cn")(modifiers),
+	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_ko_kr")(modifiers),
 }
 
 EID:addGoldenTrinketTable(Trinket.WHITE_STRING.ID, {t = {1}})

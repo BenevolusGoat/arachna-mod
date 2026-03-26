@@ -42,6 +42,7 @@ local descriptions = {
 	pl = Mod.Include("scripts.compatibility.patches.eid.eid_items.items_pl")(modifiers),
 	ru = Mod.Include("scripts.compatibility.patches.eid.eid_items.items_ru")(modifiers),
 	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_items.items_zh_cn")(modifiers),
+	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_items.items_ko_kr")(modifiers),
 }
 
 local allDescData = {}
