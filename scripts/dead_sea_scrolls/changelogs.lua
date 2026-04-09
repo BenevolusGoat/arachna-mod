@@ -168,7 +168,6 @@ Other:
 - Web Heart Clots now have a 25% chance to shoot slowing tears
 - Using Yarn Heart with coin health characters (e.g. Keeper) spawns 2 blue spiders
 - Lil Arachna, Soul of Arachna, and Spindle inflict Webbed instead of Ensnared
-- Added synergy with Spindle and Midas' Touch
 
 ## VISUAL CHANGES
 - All new achievement page sprites by damagaz
