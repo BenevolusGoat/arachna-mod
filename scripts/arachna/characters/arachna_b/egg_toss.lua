@@ -216,7 +216,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 		local poof = Mod.Spawn.Poof02(1, source.Position, source.Entity)
 		poof.Color = source.Entity.Color
 		poof.SpriteScale = Vector(0.8, 0.8)
-		if ent then
+		if ent and not ent:IsBoss() then
 			ent:AddCharmed(playerSource, -1)
 		end
 		Mod.Foreach.NPCInRadius(source.Position, EGG_TOSS.THROWN_EGG_RADIUS, function(npc, index)
