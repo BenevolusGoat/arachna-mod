@@ -16,7 +16,8 @@ local arachna = {
 	"testament",
 	"the_yarn",
 	"white_string",
-	"yarn_heart"
+	"yarn_heart",
+	"arachnology_101"
 }
 
 Mod.LoopInclude(arachna, prefix .. "arachna")

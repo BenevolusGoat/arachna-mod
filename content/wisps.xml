@@ -5,13 +5,14 @@
 
 	<wisp id="0" hp="1" damage="3" layer="1" flameColor="spiderWisp_color_flame" coreColor="spiderWisp_color_core" coreGfx="spider.png" canShoot="false"/>
     <wisp id="1" hp="1" damage="3" layer="1" flameColor="spiderWisp_color_flame" coreColor="spiderWisp_color_core" coreGfx="spider.png" canShoot="false"/>
+    <wisp id="19" hp="1" damage="3" layer="1" flameColor="spiderWisp_color_flame" coreColor="spiderWisp_color_core" coreGfx="spider.png" canShoot="false"/>
 
 	<!-- Yarn Heart -->
 	<color name="yarnHeartWisp_color_flame" r="460" g="460" b="420"/>
 	<color name="yarnHeartWisp_color_core" r="200" g="200" b="200"/>
 	<color name="yarnHeartWisp_color_tear" r="383" g="510" b="510" or="40" og="50" ob="50"/>
 
-    <wisp id="2" hp="2" damage="3" layer="1" flameColor="yarnHeartWisp_color_flame" coreColor="yarnHeartWisp_color_core" tearColor="yarnHeartWisp_color_tear" coreGfx="heart.png" tearFlags2="3" procChance="0.3"/>	
+    <wisp id="2" hp="2" damage="3" layer="1" flameColor="yarnHeartWisp_color_flame" coreColor="yarnHeartWisp_color_core" tearColor="yarnHeartWisp_color_tear" coreGfx="heart.png" tearFlags2="3" procChance="0.3"/>
 
 	<!-- BBB -->
 	<color name="BBBWisp_color_flame" r="330" g="152" b="458"/>

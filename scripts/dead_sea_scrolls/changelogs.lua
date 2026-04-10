@@ -91,7 +91,7 @@ The newly available "Legacy Gameplay" option allows certain changes to be revert
 Changes that will be reverted with the setting set to Off are marked with a *.
 
 New Content:
-- Added 4 new items after unlocking Web Hearts: Spider Donut, Old Shoebox, Candy Floss, and Gummy Spiders
+- Added 5 new items after unlocking Web Hearts: Spider Donut, Old Shoebox, Candy Floss, Gummy Spiders, and Arachnology 101
 - Added a new special item: Spider Cake. It only appears for Arachna and Tainted Arachna when starting a run on the day of the mod's release date
 - Added Reversed Merged Card (suggestion by cadetpirx!). It's unlocked alongside the normal Merged Card
 

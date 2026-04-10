@@ -7,6 +7,8 @@ for i = 5, 20 do
 	Mod.Insert(frameOptions, tostring(i))
 end
 
+SettingsHelper.AddBooleanSetting(Mod.Setting.SpiderFacts, "Display spider-related trivia when starting as Arachna?", false)
+
 SettingsHelper.AddChoiceSetting(Mod.Setting.DoubletapFrameWindow,
 	"Adjust the double tap window for actions such as Dad's Newspaper", frameOptions, 8) --Index 8 is 12 frames
 

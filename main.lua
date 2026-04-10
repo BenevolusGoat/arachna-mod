@@ -236,6 +236,7 @@ ARACHNAMOD.Card = {}
 ARACHNAMOD.Trinket = {}
 ARACHNAMOD.Slot = {}
 ARACHNAMOD.Entities = {}
+ARACHNAMOD.Misc = {}
 include("flags")
 
 local entities = {
@@ -265,6 +266,7 @@ local miscItems = {
 Mod.LoopInclude(miscItems, "scripts.arachna.misc_items")
 
 Mod.Include("scripts.arachna.unlocks.unlock_loader")
+Mod.Include("scripts.arachna.misc.floor_text")
 
 ---@param player EntityPlayer
 function ARACHNAMOD:HasDoubleTapped(player)

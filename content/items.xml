@@ -1,31 +1,31 @@
 <items gfxroot="gfx/items/" version="1" deathanm2="gfx/arachna_death_items.anm2">
 	<!--ITEMS-->
 	<active id="0" name="Arachna's Spool" description="Web design tool" achievement="Arachna's Spool" gfx="spool.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
-	<active id="1" name="Divine Cloth" description="Enemy infestation" achievement="Divine Cloth" gfx="divine-cloth.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
-	<active id="18" name="Egg Toss" description="Grab and throw eggs" achievement="The Wretched" gfx="collectible_eggtoss.png" maxcharges="90" chargetype="timed" tags="noeden nocantrip" quality="0"/>
-	<active id="2" name="Yarn Heart" description="Reusable web protection" achievement="Yarn Heart" gfx="yarn-heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
+	<active id="1" name="Divine Cloth" description="Enemy infestation" achievement="Divine Cloth" gfx="divine_cloth.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
+	<active id="18" name="Egg Toss" description="Grab and throw eggs" achievement="The Wretched" gfx="egg_toss.png" maxcharges="90" chargetype="timed" tags="noeden nocantrip" quality="0"/>
+	<active id="2" name="Yarn Heart" description="Reusable web protection" achievement="Yarn Heart" gfx="yarn_heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
 	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." achievement="Mutagen" gfx="mutagen.png" flatdamage="1" quality="2" tags="offensive summonable"/>
-	<familiar id="4" name="Lil Arachna" description="Spider friend" achievement="Lil Arachna" gfx="lil-arachna.png" tags="baby spider monstermanual summonable" quality="3"/>
-	<active id="5" name="Best Bud Ball" description="Find your very best friend!" achievement="Best Bud Ball" gfx="best-bud-ball.png" activegfx="hud_best_bud_ball.png" maxcharges="8" tags="nochallenge noeden nocantrip" quality="4"/>
-	<familiar id="6" name="The Yarn" description="Static shock!" achievement="The Yarn" gfx="the-yarn.png" tags="baby offensive summonable" quality="2"/>
-	<familiar id="7" name="Mechanical Eye" description="Active expansion" achievement="Mechanical Eye" gfx="mechanical-eye.png" tags="tech offensive summonable" quality="3"/>
-	<passive id="8" name="Arachnid's Grip" description="Infested!" achievement="Arachnid's Grip" gfx="arachnid-grips.png" tags="spider offensive summonable" quality="3"/>
+	<familiar id="4" name="Lil Arachna" description="Spider friend" achievement="Lil Arachna" gfx="lil_arachna.png" tags="baby spider monstermanual summonable" quality="3"/>
+	<active id="5" name="Best Bud Ball" description="Find your very best friend!" achievement="Best Bud Ball" gfx="best_bud_ball.png" activegfx="hud_best_bud_ball.png" maxcharges="8" tags="nochallenge noeden nocantrip" quality="4"/>
+	<familiar id="6" name="The Yarn" description="Static shock!" achievement="The Yarn" gfx="the_yarn.png" tags="baby offensive summonable" quality="2"/>
+	<familiar id="7" name="Mechanical Eye" description="Active expansion" achievement="Mechanical Eye" gfx="mechanical_eye.png" tags="tech offensive summonable" quality="3"/>
+	<passive id="8" name="Arachnid's Grip" description="Infested!" achievement="Arachnid's Grip" gfx="arachnid_grips.png" tags="spider offensive summonable" quality="3"/>
 	<!-- ::::) -->
-	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" achievement="Dad's Newspaper" gfx="dads-newspaper.png" tags="offensive summonable" quality="3"/>
+	<passive id="9" name="Dad's Newspaper" description="Double-tap bonk" achievement="Dad's Newspaper" gfx="dads_newspaper.png" tags="offensive summonable" quality="3"/>
 	<active id="10" name="The Testament" description="Leave the inheritance for your descendants" achievement="The Testament" gfx="lastwill.png" maxcharges="0" tags="nochallenge noeden nocantrip offensive" quality="4" cooldown="20" persistent="true"/>
 	<active id="11" name="Geptameron" description="Ever changing holy tome" achievement="Geptameron" gfx="geptameron.png" maxcharges="4" tags="book offensive" quality="3" />
-	<passive id="12" name="3D Glasses" description="I'm seeing double..." achievement="3D Glasses" gfx="3dglasses.png"  tags="offensive summonable" quality="2"/>
+	<passive id="12" name="3D Glasses" description="I'm seeing double..." achievement="3D Glasses" gfx="3d_glasses.png"  tags="offensive summonable" quality="2"/>
 	<!-- v2.0 -->
-	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider-cake.png" hidden="true" tags="quest noeden" quality="4" effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1" />
-	<passive id="14" name="Spider Donut" description="HP Up?" achievement="Web Hearts" gfx="collectible_spiderdonut.png" damage="0.69" tags="offensive summonable" quality="2"/>
-	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." achievement="Web Hearts" gfx="collectible_candyfloss.png" tags="offensive summonable" quality="2" cache="tearcolor"/>
-	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" achievement="Web Hearts" gfx="collectible_gummyspiders.png" tears="0.61" tags="offensive summonable" quality="2"/>
-	<passive id="17" name="Old Shoebox" description="What could be inside?" achievement="Web Hearts" gfx="collectible_oldshoebox.png" tears="0.33" speed="0.15" tags="offensive summonable" quality="2"/>
-
+	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider_cake.png" hidden="true" tags="quest noeden" quality="4" effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1" />
+	<passive id="14" name="Spider Donut" description="HP Up?" achievement="Web Hearts" gfx="spider_donut.png" damage="0.69" tags="offensive summonable" quality="2"/>
+	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." achievement="Web Hearts" gfx="candy_floss.png" tags="offensive summonable" quality="2" cache="tearcolor"/>
+	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" achievement="Web Hearts" gfx="gummy_spiders.png" tears="0.61" tags="offensive summonable" quality="2"/>
+	<passive id="17" name="Old Shoebox" description="What could be inside?" achievement="Web Hearts" gfx="old_shoebox.png" tears="0.33" speed="0.15" tags="offensive summonable" quality="2"/>
+	<active id="19" name="Arachnology 101" description="Reusable knowledge" achievement="Web Hearts" gfx="arachnology_101.png" maxcharges="2" tags="spider nolostbr book" />
 	<!--TRINKETS-->
-	<trinket name="White String" description="Spider's little gift" achievement="White String" gfx="white-string.png" />
+	<trinket name="White String" description="Spider's little gift" achievement="White String" gfx="white_string.png" />
 	<trinket name="Spindle" description="Ouch!" achievement="Spindle" gfx="spindle.png"/>
-	<trinket name="Infested Penny" description="Wealth of spiders" achievement="Infested Penny" gfx="infested-penny.png"/>
+	<trinket name="Infested Penny" description="Wealth of spiders" achievement="Infested Penny" gfx="infested_penny.png"/>
 
 	<!-- NULL ITEMS -->
 	<null name="arachnids grip orbitals" persistent="true" cache="familiars"/>
