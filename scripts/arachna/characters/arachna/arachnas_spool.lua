@@ -59,8 +59,10 @@ end
 ---@param pos Vector
 ---@param spawner? Entity
 ---@param color? ColoredSpiderSubtype
-function ARACHNAS_SPOOL:SpawnWeb(pos, spawner, color)
-	return Mod.Spawn.Effect(ARACHNAS_SPOOL.WEB_EFFECT, color or 0, pos, nil, spawner)
+---@param clamp integer
+function ARACHNAS_SPOOL:SpawnWeb(pos, spawner, color, clamp)
+	local fixedPos = Mod.Room():GetClampedPosition(pos, clamp)
+	return Mod.Spawn.Effect(ARACHNAS_SPOOL.WEB_EFFECT, color or 0, fixedPos, nil, spawner)
 end
 
 ---How much damage is required in order to fill the chargebar on a boss to spawn a Spider Egg
@@ -146,8 +148,7 @@ function ARACHNAS_SPOOL:OnSpoolDeath(tear)
 		ent:GetSprite():Play("Remove")
 		table.remove(ownedWebs, 1)
 	end
-	local fixedPos = Mod.Room():GetClampedPosition(tear.Position, 45)
-	local web = ARACHNAS_SPOOL:SpawnWeb(fixedPos, tear.SpawnerEntity)
+	local web = ARACHNAS_SPOOL:SpawnWeb(tear.Position, tear.SpawnerEntity, nil, 45)
 	if Mod:GetData(tear).JudasBirthright then
 		Mod:GetData(web).JudasBirthright = true
 		web.Color = tear.Color

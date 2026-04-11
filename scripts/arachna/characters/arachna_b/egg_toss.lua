@@ -309,7 +309,7 @@ function EGG_TOSS:SpawnMiniWeb(player, spiderColor, pos)
 		ent:GetSprite():Play("Remove")
 		table.remove(ownedWebs, 1)
 	end
-	local web = Mod.Item.ARACHNAS_SPOOL:SpawnWeb(pos, player, spiderColor)
+	local web = Mod.Item.ARACHNAS_SPOOL:SpawnWeb(pos, player, spiderColor, 25)
 	Mod:GetData(web).ArachnaBBirthright = true
 	web.SpriteScale = Vector(0.5, 0.5)
 	web:SetSize(web.Size / 2, Vector.One, 8)
