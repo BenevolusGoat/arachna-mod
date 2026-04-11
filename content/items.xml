@@ -2,7 +2,7 @@
 	<!--ITEMS-->
 	<active id="0" name="Arachna's Spool" description="Web design tool" achievement="Arachna's Spool" gfx="spool.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
 	<active id="1" name="Divine Cloth" description="Enemy infestation" achievement="Divine Cloth" gfx="divine_cloth.png" maxcharges="180" chargetype="timed" tags="offensive" quality="3"/>
-	<active id="18" name="Egg Toss" description="Grab and throw eggs" achievement="The Wretched" gfx="egg_toss.png" maxcharges="90" chargetype="timed" tags="noeden nocantrip" quality="0"/>
+	<active id="18" name="Egg Toss" description="Grab and throw eggs" achievement="The Wretched" gfx="egg_toss.png" maxcharges="30" chargetype="timed" tags="noeden nocantrip" quality="0"/>
 	<active id="2" name="Yarn Heart" description="Reusable web protection" achievement="Yarn Heart" gfx="yarn_heart.png" maxcharges="4" tags="spider nokeeper nolostbr" quality="2"/>
 	<passive id="3" name="Mutagen" description="DMG UP. Mutated buddies." achievement="Mutagen" gfx="mutagen.png" flatdamage="1" quality="2" tags="offensive summonable"/>
 	<familiar id="4" name="Lil Arachna" description="Spider friend" achievement="Lil Arachna" gfx="lil_arachna.png" tags="baby spider monstermanual summonable" quality="3"/>
