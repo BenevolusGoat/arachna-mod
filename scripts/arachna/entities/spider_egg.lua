@@ -267,6 +267,9 @@ end
 ---@param rewards? boolean
 function SPIDER_EGG:Explode(egg, rewards)
 	local color = SPIDER_EGG:GetEggColor(egg.SubType) or Color(1, 1, 1, 1, 1, 1, 1)
+	if egg.SubType == COLORED_SPIDERS.SpiderSubtype.CONQUEST then
+		color = Color(1, 1, 1, 1, 1, 1, 1)
+	end
 	Mod.Game:SpawnParticles(egg.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, color)
 	Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 1.25)
 	if not rewards then
