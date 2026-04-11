@@ -170,8 +170,10 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 			local returnPrint = commandFuncs[commandTable[1]](args)
 			if type(returnPrint) == "string" then
 				Mod:Log(returnPrint)
+				return
 			elseif returnPrint == true then
 				Mod:Log("Ran command successfully!")
+				return
 			else
 				Mod:Log("Failed to run command!")
 			end
