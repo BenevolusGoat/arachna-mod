@@ -35,7 +35,7 @@ end
 
 --#region Effects
 
----@type {[Card]: fun(player: EntityPlayer, rng: RNG)}
+---@type {[Card]: fun(player: EntityPlayer, rng?: RNG)}
 MERGED_CARD.CARD_EFFECTS = {
 	[Card.CARD_FOOL] = function (player)
 		player:UseActiveItem(CollectibleType.COLLECTIBLE_D7, UseFlag.USE_NOANIM, -1)

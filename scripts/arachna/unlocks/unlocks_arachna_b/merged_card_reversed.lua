@@ -51,7 +51,7 @@ end
 
 --#region Effects
 
----@type {[Card]: fun(player: EntityPlayer, rng: RNG)}
+---@type {[Card]: fun(player: EntityPlayer, rng?: RNG)}
 MERGED_CARD_REVERSED.CARD_EFFECTS = {
 	[Card.CARD_REVERSE_FOOL] = function(player, rng)
 		local pickupType = rng:RandomInt(3) --0, 1, 2
@@ -484,10 +484,9 @@ function MERGED_CARD_REVERSED:OnUse(card, player, useFlags)
 	local hudNames = {}
 	local bonusHUDNames = {}
 	for _ = 1, numEffects do
-		local selectedEffectKey = rng:RandomInt(Card.CARD_REVERSE_FOOL, Card.CARD_REVERSE_WORLD)
+		local selectedEffectKey = rng:RandomInt(#effect_keys) + 1
 		MERGED_CARD_REVERSED:TriggerEffect(effect_keys[selectedEffectKey], player, rng)
-		local name = Isaac.GetString(StringTableCategory.POCKET_ITEMS,
-			Mod.ItemConfig:GetCard(effect_keys[selectedEffectKey]).Name)
+		local name = Isaac.GetString(StringTableCategory.POCKET_ITEMS, Mod.ItemConfig:GetCard(effect_keys[selectedEffectKey]).Name)
 		if #hudNames < 2 then
 			Mod.Insert(hudNames, name)
 		else
