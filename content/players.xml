@@ -13,5 +13,5 @@
 		  achievement="The Wretched"
           nameimage="playername_arachna.png"
           portrait="playerportrait_arachna_b.png" skinColor="1" costumeSuffix="arachna" bSkinParent="Arachna" noshake="true"
-		  birthright="Heal your friends + Radius up!" />
+		  birthright="Sticky eggs" />
 </players>
