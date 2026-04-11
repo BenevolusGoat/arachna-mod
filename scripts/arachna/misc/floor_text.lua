@@ -45,7 +45,7 @@ end
 ---@param rng RNG
 ---@param isFloor? boolean
 local function getRandomSplashText(rng, isFloor)
-	local spiderTable = isFloor and protipSplashes.Floor or protipSplashes.Fortune
+	local spiderTable = protipSplashes.Facts
 	if FLOOR_TEXT.FORCE_NUMERICAL then
 		if FLOOR_TEXT.FORCE_FACT == -1 then
 			FLOOR_TEXT.FORCE_FACT = 0
@@ -57,7 +57,11 @@ local function getRandomSplashText(rng, isFloor)
 		textid = FLOOR_TEXT.FORCE_FACT
 	end
 	Mod:DebugLog("Returned spider fact #", textid)
-	return spiderTable[textid], textid
+	local text = spiderTable[textid]
+	if not isFloor then
+		text = string.gsub(text, "#", " ")
+	end
+	return text, textid
 end
 
 local function str_split(str) --stolen off internet
