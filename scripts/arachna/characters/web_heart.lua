@@ -270,7 +270,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, WEB_HEART.Abaddon, Collect
 
 --#endregion
 
---#region Guppy's Paw/Potato Peeler
+--#region Patches for items that look for heart containers
 
 local ACTIVE_FORCE_USE = Mod:Set({
 	CollectibleType.COLLECTIBLE_GUPPYS_PAW,
@@ -334,6 +334,20 @@ function WEB_HEART:PotatoPeelerUse(itemID, rng, player, flags, slot, customVar)
 end
 
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, WEB_HEART.PotatoPeelerUse, CollectibleType.COLLECTIBLE_POTATO_PEELER)
+
+---@param player EntityPlayer
+---@param postLevelInitFinished boolean
+function WEB_HEART:EmptyHeartNewFloor(player, _, postLevelInitFinished)
+	if Mod:IsAnyArachna(player)
+		and postLevelInitFinished
+		and WEB_HEART:GetWebHearts(player) == 0
+		and player:HasCollectible(CollectibleType.COLLECTIBLE_EMPTY_HEART)
+	then
+		WEB_HEART:AddWebHearts(player, 1)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_NEW_LEVEL, WEB_HEART.EmptyHeartNewFloor)
 
 --#endregion
 
