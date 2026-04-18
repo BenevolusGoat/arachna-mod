@@ -1,0 +1,222 @@
+<shaders>
+    <shader name="DarkRoomArachna">
+        <parameters>
+            <param name="PlayerPos1" type="vec2"/>
+            <param name="PlayerPos2" type="vec2"/>
+            <param name="PlayerPos3" type="vec2"/>
+            <param name="PlayerPos4" type="vec2"/>
+            <param name="PlayerPos5" type="vec2"/>
+            <param name="PlayerPos6" type="vec2"/>
+            <param name="PlayerPos7" type="vec2"/>
+            <param name="PlayerPos8" type="vec2"/>
+            <param name="PlayerNum" type="float"/>
+            <param name="Strength" type="float"/>
+            <param name="Saturation" type="float"/>
+        </parameters>
+        <vertex><![CDATA[
+            attribute vec3 Position;
+            attribute vec4 Color;
+            attribute vec2 TexCoord;
+            attribute vec4 RenderData;
+            attribute float Scale;
+            attribute vec2 PlayerPos1;
+            attribute vec2 PlayerPos2;
+            attribute vec2 PlayerPos3;
+            attribute vec2 PlayerPos4;
+            attribute vec2 PlayerPos5;
+            attribute vec2 PlayerPos6;
+            attribute vec2 PlayerPos7;
+            attribute vec2 PlayerPos8;
+            attribute float PlayerNum;
+            attribute float Strength;
+            attribute float Saturation;
+            attribute float CircleSize;
+            varying vec4 Color0;
+            varying vec2 TexCoord0;
+            varying vec4 RenderDataOut;
+            varying float ScaleOut;
+            varying vec2 PlayerPosOut[8];
+            varying float StrengthOut;
+            varying float SaturationOut;
+            varying float PlayerNumOut;
+            uniform mat4 Transform;
+            void main(void)
+            {
+                RenderDataOut = RenderData;
+                ScaleOut = Scale;           // Passing data to fragment shader
+                PlayerPosOut[0] =  PlayerPos1 * Scale;
+                PlayerPosOut[7] =  PlayerPos8 * Scale;
+                PlayerPosOut[6] =  PlayerPos7 * Scale;
+                PlayerPosOut[5] =  PlayerPos6 * Scale;
+                PlayerPosOut[4] =  PlayerPos5 * Scale;
+                PlayerPosOut[3] =  PlayerPos4 * Scale;
+                PlayerPosOut[2] =  PlayerPos3 * Scale;
+                PlayerPosOut[1] =  PlayerPos2 * Scale;      
+                Color0 = Color;
+                StrengthOut = Strength;
+                SaturationOut = Saturation;
+                PlayerNumOut = PlayerNum;
+                TexCoord0 = TexCoord;
+                gl_Position = Transform * vec4(Position.xyz, 1.0);
+            }
+        ]]></vertex>
+        <fragment><![CDATA[#version 130
+            varying lowp vec4 Color0;
+            varying mediump vec2 TexCoord0;
+            varying lowp vec4 RenderDataOut;
+            varying lowp float ScaleOut;
+            varying mediump vec2 PlayerPosOut[8];
+            varying lowp float StrengthOut;
+            varying lowp float SaturationOut;
+            varying lowp float PlayerNumOut;
+            uniform sampler2D Texture0;
+
+            const float CircleSize = 210;
+
+            /**
+            * Original "A Simple Circle" code by jonobr1 https://www.shadertoy.com/view/XsjGDt
+            */
+
+            /**
+            * Convert r, g, b to normalized vec3
+            */
+            vec3 toRGB(float r, float g, float b) {
+                return vec3(r / 255.0, g / 255.0, b / 255.0);
+            }
+
+            /**
+            * Calculate alpha for circle.
+            */
+            float circlealpha(vec2 uv, vec2 pos, float rad) {
+                float d = length(pos - uv);
+                float t = clamp(d / rad, 0., 1);
+                return 1.0 - t;
+            }
+            
+            /**
+            * PhotoshopMath.glsl https://gist.github.com/floz/53ad2765cc846187cdd3
+            */
+            
+            vec3 RGBToHSL(vec3 color)
+            {
+                vec3 hsl; // init to 0 to avoid warnings ? (and reverse if + remove first part)
+                
+                float fmin = min(min(color.r, color.g), color.b);    //Min. value of RGB
+                float fmax = max(max(color.r, color.g), color.b);    //Max. value of RGB
+                float delta = fmax - fmin;             //Delta RGB value
+
+                hsl.z = (fmax + fmin) / 2.0; // Luminance
+
+                if (delta == 0.0)		//This is a gray, no chroma...
+                {
+                    hsl.x = 0.0;	// Hue
+                    hsl.y = 0.0;	// Saturation
+                }
+                else                                    //Chromatic data...
+                {
+                    if (hsl.z < 0.5)
+                        hsl.y = delta / (fmax + fmin); // Saturation
+                    else
+                        hsl.y = delta / (2.0 - fmax - fmin); // Saturation
+                    
+                    float deltaR = (((fmax - color.r) / 6.0) + (delta / 2.0)) / delta;
+                    float deltaG = (((fmax - color.g) / 6.0) + (delta / 2.0)) / delta;
+                    float deltaB = (((fmax - color.b) / 6.0) + (delta / 2.0)) / delta;
+
+                    if (color.r == fmax )
+                        hsl.x = deltaB - deltaG; // Hue
+                    else if (color.g == fmax)
+                        hsl.x = (1.0 / 3.0) + deltaR - deltaB; // Hue
+                    else if (color.b == fmax)
+                        hsl.x = (2.0 / 3.0) + deltaG - deltaR; // Hue
+
+                    if (hsl.x < 0.0)
+                        hsl.x += 1.0; // Hue
+                    else if (hsl.x > 1.0)
+                        hsl.x -= 1.0; // Hue
+                }
+
+                return hsl;
+            }
+
+            float HueToRGB(float f1, float f2, float hue)
+            {
+                if (hue < 0.0)
+                    hue += 1.0;
+                else if (hue > 1.0)
+                    hue -= 1.0;
+                float res;
+                if ((6.0 * hue) < 1.0)
+                    res = f1 + (f2 - f1) * 6.0 * hue;
+                else if ((2.0 * hue) < 1.0)
+                    res = f2;
+                else if ((3.0 * hue) < 2.0)
+                    res = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;
+                else
+                    res = f1;
+                return res;
+            }
+
+            vec3 HSLToRGB(vec3 hsl)
+            {
+                vec3 rgb;
+                
+                if (hsl.y == 0.0)
+                    rgb = vec3(hsl.z); // Luminance
+                else
+                {
+                    float f2;
+                    
+                    if (hsl.z < 0.5)
+                        f2 = hsl.z * (1.0 + hsl.y);
+                    else
+                        f2 = (hsl.z + hsl.y) - (hsl.y * hsl.z);
+                        
+                    float f1 = 2.0 * hsl.z - f2;
+                    
+                    rgb.r = HueToRGB(f1, f2, hsl.x + (1.0/3.0));
+                    rgb.g = HueToRGB(f1, f2, hsl.x);
+                    rgb.b= HueToRGB(f1, f2, hsl.x - (1.0/3.0));
+                }
+                
+                return rgb;
+            }
+
+            vec3 blendLinearBurn(vec3 base, vec3 blend) {
+                // Note : Same implementation as BlendSubtract
+                return max(base+blend-vec3(1.0),vec3(0.0));
+            }
+
+            vec3 blendLinearBurn(vec3 base, vec3 blend, float opacity) {
+                return (blendLinearBurn(base, blend) * opacity + base * (1 - opacity));
+            }
+
+            void main(void)
+            {   
+    
+                vec2 uv = gl_FragCoord.xy;
+                vec2 center = RenderDataOut.xy * 0.5;
+                
+                float radius = CircleSize / (3 - ScaleOut);
+                // Background layer
+                vec4 color = Color0 * texture2D(Texture0,TexCoord0);
+                vec3 hsl = RGBToHSL(color.rgb);
+                hsl.y *= SaturationOut;
+                color.rgb = HSLToRGB(hsl);
+                vec3 layer1 = blendLinearBurn(color.rgb, toRGB(148, 142, 212), StrengthOut);
+                
+                // Circles alpha
+                float alpha = 0;
+                for (int i = 0; i < PlayerNumOut; i++){
+                    alpha += circlealpha(uv, PlayerPosOut[i], radius);
+                }
+                // Make circles layer
+                vec4 layer2 = vec4(color.rgb,alpha);
+                // Blend the two
+                vec4 new_color = mix(vec4(layer1, 1),layer2, layer2.a);
+                gl_FragColor = new_color;
+                
+            }
+        ]]></fragment>
+    </shader>
+</shaders>

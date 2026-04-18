@@ -7,8 +7,6 @@ for i = 5, 20 do
 	Mod.Insert(frameOptions, tostring(i))
 end
 
-SettingsHelper.AddBooleanSetting(Mod.Setting.SpiderFacts, "Display spider-related trivia when starting as Arachna?", false)
-
 SettingsHelper.AddChoiceSetting(Mod.Setting.DoubletapFrameWindow,
 	"Adjust the double tap window for actions such as Dad's Newspaper", frameOptions, 8) --Index 8 is 12 frames
 
@@ -24,4 +22,4 @@ SettingsHelper.AddChoiceSetting(Mod.Setting.AnniversaryOverride, "Override the c
 SettingsHelper.AddBooleanSetting(Mod.Setting.LegacyGameplay,
 	"Change Arachna and Tainted Arachna gameplay to before the v2.0 update? (Requires run restart)", false)
 
-SettingsHelper.AddBooleanSetting(Mod.Setting.RareSoundAlt, "Enable rare chance for a different sound when Arachna is hurt?", true)
+SettingsHelper.AddBooleanSetting(Mod.Setting.SpiderFacts, "..?", false)

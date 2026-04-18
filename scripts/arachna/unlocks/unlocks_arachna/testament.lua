@@ -3,6 +3,7 @@
 local Mod = ARACHNAMOD
 
 local TESTAMENT = {}
+local enableTestamentShader = false --self explanatory. CircleSize in shader file used to be 110
 
 ARACHNAMOD.Item.TESTAMENT = TESTAMENT
 
@@ -144,6 +145,7 @@ function TESTAMENT:TeleportToTestamentRoom()
 	Isaac.ExecuteCommand("goto s.sacrifice.20000")
 	musicman:Play(Music.MUSIC_DARK_CLOSET, 1)
 	musicman:UpdateVolume()
+	enableTestamentShader = true
 end
 
 --#endregion
@@ -352,6 +354,7 @@ function TESTAMENT:ReturnToRegularDimension(itemConfigItem)
 		or Mod.Level():GetStartingRoomIndex()
 	Mod.Game:StartRoomTransition(roomIndex, Direction.NO_DIRECTION, RoomTransitionAnim.FADE)
 	playStatic()
+	enableTestamentShader = false
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_ROOM_TRIGGER_EFFECT_REMOVED, TESTAMENT.ReturnToRegularDimension, TESTAMENT_CONFIG)
@@ -527,3 +530,62 @@ end
 Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, TESTAMENT.EmergencyExit)
 
 --#endregion
+
+-- SHADER FUNCTIONALITY (tysm brakedude)
+local function GetPlayerPosition(player)
+	return Isaac.WorldToScreen(player.Position + Vector(0, -10))
+end
+
+local function ShouldNotRenderShader()
+	return Game():IsPauseMenuOpen()
+		or RoomTransition.IsRenderingBossIntro()
+		or (ModConfigMenu and ModConfigMenu.IsVisible)
+		or (DeadSeaScrollsMenu and DeadSeaScrollsMenu.OpenedMenu)
+		or (not enableTestamentShader)
+end
+
+local function testamentShader(_, shaderName) 
+	if shaderName == "DarkRoomArachna" then
+		local playerPos = GetPlayerPosition(Isaac.GetPlayer(0))
+		local params = {
+			PlayerPos1 = { playerPos.X, playerPos.Y },
+			PlayerPos2 = { playerPos.X, playerPos.Y },
+			PlayerPos3 = { playerPos.X, playerPos.Y },
+			PlayerPos4 = { playerPos.X, playerPos.Y },
+			PlayerPos5 = { playerPos.X, playerPos.Y },
+			PlayerPos6 = { playerPos.X, playerPos.Y },
+			PlayerPos7 = { playerPos.X, playerPos.Y },
+			PlayerPos8 = { playerPos.X, playerPos.Y },
+			Strength = 1,
+			Saturation = 0.4,
+			PlayerNum = 1,
+		}
+
+		if ShouldNotRenderShader() then
+			params.Strength = 0
+			params.Saturation = 1
+			return params
+		end
+
+		if Game():GetNumPlayers() > 1 then
+			params.PlayerNum = Game():GetNumPlayers()
+			local players = {}
+			for i = 1, Game():GetNumPlayers() - 1 do
+				table.insert(players, Isaac.GetPlayer(i))
+			end
+			table.sort(players, function(a, b)
+				return a.Parent == nil and a.Variant == 0 and (b.Parent ~= nil or b.Variant == 1)
+			end)
+
+			for i, player in ipairs(players) do
+				playerPos = GetPlayerPosition(player)
+				params["PlayerPos" .. tostring(i + 1)] = { playerPos.X, playerPos.Y }
+				if i > 8 then
+					break
+				end
+			end
+		end
+		return params
+	end
+end
+Mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, testamentShader)

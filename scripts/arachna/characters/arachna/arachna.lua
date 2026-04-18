@@ -151,7 +151,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_STATUS_EFFECT_APPLY, ARACHNA.IgnoreCobwebSlo
 --#region Rare Sounds
 
 function ARACHNA:RareSoundAlt(id, volume, delay, loop, pitch, pan)
-	if Mod.GetSetting(Mod.Setting.RareSoundAlt)
+	if Mod.GetSetting(Mod.Setting.SpiderFacts)
 		and Mod:RandomNum() < ARACHNA.RARE_SFX_CHANCE
 	then
 		local newId = id == ARACHNA.SFX_HURT and ARACHNA.SFX_HURT_RARE or ARACHNA.SFX_DEATH_RARE
