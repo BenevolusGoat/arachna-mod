@@ -2,7 +2,7 @@
 	<Info CreatedBy="Alzarath" CreatedOn="3/12/2026 2:32:09 PM" Version="25" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="ui_cardfronts.png" Id="0"/>
+			<Spritesheet Path="ui_cardfronts_arachna.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="Main" Id="0" SpritesheetId="0"/>
