@@ -167,7 +167,7 @@ return function(modifiers)
 			Description = {
 				"将角色传送至一个包含其拥有的所有道具的楼层",
 				"#从中选择一个道具后将角色送回原本的房间",
-				"#选定的道具将会出现在下一局开始",
+				"#选定的道具会被移出角色的物品栏, 并出现在下一局开始",
 				"#未拥有道具时则改为生成{{Collectible" ..
 				CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} 伊甸的灵魂"
 			}
