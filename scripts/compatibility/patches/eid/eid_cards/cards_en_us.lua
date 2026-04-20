@@ -70,7 +70,7 @@ return function(modifiers)
 						.. "#{{Card" ..
 						Card.CARD_REVERSE_EMPRESS .. "}} {{Timer}} Receive for the room: +1 {{Heart}} Health, {{Tears}} +0.75 Tears, {{Speed}} -0.05 Speed",
 
-						"#{{Card" .. Card.CARD_REVERSE_EMPEROR .. "}} Spawns a {{ColorRainbow}}rainbow{{CR}} champion of a random enemy on the floor"
+						"#{{Card" .. Card.CARD_REVERSE_EMPEROR .. "}} Spawns a {{ColorRainbow}}rainbow{{CR}} champion of a random enemy that can be encountered on the current floor"
 						.. "#{{Card" .. Card.CARD_REVERSE_HIEROPHANT .. "}} Spawns 1 {{EmptyBoneHeart}} Bone Heart"
 						.. "#{{Card" .. Card.CARD_REVERSE_LOVERS .. "}} {{BrokenHeart}} +1 Broken Heart, {{Damage}} +0.25 Damage"
 						.. "#{{Card" ..
