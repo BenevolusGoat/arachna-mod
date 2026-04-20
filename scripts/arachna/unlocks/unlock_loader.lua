@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local prefix = "scripts.arachna.unlocks.unlocks_"
 

@@ -196,8 +196,9 @@ Other:
 
 ## INTERNAL CHANGES
 Important changes for modders to be aware of for updating compatibility with Arachna
+- Arachna's mod global has been changed from ARACHNAMOD to ArachnaMod. This is so that patches from other mods wont break in unforseen ways and will only function if support is updated.
 - Arachna now requires REPENTOGON on Repentance+ to function. REPENTOGON on regular Repentance will not work
-- The entire mod's code was rewritten from the ground up. Nearly everything on the mod is now properly attached to the "ARACHNAMOD" global
+- The entire mod's code was rewritten from the ground up. Nearly everything on the mod is now properly attached to the "ArachnaMod" global
 - Save data is now handled through the Isaac Save Manager library. Previous save data on completion marks should have automatically transferred to REPENTOGON's own save data for completion marks and achievements
 - The utility of throwing Arachna's Spool now utilizes ThrowableItemLib for general improvements and cross-MOD compatibility
 - Web Hearts now utilize CustomHealthAPI for immense improvements and cross-MOD compatibility

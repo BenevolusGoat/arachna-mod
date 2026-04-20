@@ -1,10 +1,10 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 ---@type EntityReplacement[]
-ARACHNAMOD.EntityReplacements = {}
+ArachnaMod.EntityReplacements = {}
 
 ---@type PickupReplacement[]
-ARACHNAMOD.PickupReplacements = {}
+ArachnaMod.PickupReplacements = {}
 
 local allowedRoomSpawnTypes = {}
 
@@ -52,7 +52,7 @@ local vanillaChests = Mod:Set({
 })
 
 ---@param replacement_info EntityReplacementInput
-function ARACHNAMOD:RegisterReplacementEntity(replacement_info)
+function ArachnaMod:RegisterReplacementEntity(replacement_info)
 	---@type EntityReplacement
 	local replacement_info_copy = Mod:CopyTable(replacement_info)
 	replacement_info_copy.OldType = Mod:Set(replacement_info.OldType)
@@ -65,7 +65,7 @@ function ARACHNAMOD:RegisterReplacementEntity(replacement_info)
 		if entType ~= EntityType.ENTITY_PICKUP then
 			allowedRoomSpawnTypes[entType] = true
 		else
-			Mod:DebugLog("Please use ARACHNAMOD:RegisterReplacementPickup for replacing pickups!")
+			Mod:DebugLog("Please use ArachnaMod:RegisterReplacementPickup for replacing pickups!")
 		end
 	end
 end
@@ -74,7 +74,7 @@ end
 ---
 ---This will not allow replacements of predetermined spawns (e.g. 5.20.0 for a random coin vs 5.20.1 for a penny).
 ---@param replacement_info PickupReplacementInput
-function ARACHNAMOD:RegisterReplacementPickup(replacement_info)
+function ArachnaMod:RegisterReplacementPickup(replacement_info)
 	---@type PickupReplacement
 	local replacement_info_copy = Mod:CopyTable(replacement_info)
 	replacement_info_copy.OldVariant = Mod:Set(replacement_info.OldVariant)
@@ -208,7 +208,7 @@ local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 				Mod:DebugLog("Replacement successful!")
 				if replacement_info.PostRollReplacement then
 					replacement_info.PostRollReplacement(rng, true, replacement_info.NewType, replacement_info
-					.NewVariant, newSubtype)
+						.NewVariant, newSubtype)
 				end
 				return { replacement_info.NewType, replacement_info.NewVariant, newSubtype }
 			else

@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 local BOSS_HEALTH_DIV = 10
@@ -35,7 +35,7 @@ local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdow
 	end
 
 	if ent:IsBoss() then
-		return {Damage = amount + (ent.HitPoints / div)}
+		return { Damage = amount + (ent.HitPoints / div) }
 	else
 		ent:Die()
 	end
@@ -78,10 +78,10 @@ end
 
 --How the game makes rainbow for the Playdough lasers
 function COLORED_SPIDERS:GetRainbowColor()
-	local hue = (Game():GetFrameCount() % 30)/30
+	local hue = (Game():GetFrameCount() % 30) / 30
 	local r, g, b = hsvToRgb(hue, 0.9, 1.0, 1.0)
 
-	return {r/255*4, g/255*4, b/255*4, 1.0}
+	return { r / 255 * 4, g / 255 * 4, b / 255 * 4, 1.0 }
 end
 
 ---@param spider EntityFamiliar

@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local YARN = {}
 
-ARACHNAMOD.Item.YARN = YARN
+ArachnaMod.Item.YARN = YARN
 
 YARN.ID = Isaac.GetItemIdByName("The Yarn")
 YARN.FAMILIAR = Isaac.GetEntityVariantByName("The Yarn (follower)")
@@ -33,7 +33,7 @@ function YARN:FireLaser(familiar)
 	familiar:PickEnemyTarget(YARN.FIRE_DISTANCE)
 	if familiar.Target then
 		familiar.TargetPosition = familiar.Target.Position
-		local offset = Vector(0, -25* familiar.SpriteScale.Y)
+		local offset = Vector(0, -25 * familiar.SpriteScale.Y)
 		local angle = (familiar.TargetPosition - familiar.Position):GetAngleDegrees()
 		local laser = EntityLaser.ShootAngle(LaserVariant.THIN_RED, familiar.Position, angle, 3, offset, familiar)
 		laser.CollisionDamage = YARN.LASER_DAMAGE
@@ -67,7 +67,7 @@ Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, YARN.OnFamiliarUpdate, YARN.FAM
 
 ---@param player EntityPlayer
 function YARN:OnRoomClear(player)
-	Mod.Foreach.Familiar(function (familiar, index)
+	Mod.Foreach.Familiar(function(familiar, index)
 		if (familiar.RoomClearCount + 1) % YARN.ROOM_CLEAR_THRESHOLD == 0
 			and GetPtrHash(player) == GetPtrHash(familiar.Player)
 		then

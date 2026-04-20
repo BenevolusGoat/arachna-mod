@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local loader = Mod.PatchesLoader
 local Item = Mod.Item
 
@@ -25,7 +25,7 @@ local function epiphanyPatch()
 		[Mod.Pickup.WEB_HEART.ID] = 0,
 		[Mod.Pickup.WEB_HEART.ID] = 0,
 	})
-	ARACHNAMOD.KeeperPlayers[Epiphany.PlayerType.KEEPER] = true
+	ArachnaMod.KeeperPlayers[Epiphany.PlayerType.KEEPER] = true
 	local THROWING_BAG = Epiphany.Item.THROWING_BAG
 
 	local cainSynergies = {
@@ -68,7 +68,7 @@ local function epiphanyPatch()
 		id_list = { Item.ARACHNAS_SPOOL.ID, Item.LIL_ARACHNA.ID },
 		color = StatusEffectLibrary.StatusColor.SLOW,
 
-		callback_post_hit = function (_, count, entity, bagData)
+		callback_post_hit = function(_, count, entity, bagData)
 			if entity:IsActiveEnemy() then
 				local player = bagData.PlayerOwner
 
@@ -84,7 +84,7 @@ local function epiphanyPatch()
 			end
 		end,
 
-		callback_swing_post_hit = function (_, count, entity, player, bagData)
+		callback_swing_post_hit = function(_, count, entity, player, bagData)
 			if entity:IsVulnerableEnemy() then
 				if THROWING_BAG:HasBirthrightBuff(player) then
 					count = count * 2
@@ -104,7 +104,7 @@ local function epiphanyPatch()
 		id_list = { Item.DIVINE_CLOTH.ID },
 		color = StatusEffectLibrary.StatusColor.SLOW,
 
-		callback_post_hit = function (_, count, entity, bagData)
+		callback_post_hit = function(_, count, entity, bagData)
 			if entity:IsActiveEnemy() then
 				local player = bagData.PlayerOwner
 
@@ -120,7 +120,7 @@ local function epiphanyPatch()
 			end
 		end,
 
-		callback_swing_post_hit = function (_, count, entity, player, bagData)
+		callback_swing_post_hit = function(_, count, entity, player, bagData)
 			if entity:IsVulnerableEnemy() then
 				if THROWING_BAG:HasBirthrightBuff(player) then
 					count = count * 2

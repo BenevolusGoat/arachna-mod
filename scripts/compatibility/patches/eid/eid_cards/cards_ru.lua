@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 return function(modifiers)
 	return {

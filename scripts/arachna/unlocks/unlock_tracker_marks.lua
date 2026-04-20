@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 ---@param playerType PlayerType
 ---@param completionType CompletionType
-function ARACHNAMOD:GetAchievement(playerType, completionType)
+function ArachnaMod:GetAchievement(playerType, completionType)
 	local entityConfigPlayer = EntityConfig.GetPlayer(playerType)
 	if not entityConfigPlayer then return end
 	local completionTable = Mod.PlayerTypeToCompletionTable[playerType]
@@ -31,7 +31,7 @@ end
 ---@param playerType PlayerType
 ---@param completionType CompletionType
 ---@return boolean @Returns if unlock was successful.
-function ARACHNAMOD:TryUnlockCompletionMark(playerType, completionType)
+function ArachnaMod:TryUnlockCompletionMark(playerType, completionType)
 	if Mod.Game:AchievementUnlocksDisallowed() then return false end
 	local achievement = Mod:GetAchievement(playerType, completionType)
 	if achievement then

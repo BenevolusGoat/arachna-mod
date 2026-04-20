@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local ARACHNIDS_GRIP = {}
 
-ARACHNAMOD.Item.ARACHNIDS_GRIP = ARACHNIDS_GRIP
+ArachnaMod.Item.ARACHNIDS_GRIP = ARACHNIDS_GRIP
 
 ARACHNIDS_GRIP.ID = Isaac.GetItemIdByName("Arachnid's Grip")
 ARACHNIDS_GRIP.FAMILIAR = Isaac.GetEntityVariantByName("Spider Egg (orbital)")
@@ -144,7 +144,7 @@ end
 Mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, ARACHNIDS_GRIP.OnEnemyKill)
 
 function ARACHNIDS_GRIP:PreRoomExit()
-	Mod.Foreach.Pickup(function (pickup, index)
+	Mod.Foreach.Pickup(function(pickup, index)
 		pickup:Remove()
 	end, ARACHNIDS_GRIP.PICKUP, 0)
 end
@@ -164,7 +164,7 @@ function ARACHNIDS_GRIP:OnOrbitalBlockProjectile(familiar, collider)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, ARACHNIDS_GRIP.OnOrbitalBlockProjectile, ARACHNIDS_GRIP
-.FAMILIAR)
+	.FAMILIAR)
 
 ---@param ent Entity
 ---@param source EntityRef
@@ -220,7 +220,7 @@ function ARACHNIDS_GRIP:PosionTears(player, tearParams, weaponType, damageScale,
 		and player:GetCollectibleRNG(ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNIDS_GRIP.POISON_CHANCE
 	then
 		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
-		tearParams.TearColor = ARACHNAMOD:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
+		tearParams.TearColor = ArachnaMod:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
 		return tearParams
 	end
 end

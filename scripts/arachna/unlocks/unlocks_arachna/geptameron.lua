@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local GEPTAMERON = {}
 
-ARACHNAMOD.Item.GEPTAMERON = GEPTAMERON
+ArachnaMod.Item.GEPTAMERON = GEPTAMERON
 
 GEPTAMERON.ID = Isaac.GetItemIdByName("Geptameron")
 GEPTAMERON.OVERLAY = Isaac.GetGiantBookIdByName("Geptameron")
@@ -94,9 +94,9 @@ end
 ---@param amount integer
 function GEPTAMERON:ApplySackToRandomEnemy(source, rng, amount)
 	local npcs = {}
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		Mod.Insert(npcs, npc)
-	end, nil, nil, nil, {UseEnemySearchParams = true, NoCollision = true})
+	end, nil, nil, nil, { UseEnemySearchParams = true, NoCollision = true })
 	for _ = 1, amount do
 		local index = rng:RandomInt(#npcs) + 1
 		local npc = npcs[index]
@@ -119,21 +119,21 @@ function GEPTAMERON:ActivateEffect(player, week)
 		effects:AddNullEffect(GEPTAMERON.TUESDAY_NULL_ITEM)
 	elseif week == GEPTAMERON.WeekEffect.WEDNESDAY then
 		local source = EntityRef(player)
-		Mod.Foreach.NPC(function (npc, index)
+		Mod.Foreach.NPC(function(npc, index)
 			if index % 2 == 0 then
 				StatusEffectLibrary:AddStatusEffect(npc, GEPTAMERON.STATUS_LOCUST, -1, source)
 			else
 				npc:AddCharmed(source, GEPTAMERON.CHARM_DURATION)
 			end
-		end, nil, nil, nil, {UseEnemySearchParams = true, NoCollision = true})
+		end, nil, nil, nil, { UseEnemySearchParams = true, NoCollision = true })
 	elseif week == GEPTAMERON.WeekEffect.THURSDAY then
 		player:GetEffects():AddCollectibleEffect(CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL, true, 2)
 		player:AddCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE, true)
 	elseif week == GEPTAMERON.WeekEffect.FRIDAY then
 		local source = EntityRef(player)
-		Mod.Foreach.NPC(function (npc, index)
+		Mod.Foreach.NPC(function(npc, index)
 			StatusEffectLibrary:AddStatusEffect(npc, GEPTAMERON.STATUS_COIN, -1, source)
-		end, nil, nil, nil, {UseEnemySearchParams = true, NoCollision = true})
+		end, nil, nil, nil, { UseEnemySearchParams = true, NoCollision = true })
 	elseif week == GEPTAMERON.WeekEffect.SATURDAY then
 		local effects = Mod.Room():GetEffects()
 		effects:AddNullEffect(GEPTAMERON.SATURDAY_NULL_ITEM)
@@ -162,7 +162,7 @@ function GEPTAMERON:OnUse(itemId, rng, player, useFlags, slot, customVarData)
 	local week2
 	GEPTAMERON:ActivateEffect(player, week)
 	if LibraryExpanded and player:HasCollectible(LibraryExpanded.Item.TBOATB.ID) then
-		local days = {0, 1, 2, 3, 4, 5, 6}
+		local days = { 0, 1, 2, 3, 4, 5, 6 }
 		table.remove(days, week + 1)
 		week2 = days[rng:RandomInt(#days) + 1]
 		GEPTAMERON:ActivateEffect(player, week2)
@@ -250,23 +250,23 @@ function GEPTAMERON:KillGaper(npc)
 end
 
 function GEPTAMERON:KillGapersOnRoomClear()
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		local data = Mod:TryGetData(npc)
 		if data and data.GeptameronGaper then
 			GEPTAMERON:KillGaper(npc)
 		end
-	end, EntityType.ENTITY_GAPER, 1, 0, {Inverse = true})
+	end, EntityType.ENTITY_GAPER, 1, 0, { Inverse = true })
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, CallbackPriority.LATE, GEPTAMERON.KillGapersOnRoomClear)
 
 function GEPTAMERON:RemoveGapersOnGameExit()
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		local data = Mod:TryGetData(npc)
 		if data and data.GeptameronGaper then
 			npc:ClearEntityFlags(EntityFlag.FLAG_CHARM | EntityFlag.FLAG_FRIENDLY)
 		end
-	end, EntityType.ENTITY_GAPER, 1, 0, {Inverse = true})
+	end, EntityType.ENTITY_GAPER, 1, 0, { Inverse = true })
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, GEPTAMERON.RemoveGapersOnGameExit)

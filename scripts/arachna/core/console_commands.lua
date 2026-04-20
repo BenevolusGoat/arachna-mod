@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 --#region Achievement commands
 
@@ -189,12 +189,12 @@ end, rootCommand)
 
 --#region Wipe save
 
-function ARACHNAMOD:WipeSave()
+function ArachnaMod:WipeSave()
 	Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA)
 	Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA_B)
 	manageAchievements(false)
 end
 
-Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_DELETE, ARACHNAMOD.WipeSave)
+Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_DELETE, ArachnaMod.WipeSave)
 
 --#endregion

@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local modInitial = "ARC_"
 local game = Mod.Game
 
@@ -164,7 +164,7 @@ function TearModifier:GetChance(player, ignoreTeardrop, baseChanceMult)
 	baseChanceMult = baseChanceMult or 1
 	local deltaX = self.MaxLuck - self.MinLuck
 	local rngRequirement = ((self.MaxChance - self.MinChance) / deltaX) * luck +
-	(self.MaxLuck * self.MinChance - self.MinLuck * self.MaxChance) / deltaX
+		(self.MaxLuck * self.MinChance - self.MinLuck * self.MaxChance) / deltaX
 	rngRequirement = rngRequirement + (self.MinChance * (baseChanceMult - 1))
 
 	return rngRequirement

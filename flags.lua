@@ -1,4 +1,4 @@
-ARACHNAMOD.FLAGS = {}
+ArachnaMod.FLAGS = {}
 
-ARACHNAMOD.FLAGS.Debug = true
-ARACHNAMOD.FLAGS.Anniversary = os.date("%d.%m") == "29.04"
+ArachnaMod.FLAGS.Debug = true
+ArachnaMod.FLAGS.Anniversary = os.date("%d.%m") == "29.04"

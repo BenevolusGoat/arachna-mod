@@ -1,4 +1,4 @@
-local floor = ARACHNAMOD.math.floor
+local floor = ArachnaMod.math.floor
 
 ---Credit to Epiphany
 
@@ -6,7 +6,7 @@ local floor = ARACHNAMOD.math.floor
 ---@param tab1 any[]
 ---@param tab2 any[]
 ---@function
-function ARACHNAMOD:AppendTable(tab1, tab2)
+function ArachnaMod:AppendTable(tab1, tab2)
 	for _, v in pairs(tab2) do
 		tab1[#tab1 + 1] = v
 	end
@@ -17,12 +17,12 @@ end
 -- Inserts all values in given tables into a new table
 -- Returns that new table
 ---@function
-function ARACHNAMOD:CombineTables(...)
+function ArachnaMod:CombineTables(...)
 	local tabs = { ... }
 	local out = {}
 	for _, tab in pairs(tabs) do
 		for _, val in pairs(tab) do
-			ARACHNAMOD.Insert(out, val)
+			ArachnaMod.Insert(out, val)
 		end
 	end
 	return out
@@ -33,7 +33,7 @@ end
 ---@param dict1 table<K,V>
 ---@param dict2 table<K,V>
 ---@function
-function ARACHNAMOD:AddToDictionary(dict1, dict2)
+function ArachnaMod:AddToDictionary(dict1, dict2)
 	for k, v in pairs(dict2) do
 		dict1[k] = v
 	end
@@ -43,10 +43,10 @@ end
 ---@param tab table<K,V>
 ---@return K[]
 ---@function
-function ARACHNAMOD:GetKeys(tab)
+function ArachnaMod:GetKeys(tab)
 	local out = {}
 	for k in pairs(tab) do
-		ARACHNAMOD.Insert(out, k)
+		ArachnaMod.Insert(out, k)
 	end
 	return out
 end
@@ -55,10 +55,10 @@ end
 ---@param tab table<K,V>
 ---@return V[]
 ---@function
-function ARACHNAMOD:GetValues(tab)
+function ArachnaMod:GetValues(tab)
 	local out = {}
 	for _, v in pairs(tab) do
-		ARACHNAMOD.Insert(out, v)
+		ArachnaMod.Insert(out, v)
 	end
 	return out
 end
@@ -67,7 +67,7 @@ end
 ---@param tab table
 ---@param valueOrLocation any
 ---@overload fun(tab: table, location: integer, value: any)
-function ARACHNAMOD.Insert(tab, valueOrLocation, value)
+function ArachnaMod.Insert(tab, valueOrLocation, value)
 	if value ~= nil and type(valueOrLocation) == "number" then
 		tab[valueOrLocation] = value
 	elseif value == nil then
@@ -92,7 +92,7 @@ author: Alundaio (aka Revolucas)
 --]]
 
 ---@function
-function ARACHNAMOD:PrintTable(node)
+function ArachnaMod:PrintTable(node)
 	-- to make output beautiful
 	local function tab(amt)
 		local str = ""
@@ -122,7 +122,7 @@ function ARACHNAMOD:PrintTable(node)
 				end
 
 				-- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
-				ARACHNAMOD.Insert(output, output_str)
+				ArachnaMod.Insert(output, output_str)
 				output_str = ""
 
 				local key
@@ -136,8 +136,8 @@ function ARACHNAMOD:PrintTable(node)
 					output_str = output_str .. tab(depth) .. key .. " = " .. tostring(v)
 				elseif type(v) == "table" then
 					output_str = output_str .. tab(depth) .. key .. " = {\n"
-					ARACHNAMOD.Insert(stack, node)
-					ARACHNAMOD.Insert(stack, v)
+					ArachnaMod.Insert(stack, node)
+					ArachnaMod.Insert(stack, v)
 					cache[node] = cur_index + 1
 					break
 				else
@@ -169,10 +169,10 @@ function ARACHNAMOD:PrintTable(node)
 	end
 
 	-- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
-	ARACHNAMOD.Insert(output, output_str)
+	ArachnaMod.Insert(output, output_str)
 	output_str = table.concat(output)
 
-	ARACHNAMOD:Log(output_str)
+	ArachnaMod:Log(output_str)
 	--[[local filewrite = io.open("TARNISHEDDEBUG", "w")
 	filewrite:write(output_str)
 	filewrite:close()]]
@@ -186,7 +186,7 @@ end
 ---@param tab table
 ---@return integer
 ---@function
-function ARACHNAMOD:TableLength(tab)
+function ArachnaMod:TableLength(tab)
 	local count = 0
 	for _ in pairs(tab) do
 		count = count + 1
@@ -199,7 +199,7 @@ end
 ---@param list V[]
 ---@return {[V]: boolean}
 ---@function
-function ARACHNAMOD:Set(list)
+function ArachnaMod:Set(list)
 	local set = {}
 	for _, l in ipairs(list) do
 		set[l] = true
@@ -211,7 +211,7 @@ end
 ---@param val any
 ---@return boolean
 ---@function
-function ARACHNAMOD:ContainsValue(tab, val)
+function ArachnaMod:ContainsValue(tab, val)
 	for _, v in pairs(tab) do
 		if v == val then
 			return true
@@ -226,11 +226,11 @@ end
 ---@param rng? RNG
 ---@return table<K,V>
 ---@function
-function ARACHNAMOD:ShuffleTable(tab, rng)
+function ArachnaMod:ShuffleTable(tab, rng)
 	if not rng then
-		rng = ARACHNAMOD.GENERIC_RNG
+		rng = ArachnaMod.GENERIC_RNG
 	end
-	local out = ARACHNAMOD:CopyTable(tab)
+	local out = ArachnaMod:CopyTable(tab)
 
 	for i = #out, 2, -1 do
 		local j = rng:RandomInt(i) + 1
@@ -246,7 +246,7 @@ end
 ---@param isArray? boolean
 ---@return table<K,V>
 ---@function
-function ARACHNAMOD:ClearTable(tab, isArray)
+function ArachnaMod:ClearTable(tab, isArray)
 	if isArray then
 		local count = #tab
 		for i = 1, count do
@@ -268,13 +268,13 @@ end
 --- Writes all values in a given tables and its subtables
 --- to an array recursively infinitely or with given max depth.
 ---@function
-function ARACHNAMOD:FlattenTable(tab, depth, out)
+function ArachnaMod:FlattenTable(tab, depth, out)
 	out = out or {}
 	for _, v in pairs(tab) do
 		if type(v) == "table" and (not depth or depth > 0) then
-			ARACHNAMOD:FlattenTable(v, depth and depth - 1, out)
+			ArachnaMod:FlattenTable(v, depth and depth - 1, out)
 		else
-			ARACHNAMOD.Insert(out, v)
+			ArachnaMod.Insert(out, v)
 		end
 	end
 	return out
@@ -286,7 +286,7 @@ end
 ---@return any, V
 --- Returns a key-value pair corresponding to maximum value in a given table
 ---@function
-function ARACHNAMOD:MaxInTable(tab, comparer)
+function ArachnaMod:MaxInTable(tab, comparer)
 	comparer = comparer or function(a, b)
 		return a > b
 	end
@@ -310,7 +310,7 @@ end
 ---@return any, V
 --- Returns a key-value pair corresponding to minimum value in a given table
 ---@function
-function ARACHNAMOD:MinInTable(tab, comparer)
+function ArachnaMod:MinInTable(tab, comparer)
 	comparer = comparer or function(a, b)
 		return a < b
 	end
@@ -335,7 +335,7 @@ end
 ---Returns a randomly selected value from a given weighted pool alongside its index.
 ---Weights are defined with *weight* field and default to 1.0
 ---@function
-function ARACHNAMOD:GetValueFromWeightedPool(pool, rng)
+function ArachnaMod:GetValueFromWeightedPool(pool, rng)
 	local function GetWeight(val)
 		if type(val) == "table" then
 			return val.Weight or 1.0
@@ -354,24 +354,24 @@ function ARACHNAMOD:GetValueFromWeightedPool(pool, rng)
 	while roll > 0 and index < #pool do
 		index = index + 1
 		roll = roll - GetWeight(pool[index])
-		--ARACHNAMOD:DebugLog("Index is:", index)
-		--ARACHNAMOD:DebugLog("Roll is:", roll)
+		--ArachnaMod:DebugLog("Index is:", index)
+		--ArachnaMod:DebugLog("Roll is:", roll)
 	end
 
 	-- V is the value of the selected pool item
-	--ARACHNAMOD:DebugLog("Available Pools: ")
+	--ArachnaMod:DebugLog("Available Pools: ")
 	for num, value in ipairs(pool) do
 		local weight = GetWeight(value)
 		if weight == floor(weight) then
 			weight = floor(weight)
 		end
-		--ARACHNAMOD:DebugLog(num .. " With weight " .. weight)
+		--ArachnaMod:DebugLog(num .. " With weight " .. weight)
 	end
 	if index == 0 then
-		--ARACHNAMOD:DebugLog("Pool exhausted. Returned nil")
+		--ArachnaMod:DebugLog("Pool exhausted. Returned nil")
 		return nil, index
 	end
-	--ARACHNAMOD:DebugLog("Chosen Pool:" .. index)
+	--ArachnaMod:DebugLog("Chosen Pool:" .. index)
 	local result = pool[index].V
 
 	return result, index
@@ -384,10 +384,10 @@ end
 ---Returns a table consisting of values in **tab** corresponding to
 ---values in **keys** table.
 ---@function
-function ARACHNAMOD:GetValuesByKeys(tab, keys)
+function ArachnaMod:GetValuesByKeys(tab, keys)
 	local out = {}
 	for _, v in pairs(keys) do
-		ARACHNAMOD.Insert(out, tab[v])
+		ArachnaMod.Insert(out, tab[v])
 	end
 
 	return out
@@ -397,7 +397,7 @@ end
 ---@param tab table<K,V>
 ---@param func fun(val: V): any
 ---@function
-function ARACHNAMOD:Map(tab, func)
+function ArachnaMod:Map(tab, func)
 	local out = {}
 
 	for k, v in pairs(tab) do
@@ -412,7 +412,7 @@ end
 ---@param filterFunc fun(val: V, key?: K): boolean
 ---@return table<K,V>
 ---@function
-function ARACHNAMOD:FilterDict(dict, filterFunc)
+function ArachnaMod:FilterDict(dict, filterFunc)
 	local out = {}
 
 	for k, v in pairs(dict) do
@@ -429,7 +429,7 @@ end
 ---@param filterFunc fun(val: V, key?: integer): boolean
 ---@return V[]
 ---@function
-function ARACHNAMOD:FilterList(list, filterFunc)
+function ArachnaMod:FilterList(list, filterFunc)
 	local out = {}
 
 	for k, v in ipairs(list) do
@@ -444,7 +444,7 @@ end
 ---@generic K, V
 ---@param tab table<K,V>
 ---@return table<V,K>
-function ARACHNAMOD:Invert(tab)
+function ArachnaMod:Invert(tab)
 	local out = {}
 	for k, v in pairs(tab) do
 		out[v] = k
@@ -457,7 +457,7 @@ end
 ---@param tab table<K,V>
 ---@param checker any|fun(val: V, key?: K): boolean?
 ---@return K?, V?
-function ARACHNAMOD:FindInTable(tab, checker)
+function ArachnaMod:FindInTable(tab, checker)
 	if type(checker) == "function" then
 		for k, v in pairs(tab) do
 			if checker(v, k) then
@@ -478,7 +478,7 @@ end
 ---@param funcOrVal T|fun(...: any): T
 ---@param ... any
 ---@return T[]
-function ARACHNAMOD:RepeatFill(count, funcOrVal, ...)
+function ArachnaMod:RepeatFill(count, funcOrVal, ...)
 	local out = {}
 
 	if type(funcOrVal) == "function" then
@@ -497,7 +497,7 @@ end
 ---@generic K, V
 ---@param tab table<K,V>
 ---@return table<K,V>
-function ARACHNAMOD:ShallowCopy(tab)
+function ArachnaMod:ShallowCopy(tab)
 	local out = {}
 	for k, v in pairs(tab) do
 		out[k] = v
@@ -508,14 +508,14 @@ end
 ---@generic V
 ---@param tab V
 ---@return V
-function ARACHNAMOD:CopyTable(tab)
+function ArachnaMod:CopyTable(tab)
 	if type(tab) ~= "table" then
 		return tab
 	end
 
 	local final = setmetatable({}, getmetatable(tab))
 	for i, v in pairs(tab) do
-		final[i] = ARACHNAMOD:CopyTable(v)
+		final[i] = ArachnaMod:CopyTable(v)
 	end
 
 	return final
@@ -524,7 +524,7 @@ end
 ---@generic V
 ---@param dict table<any, V>
 ---@return V[]
-function ARACHNAMOD:ToList(dict)
+function ArachnaMod:ToList(dict)
 	local out = {}
 	for _, v in pairs(dict) do
 		out[#out + 1] = v

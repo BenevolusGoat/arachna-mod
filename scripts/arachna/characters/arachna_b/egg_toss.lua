@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local EGG_TOSS = {}
 
-ARACHNAMOD.Item.EGG_TOSS = EGG_TOSS
+ArachnaMod.Item.EGG_TOSS = EGG_TOSS
 
 EGG_TOSS.ID = Isaac.GetItemIdByName("Egg Toss")
 EGG_TOSS.TEAR = Isaac.GetEntityVariantByName("Arachna Egg Tear")
@@ -183,7 +183,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 		end
 		Mod.Foreach.NPCInRadius(source.Position, EGG_TOSS.THROWN_EGG_RADIUS, function(npc, index)
 			npc:AddSlowing(playerSource, 150, 0.5, StatusEffectLibrary.StatusColor.SLOW)
-		end, nil, nil, {UseEnemySearchParams = true})
+		end, nil, nil, { UseEnemySearchParams = true })
 	elseif spiderColor == SpiderSubType.DEATH then
 		local poof = Mod.Spawn.Poof02(1, source.Position, source.Entity)
 		poof.Color = source.Entity.Color
@@ -192,7 +192,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 		local necroDamage = player and getNecroDamage(player) or 40
 		Mod.Foreach.NPCInRadius(source.Position, 80, function(npc, index)
 			npc:TakeDamage(necroDamage, 0, playerSource, 0)
-		end, nil, nil, {UseEnemySearchParams = true})
+		end, nil, nil, { UseEnemySearchParams = true })
 	elseif spiderColor == SpiderSubType.RAINBOW then
 		Mod.Foreach.NPCInRadius(source.Position, EGG_TOSS.THROWN_EGG_RADIUS, function(npc, index)
 			if npc:IsBoss() then
@@ -201,7 +201,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 				Mod.Entities.COLORED_SPIDERS:SpawnRainbowFart(npc.Position, source.Entity:GetSprite().Color)
 				npc:Die()
 			end
-		end, nil, nil, {UseEnemySearchParams = true})
+		end, nil, nil, { UseEnemySearchParams = true })
 	elseif spiderColor == SpiderSubType.GOLDEN then
 		if ent then
 			ent:AddMidasFreeze(playerSource, 150)
@@ -221,7 +221,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 		end
 		Mod.Foreach.NPCInRadius(source.Position, EGG_TOSS.THROWN_EGG_RADIUS, function(npc, index)
 			npc:AddCharmed(playerSource, 150)
-		end, nil, nil, {UseEnemySearchParams = true})
+		end, nil, nil, { UseEnemySearchParams = true })
 	elseif spiderColor == SpiderSubType.ICE then
 		local clouds = Mod.Spawn.DustClouds(source.Position, nil, source.Entity, nil, 3)
 		for _, cloud in ipairs(clouds) do

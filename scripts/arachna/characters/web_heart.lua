@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local WEB_HEART = {}
 
-ARACHNAMOD.Pickup.WEB_HEART = WEB_HEART
+ArachnaMod.Pickup.WEB_HEART = WEB_HEART
 
 WEB_HEART.ID = Isaac.GetEntitySubTypeByName("Web Heart")
 WEB_HEART.ID_DOUBLE = Isaac.GetEntitySubTypeByName("Web Heart (Double)")
@@ -162,7 +162,7 @@ function WEB_HEART:KeeperHeartCollision(pickup, collider)
 		if pickup:IsShopItem() then
 			return true
 		end
-		ARACHNAMOD:PickupKill(pickup)
+		ArachnaMod:PickupKill(pickup)
 		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
 		local amount = pickup.SubType == WEB_HEART.ID_DOUBLE and 4 or 2
 		for _ = 1, amount do
@@ -185,7 +185,7 @@ function WEB_HEART:CollectWebHeart(pickup, collider)
 		return pickup:IsShopItem()
 	end
 
-	if ARACHNAMOD:PricedPickup(player, pickup) then
+	if ArachnaMod:PricedPickup(player, pickup) then
 		Mod.sfxman:Play(WEB_HEART.PICKUP_SFX)
 		local heartWorth = pickup.SubType == WEB_HEART.ID_DOUBLE and 2 or 1
 		WEB_HEART:AddWebHearts(player, heartWorth)

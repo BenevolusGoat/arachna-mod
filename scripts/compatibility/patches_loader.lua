@@ -1,10 +1,10 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local loader = {
 	Patches = {},
 	AppliedPatches = false,
 }
 
-ARACHNAMOD.PatchesLoader = loader
+ArachnaMod.PatchesLoader = loader
 
 -- Registers a Mod patch
 -- Mod:string           Name of Mod global

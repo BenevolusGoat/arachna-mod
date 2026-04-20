@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local COLORED_SPIDERS = {}
 
-ARACHNAMOD.Entities.COLORED_SPIDERS = COLORED_SPIDERS
+ArachnaMod.Entities.COLORED_SPIDERS = COLORED_SPIDERS
 
 local function getSub(str)
 	return Isaac.GetEntitySubTypeByName("Arachna Spider (" .. str .. ")")

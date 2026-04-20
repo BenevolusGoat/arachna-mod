@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local oldSaveDataLookup = {
 	MomsHeart = "Mom's Heart",
@@ -18,7 +18,7 @@ local oldSaveDataLookup = {
 ---Many players might attempt to launch Arachna without REPENTOGON while IsaacSaveManager is still intact.
 ---Wait until the conditions are met to properly transfer save data of marks to REPENTOGON
 ---@param saveData table
-function ARACHNAMOD:TransferMarksToREPENTOGON(saveData)
+function ArachnaMod:TransferMarksToREPENTOGON(saveData)
 	if not REPENTOGON then
 		return
 	end
@@ -76,14 +76,14 @@ function ARACHNAMOD:TransferMarksToREPENTOGON(saveData)
 		saveData.file.other.arachnaMarks = nil
 		saveData.file.other.arachnaMarksAlt = nil
 		Mod.SaveManager.Save()
-		ARACHNAMOD.ShowNewPopup = true
+		ArachnaMod.ShowNewPopup = true
 	end
 end
 
-ARACHNAMOD:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_LOAD, ARACHNAMOD.TransferMarksToREPENTOGON)
+ArachnaMod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_LOAD, ArachnaMod.TransferMarksToREPENTOGON)
 
 ---@param saveData table
-function ARACHNAMOD:ConvertSaveData(saveData)
+function ArachnaMod:ConvertSaveData(saveData)
 	if saveData.arachnaMarks then
 		print("[Arachna] Old save format found. Transfered completion marks to new location.")
 		local newSave = Mod.SaveManager.Utility.PatchSaveFile({}, Mod.SaveManager.DEFAULT_SAVE)
@@ -93,4 +93,4 @@ function ARACHNAMOD:ConvertSaveData(saveData)
 	end
 end
 
-ARACHNAMOD:AddCallback(Mod.SaveManager.SaveCallbacks.PRE_DATA_LOAD, ARACHNAMOD.ConvertSaveData)
+ArachnaMod:AddCallback(Mod.SaveManager.SaveCallbacks.PRE_DATA_LOAD, ArachnaMod.ConvertSaveData)

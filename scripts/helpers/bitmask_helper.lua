@@ -3,7 +3,7 @@
 ---@param bitmaskOffset integer
 ---@return TearFlags
 ---@function
-function ARACHNAMOD:TearFlag(bitmaskOffset)
+function ArachnaMod:TearFlag(bitmaskOffset)
 	return bitmaskOffset >= 64 and BitSet128(0, 1 << (bitmaskOffset - 64)) or BitSet128(1 << bitmaskOffset, 0)
 end
 
@@ -12,9 +12,9 @@ end
 ---@param bitmask integer @bitmask to split
 ---@param maxInt integer @max offset to check
 ---@return string[]
-function ARACHNAMOD:GetNamesInBitmask(flagTable, bitmask, maxInt)
+function ArachnaMod:GetNamesInBitmask(flagTable, bitmask, maxInt)
 	local names = {}
-	local inv = ARACHNAMOD:Invert(flagTable)
+	local inv = ArachnaMod:Invert(flagTable)
 	for i = 0, maxInt do
 		if bitmask & (1 << i) == (1 << i) then
 			names[#names + 1] = inv[1 << i]
@@ -27,7 +27,7 @@ end
 ---@generic flag
 ---@param flags flag
 ---@param checkFlag flag
-function ARACHNAMOD:HasBitFlags(flags, checkFlag)
+function ArachnaMod:HasBitFlags(flags, checkFlag)
 	if not checkFlag then
 		error("BitMaskHelper: checkFlag is nil", 2)
 	end
@@ -38,7 +38,7 @@ end
 ---@generic flag
 ---@param flags flag
 ---@param checkFlag flag
-function ARACHNAMOD:HasAnyBitFlags(flags, checkFlag)
+function ArachnaMod:HasAnyBitFlags(flags, checkFlag)
 	return flags & checkFlag > 0
 end
 
@@ -47,7 +47,7 @@ end
 ---@param flags flag
 ---@param addFlag flag
 ---@return flag
-function ARACHNAMOD:AddBitFlags(flags, addFlag)
+function ArachnaMod:AddBitFlags(flags, addFlag)
 	flags = flags | addFlag
 	return flags
 end
@@ -57,7 +57,7 @@ end
 ---@param flags flag
 ---@param removeFlag flag
 ---@return flag
-function ARACHNAMOD:RemoveBitFlags(flags, removeFlag)
+function ArachnaMod:RemoveBitFlags(flags, removeFlag)
 	flags = flags & ~removeFlag
 	return flags
 end

@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ARC_EID = Mod.EID_Support
 
 --RedToX is not supported for some languages, hence russian and polish missing

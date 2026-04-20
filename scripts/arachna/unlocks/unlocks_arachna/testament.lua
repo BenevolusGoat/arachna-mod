@@ -1,11 +1,11 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local TESTAMENT = {}
 local enableTestamentShader = false --self explanatory. CircleSize in shader file used to be 110
 
-ARACHNAMOD.Item.TESTAMENT = TESTAMENT
+ArachnaMod.Item.TESTAMENT = TESTAMENT
 
 TESTAMENT.ID = Isaac.GetItemIdByName("The Testament")
 
@@ -32,12 +32,12 @@ TESTAMENT.MAX_NEXT_RUN_ITEMS = 2
 TESTAMENT.IMMOBILE_DURATION = 20
 
 TESTAMENT.PEDESTAL_POSITIONS = {
-	[1] = {Vector(320, 400)},
-	[2] = {Vector(240, 280), Vector(400, 280)},
-	[3] = {Vector(240, 280), Vector(400, 280), Vector(320, 400)},
-	[4] = {Vector(240, 200), Vector(400, 200), Vector(240, 360), Vector(400, 360)},
-	[5] = {Vector(240, 240), Vector(400, 240), Vector(240, 320), Vector(400, 320), Vector(320, 400)},
-	[6] = {Vector(240, 200), Vector(240, 280), Vector(240, 360), Vector(400, 200), Vector(400, 280), Vector(400, 360)},
+	[1] = { Vector(320, 400) },
+	[2] = { Vector(240, 280), Vector(400, 280) },
+	[3] = { Vector(240, 280), Vector(400, 280), Vector(320, 400) },
+	[4] = { Vector(240, 200), Vector(400, 200), Vector(240, 360), Vector(400, 360) },
+	[5] = { Vector(240, 240), Vector(400, 240), Vector(240, 320), Vector(400, 320), Vector(320, 400) },
+	[6] = { Vector(240, 200), Vector(240, 280), Vector(240, 360), Vector(400, 200), Vector(400, 280), Vector(400, 360) },
 }
 
 local testamentRoomIndex = 0
@@ -185,13 +185,13 @@ function TESTAMENT:OnUse(itemId, rng, player)
 		player:GetEffects():RemoveCollectibleEffect(itemId, -1)
 	else
 		doNotTeleport = false
-		Mod.Foreach.Player(function (_player, index)
+		Mod.Foreach.Player(function(_player, index)
 			TESTAMENT:AnimateTestamentTeleport(_player)
 		end)
 		TESTAMENT:CopyPlayerInventory(player)
 		lastDir = Direction.NO_DIRECTION
 	end
-	return {Discharge = true, Remove = true, ShowAnim = false}
+	return { Discharge = true, Remove = true, ShowAnim = false }
 end
 
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, TESTAMENT.OnUse, TESTAMENT.ID)
@@ -247,7 +247,7 @@ function TESTAMENT:SetupRoom(entType, variant, subtype, gridIndex, seed)
 		end
 		local roomDesc = Mod.Level():GetRoomByIdx(GridRooms.ROOM_DEBUG_IDX, -1)
 		roomDesc.Flags = Mod:AddBitFlags(roomDesc.Flags, RoomDescriptor.FLAG_CURSED_MIST)
-		return {TESTAMENT.REPLACER_VAR, TESTAMENT.REPLACER_SUB}
+		return { TESTAMENT.REPLACER_VAR, TESTAMENT.REPLACER_SUB }
 	end
 end
 
@@ -276,7 +276,7 @@ function TESTAMENT:PostEnterTestamentRoom()
 		Mod.sfxman:Play(SoundEffect.SOUND_UNLOCK00, 0)
 		--This function reopens doors already previously removed. Create both and then remove/update them
 		level:MakeRedRoomDoor(GridRooms.ROOM_DEBUG_IDX, oppositeDoorSlot)
-		Mod.Foreach.Door(function (door, doorSlot)
+		Mod.Foreach.Door(function(door, doorSlot)
 			local name = doorSlot == DoorSlot.DOWN0 and "DOWN" or "UP"
 			if doorSlot == DoorSlot.DOWN0 and not (inventory[nextIndexSet])
 				or doorSlot == DoorSlot.UP0 and testamentRoomIndex == 0
@@ -288,7 +288,7 @@ function TESTAMENT:PostEnterTestamentRoom()
 				TESTAMENT:UpdateDoorGraphic(door)
 			end
 		end)
-		Mod.Foreach.Player(function (player, index)
+		Mod.Foreach.Player(function(player, index)
 			if lastDir == Direction.UP then
 				player.Position = Vector(320, 400)
 			elseif lastDir == Direction.NO_DIRECTION then
@@ -343,7 +343,7 @@ function TESTAMENT:SleepPlayersNearEndOfEffect()
 		local effects = Mod.Room():GetEffects()
 		local effect = effects:GetCollectibleEffect(TESTAMENT.ID)
 		if effect and effect.Cooldown == TESTAMENT.IMMOBILE_DURATION then
-			Mod.Foreach.Player(function (player, index)
+			Mod.Foreach.Player(function(player, index)
 				TESTAMENT:AnimateTestamentTeleport(player)
 			end)
 		end
@@ -424,7 +424,7 @@ function TESTAMENT:OnTestamentPedestalCollision(pedestal, collider)
 			effects:GetCollectibleEffect(TESTAMENT.ID).Cooldown = 120
 			Mod.Game:ShakeScreen(16)
 			Mod.Game:Darken(1, 80)
-			Mod.Foreach.Door(function (door, doorSlot)
+			Mod.Foreach.Door(function(door, doorSlot)
 				Mod.Spawn.Poof01(0, door.Position)
 				Mod.Room():RemoveDoor(doorSlot)
 			end)
@@ -437,12 +437,12 @@ function TESTAMENT:OnTestamentPedestalCollision(pedestal, collider)
 		pedestal.SubType = 0
 		pedestal:GetSprite():ReplaceSpritesheet(1, "")
 		pedestal:GetSprite():ReplaceSpritesheet(4, "", true)
-		Mod.Foreach.Slot(function (slot, index)
+		Mod.Foreach.Slot(function(slot, index)
 			if GetPtrHash(slot) ~= GetPtrHash(pedestal) then
 				slot:Remove()
 				Mod.Spawn.Poof01(0, slot.Position)
 			end
-		end, TESTAMENT.PEDESTAL_VAR, nil, {Inverse = true})
+		end, TESTAMENT.PEDESTAL_VAR, nil, { Inverse = true })
 		return true
 	end
 end
@@ -515,7 +515,7 @@ function TESTAMENT:EmergencyExit()
 			end
 		end
 		if hasItem then return end
-		local hasDoor = Mod.Foreach.Door(function (door, doorSlot)
+		local hasDoor = Mod.Foreach.Door(function(door, doorSlot)
 			return true
 		end) or false
 		if hasDoor then return end
@@ -526,7 +526,7 @@ function TESTAMENT:EmergencyExit()
 		Mod.sfxman:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ)
 		Mod.Game:ShakeScreen(16)
 		Mod.Game:Darken(1, 80)
-		Mod.Foreach.Door(function (door, doorSlot)
+		Mod.Foreach.Door(function(door, doorSlot)
 			Mod.Spawn.Poof01(0, door.Position)
 			Mod.Room():RemoveDoor(doorSlot)
 		end)
@@ -550,7 +550,7 @@ local function ShouldNotRenderShader()
 		or (not enableTestamentShader)
 end
 
-local function testamentShader(_, shaderName) 
+local function testamentShader(_, shaderName)
 	if shaderName == "DarkRoomArachna" then
 		local playerPos = GetPlayerPosition(Isaac.GetPlayer(0))
 		local params = {

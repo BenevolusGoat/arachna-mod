@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ARC_EID = Mod.EID_Support
 local DD = ARC_EID.DynamicDescriptions
 
@@ -101,8 +101,8 @@ EID:addDescriptionModifier(
 		if descObj.ObjVariant == PickupVariant.PICKUP_TAROTCARD
 			and (
 				descObj.ObjSubType == Mod.Card.MERGED_CARD.ID
-			or descObj.ObjSubType == Mod.Card.MERGED_CARD_REVERSED.ID
-		) and EID.holdTabCounter >= 30 then
+				or descObj.ObjSubType == Mod.Card.MERGED_CARD_REVERSED.ID
+			) and EID.holdTabCounter >= 30 then
 			EID.TabDescThisFrame = true
 			return true
 		end

@@ -1,6 +1,6 @@
 --luacheck: no max line length
-local Mod = ARACHNAMOD
-local SettingsHelper = ARACHNAMOD.SettingsHelper
+local Mod = ArachnaMod
+local SettingsHelper = ArachnaMod.SettingsHelper
 
 local frameOptions = {}
 for i = 5, 20 do

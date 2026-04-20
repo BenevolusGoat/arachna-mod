@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local SOUL_OF_ARACHNA = {}
 
-ARACHNAMOD.Card.SOUL_OF_ARACHNA = SOUL_OF_ARACHNA
+ArachnaMod.Card.SOUL_OF_ARACHNA = SOUL_OF_ARACHNA
 
 SOUL_OF_ARACHNA.ID = Isaac.GetCardIdByName("Soul of Arachna")
 SOUL_OF_ARACHNA.SFX = Isaac.GetSoundIdByName("Soul of Arachna")
@@ -15,10 +15,10 @@ SOUL_OF_ARACHNA.WEBBED_DURATION = 300
 function SOUL_OF_ARACHNA:OnUse(card, player, useFlags)
 	local source = EntityRef(player)
 
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		Mod.Item.ARACHNAS_SPOOL:ApplyWebbed(npc, source, SOUL_OF_ARACHNA.WEBBED_DURATION)
 		Mod.Game:SpawnParticles(npc.Position, EffectVariant.BLOOD_PARTICLE, Mod:RandomNum(7, 14), 4, Color(1, 1, 1, 1, 1, 1, 1))
-	end, nil, nil, nil, {UseEnemySearchParams = true})
+	end, nil, nil, nil, { UseEnemySearchParams = true })
 
 	Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 0.8)
 

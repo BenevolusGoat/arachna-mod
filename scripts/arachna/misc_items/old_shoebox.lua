@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local OLD_SHOEBOX = {}
 
-ARACHNAMOD.Item.OLD_SHOEBOX = OLD_SHOEBOX
+ArachnaMod.Item.OLD_SHOEBOX = OLD_SHOEBOX
 
 OLD_SHOEBOX.ID = Isaac.GetItemIdByName("Old Shoebox")
 

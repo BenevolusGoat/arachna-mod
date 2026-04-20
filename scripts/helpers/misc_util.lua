@@ -1,9 +1,9 @@
-local floor = ARACHNAMOD.math.floor
-local ceil = ARACHNAMOD.math.ceil
+local floor = ArachnaMod.math.floor
+local ceil = ArachnaMod.math.ceil
 
 ---@param ent1 Entity
 ---@param ent2 Entity
-function ARACHNAMOD:IsSameEntity(ent1, ent2)
+function ArachnaMod:IsSameEntity(ent1, ent2)
 	return GetPtrHash(ent1) == GetPtrHash(ent2)
 end
 
@@ -11,7 +11,7 @@ end
 ---@param anims string[]
 ---@param useOverlay? boolean
 ---@return boolean isPlaying
-function ARACHNAMOD:IsSpriteAnimActive(sprite, anims, useOverlay)
+function ArachnaMod:IsSpriteAnimActive(sprite, anims, useOverlay)
 	for i = 1, #anims do
 		if not useOverlay and sprite:GetAnimation() == anims[i]
 			or useOverlay and sprite:GetOverlayAnimation() == anims[i]
@@ -25,7 +25,7 @@ end
 ---@param direction Vector
 ---@param shotSpeed number
 ---@param player? EntityPlayer
-function ARACHNAMOD:AddTearVelocity(direction, shotSpeed, player)
+function ArachnaMod:AddTearVelocity(direction, shotSpeed, player)
 	local newDirection = direction:Resized(shotSpeed)
 
 	if player then
@@ -36,7 +36,7 @@ end
 
 ---@param tear EntityTear
 ---@return boolean isSplitTear
-function ARACHNAMOD:IsSplitTear(tear)
+function ArachnaMod:IsSplitTear(tear)
 	local isSplit = false
 
 	for _, tears in pairs(Isaac.FindInRadius(tear.Position, 10, EntityPartition.TEAR)) do
@@ -44,7 +44,7 @@ function ARACHNAMOD:IsSplitTear(tear)
 		if mainTear == nil then return false end
 		if tear.InitSeed ~= mainTear.InitSeed
 			and tear.FrameCount ~= mainTear.FrameCount
-			and ARACHNAMOD:TryGetPlayer(tear)
+			and ArachnaMod:TryGetPlayer(tear)
 		then
 			isSplit = true
 		end
@@ -55,7 +55,7 @@ end
 
 ---@param c1 Color
 ---@param c2 Color
-function ARACHNAMOD:AreColorsDifferent(c1, c2)
+function ArachnaMod:AreColorsDifferent(c1, c2)
 	local c1Metatable = getmetatable(c1)
 	local c2Metatable = getmetatable(c2)
 	local different = false
@@ -79,8 +79,8 @@ function ARACHNAMOD:AreColorsDifferent(c1, c2)
 end
 
 ---@param laser EntityLaser
-function ARACHNAMOD:IsBrimLaser(laser)
-	local brimVariants = ARACHNAMOD:Set({
+function ArachnaMod:IsBrimLaser(laser)
+	local brimVariants = ArachnaMod:Set({
 		LaserVariant.THIN_RED,
 		LaserVariant.THICK_RED,
 		LaserVariant.BRIM_TECH,
@@ -92,13 +92,13 @@ function ARACHNAMOD:IsBrimLaser(laser)
 	return brimVariants[laser.Variant]
 end
 
-function ARACHNAMOD:GetScreenCenter()
+function ArachnaMod:GetScreenCenter()
 	return Vector(floor(Isaac.GetScreenWidth() / 2), floor(Isaac.GetScreenHeight() / 2))
 end
 
 ---@param sprite Sprite
 ---@param layerID integer
-function ARACHNAMOD:GetCurrentFrameData(sprite, layerID)
+function ArachnaMod:GetCurrentFrameData(sprite, layerID)
 	local animationData = sprite:GetCurrentAnimationData()
 	if not animationData then return end
 	local layerData = animationData:GetLayer(layerID)
@@ -107,7 +107,7 @@ function ARACHNAMOD:GetCurrentFrameData(sprite, layerID)
 	return frameData
 end
 
-function ARACHNAMOD:CopySprite(sprite)
+function ArachnaMod:CopySprite(sprite)
 	local copySprite = Sprite()
 
 	if not sprite:IsLoaded() then
@@ -146,17 +146,17 @@ function ARACHNAMOD:CopySprite(sprite)
 end
 
 ---@param color Color
-function ARACHNAMOD:CopyColor(color)
+function ArachnaMod:CopyColor(color)
 	return Color(color.R, color.G, color.B, color.A, color.RO, color.GO, color.BO)
 end
 
 ---@param func function
-function ARACHNAMOD:DelayOneFrame(func)
+function ArachnaMod:DelayOneFrame(func)
 	Isaac.CreateTimer(func, 1, 1, true)
 end
 
 ---@param dir Direction
-function ARACHNAMOD:DirectionToString(dir)
+function ArachnaMod:DirectionToString(dir)
 	local directions = {
 		[Direction.NO_DIRECTION] = "Down",
 		[Direction.LEFT] = "Left",
@@ -171,7 +171,7 @@ end
 ---@param val T | fun(...): T
 ---@param ... any
 ---@return T
-function ARACHNAMOD:ProcessFuncOrValue(val, ...)
+function ArachnaMod:ProcessFuncOrValue(val, ...)
 	if type(val) == "function" then
 		return val(...)
 	else
@@ -183,7 +183,7 @@ end
 ---@param type EntityType
 ---@param var integer
 ---@param sub integer
-function ARACHNAMOD:CheckTypeVarSub(ent, type, var, sub)
+function ArachnaMod:CheckTypeVarSub(ent, type, var, sub)
 	return ent.Type == type
 		and ent.Variant == var
 		and ent.SubType == sub
@@ -199,8 +199,8 @@ end
 ---@param ignoreWalls boolean
 ---@param ignoreCrushable boolean
 ---@return boolean, Vector
-function ARACHNAMOD:RoomCheckLineEx(pos1, pos2, lineCheckMode, gridPath, ignoreWalls, ignoreCrushable)
-	local isClearPath, shittyPosIfObstructed = ARACHNAMOD.Room():CheckLine(pos1, pos2, lineCheckMode, gridPath,
+function ArachnaMod:RoomCheckLineEx(pos1, pos2, lineCheckMode, gridPath, ignoreWalls, ignoreCrushable)
+	local isClearPath, shittyPosIfObstructed = ArachnaMod.Room():CheckLine(pos1, pos2, lineCheckMode, gridPath,
 		ignoreWalls,
 		ignoreCrushable)
 
@@ -208,7 +208,7 @@ function ARACHNAMOD:RoomCheckLineEx(pos1, pos2, lineCheckMode, gridPath, ignoreW
 		local direction = (pos2 - pos1):Normalized()
 		local findGridPos = shittyPosIfObstructed + direction:Resized(5)
 		for _ = 1, 10 do
-			local gridEnt = ARACHNAMOD.Room():GetGridEntityFromPos(findGridPos)
+			local gridEnt = ArachnaMod.Room():GetGridEntityFromPos(findGridPos)
 			if gridEnt then break end
 			findGridPos = findGridPos + direction
 		end
@@ -220,14 +220,14 @@ function ARACHNAMOD:RoomCheckLineEx(pos1, pos2, lineCheckMode, gridPath, ignoreW
 end
 
 ---@param pos Vector
-function ARACHNAMOD:GetClosestGridEnt(pos)
+function ArachnaMod:GetClosestGridEnt(pos)
 	local shortestDistance
 	local closestGridEnt
 	for row = 1, 3 do
 		local posFromMiddle = row - 2
 		for column = 1, 3 do
 			local offset = 0
-			local roomShape = ARACHNAMOD.Room():GetRoomShape()
+			local roomShape = ArachnaMod.Room():GetRoomShape()
 			local perRow = roomShape >= RoomShape.ROOMSHAPE_2x1 and 27 or 15
 			if column == 1 then
 				offset = -perRow
@@ -235,7 +235,7 @@ function ARACHNAMOD:GetClosestGridEnt(pos)
 				offset = perRow
 			end
 			if row ~= 2 or column ~= 2 then
-				local room = ARACHNAMOD.Room()
+				local room = ArachnaMod.Room()
 				local playerGridIndex = room:GetGridIndex(pos)
 				local gridEnt = room:GetGridEntity(playerGridIndex + offset + posFromMiddle)
 				if gridEnt
@@ -266,23 +266,23 @@ local playdoughColor = {
 	{ 1,   0.1, 0,   1 } --dark orange
 }
 
-function ARACHNAMOD:GetRandomPlaydoughColor()
+function ArachnaMod:GetRandomPlaydoughColor()
 	local dC = Color.Default
-	local color = playdoughColor[ARACHNAMOD:RandomNum(9)]
+	local color = playdoughColor[ArachnaMod:RandomNum(9)]
 	dC:SetColorize(color[1], color[2], color[3], color[4])
 	return dC
 end
 
 ---@param pos Vector
 ---@return Vector | nil DoorSlotPos
-function ARACHNAMOD:GetClosestDoorSlotPos(pos)
+function ArachnaMod:GetClosestDoorSlotPos(pos)
 	local closestDoor
 	local closestDistance
 
 	for doorSlot = 0, DoorSlot.NUM_DOOR_SLOTS do
-		local door = ARACHNAMOD.Room():GetDoor(doorSlot)
+		local door = ArachnaMod.Room():GetDoor(doorSlot)
 		if door ~= nil and door:IsOpen() then
-			local doorPos = ARACHNAMOD.Room():GetDoorSlotPosition(doorSlot)
+			local doorPos = ArachnaMod.Room():GetDoorSlotPosition(doorSlot)
 			local doorDistance = doorPos:DistanceSquared(pos)
 
 			if not closestDoor or doorDistance < closestDistance then
@@ -297,16 +297,16 @@ end
 
 ---Capitizes the string and replaces spaces with underscores
 ---@param str string
-function ARACHNAMOD:ToEnum(str)
+function ArachnaMod:ToEnum(str)
 	return string.gsub(str, " ", "_"):upper()
 end
 
-function ARACHNAMOD:ShouldUpdateSprite()
-	return not ARACHNAMOD.Game:IsPaused() and Isaac.GetFrameCount() % 2 == 0
+function ArachnaMod:ShouldUpdateSprite()
+	return not ArachnaMod.Game:IsPaused() and Isaac.GetFrameCount() % 2 == 0
 end
 
-function ARACHNAMOD:TryStartAmbush()
-	local room = ARACHNAMOD.Room():GetType()
+function ArachnaMod:TryStartAmbush()
+	local room = ArachnaMod.Room():GetType()
 	if room ~= RoomType.ROOM_BOSSRUSH and room ~= RoomType.ROOM_CHALLENGE then
 		return
 	end
@@ -324,7 +324,7 @@ local bloodTearTable = {
 }
 
 ---@param tear EntityTear
-function ARACHNAMOD:TryChangeTearToBloodVariant(tear)
+function ArachnaMod:TryChangeTearToBloodVariant(tear)
 	if bloodTearTable[tear.Variant] then
 		tear:ChangeVariant(bloodTearTable[tear.Variant])
 		return true
@@ -332,38 +332,38 @@ function ARACHNAMOD:TryChangeTearToBloodVariant(tear)
 	return false
 end
 
-local inverseTearTable = ARACHNAMOD:Invert(bloodTearTable)
+local inverseTearTable = ArachnaMod:Invert(bloodTearTable)
 
 ---@param tear EntityTear
-function ARACHNAMOD:IsBloodTear(tear)
+function ArachnaMod:IsBloodTear(tear)
 	return inverseTearTable[tear.Variant] ~= nil
 end
 
 ---@param tear EntityTear
 ---@param player EntityPlayer
-function ARACHNAMOD:ShouldUpdateLudo(tear, player)
+function ArachnaMod:ShouldUpdateLudo(tear, player)
 	return floor(tear.FrameCount / player.MaxFireDelay) ~= floor((tear.FrameCount - 1) / player.MaxFireDelay)
 end
 
 ---@param ent Entity
-function ARACHNAMOD:IsDeadEnemy(ent)
+function ArachnaMod:IsDeadEnemy(ent)
 	return ent:IsActiveEnemy(true) and ent:ToNPC() and ent:ToNPC().CanShutDoors
 end
 
 ---@return string
-function ARACHNAMOD:GetHealthPath()
+function ArachnaMod:GetHealthPath()
 	return not CustomHealthAPI and "gfx/ui/ui_hearts.anm2" or "gfx/ui/CustomHealthAPI/hearts.anm2"
 end
 
 ---@return string
-function ARACHNAMOD:GetMinimapPath()
+function ArachnaMod:GetMinimapPath()
 	return not MinimapAPI and "gfx/ui/minimap_icons.anm2" or "gfx/ui/minimapapi_icons.anm2"
 end
 
 ---@param ent Entity | Vector
 ---@param offset Vector
 ---@param ignoreShake? boolean
-function ARACHNAMOD:GetEntityRenderPosition(ent, offset, ignoreShake)
+function ArachnaMod:GetEntityRenderPosition(ent, offset, ignoreShake)
 	local pos
 	if getmetatable(ent).__type == "Vector" then
 		---@cast ent Vector
@@ -371,21 +371,21 @@ function ARACHNAMOD:GetEntityRenderPosition(ent, offset, ignoreShake)
 	else
 		---@cast ent Entity
 		pos = ent.Position + ent.PositionOffset
-		if ent:ToPlayer() and ARACHNAMOD.Room():GetRenderMode() ~= RenderMode.RENDER_WATER_REFLECT then
+		if ent:ToPlayer() and ArachnaMod.Room():GetRenderMode() ~= RenderMode.RENDER_WATER_REFLECT then
 			---@cast ent EntityPlayer
 			pos = pos + ent:GetFlyingOffset()
 		end
 	end
 	local renderPos = Isaac.WorldToRenderPosition(pos) + offset
 	if ignoreShake then
-		renderPos = renderPos - ARACHNAMOD.Game.ScreenShakeOffset
+		renderPos = renderPos - ArachnaMod.Game.ScreenShakeOffset
 	end
 	return renderPos
 end
 
 ---@param laser EntityLaser
 ---@return Vector?
-function ARACHNAMOD:GetLaserEndPoint(laser)
+function ArachnaMod:GetLaserEndPoint(laser)
 	if laser.SubType == LaserSubType.LASER_SUBTYPE_LINEAR
 		and laser:IsSampleLaser()
 		and #laser:GetSamples() > 0
@@ -395,17 +395,17 @@ function ARACHNAMOD:GetLaserEndPoint(laser)
 	end
 end
 
-local laserWeaponType = ARACHNAMOD:Set({
+local laserWeaponType = ArachnaMod:Set({
 	WeaponType.WEAPON_BRIMSTONE,
 	WeaponType.WEAPON_LASER,
 	WeaponType.WEAPON_TECH_X
 })
 
-function ARACHNAMOD:IsLaserWeaponType(weaponType)
+function ArachnaMod:IsLaserWeaponType(weaponType)
 	return laserWeaponType[weaponType]
 end
 
 ---@param ent Entity
-function ARACHNAMOD:TypeVarSubToString(ent)
+function ArachnaMod:TypeVarSubToString(ent)
 	return tostring(ent.Type) .. "." .. tostring(ent.Variant) .. "." .. tostring(ent.SubType)
 end

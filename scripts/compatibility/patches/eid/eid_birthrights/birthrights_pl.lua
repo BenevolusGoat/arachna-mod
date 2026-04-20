@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local Item = Mod.Item
 
 return function(modifiers)

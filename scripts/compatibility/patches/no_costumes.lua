@@ -1,5 +1,5 @@
 ---@diagnostic disable: undefined-global
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local loader = Mod.PatchesLoader
 
 local function noCostumesPatch()

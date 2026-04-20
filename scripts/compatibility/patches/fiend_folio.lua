@@ -1,15 +1,15 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local loader = Mod.PatchesLoader
 local Item = Mod.Item
 
 local function ffPatch()
 	local ff = FiendFolio
 	Mod:AppendTable(ff.ReferenceItems.Actives, {
-		{ ID = Item.BEST_BUD_BALL.ID, 		Reference = "Pokemon" , Partial = false},
+		{ ID = Item.BEST_BUD_BALL.ID, Reference = "Pokemon", Partial = false },
 	})
 	Mod:AppendTable(ff.ReferenceItems.Passives, {
-		{ ID = Item.SPIDER_DONUT.ID, 		Reference = "Undertale" , Partial = false},
-		{ ID = Item.ARACHNIDS_GRIP.ID, 		Reference = "Homestuck" , Partial = true},
+		{ ID = Item.SPIDER_DONUT.ID,   Reference = "Undertale",  Partial = false },
+		{ ID = Item.ARACHNIDS_GRIP.ID, Reference = "Homestuck",  Partial = true },
 	})
 	ff:AddStackableItems({
 		Item.ARACHNIDS_GRIP.ID,

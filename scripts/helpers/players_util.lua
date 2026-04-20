@@ -1,5 +1,5 @@
-local floor = ARACHNAMOD.math.floor
-local max = ARACHNAMOD.math.max
+local floor = ArachnaMod.math.floor
+local max = ArachnaMod.math.max
 
 ---@class TryGetParams
 ---@field WeaponOwner boolean? If a familiar is found, will only pass the player if that familiar is a weapon-copying familiar
@@ -13,15 +13,15 @@ local preventLoop = {}
 ---@param ent Entity | EntityRef | EntityPtr
 ---@param tryGetParams? TryGetParams
 ---@return EntityPlayer?
-function ARACHNAMOD:TryGetPlayer(ent, tryGetParams)
+function ArachnaMod:TryGetPlayer(ent, tryGetParams)
 	if not ent then return end
 	if string.match(getmetatable(ent).__type, "EntityPtr") then
 		if ent.Ref then
-			return ARACHNAMOD:TryGetPlayer(ent.Ref, tryGetParams)
+			return ArachnaMod:TryGetPlayer(ent.Ref, tryGetParams)
 		end
 	elseif string.match(getmetatable(ent).__type, "EntityRef") then
 		if ent.Entity then
-			return ARACHNAMOD:TryGetPlayer(ent.Entity, tryGetParams)
+			return ArachnaMod:TryGetPlayer(ent.Entity, tryGetParams)
 		end
 	elseif ent:ToPlayer() then
 		return ent:ToPlayer()
@@ -41,7 +41,7 @@ function ARACHNAMOD:TryGetPlayer(ent, tryGetParams)
 		local ptrHash = GetPtrHash(ent)
 		if not preventLoop[ptrHash] then
 			preventLoop[ptrHash] = true
-			local result = ARACHNAMOD:TryGetPlayer(ent.SpawnerEntity, tryGetParams)
+			local result = ArachnaMod:TryGetPlayer(ent.SpawnerEntity, tryGetParams)
 			preventLoop[ptrHash] = nil
 			return result
 		end
@@ -51,16 +51,16 @@ end
 ---TryGetPlayer, but only returns a player or familiar if it has a Weapon object attached to them
 ---@param ent Entity | EntityRef | EntityPtr
 ---@return EntityPlayer | EntityFamiliar?
-function ARACHNAMOD:TryGetOwner(ent)
-	return ARACHNAMOD:TryGetPlayer(ent, { WeaponFamiliar = true })
+function ArachnaMod:TryGetOwner(ent)
+	return ArachnaMod:TryGetPlayer(ent, { WeaponFamiliar = true })
 end
 
 ---@param player EntityPlayer
 ---@return boolean canControl
-function ARACHNAMOD:PlayerCanControl(player)
+function ArachnaMod:PlayerCanControl(player)
 	local canControl = false
 
-	if not ARACHNAMOD.Game:IsPaused()
+	if not ArachnaMod.Game:IsPaused()
 		and not player:IsDead()
 		and player.ControlsEnabled
 	then
@@ -71,8 +71,8 @@ function ARACHNAMOD:PlayerCanControl(player)
 end
 
 ---@param player EntityPlayer
-function ARACHNAMOD:IsNotUsingMoveControls(player)
-	if not ARACHNAMOD.Game:IsPaused() and not player:IsDead() and player.ControlsEnabled and
+function ArachnaMod:IsNotUsingMoveControls(player)
+	if not ArachnaMod.Game:IsPaused() and not player:IsDead() and player.ControlsEnabled and
 		not (Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex)
 			or Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex)
 			or Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex)
@@ -88,7 +88,7 @@ end
 ---@param allowBone? boolean
 ---@param ignoreMods? boolean
 ---@function
-function ARACHNAMOD:GetPlayerRealContainersCount(player, allowBone, ignoreMods)
+function ArachnaMod:GetPlayerRealContainersCount(player, allowBone, ignoreMods)
 	local hearts = player:GetEffectiveMaxHearts()
 	if not ignoreMods and CustomHealthAPI then --Some modded hearts use red hearts behind the actual one.
 		hearts = CustomHealthAPI.Library.GetHPOfKey(player, "EMPTY_HEART", false, true)
@@ -108,7 +108,7 @@ end
 ---@param allowRotten? boolean
 ---@param ignoreMods? boolean
 ---@function
-function ARACHNAMOD:GetPlayerRealRedHeartsCount(player, allowRotten, ignoreMods)
+function ArachnaMod:GetPlayerRealRedHeartsCount(player, allowRotten, ignoreMods)
 	local hearts = player:GetHearts()
 	if not ignoreMods and CustomHealthAPI then --Some modded hearts use red hearts behind the actual one.
 		hearts = CustomHealthAPI.Library.GetHPOfKey(player, "RED_HEART", false, true)
@@ -127,7 +127,7 @@ end
 ---@param player EntityPlayer
 ---@param ignoreMods? boolean
 ---@function
-function ARACHNAMOD:GetPlayerRealSoulHeartsCount(player, ignoreMods)
+function ArachnaMod:GetPlayerRealSoulHeartsCount(player, ignoreMods)
 	if not ignoreMods and CustomHealthAPI then --Some modded hearts use soul hearts behind the actual one.
 		return CustomHealthAPI.Library.GetHPOfKey(player, "SOUL_HEART", false, false)
 	end
@@ -150,7 +150,7 @@ end
 ---@param player EntityPlayer
 ---@param ignoreMods? boolean
 ---@function
-function ARACHNAMOD:GetPlayerRealBlackHeartsCount(player, ignoreMods)
+function ArachnaMod:GetPlayerRealBlackHeartsCount(player, ignoreMods)
 	if not ignoreMods and CustomHealthAPI then --Some modded hearts use black hearts behind the actual one (?
 		return CustomHealthAPI.Library.GetHPOfKey(player, "BLACK_HEART", false, false)
 	end
@@ -171,10 +171,10 @@ end
 
 ---@param familiar EntityFamiliar
 ---@return boolean
-function ARACHNAMOD:IsPlayerWeaponFamiliar(familiar)
+function ArachnaMod:IsPlayerWeaponFamiliar(familiar)
 	local isPlayerFamiliar = false
 	if not familiar then return false end
-	local validFamiliars = ARACHNAMOD:Set({
+	local validFamiliars = ArachnaMod:Set({
 		FamiliarVariant.INCUBUS,
 		FamiliarVariant.TWISTED_BABY,
 		FamiliarVariant.BLOOD_BABY,
@@ -189,7 +189,7 @@ end
 
 ---@param player EntityPlayer
 ---@param pngName string
-function ARACHNAMOD:IsHoldingCollectibleSprite(player, pngName)
+function ArachnaMod:IsHoldingCollectibleSprite(player, pngName)
 	local heldSprite = player:GetHeldSprite()
 	local isHolding = false
 	if not (heldSprite:IsLoaded()
@@ -212,14 +212,14 @@ end
 ---@param player EntityPlayer
 ---@return boolean
 ---@function
-function ARACHNAMOD:IsPlayerDying(player)
+function ArachnaMod:IsPlayerDying(player)
 	return player:GetSprite():GetAnimation():sub(- #"Death") == "Death" --does their current animation end with "Death"?
 end
 
 ---Credit to Epiphany
 ---@param itemId CollectibleType
-function ARACHNAMOD:GetMaxCharges(itemId)
-	return ARACHNAMOD.ItemConfig:GetCollectible(itemId).MaxCharges
+function ArachnaMod:GetMaxCharges(itemId)
+	return ArachnaMod.ItemConfig:GetCollectible(itemId).MaxCharges
 end
 
 ---Credit to Epiphany
@@ -228,7 +228,7 @@ end
 ---@param heartsToRemove integer
 ---@param Inverse boolean
 ---@function
-function ARACHNAMOD:RemoveHearts(player, heartsToRemove, Inverse)
+function ArachnaMod:RemoveHearts(player, heartsToRemove, Inverse)
 	if Inverse or player:HasTrinket(TrinketType.TRINKET_CROW_HEART) then
 		local souldamage = heartsToRemove - player:GetHearts()
 		player:AddHearts(-heartsToRemove)
@@ -247,7 +247,7 @@ end
 ---Credit to Epiphany
 ---Returns true if the player is found soul
 ---@param player EntityPlayer
-function ARACHNAMOD:IsFoundSoul(player)
+function ArachnaMod:IsFoundSoul(player)
 	if player.Variant == PlayerVariant.FOUND_SOUL
 		and player:GetBabySkin() == BabySubType.BABY_FOUND_SOUL then
 		return true
@@ -259,11 +259,11 @@ end
 ---@param item CollectibleType
 ---@return ActiveSlot[]
 ---@function
-function ARACHNAMOD:GetActiveItemSlots(player, item)
+function ArachnaMod:GetActiveItemSlots(player, item)
 	local out = {}
 	for _, v in pairs(ActiveSlot) do
 		if player:GetActiveItem(v) == item then
-			ARACHNAMOD.Insert(out, v)
+			ArachnaMod.Insert(out, v)
 		end
 	end
 	return out
@@ -272,18 +272,18 @@ end
 ---@param player EntityPlayer
 ---@param itemID CollectibleType
 ---@return {Slot: ActiveSlot, Charge: integer}[]
-function ARACHNAMOD:GetActiveItemCharges(player, itemID)
-	local slots = ARACHNAMOD:GetActiveItemSlots(player, itemID)
+function ArachnaMod:GetActiveItemCharges(player, itemID)
+	local slots = ArachnaMod:GetActiveItemSlots(player, itemID)
 	local out = {}
 	for i, slot in ipairs(slots) do
-		ARACHNAMOD.Insert(out, { Slot = slot, Charge = player:GetActiveCharge(slot) })
+		ArachnaMod.Insert(out, { Slot = slot, Charge = player:GetActiveCharge(slot) })
 	end
 	return out
 end
 
 ---@param player EntityPlayer
 ---@return boolean
-function ARACHNAMOD:IsJudasBirthrightActive(player)
+function ArachnaMod:IsJudasBirthrightActive(player)
 	local playerType = player:GetPlayerType()
 	return (playerType == PlayerType.PLAYER_JUDAS or playerType == PlayerType.PLAYER_BLACKJUDAS) and
 		player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
@@ -291,7 +291,7 @@ end
 
 ---@param player EntityPlayer
 ---@return SoundEffect | integer sound
-function ARACHNAMOD:GetBelialSound(player)
+function ArachnaMod:GetBelialSound(player)
 	local temporaryEffects = player:GetEffects()
 	if temporaryEffects:HasCollectibleEffect(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL) or temporaryEffects:HasNullEffect(NullItemID.ID_JUDAS_BIRTHRIGHT) then
 		return SoundEffect.SOUND_CANDLE_LIGHT
@@ -302,7 +302,7 @@ end
 
 ---Takes an EntityPlayer and returns how many hits they should be able to sustain
 ---@param player EntityPlayer
-function ARACHNAMOD:GetEffectiveHitPoints(player)
+function ArachnaMod:GetEffectiveHitPoints(player)
 	return player:GetHearts()      --Red health you have
 		+ player:GetBoneHearts()   --Extra hit from bone hearts
 		+ player:GetSoulHearts()   --Soul hearts, including black hearts
@@ -310,31 +310,31 @@ function ARACHNAMOD:GetEffectiveHitPoints(player)
 		- (player:GetRottenHearts() * 2) --Rotten Hearts take a full heart while not replacing red health
 end
 
-ARACHNAMOD.LostPlayers = ARACHNAMOD:Set({
+ArachnaMod.LostPlayers = ArachnaMod:Set({
 	PlayerType.PLAYER_THELOST,
 	PlayerType.PLAYER_THELOST_B
 })
 
-ARACHNAMOD.KeeperPlayers = ARACHNAMOD:Set({
+ArachnaMod.KeeperPlayers = ArachnaMod:Set({
 	PlayerType.PLAYER_KEEPER,
 	PlayerType.PLAYER_KEEPER_B
 })
 
 ---@param player EntityPlayer
-function ARACHNAMOD:IsAnyLost(player)
-	return ARACHNAMOD.LostPlayers[player:GetPlayerType()]
+function ArachnaMod:IsAnyLost(player)
+	return ArachnaMod.LostPlayers[player:GetPlayerType()]
 end
 
 ---@param player EntityPlayer
-function ARACHNAMOD:IsAnyKeeper(player)
-	return player:GetHealthType() == HealthType.COIN or ARACHNAMOD.KeeperPlayers[player:GetPlayerType()]
+function ArachnaMod:IsAnyKeeper(player)
+	return player:GetHealthType() == HealthType.COIN or ArachnaMod.KeeperPlayers[player:GetPlayerType()]
 end
 
 ---returns true if the player can pickup the item, false if they cannot (not being able to pickup due animation is included)
 ---@param player EntityPlayer
 ---@param pickup EntityPickup
 ---@return boolean
-function ARACHNAMOD:CanPlayerBuyShopItem(player, pickup)
+function ArachnaMod:CanPlayerBuyShopItem(player, pickup)
 	if player:CanPickupItem() then
 		local isItem = (pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE or pickup.Variant == PickupVariant.PICKUP_TRINKET)
 		local hasToHold = isItem or pickup.Price ~= 0
@@ -347,7 +347,7 @@ function ARACHNAMOD:CanPlayerBuyShopItem(player, pickup)
 		end
 
 		if pickup.Price < 0 then
-			if not ARACHNAMOD:IsAnyLost(player) then
+			if not ArachnaMod:IsAnyLost(player) then
 				if pickup.Price == PickupPrice.PRICE_ONE_HEART and player:GetMaxHearts() < 2 then
 					return false
 				end
@@ -376,7 +376,7 @@ end
 ---Aquired from EID who reverse engineerd the decomp code for Consolation Prize
 ---@param player EntityPlayer
 ---@param cacheFlag CacheFlag
-function ARACHNAMOD:GetStatScore(player, cacheFlag)
+function ArachnaMod:GetStatScore(player, cacheFlag)
 	local score = 0
 	if cacheFlag == CacheFlag.CACHE_SPEED then
 		score = (player.MoveSpeed * 4.5) - 2
@@ -392,13 +392,13 @@ function ARACHNAMOD:GetStatScore(player, cacheFlag)
 	elseif cacheFlag == CacheFlag.CACHE_LUCK then
 		score = player.Luck + 2.5
 	end
-	return ARACHNAMOD:Round(score)
+	return ArachnaMod:Round(score)
 end
 
 ---Attempts to return the Marked target used by the player. Returns nil if none are found
 ---@param player EntityPlayer
 ---@return Vector?
-function ARACHNAMOD:TryGetMarkedTargetAimVector(player)
+function ArachnaMod:TryGetMarkedTargetAimVector(player)
 	local aimVector
 	if REPENTOGON then
 		local target = player:GetMarkedTarget()
@@ -424,13 +424,13 @@ function ARACHNAMOD:TryGetMarkedTargetAimVector(player)
 end
 
 ---@param player EntityPlayer
-function ARACHNAMOD:GetLaserRange(player)
+function ArachnaMod:GetLaserRange(player)
 	return 60 + max(0, player.TearRange - 112) * 0.25
 end
 
 ---@param player EntityPlayer
 ---@param layer PlayerSpriteLayer
-function ARACHNAMOD:GetCostumeSpriteFromLayer(player, layer)
+function ArachnaMod:GetCostumeSpriteFromLayer(player, layer)
 	local layerMap = player:GetCostumeLayerMap()[layer + 1]
 	if not layerMap then return end
 	local costumeIndex = layerMap.costumeIndex
@@ -442,13 +442,13 @@ end
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
 ---@return boolean
-function ARACHNAMOD:ActiveUsesCarBattery(player, slot)
+function ArachnaMod:ActiveUsesCarBattery(player, slot)
 	local useCarBattery = player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY)
-	if ARACHNAMOD then
-		if ARACHNAMOD.API.HasGoldenItem then
-			useCarBattery = useCarBattery or ARACHNAMOD.API:HasGoldenItem(player:GetActiveItem(slot), player, slot)
+	if Epiphany then
+		if Epiphany.API.HasGoldenItem then
+			useCarBattery = useCarBattery or Epiphany.API:HasGoldenItem(player:GetActiveItem(slot), player, slot)
 		else
-			useCarBattery = useCarBattery or ARACHNAMOD.API:IsGoldenItem(player:GetActiveItem(slot))
+			useCarBattery = useCarBattery or Epiphany.API:IsGoldenItem(player:GetActiveItem(slot))
 		end
 	end
 	return useCarBattery

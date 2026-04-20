@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 local PARTICLE_SPEED = 4

@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local SPIDER_DONUT = {}
 
-ARACHNAMOD.Item.SPIDER_DONUT = SPIDER_DONUT
+ArachnaMod.Item.SPIDER_DONUT = SPIDER_DONUT
 
 SPIDER_DONUT.ID = Isaac.GetItemIdByName("Spider Donut")
 

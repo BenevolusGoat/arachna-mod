@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local FLOOR_TEXT = {}
 
-ARACHNAMOD.Misc.FLOOR_TEXT = FLOOR_TEXT
+ArachnaMod.Misc.FLOOR_TEXT = FLOOR_TEXT
 
 FLOOR_TEXT.ID = Isaac.GetEntityVariantByName("Floor Letter (Arachna)")
 FLOOR_TEXT.FORCE_FACT = -1
@@ -83,14 +83,14 @@ local function str_split_font(font, str, boxWidth)
 	for w in str:gmatch("%S+") do
 		local newString = currentString .. w .. " "
 		if font:GetStringWidth(newString) >= boxWidth and #endTable < 2 then
-			endTable[#endTable+1] = currentString
+			endTable[#endTable + 1] = currentString
 			currentString = ""
 		end
 
 		currentString = currentString .. w .. " "
 	end
 
-	endTable[#endTable+1] = currentString
+	endTable[#endTable + 1] = currentString
 	return endTable
 end
 
@@ -126,7 +126,7 @@ local function drawFloorLine(_line, _x, _y, _small)
 			local floorText = Mod.Spawn.Effect(FLOOR_TEXT.ID, 0, Vector(textX, textY))
 			local sprite = floorText:GetSprite()
 			if Mod.Level():GetStageType() == StageType.STAGETYPE_AFTERBIRTH then -- if in Burning Basement
-				sprite.Color = Color(0.7, 0.6, 0.6)                        --Yes the game actually does this
+				sprite.Color = Color(0.7, 0.6, 0.6)                     --Yes the game actually does this
 			end
 			--render intro or letter
 			if _small then
@@ -221,9 +221,9 @@ function FLOOR_TEXT:AddFloorTextOnNewRoom()
 			factLinePos1 = factLinePos1 + 165
 			factLinePos2 = factLinePos2 + 165
 		end
-		drawFloorLine("FUN FACT:", roomCenterPos.X, factLinePos1, true)               --y used to be 364
+		drawFloorLine("FUN FACT:", roomCenterPos.X, factLinePos1, true) --y used to be 364
 		local splashText = getRandomSplashText(textRNG, true)
-		drawFloorLine(splashText, roomCenterPos.X, factLinePos2) --y used to be 384
+		drawFloorLine(splashText, roomCenterPos.X, factLinePos2)  --y used to be 384
 	end
 end
 

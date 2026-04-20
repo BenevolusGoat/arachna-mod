@@ -1,13 +1,13 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ceil = Mod.math.ceil
 local floor = Mod.math.floor
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 local SPIDER_EGG = {}
 
-ARACHNAMOD.Entities.SPIDER_EGG = SPIDER_EGG
+ArachnaMod.Entities.SPIDER_EGG = SPIDER_EGG
 
 SPIDER_EGG.ID = Isaac.GetEntityVariantByName("Spider Egg")
 SPIDER_EGG.ID_SMALL = Isaac.GetEntityVariantByName("Spider Egg (Small)")

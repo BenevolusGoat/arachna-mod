@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local DADS_NEWSPAPER = {}
 
-ARACHNAMOD.Item.DADS_NEWSPAPER = DADS_NEWSPAPER
+ArachnaMod.Item.DADS_NEWSPAPER = DADS_NEWSPAPER
 
 DADS_NEWSPAPER.ID = Isaac.GetItemIdByName("Dad's Newspaper")
 DADS_NEWSPAPER.EFFECT = Isaac.GetEntityVariantByName("Newspaper (swing)")

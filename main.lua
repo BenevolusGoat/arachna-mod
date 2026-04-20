@@ -1,26 +1,26 @@
 InputHelper = include("scripts/helpers/vendor/inputhelper")
 
 ---@class ModReference
-_G.ARACHNAMOD = RegisterMod("Arachna Mod", 1)
+_G.ArachnaMod = RegisterMod("Arachna Mod", 1)
 
-ARACHNAMOD.Version = "2.0.0"
+ArachnaMod.Version = "2.0.0"
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
-ARACHNAMOD.SaveManager = include("scripts.tools.save_manager")
-ARACHNAMOD.SaveManager.Init(Mod)
+ArachnaMod.SaveManager = include("scripts.tools.save_manager")
+ArachnaMod.SaveManager.Init(Mod)
 
-ARACHNAMOD.sfxman = SFXManager()
-ARACHNAMOD.Game = Game()
-ARACHNAMOD.Room = function() return Mod.Game:GetRoom() end
-ARACHNAMOD.Level = function() return Mod.Game:GetLevel() end
-ARACHNAMOD.ItemConfig = Isaac.GetItemConfig()
+ArachnaMod.sfxman = SFXManager()
+ArachnaMod.Game = Game()
+ArachnaMod.Room = function() return Mod.Game:GetRoom() end
+ArachnaMod.Level = function() return Mod.Game:GetLevel() end
+ArachnaMod.ItemConfig = Isaac.GetItemConfig()
 
-ARACHNAMOD.GENERIC_RNG = RNG()
+ArachnaMod.GENERIC_RNG = RNG()
 
-ARACHNAMOD:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
-	local seed = ARACHNAMOD.Game:GetSeeds():GetStartSeed()
-	ARACHNAMOD.GENERIC_RNG:SetSeed(seed, 35)
+ArachnaMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+	local seed = ArachnaMod.Game:GetSeeds():GetStartSeed()
+	ArachnaMod.GENERIC_RNG:SetSeed(seed, 35)
 	if Mod.ShowNewPopup then
 		if REPENTOGON and REPENTANCE_PLUS then
 			DeadSeaScrollsMenu.QueueMenuOpen("Arachna", "arachnapopup", 0, true)
@@ -36,17 +36,18 @@ include("scripts.dead_sea_scrolls.deadseascrolls")
 include("scripts.arachna.core.customhealthapi.core")
 
 if not REPENTOGON or not REPENTANCE_PLUS then
-	local msg = "[Arachna] Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com"
+	local msg =
+	"[Arachna] Mod dependencies not detected! Please ensure you're playing on the official Repentance+ DLC on Steam and have the latest version of REPENTOGON, which can be found on repentogon.com"
 	print(msg)
 	Isaac.DebugString(msg)
 	Mod.ShowNewPopup = true
 	return
 end
 
-ARACHNAMOD.RANGE_BASE_MULT = 40
+ArachnaMod.RANGE_BASE_MULT = 40
 
 ---A little optimization for storing the variables locally as opposed to calling upon them each time
-ARACHNAMOD.math = {
+ArachnaMod.math = {
 	ceil = math.ceil,
 	floor = math.floor,
 	max = math.max,
@@ -59,7 +60,7 @@ ARACHNAMOD.math = {
 	rad = math.rad
 }
 
-ARACHNAMOD.PlayerType = {
+ArachnaMod.PlayerType = {
 	ARACHNA = Isaac.GetPlayerTypeByName("Arachna", false),
 	ARACHNA_B = Isaac.GetPlayerTypeByName("Arachna", true)
 }
@@ -72,7 +73,7 @@ local getData = {}
 ---However GetData() is wiped on POST_ENTITY_REMOVE, so this also helps retain the data until after entity removal
 ---@param ent Entity
 ---@return table
-function ARACHNAMOD:GetData(ent)
+function ArachnaMod:GetData(ent)
 	if not ent then return {} end
 	local ptrHash = GetPtrHash(ent)
 	if not getData[ptrHash] then
@@ -86,22 +87,22 @@ end
 
 ---@param ent Entity
 ---@return table?
-function ARACHNAMOD:TryGetData(ent)
+function ArachnaMod:TryGetData(ent)
 	local ptrHash = GetPtrHash(ent)
 	return getData[ptrHash]
 end
 
-ARACHNAMOD:AddPriorityCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, CallbackPriority.LATE, function(_, ent)
+ArachnaMod:AddPriorityCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, CallbackPriority.LATE, function(_, ent)
 	if not ent:ToNPC() then
 		getData[GetPtrHash(ent)] = nil
 	end
 end)
 
-ARACHNAMOD:AddPriorityCallback(ModCallbacks.MC_POST_NPC_DEATH, CallbackPriority.LATE, function(_, ent)
+ArachnaMod:AddPriorityCallback(ModCallbacks.MC_POST_NPC_DEATH, CallbackPriority.LATE, function(_, ent)
 	getData[GetPtrHash(ent)] = nil
 end)
 
-ARACHNAMOD:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.LATE, function(_, ent)
+ArachnaMod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.LATE, function(_, ent)
 	for ptrHash, entityData in pairs(getData) do
 		local entityPointer = (entityData and entityData.Pointer)
 		if not (entityPointer and entityPointer.Ref) then
@@ -113,16 +114,16 @@ end)
 local legacyEnabled = false
 
 ---@param player EntityPlayer
-function ARACHNAMOD:IsAnyArachna(player)
+function ArachnaMod:IsAnyArachna(player)
 	local playerType = player:GetPlayerType()
 	return playerType == Mod.PlayerType.ARACHNA or playerType == Mod.PlayerType.ARACHNA_B
 end
 
-function ARACHNAMOD:IsLegacyGameplayEnabled()
+function ArachnaMod:IsLegacyGameplayEnabled()
 	return legacyEnabled
 end
 
-function ARACHNAMOD:EveryoneIsArachna()
+function ArachnaMod:EveryoneIsArachna()
 	local foundArachna = false
 	local noArachna = Mod.Foreach.Player(function(player, index)
 		if Mod:IsAnyArachna(player) then
@@ -138,12 +139,12 @@ function ARACHNAMOD:EveryoneIsArachna()
 	end
 end
 
-function ARACHNAMOD:AnyoneIsArachna()
+function ArachnaMod:AnyoneIsArachna()
 	return PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA) or
-	PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA_B)
+		PlayerManager.AnyoneIsPlayerType(Mod.PlayerType.ARACHNA_B)
 end
 
-function ARACHNAMOD:UpdateLegacyGameplay()
+function ArachnaMod:UpdateLegacyGameplay()
 	local run_save = Mod.SaveManager.GetRunSave()
 	if Mod.Game:GetFrameCount() <= 0 then
 		run_save.ArachnaLegacyGameplay = Mod.GetSetting(Mod.Setting.LegacyGameplay)
@@ -151,38 +152,38 @@ function ARACHNAMOD:UpdateLegacyGameplay()
 	legacyEnabled = run_save.ArachnaLegacyGameplay
 end
 
-Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, ARACHNAMOD.UpdateLegacyGameplay)
+Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_GLOBAL_DATA_LOAD, ArachnaMod.UpdateLegacyGameplay)
 
-ARACHNAMOD.FileLoadError = false
-ARACHNAMOD.InvalidPathError = false
+ArachnaMod.FileLoadError = false
+ArachnaMod.InvalidPathError = false
 
 ---Mimics include() but with a pcall safety wrapper and appropriate error codes if any are found
 ---
----VSCode users: Go to Settings > Lua > Runtime:Special and link ARACHNAMOD.Include to require, just like you would regular include!
+---VSCode users: Go to Settings > Lua > Runtime:Special and link ArachnaMod.Include to require, just like you would regular include!
 ---@return unknown
-function ARACHNAMOD.Include(path)
+function ArachnaMod.Include(path)
 	Isaac.DebugString("[ArachnaMOD] Loading " .. path)
 	local wasLoaded, result = pcall(include, path)
 	local errMsg = ""
 	local foundError = false
 	if not wasLoaded then
-		ARACHNAMOD.FileLoadError = true
+		ArachnaMod.FileLoadError = true
 		foundError = true
 		errMsg = 'Error in path "' .. path .. '":\n' .. result .. '\n'
 	elseif result and type(result) == "string" and string.find(result, "no file '") then
 		foundError = true
-		ARACHNAMOD.InvalidPathError = true
+		ArachnaMod.InvalidPathError = true
 		errMsg = 'Unable to locate file in path "' .. path .. '"\n'
 	end
 	if foundError then
-		ARACHNAMOD:Log(errMsg)
+		ArachnaMod:Log(errMsg)
 	end
 	return result
 end
 
-function ARACHNAMOD.LoopInclude(tab, path)
+function ArachnaMod.LoopInclude(tab, path)
 	for _, fileName in pairs(tab) do
-		ARACHNAMOD.Include(path .. "." .. fileName)
+		ArachnaMod.Include(path .. "." .. fileName)
 	end
 end
 
@@ -214,29 +215,29 @@ local config = {
 	"mcm_setup",
 }
 
-ARACHNAMOD.Spawn = include("scripts.helpers.spawn")
-ARACHNAMOD.Foreach = include("scripts.helpers.for_each")
+ArachnaMod.Spawn = include("scripts.helpers.spawn")
+ArachnaMod.Foreach = include("scripts.helpers.for_each")
 
 Mod.LoopInclude(tools, "scripts.tools")
 Mod.LoopInclude(helpers, "scripts.helpers")
 Mod.LoopInclude(core, "scripts.arachna.core")
 Mod.LoopInclude(config, "scripts.arachna.config")
 
-ARACHNAMOD.CHAPI_ID = "ArachnaMOD"
+ArachnaMod.CHAPI_ID = "ArachnaMOD"
 if CustomHealthAPI and CustomHealthAPI.Library and CustomHealthAPI.Library.UnregisterCallbacks then
-	CustomHealthAPI.Library.UnregisterCallbacks(ARACHNAMOD.CHAPI_ID)
+	CustomHealthAPI.Library.UnregisterCallbacks(ArachnaMod.CHAPI_ID)
 end
 
-ARACHNAMOD.TearModifier = include("scripts/arachna/core/tear_modifier")
+ArachnaMod.TearModifier = include("scripts/arachna/core/tear_modifier")
 
-ARACHNAMOD.Character = {}
-ARACHNAMOD.Item = {}
-ARACHNAMOD.Pickup = {}
-ARACHNAMOD.Card = {}
-ARACHNAMOD.Trinket = {}
-ARACHNAMOD.Slot = {}
-ARACHNAMOD.Entities = {}
-ARACHNAMOD.Misc = {}
+ArachnaMod.Character = {}
+ArachnaMod.Item = {}
+ArachnaMod.Pickup = {}
+ArachnaMod.Card = {}
+ArachnaMod.Trinket = {}
+ArachnaMod.Slot = {}
+ArachnaMod.Entities = {}
+ArachnaMod.Misc = {}
 include("flags")
 
 local entities = {
@@ -269,12 +270,12 @@ Mod.Include("scripts.arachna.unlocks.unlock_loader")
 Mod.Include("scripts.arachna.misc.floor_text")
 
 ---@param player EntityPlayer
-function ARACHNAMOD:HasDoubleTapped(player)
+function ArachnaMod:HasDoubleTapped(player)
 	return Mod:GetData(player).DoubleTapped or false
 end
 
 ---@param player EntityPlayer
-function ARACHNAMOD:HandleDoubleTap(player)
+function ArachnaMod:HandleDoubleTap(player)
 	if not player.ControlsEnabled
 		or player.ControlsCooldown > 0
 	then
@@ -339,5 +340,5 @@ else
 	Mod:Log("v" .. Mod.Version .. " successfully loaded!")
 end
 
-ARACHNAMOD.Include = nil
-ARACHNAMOD.LoopInclude = nil
+ArachnaMod.Include = nil
+ArachnaMod.LoopInclude = nil

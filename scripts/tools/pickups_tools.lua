@@ -1,14 +1,14 @@
 --Full credit to Epiphany
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local min = Mod.math.min
 
 ---@param pickup EntityPickup
-function ARACHNAMOD:IsDevilDealItem(pickup)
+function ArachnaMod:IsDevilDealItem(pickup)
 	return pickup.Price < 0 and pickup.Price ~= PickupPrice.PRICE_FREE and pickup.Price ~= PickupPrice.PRICE_SPIKES
 end
 
 -- Removes given pedestal and tries to start an ambush.
-function ARACHNAMOD:KillPedestal(pedestal)
+function ArachnaMod:KillPedestal(pedestal)
 	pedestal:TriggerTheresOptionsPickup()
 	Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, 0, pedestal.Position, Vector.Zero, nil)
 	pedestal:Remove()
@@ -19,7 +19,7 @@ end
 ---@param player EntityPlayer
 ---@param pickup EntityPickup
 ---@return boolean @Returns `false` if you can't pick up the pickup, `true` if you consumed it.
-function ARACHNAMOD:PricedPickup(player, pickup)
+function ArachnaMod:PricedPickup(player, pickup)
 	if Mod:CanPlayerBuyShopItem(player, pickup) then
 		if pickup.Price > 0 and player:GetNumCoins() < pickup.Price then
 			return false
@@ -40,7 +40,7 @@ end
 ---@param player EntityPlayer
 ---@param pickup EntityPickup
 ---@param sound SoundEffect?
-function ARACHNAMOD:PickupShopKill(player, pickup, sound)
+function ArachnaMod:PickupShopKill(player, pickup, sound)
 	local sprite = pickup:GetSprite()
 	if not sound then
 		pickup:PlayPickupSound()
@@ -63,7 +63,7 @@ end
 ---Kills a pickup and simulaters vanilla behaviour
 ---@param pickup EntityPickup
 ---@param playSound? boolean
-function ARACHNAMOD:PickupKill(pickup, playSound)
+function ArachnaMod:PickupKill(pickup, playSound)
 	if playSound then
 		pickup:PlayPickupSound()
 	end
@@ -76,7 +76,7 @@ function ARACHNAMOD:PickupKill(pickup, playSound)
 end
 
 ---Makes a custom coin play the pickup animation
-function ARACHNAMOD:CollectCustomCoin(pickup, SoundID)
+function ArachnaMod:CollectCustomCoin(pickup, SoundID)
 	pickup = pickup:ToPickup()
 	pickup.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 	pickup.Touched = true
@@ -95,7 +95,7 @@ end
 ---Removes coins or health according to given pickup's price
 ---@param player EntityPlayer
 ---@param pickup EntityPickup
-function ARACHNAMOD:PayPickupPrice(player, pickup)
+function ArachnaMod:PayPickupPrice(player, pickup)
 	local price = pickup.Price
 	if price > 0 then
 		player:AddCoins(-price)
@@ -141,7 +141,7 @@ end
 --- Kills all pedestals that cost hearts. For use when Lost buys a devil item
 ---@param ignoredPickup? EntityPickup A pointer hash to a pedestal that will be ignored. In most cases, this should be a pedestal that the player just picked up.
 ---@param filter? fun(Pedestal: EntityPickup): boolean
-function ARACHNAMOD:KillDevilPedestals(ignoredPickup, filter)
+function ArachnaMod:KillDevilPedestals(ignoredPickup, filter)
 	local ignoredHash = GetPtrHash(ignoredPickup) or -1
 	local level = Mod.Level()
 	local isDarkRoom = level:GetStage() == LevelStage.STAGE6 and level:GetStageType() == StageType.STAGETYPE_ORIGINAL
@@ -168,7 +168,7 @@ end
 ---@param itemPoolType ItemPoolType
 ---@param maxIterations integer
 ---@param filter fun(item: CollectibleType): boolean
-function ARACHNAMOD:BruteForceRoll(itemPoolType, maxIterations, filter)
+function ArachnaMod:BruteForceRoll(itemPoolType, maxIterations, filter)
 	local itemPool = Mod.Game:GetItemPool()
 	local iter = 0
 
@@ -186,7 +186,7 @@ function ARACHNAMOD:BruteForceRoll(itemPoolType, maxIterations, filter)
 end
 
 ---@param pedestal EntityPickup
-function ARACHNAMOD:MakePedestalEmpty(pedestal)
+function ArachnaMod:MakePedestalEmpty(pedestal)
 	if REPENTOGON then
 		pedestal:TryRemoveCollectible()
 		return

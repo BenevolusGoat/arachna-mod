@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ARC_EID = Mod.EID_Support
 local DD = ARC_EID.DynamicDescriptions
 local Item = Mod.Item
@@ -6,7 +6,7 @@ local Item = Mod.Item
 ---@type {[CollectibleType]: {_modifier: fun(descObj: EID_DescObj, ...: any): any}}
 local modifiers = {
 	[Item.SPIDER_CAKE.ID] = {
-		_modifier = function ()
+		_modifier = function()
 			local yearDiff = Item.SPIDER_CAKE:GetYearDifference()
 			local stats = {
 				Damage = 1,
@@ -29,7 +29,7 @@ local modifiers = {
 		end
 	},
 	[Item.ARACHNIDS_GRIP.ID] = {
-		_modifier = function (descObj, desc)
+		_modifier = function(descObj, desc)
 			local player = ARC_EID:ClosestPlayerTo(descObj.Entity)
 			if player:HasCollectible(Item.MUTAGEN.ID) then
 				return desc

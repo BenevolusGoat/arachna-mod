@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local Trinket = Mod.Trinket
 local ARC_EID = Mod.EID_Support
 local DD = ARC_EID.DynamicDescriptions
@@ -24,9 +24,9 @@ local descriptions = {
 	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_ko_kr")(modifiers),
 }
 
-EID:addGoldenTrinketTable(Trinket.WHITE_STRING.ID, {t = {1}})
-EID:addGoldenTrinketTable(Trinket.INFESTED_PENNY.ID, {t = {20}, mults = {1.9, 2.8}})
-EID:addGoldenTrinketTable(Trinket.SPINDLE.ID, {t = {10}})
+EID:addGoldenTrinketTable(Trinket.WHITE_STRING.ID, { t = { 1 } })
+EID:addGoldenTrinketTable(Trinket.INFESTED_PENNY.ID, { t = { 20 }, mults = { 1.9, 2.8 } })
+EID:addGoldenTrinketTable(Trinket.SPINDLE.ID, { t = { 10 } })
 
 local allDescData = {}
 for lang, desc in pairs(descriptions) do
@@ -68,4 +68,3 @@ for id, trinketDescData in pairs(allDescData) do
 		::continue::
 	end
 end
-

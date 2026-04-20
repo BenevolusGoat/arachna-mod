@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local CANDY_FLOSS = {}
 
-ARACHNAMOD.Item.CANDY_FLOSS = CANDY_FLOSS
+ArachnaMod.Item.CANDY_FLOSS = CANDY_FLOSS
 
 CANDY_FLOSS.ID = Isaac.GetItemIdByName("Candy Floss")
 
@@ -10,7 +10,7 @@ CANDY_FLOSS.MIN_WEB_HEARTS = 3
 
 CANDY_FLOSS.MODIFIER = Mod.TearModifier.New({
 	Name = "CandyFloss",
-	Items = {CANDY_FLOSS.ID},
+	Items = { CANDY_FLOSS.ID },
 	MinLuck = 0,
 	MaxLuck = 20,
 	MinChance = 0.05,

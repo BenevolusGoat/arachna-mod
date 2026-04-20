@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ARC_EID = Mod.EID_Support
 local DD = ARC_EID.DynamicDescriptions
 

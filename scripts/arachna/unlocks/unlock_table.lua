@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local function achievement(str)
 	return Isaac.GetAchievementIdByName(str)
@@ -7,36 +7,36 @@ end
 ---@alias CompletionTable {[CompletionType|ArachnaCompletionType]: Achievement}
 
 ---@type {[string]: CompletionTable}
-ARACHNAMOD.CompletionMarkToAchievement = {}
+ArachnaMod.CompletionMarkToAchievement = {}
 
 ---@type {[PlayerType]: CompletionTable}
-ARACHNAMOD.PlayerTypeToCompletionTable = {}
+ArachnaMod.PlayerTypeToCompletionTable = {}
 
 ---@enum ArachnaCompletionType
-ARACHNAMOD.CompletionType = {
+ArachnaMod.CompletionType = {
 	TAINTED = 15,
 	ALL = 16
 }
 
 --#region Arachna
 
-ARACHNAMOD.Pickup.WEB_HEART.ACHIEVEMENT = achievement("Web Hearts")
-ARACHNAMOD.Item.ARACHNAS_SPOOL.ACHIEVEMENT = achievement("Arachna's Spool")
-ARACHNAMOD.Item.YARN.ACHIEVEMENT = achievement("The Yarn")
-ARACHNAMOD.Item.GEPTAMERON.ACHIEVEMENT = achievement("Geptameron")
-ARACHNAMOD.Trinket.WHITE_STRING.ACHIEVEMENT = achievement("White String")
-ARACHNAMOD.Item.GLASSES_3D.ACHIEVEMENT = achievement("3D Glasses")
-ARACHNAMOD.Item.MECHANICAL_EYE.ACHIEVEMENT = achievement("Mechanical Eye")
-ARACHNAMOD.Trinket.INFESTED_PENNY.ACHIEVEMENT = achievement("Infested Penny")
-ARACHNAMOD.Item.ARACHNIDS_GRIP.ACHIEVEMENT = achievement("Arachnid's Grip")
-ARACHNAMOD.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT = achievement("Golden Shopkeepers")
-ARACHNAMOD.Item.MUTAGEN.ACHIEVEMENT = achievement("Mutagen")
-ARACHNAMOD.Item.YARN_HEART.ACHIEVEMENT = achievement("Yarn Heart")
-ARACHNAMOD.Item.TESTAMENT.ACHIEVEMENT = achievement("The Testament")
-ARACHNAMOD.Item.LIL_ARACHNA.ACHIEVEMENT = achievement("Lil Arachna")
-ARACHNAMOD.Character.ARACHNA_B.ACHIEVEMENT = achievement("The Wretched")
+ArachnaMod.Pickup.WEB_HEART.ACHIEVEMENT = achievement("Web Hearts")
+ArachnaMod.Item.ARACHNAS_SPOOL.ACHIEVEMENT = achievement("Arachna's Spool")
+ArachnaMod.Item.YARN.ACHIEVEMENT = achievement("The Yarn")
+ArachnaMod.Item.GEPTAMERON.ACHIEVEMENT = achievement("Geptameron")
+ArachnaMod.Trinket.WHITE_STRING.ACHIEVEMENT = achievement("White String")
+ArachnaMod.Item.GLASSES_3D.ACHIEVEMENT = achievement("3D Glasses")
+ArachnaMod.Item.MECHANICAL_EYE.ACHIEVEMENT = achievement("Mechanical Eye")
+ArachnaMod.Trinket.INFESTED_PENNY.ACHIEVEMENT = achievement("Infested Penny")
+ArachnaMod.Item.ARACHNIDS_GRIP.ACHIEVEMENT = achievement("Arachnid's Grip")
+ArachnaMod.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT = achievement("Golden Shopkeepers")
+ArachnaMod.Item.MUTAGEN.ACHIEVEMENT = achievement("Mutagen")
+ArachnaMod.Item.YARN_HEART.ACHIEVEMENT = achievement("Yarn Heart")
+ArachnaMod.Item.TESTAMENT.ACHIEVEMENT = achievement("The Testament")
+ArachnaMod.Item.LIL_ARACHNA.ACHIEVEMENT = achievement("Lil Arachna")
+ArachnaMod.Character.ARACHNA_B.ACHIEVEMENT = achievement("The Wretched")
 
-ARACHNAMOD.CompletionMarkToAchievement.ARACHNA = {
+ArachnaMod.CompletionMarkToAchievement.ARACHNA = {
 	[CompletionType.MOMS_HEART] = Mod.Pickup.WEB_HEART.ACHIEVEMENT,
 	[CompletionType.ISAAC] = Mod.Item.ARACHNAS_SPOOL.ACHIEVEMENT,
 	[CompletionType.SATAN] = Mod.Item.YARN.ACHIEVEMENT,
@@ -53,21 +53,21 @@ ARACHNAMOD.CompletionMarkToAchievement.ARACHNA = {
 	[Mod.CompletionType.TAINTED] = Mod.Character.ARACHNA_B.ACHIEVEMENT,
 	[Mod.CompletionType.ALL] = Mod.Item.LIL_ARACHNA.ACHIEVEMENT
 }
-ARACHNAMOD.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA] = Mod.CompletionMarkToAchievement.ARACHNA
+ArachnaMod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA] = Mod.CompletionMarkToAchievement.ARACHNA
 
 --#endregion
 
 --#region Tainted Arachna
 
-ARACHNAMOD.Card.SOUL_OF_ARACHNA.ACHIEVEMENT = achievement("Soul of Arachna")
-ARACHNAMOD.Trinket.SPINDLE.ACHIEVEMENT = achievement("Spindle")
-ARACHNAMOD.Slot.SPIDER_BEGGAR.ACHIEVEMENT = achievement("Spider Beggar")
-ARACHNAMOD.Card.MERGED_CARD.ACHIEVEMENT = achievement("Merged Card")
-ARACHNAMOD.Item.DIVINE_CLOTH.ACHIEVEMENT = achievement("Divine Cloth")
-ARACHNAMOD.Item.DADS_NEWSPAPER.ACHIEVEMENT = achievement("Dad's Newspaper")
-ARACHNAMOD.Item.BEST_BUD_BALL.ACHIEVEMENT = achievement("Best Bud Ball")
+ArachnaMod.Card.SOUL_OF_ARACHNA.ACHIEVEMENT = achievement("Soul of Arachna")
+ArachnaMod.Trinket.SPINDLE.ACHIEVEMENT = achievement("Spindle")
+ArachnaMod.Slot.SPIDER_BEGGAR.ACHIEVEMENT = achievement("Spider Beggar")
+ArachnaMod.Card.MERGED_CARD.ACHIEVEMENT = achievement("Merged Card")
+ArachnaMod.Item.DIVINE_CLOTH.ACHIEVEMENT = achievement("Divine Cloth")
+ArachnaMod.Item.DADS_NEWSPAPER.ACHIEVEMENT = achievement("Dad's Newspaper")
+ArachnaMod.Item.BEST_BUD_BALL.ACHIEVEMENT = achievement("Best Bud Ball")
 
-ARACHNAMOD.CompletionMarkToAchievement.ARACHNA_B = {
+ArachnaMod.CompletionMarkToAchievement.ARACHNA_B = {
 	[TaintedMarksGroup.SOULSTONE] = Mod.Card.SOUL_OF_ARACHNA.ACHIEVEMENT,
 	[TaintedMarksGroup.POLAROID_NEGATIVE] = Mod.Trinket.SPINDLE.ACHIEVEMENT,
 	[CompletionType.MEGA_SATAN] = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT,
@@ -76,7 +76,7 @@ ARACHNAMOD.CompletionMarkToAchievement.ARACHNA_B = {
 	[CompletionType.MOTHER] = Mod.Item.DADS_NEWSPAPER.ACHIEVEMENT,
 	[CompletionType.BEAST] = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT
 }
-ARACHNAMOD.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA_B] = Mod.CompletionMarkToAchievement.ARACHNA_B
+ArachnaMod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA_B] = Mod.CompletionMarkToAchievement.ARACHNA_B
 
 --#endregion
 

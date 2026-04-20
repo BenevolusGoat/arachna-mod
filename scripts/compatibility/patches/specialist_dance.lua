@@ -1,6 +1,6 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local game = Mod.Game
-local loader = ARACHNAMOD.PatchesLoader
+local loader = ArachnaMod.PatchesLoader
 
 local function SpecialistDancePatch()
 	--It breaks if added immediately so MC_POST_NEW_LEVEL is used here instead...I guess?

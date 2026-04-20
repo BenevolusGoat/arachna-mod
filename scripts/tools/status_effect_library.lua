@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local VERSION = 1.12 --1.1.2
 local game = Game()

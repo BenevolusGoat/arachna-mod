@@ -1,8 +1,8 @@
 --Full credit to Epiphany for this easy and flexible EID system
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ARC_EID = {}
 
-ARACHNAMOD.EID_Support = ARC_EID
+ArachnaMod.EID_Support = ARC_EID
 
 if not EID then
 	return
@@ -509,7 +509,7 @@ EID:addDescriptionModifier(
 	function(descObj)
 		local item = descObj.ObjSubType
 		if item == 0 then
-			return {Entity = descObj.Entity, Name = "", Description = ""}
+			return { Entity = descObj.Entity, Name = "", Description = "" }
 		end
 		local desc = EID:getDescriptionObj(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, item, descObj.Entity)
 		return desc

@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local ARACHNA_B = {}
 
-ARACHNAMOD.Character.ARACHNA_B = ARACHNA_B
+ArachnaMod.Character.ARACHNA_B = ARACHNA_B
 
 Mod.Include("scripts.arachna.characters.arachna_b.divine_cloth")
 Mod.Include("scripts.arachna.characters.arachna_b.egg_toss")

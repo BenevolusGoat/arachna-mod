@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 
 local DURATION = 120
@@ -14,7 +14,7 @@ local function preEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdow
 	local player = spider.Player
 	if not ent:IsBoss() then
 		ent:AddEntityFlags(EntityFlag.FLAG_ICE)
-		return {Damage = ent.HitPoints + 1}
+		return { Damage = ent.HitPoints + 1 }
 	else
 		local isBig = COLORED_SPIDERS:IsBigSpider(spider)
 		local duration = isBig and DURATION_BIG or DURATION

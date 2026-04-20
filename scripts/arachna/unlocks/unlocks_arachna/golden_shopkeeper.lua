@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local GOLDEN_SHOPKEEPER = {}
 
-ARACHNAMOD.Entities.GOLDEN_SHOPKEEPER = GOLDEN_SHOPKEEPER
+ArachnaMod.Entities.GOLDEN_SHOPKEEPER = GOLDEN_SHOPKEEPER
 
 GOLDEN_SHOPKEEPER.ID = Isaac.GetEntityVariantByName("Golden Shopkeeper")
 
@@ -68,7 +68,7 @@ function GOLDEN_SHOPKEEPER:ShopkeeperTakeDamage(ent, amount, flags, source, coun
 			run_save.GoldenKeeperHits = run_save.GoldenKeeperHits - 1
 			GOLDEN_SHOPKEEPER:OnDamageEffect(npc)
 			Mod:DebugLog(run_save.GoldenKeeperHits, "hit(s) remaining")
-			return {Damage = 0, DamageFlags = flags | DamageFlag.DAMAGE_COUNTDOWN, DamageCountdown = 20}
+			return { Damage = 0, DamageFlags = flags | DamageFlag.DAMAGE_COUNTDOWN, DamageCountdown = 20 }
 		else
 			local rng = npc:GetDropRNG()
 			npc:GetSprite():Play("Break")

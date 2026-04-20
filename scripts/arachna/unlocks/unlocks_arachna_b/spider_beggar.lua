@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local SPIDER_BEGGAR = {}
 
-ARACHNAMOD.Slot.SPIDER_BEGGAR = SPIDER_BEGGAR
+ArachnaMod.Slot.SPIDER_BEGGAR = SPIDER_BEGGAR
 
 SPIDER_BEGGAR.ID = Isaac.GetEntityVariantByName("Spider Beggar")
 SPIDER_BEGGAR.POOL = Isaac.GetPoolIdByName("spiderBeggar")
@@ -13,11 +13,11 @@ SPIDER_BEGGAR.REPLACEMENT_CHANCE = 0.2
 
 --Type, Variant
 SPIDER_BEGGAR.SPIDERS = {
-	{EntityType.ENTITY_BLISTER, 0},
-	{EntityType.ENTITY_BIGSPIDER, 0},
-	{EntityType.ENTITY_SPIDER_L2, 0},
-	{EntityType.ENTITY_TICKING_SPIDER, 0},
-	{EntityType.ENTITY_CRAZY_LONG_LEGS, 1}
+	{ EntityType.ENTITY_BLISTER,         0 },
+	{ EntityType.ENTITY_BIGSPIDER,       0 },
+	{ EntityType.ENTITY_SPIDER_L2,       0 },
+	{ EntityType.ENTITY_TICKING_SPIDER,  0 },
+	{ EntityType.ENTITY_CRAZY_LONG_LEGS, 1 }
 }
 
 ---@class PayoutEvent
@@ -40,17 +40,17 @@ end
 
 ---@type PayoutEvent[]
 SPIDER_BEGGAR.PAYOUT_EVENTS = {
-	SPIDER_BEGGAR.PayoutEvent("Web Heart", 0.35, function (beggar, rng)
+	SPIDER_BEGGAR.PayoutEvent("Web Heart", 0.35, function(beggar, rng)
 		local vel = EntityPickup.GetRandomPickupVelocity(beggar.Position, rng, 1)
 		Mod.Spawn.Heart(Mod.Pickup.WEB_HEART.ID, beggar.Position, vel, beggar, rng:Next())
 	end),
-	SPIDER_BEGGAR.PayoutEvent("Friendly Spiders", 0.32, function (beggar, rng)
+	SPIDER_BEGGAR.PayoutEvent("Friendly Spiders", 0.32, function(beggar, rng)
 		local randomSpider = rng:RandomInt(#SPIDER_BEGGAR.SPIDERS) + 1
 		local spiderType = SPIDER_BEGGAR.SPIDERS[randomSpider]
 		local spider = Mod.Game:Spawn(spiderType[1], spiderType[2], Isaac.GetFreeNearPosition(beggar.Position, 40), Vector.Zero, beggar, 0, rng:Next())
 		spider:AddCharmed(EntityRef(beggar), -1)
 	end),
-	SPIDER_BEGGAR.PayoutEvent("Collectible", 0.29, function (beggar, rng)
+	SPIDER_BEGGAR.PayoutEvent("Collectible", 0.29, function(beggar, rng)
 		local itemId = Mod.Game:GetItemPool():GetCollectible(SPIDER_BEGGAR.POOL, true, rng:Next())
 		local pos = Mod.Room():FindFreePickupSpawnPosition(beggar.Position, 0, true)
 		Mod.Spawn.Collectible(itemId, pos, beggar, rng:Next())

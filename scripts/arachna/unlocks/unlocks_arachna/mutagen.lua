@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local MUTAGEN = {}
 
-ARACHNAMOD.Item.MUTAGEN = MUTAGEN
+ArachnaMod.Item.MUTAGEN = MUTAGEN
 
 MUTAGEN.ID = Isaac.GetItemIdByName("Mutagen")
 

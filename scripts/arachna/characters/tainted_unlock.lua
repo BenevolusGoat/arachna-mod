@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local TAINTED_UNLOCK = {}
 
@@ -7,7 +7,7 @@ local function checkArachnaTaintedLocked()
 	local playerType = player:GetPlayerType()
 	local persistGameData = Isaac.GetPersistentGameData()
 	return playerType == Mod.PlayerType.ARACHNA
-		and	not persistGameData:Unlocked(Mod.Character.ARACHNA_B.ACHIEVEMENT)
+		and not persistGameData:Unlocked(Mod.Character.ARACHNA_B.ACHIEVEMENT)
 end
 
 function TAINTED_UNLOCK:OnSlotSpawn(entType, variant, subtype, grid, seed)

@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 -- Template strings used for unlock descriptions. Format them with a character or challenge name
 ---@enum UnlockStrings
-ARACHNAMOD.UnlockStrings = {
+ArachnaMod.UnlockStrings = {
 	[CompletionType.MOMS_HEART] = "Unlocked by defeating Mom's Heart as %s.",
 	[CompletionType.ISAAC] = "Unlocked by defeating Isaac as %s.",
 	[CompletionType.SATAN] = "Unlocked by defeating Satan as %s.",
@@ -20,7 +20,7 @@ ARACHNAMOD.UnlockStrings = {
 	[Mod.CompletionType.ALL] = "Unlocked by obtaining every other unlock for %s.",
 }
 
-ARACHNAMOD.TaintedUnlockStrings = {
+ArachnaMod.TaintedUnlockStrings = {
 	[TaintedMarksGroup.POLAROID_NEGATIVE] = "Unlocked by defeating Isaac, ???, Satan, and the Lamb as %s.",
 	[TaintedMarksGroup.SOULSTONE] = "Unlocked by defeating Hush and Boss Rush as %s.",
 }
@@ -40,12 +40,12 @@ return function(DSSUnlockManager)
 		local achievementName = xmlData.name
 		local desc
 		if groupName == "arachna" and completionType == Mod.CompletionType.TAINTED then
-			desc = ARACHNAMOD.UnlockStrings[completionType]:format(groupName)
+			desc = ArachnaMod.UnlockStrings[completionType]:format(groupName)
 			groupName = "tainted arachna"
 		elseif groupName == "tainted arachna" and (completionType == TaintedMarksGroup.POLAROID_NEGATIVE or completionType == TaintedMarksGroup.SOULSTONE) then
-			desc = ARACHNAMOD.TaintedUnlockStrings[completionType]:format(groupName)
+			desc = ArachnaMod.TaintedUnlockStrings[completionType]:format(groupName)
 		else
-			desc = ARACHNAMOD.UnlockStrings[completionType]:format(groupName)
+			desc = ArachnaMod.UnlockStrings[completionType]:format(groupName)
 		end
 
 		return {
@@ -62,7 +62,7 @@ return function(DSSUnlockManager)
 			},
 		}
 	end
-	for playerType, completionTable in pairs(ARACHNAMOD.PlayerTypeToCompletionTable) do
+	for playerType, completionTable in pairs(ArachnaMod.PlayerTypeToCompletionTable) do
 		local groupName = playerTypeToGroup[playerType]
 		for completionType, achievement in pairs(completionTable) do
 			Mod.Insert(catalogTable, makeUnlockTable(groupName, completionType, achievement))

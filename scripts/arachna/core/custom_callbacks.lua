@@ -1,6 +1,6 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
-ARACHNAMOD.ModCallbacks = {
+ArachnaMod.ModCallbacks = {
 	---(EntityBomb Bomb) - Called when a bomb explodes
 	POST_BOMB_EXPLODE = "ARACHNA_POST_BOMB_EXPLODE",
 

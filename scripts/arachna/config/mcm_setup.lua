@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local SettingsHelper = Mod.SettingsHelper
 
 if ModConfigMenu and not ModConfigMenu.GetCategoryIDByName("Arachna") then

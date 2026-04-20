@@ -1,11 +1,11 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local loader = Mod.PatchesLoader
 
 local function tmPlusPatch()
 	--Manually update TM Plus' own Arachna compatibility--
 	local function TMplusCompatibility()
 		TMplus.ArachnaTMPSlotIndex = {
-			[Mod.Slot.SPIDER_BEGGAR.ID] = {"Spider Beggar", true}
+			[Mod.Slot.SPIDER_BEGGAR.ID] = { "Spider Beggar", true }
 		}
 		TMplus:AddCompatibility("Arachna", 2.0, TMplus.ArachnaTMPSlotIndex)
 	end

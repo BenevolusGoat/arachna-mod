@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local MECHANICAL_EYE = {}
 
-ARACHNAMOD.Item.MECHANICAL_EYE = MECHANICAL_EYE
+ArachnaMod.Item.MECHANICAL_EYE = MECHANICAL_EYE
 
 MECHANICAL_EYE.ID = Isaac.GetItemIdByName("Mechanical Eye")
 MECHANICAL_EYE.FAMILIAR = Isaac.GetEntityVariantByName("Mechanical Eye (orbital)")
@@ -113,7 +113,7 @@ function MECHANICAL_EYE:GenerateActiveCopy(familiar)
 	local chargeList
 	repeat
 		Mod:DebugLog("Desired Mechanical Eye charge:", chargeRef)
-		chargeList = Mod:FilterList(activeList[chargeRef] or {}, function (val, key)
+		chargeList = Mod:FilterList(activeList[chargeRef] or {}, function(val, key)
 			--Does not allow the same item or items removed from the pool
 			return val ~= primaryActive and itemPool:HasCollectible(val)
 		end)
@@ -177,11 +177,11 @@ function MECHANICAL_EYE:OnFamiliarUpdate(familiar)
 	end
 
 	if sprite:IsFinished("Opening")
-		 or (
+		or (
 			sprite:IsPlaying("Opened")
 			and player:IsExtraAnimationFinished()
 			and ((data.MechEyeCurReferenceActive or 0) ~= player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
-			or (data.MechEyeCurReferenceCharge or 0) ~= getChargeReference(player))
+				or (data.MechEyeCurReferenceCharge or 0) ~= getChargeReference(player))
 		)
 	then
 		MECHANICAL_EYE:GenerateActiveCopy(familiar)
@@ -208,7 +208,7 @@ Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, MECHANICAL_EYE.OnFamiliarUpdate
 ---@param slot ActiveSlot
 function MECHANICAL_EYE:PostDischarge(itemId, removed, player, slot)
 	if slot ~= ActiveSlot.SLOT_PRIMARY then return end
-	Mod.Foreach.Familiar(function (familiar, index)
+	Mod.Foreach.Familiar(function(familiar, index)
 		local familiar_run_save = Mod.SaveManager.GetRunSave(familiar)
 		local generatedItem = familiar_run_save.MechanicalActive
 
@@ -238,7 +238,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_DISCHARGE_ACTIVE_ITEM, MECHANICAL_EYE.PostD
 --#region Reroll on new room/greed wave
 
 function MECHANICAL_EYE:RerollActives()
-	Mod.Foreach.Familiar(function (familiar, index)
+	Mod.Foreach.Familiar(function(familiar, index)
 		if familiar:GetSprite():IsPlaying("Opened") then
 			MECHANICAL_EYE:GenerateActiveCopy(familiar)
 		end

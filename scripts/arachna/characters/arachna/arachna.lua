@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local ARACHNA = {}
 
-ARACHNAMOD.Character.ARACHNA = ARACHNA
+ArachnaMod.Character.ARACHNA = ARACHNA
 
 Mod.Include("scripts.arachna.characters.arachna.arachnas_spool")
 
@@ -107,7 +107,7 @@ function ARACHNA:PosionTears(player, tearParams, weaponType, damageScale, tearDi
 		and player:GetCollectibleRNG(Mod.Item.ARACHNIDS_GRIP.ID):RandomFloat() < ARACHNA.POISON_CHANCE
 	then
 		tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_POISON)
-		--tearParams.TearColor = ARACHNAMOD:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
+		--tearParams.TearColor = ArachnaMod:IsLaserWeaponType(weaponType) and Color.LaserPoison or Color.TearCommonCold
 		return tearParams
 	end
 end
@@ -155,7 +155,7 @@ function ARACHNA:RareSoundAlt(id, volume, delay, loop, pitch, pan)
 		and Mod:RandomNum() < ARACHNA.RARE_SFX_CHANCE
 	then
 		local newId = id == ARACHNA.SFX_HURT and ARACHNA.SFX_HURT_RARE or ARACHNA.SFX_DEATH_RARE
-		return {newId, volume, delay, loop, pitch, pan}
+		return { newId, volume, delay, loop, pitch, pan }
 	end
 end
 

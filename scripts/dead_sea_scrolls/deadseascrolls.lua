@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local DSSModName = "Dead Sea Scrolls (Arachna)"
 local DSSCoreVersion = 7
 
@@ -146,31 +146,31 @@ local arachnaDssDirectory = {
 		generate = function(menu)
 			menu.buttons = {}
 
-			for _, info in ipairs(ARACHNAMOD.SettingsHelper.GetAllSettings()) do
+			for _, info in ipairs(ArachnaMod.SettingsHelper.GetAllSettings()) do
 				local button = {}
 				button.strset = GenerateTooltip(info.Name:lower()).strset
 				button.tooltip = GenerateTooltip(info.Description:lower())
 
 				button.variable = info.Name
 
-				if info.Type == ARACHNAMOD.SettingTypes.Boolean then
+				if info.Type == ArachnaMod.SettingTypes.Boolean then
 					button.load = function()
-						return ARACHNAMOD.GetSetting(info.Name) == true and 1 or 2
+						return ArachnaMod.GetSetting(info.Name) == true and 1 or 2
 					end
 
 					button.choices = { "on", "off" }
 					button.setting = button.load()
 
 					button.changefunc = function()
-						ARACHNAMOD.SaveSetting(info.Name, button.setting == 1)
+						ArachnaMod.SaveSetting(info.Name, button.setting == 1)
 					end
 
 					button.store = function()
-						ARACHNAMOD.SaveSetting(info.Name, button.setting == 1)
+						ArachnaMod.SaveSetting(info.Name, button.setting == 1)
 					end
-				elseif info.Type == ARACHNAMOD.SettingTypes.Choice then
+				elseif info.Type == ArachnaMod.SettingTypes.Choice then
 					button.load = function()
-						return ARACHNAMOD.GetSetting(info.Name)
+						return ArachnaMod.GetSetting(info.Name)
 					end
 
 					button.choices = info.Choices
@@ -180,26 +180,26 @@ local arachnaDssDirectory = {
 						info.Choices[i] = choice:lower()
 					end
 					button.changefunc = function()
-						ARACHNAMOD.SaveSetting(info.Name, button.setting)
+						ArachnaMod.SaveSetting(info.Name, button.setting)
 					end
 
 					button.store = function()
-						ARACHNAMOD.SaveSetting(info.Name, button.setting)
+						ArachnaMod.SaveSetting(info.Name, button.setting)
 					end
-				elseif info.Type == ARACHNAMOD.SettingTypes.Keybind then
+				elseif info.Type == ArachnaMod.SettingTypes.Keybind then
 					button.load = function()
-						return ARACHNAMOD.GetSetting(info.Name)
+						return ArachnaMod.GetSetting(info.Name)
 					end
 
 					button.setting = button.load()
 					button.keybind = true
 
 					button.changefunc = function()
-						ARACHNAMOD.SaveSetting(info.Name, button.setting)
+						ArachnaMod.SaveSetting(info.Name, button.setting)
 					end
 
 					button.store = function()
-						ARACHNAMOD.SaveSetting(info.Name, button.setting)
+						ArachnaMod.SaveSetting(info.Name, button.setting)
 					end
 				end
 
@@ -359,8 +359,8 @@ local arachnaDssDirectory = {
 	}
 }
 
-ARACHNAMOD.DSS_DIRECTORY = arachnaDssDirectory
-ARACHNAMOD.DSS_MOD = dssmod
+ArachnaMod.DSS_DIRECTORY = arachnaDssDirectory
+ArachnaMod.DSS_MOD = dssmod
 
 local exampledirectorykey = {
 	Item = arachnaDssDirectory.main, -- This is the initial item of the menu, generally you want to set it to your main item

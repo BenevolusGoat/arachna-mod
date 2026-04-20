@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local ARACHNAS_SPOOL = {}
 
-ARACHNAMOD.Item.ARACHNAS_SPOOL = ARACHNAS_SPOOL
+ArachnaMod.Item.ARACHNAS_SPOOL = ARACHNAS_SPOOL
 
 ARACHNAS_SPOOL.ID = Isaac.GetItemIdByName("Arachna's Spool")
 
@@ -272,7 +272,7 @@ function ARACHNAS_SPOOL:ShouldReceiveStatusEffect(npc)
 		and not npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
 		and npc:IsActiveEnemy(false)
 		and npc:IsVulnerableEnemy()
-		and (not ARACHNAMOD:IsLegacyGameplayEnabled() or not npc:IsBoss())
+		and (not ArachnaMod:IsLegacyGameplayEnabled() or not npc:IsBoss())
 end
 
 ---@param ent Entity
@@ -389,7 +389,7 @@ function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
 			if StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
 				local dist = player.Position:Distance(npc.Position)
 				local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(
-				-45, 45))
+					-45, 45))
 				local tear = Mod.Item.EGG_TOSS:FireEgg(npc.Position, vel, player, npc)
 				tear.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 			else
@@ -456,9 +456,9 @@ Mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, ARACHNAS_SPOOL.RenderBossCharge
 function ARACHNAS_SPOOL:OnNPCKill(ent, source)
 	local webbed_data = StatusEffectLibrary:GetStatusEffectData(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
 	if webbed_data
-		or (not ARACHNAMOD:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
+		or (not ArachnaMod:IsLegacyGameplayEnabled() and source.Type == EntityType.ENTITY_TEAR and source.Variant == ARACHNAS_SPOOL.TEAR)
 	then
-		if ent:IsBoss() and ARACHNAMOD:IsLegacyGameplayEnabled() then
+		if ent:IsBoss() and ArachnaMod:IsLegacyGameplayEnabled() then
 			return
 		end
 		local data = Mod:GetData(ent)

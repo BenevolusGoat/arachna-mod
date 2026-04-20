@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local YARN_HEART = {}
 
-ARACHNAMOD.Item.YARN_HEART = YARN_HEART
+ArachnaMod.Item.YARN_HEART = YARN_HEART
 
 YARN_HEART.ID = Isaac.GetItemIdByName("Yarn Heart")
 

@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local GUMMY_SPIDERS = {}
 
-ARACHNAMOD.Item.GUMMY_SPIDERS = GUMMY_SPIDERS
+ArachnaMod.Item.GUMMY_SPIDERS = GUMMY_SPIDERS
 
 GUMMY_SPIDERS.ID = Isaac.GetItemIdByName("Gummy Spiders")
 

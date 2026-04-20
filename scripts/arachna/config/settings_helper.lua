@@ -1,8 +1,8 @@
 local allSettings = {}
 local SettingsHelper = {}
-ARACHNAMOD.SettingsHelper = SettingsHelper
+ArachnaMod.SettingsHelper = SettingsHelper
 
-ARACHNAMOD.SettingTypes = {
+ArachnaMod.SettingTypes = {
 	Choice = 0,
 	Keybind = 1,
 	Boolean = 2,
@@ -12,8 +12,8 @@ ARACHNAMOD.SettingTypes = {
 ---@param settingKey string
 ---@param value any
 ---@function
-function ARACHNAMOD.SaveSetting(settingKey, value)
-	local game_save = ARACHNAMOD.SaveManager.GetSettingsSave()
+function ArachnaMod.SaveSetting(settingKey, value)
+	local game_save = ArachnaMod.SaveManager.GetSettingsSave()
 	---@cast game_save table
 
 	if not game_save.ArachnaSettings then
@@ -24,14 +24,14 @@ function ARACHNAMOD.SaveSetting(settingKey, value)
 		game_save.ArachnaSettings[settingKey] = value
 	end
 
-	ARACHNAMOD.SaveManager.Save()
+	ArachnaMod.SaveManager.Save()
 end
 
 ---Gets the value for a setting. Settings have default values, so unless the setting doesn't exist, this doesn't return nil.
 ---@return any?
 ---@function
-function ARACHNAMOD.GetSetting(settingKey)
-	local game_save = ARACHNAMOD.SaveManager.GetSettingsSave()
+function ArachnaMod.GetSetting(settingKey)
+	local game_save = ArachnaMod.SaveManager.GetSettingsSave()
 	---@cast game_save table
 
 	if not game_save.ArachnaSettings then
@@ -53,8 +53,8 @@ function ARACHNAMOD.GetSetting(settingKey)
 end
 
 ---Returns the string value of current setting. Works only for choice settings.
-function ARACHNAMOD.GetSettingStr(settingKey)
-	local settingValue = ARACHNAMOD.GetSetting(settingKey)
+function ArachnaMod.GetSettingStr(settingKey)
+	local settingValue = ArachnaMod.GetSetting(settingKey)
 
 	local settingInfo = SettingsHelper.GetSettingInfo(settingKey)
 
@@ -86,7 +86,7 @@ function SettingsHelper.GetDefault(settingKey)
 end
 
 -- Creates a new multiple-choice setting.
----@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with ARACHNAMOD.GetSetting()
+---@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with ArachnaMod.GetSetting()
 ---@param settingDescription any @The description of the setting. This is what will be displayed in the settings menu.
 ---@param possibleValues string[] @Array of possible values
 ---@param defaultValue number? @The index of the possibleValues array that is the default value. If this is nil, the first value in the array will be used.
@@ -101,11 +101,11 @@ function SettingsHelper.AddChoiceSetting(settingName, settingDescription, possib
 		Default = defaultValue,
 		Choices = possibleValues,
 		Condition = condition,
-		Type = ARACHNAMOD.SettingTypes.Choice,
+		Type = ArachnaMod.SettingTypes.Choice,
 	})
 end
 
----@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with ARACHNAMOD.GetSetting()
+---@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with ArachnaMod.GetSetting()
 ---@param settingDescription any @The description of the setting. This is what will be displayed in the settings menu.
 ---@param defaultValue boolean
 ---@param condition function? @A function that returns a boolean. If this function returns false, the setting will not be displayed.
@@ -116,12 +116,12 @@ function SettingsHelper.AddBooleanSetting(settingName, settingDescription, defau
 		Description = settingDescription,
 		Default = defaultValue,
 		Condition = condition,
-		Type = ARACHNAMOD.SettingTypes.Boolean,
+		Type = ArachnaMod.SettingTypes.Boolean,
 	})
 end
 
 -- Creates a new keybind setting.
----@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with ARACHNAMOD.GetSetting()
+---@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with ArachnaMod.GetSetting()
 ---@param settingDescription any @The description of the setting. This is what will be displayed in the settings menu.
 ---@param defaultKey Keyboard @The default key for the setting.
 ---@param condition function? @A function that returns a boolean. If this function returns false, the setting will not be displayed.
@@ -132,6 +132,6 @@ function SettingsHelper.AddKeybindSetting(settingName, settingDescription, defau
 		Description = settingDescription,
 		Default = defaultKey,
 		Condition = condition,
-		Type = ARACHNAMOD.SettingTypes.Keybind,
+		Type = ArachnaMod.SettingTypes.Keybind,
 	})
 end

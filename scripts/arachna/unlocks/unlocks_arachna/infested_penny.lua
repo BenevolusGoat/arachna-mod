@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local INFESTED_PENNY = {}
 
-ARACHNAMOD.Trinket.INFESTED_PENNY = INFESTED_PENNY
+ArachnaMod.Trinket.INFESTED_PENNY = INFESTED_PENNY
 
 INFESTED_PENNY.ID = Isaac.GetTrinketIdByName("Infested Penny")
 

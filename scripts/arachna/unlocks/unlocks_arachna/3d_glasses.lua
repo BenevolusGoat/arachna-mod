@@ -1,14 +1,14 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local GLASSES_3D = {}
 
-ARACHNAMOD.Item.GLASSES_3D = GLASSES_3D
+ArachnaMod.Item.GLASSES_3D = GLASSES_3D
 
 GLASSES_3D.ID = Isaac.GetItemIdByName("3D Glasses")
 
-GLASSES_3D.MODIFIER = ARACHNAMOD.TearModifier.New({
+GLASSES_3D.MODIFIER = ArachnaMod.TearModifier.New({
 	Name = "3D Glasses",
-	Items = {GLASSES_3D.ID},
+	Items = { GLASSES_3D.ID },
 	MinChance = 0.05,
 	MaxChance = 0.25,
 	MinLuck = 0,
@@ -52,7 +52,7 @@ end
 
 function GLASSES_3D.MODIFIER:PostNpcHit(hitter, npc)
 	if not npc:IsBoss() then
-		local player = Mod:TryGetPlayer(hitter, {WeaponOwner = true})
+		local player = Mod:TryGetPlayer(hitter, { WeaponOwner = true })
 		---@cast player EntityPlayer
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 2, false, 3)
 		GLASSES_3D:SpawnEnemyCopy(npc, Vector(-15, 0), player, Color(0.5, 0.3, 0.3, 0.8, 0.3, 0, 0))
@@ -69,7 +69,7 @@ function GLASSES_3D:DisappearOnRoomClear(npc)
 		smoke.Color = npc:GetSprite().Color
 		smoke.SpriteScale = smoke.SpriteScale / 1.5
 		Mod.sfxman:Play(SoundEffect.SOUND_SUMMON_POOF, 0.5, 2, false, 1.5)
-		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS , 0.8, 2, false, 0.8)
+		Mod.sfxman:Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8, 2, false, 0.8)
 		npc:Remove()
 	end
 end
@@ -103,7 +103,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_ENTITY_SET_COLOR, GLASSES_3D.StopColorChange
 --Remove charm from copy enemies as they persist when continuing otherwise
 function GLASSES_3D:Purge3DCopiesOnGameExit(shouldSave)
 	if shouldSave then
-		Mod.Foreach.NPC(function (npc, index)
+		Mod.Foreach.NPC(function(npc, index)
 			local data = Mod:TryGetData(npc)
 			if data and data.GlassesCopy then
 				npc:ClearEntityFlags(EntityFlag.FLAG_FRIENDLY | EntityFlag.FLAG_CHARM)

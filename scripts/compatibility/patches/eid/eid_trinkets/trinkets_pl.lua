@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local Trinket = Mod.Trinket
 
 return function(modifiers)

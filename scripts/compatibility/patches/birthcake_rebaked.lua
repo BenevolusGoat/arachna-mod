@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local loader = Mod.PatchesLoader
 
 local ARACHNA = {
@@ -37,12 +37,13 @@ local function birthcakePatch()
 	local api = BirthcakeRebaked.API
 	api:AddBirthcakePickupText(Mod.PlayerType.ARACHNA, ARACHNA.PickupQuote, ARACHNA.Name)
 	api:AddAccurateBlurbcake(Mod.PlayerType.ARACHNA, ARACHNA.AccurateBlurb)
-	api:AddBirthcakeSprite(Mod.PlayerType.ARACHNA, {SpritePath = ARACHNA.SpriteName})
+	api:AddBirthcakeSprite(Mod.PlayerType.ARACHNA, { SpritePath = ARACHNA.SpriteName })
 	api:AddEIDDescription(Mod.PlayerType.ARACHNA, ARACHNA.EIDDesc)
 
-	api:AddTaintedBirthcakePickupText(Mod.PlayerType.ARACHNA_B, ARACHNA_B.PickupQuote, Mod.PlayerType.ARACHNA, ARACHNA_B.Name, ARACHNA_B.Title)
+	api:AddTaintedBirthcakePickupText(Mod.PlayerType.ARACHNA_B, ARACHNA_B.PickupQuote, Mod.PlayerType.ARACHNA,
+		ARACHNA_B.Name, ARACHNA_B.Title)
 	api:AddAccurateBlurbcake(Mod.PlayerType.ARACHNA_B, ARACHNA_B.AccurateBlurb)
-	api:AddBirthcakeSprite(Mod.PlayerType.ARACHNA_B, {SpritePath = ARACHNA_B.SpriteName})
+	api:AddBirthcakeSprite(Mod.PlayerType.ARACHNA_B, { SpritePath = ARACHNA_B.SpriteName })
 	api:AddEIDDescription(Mod.PlayerType.ARACHNA_B, ARACHNA_B.EIDDesc)
 end
 

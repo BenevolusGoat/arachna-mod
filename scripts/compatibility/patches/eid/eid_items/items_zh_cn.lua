@@ -1,4 +1,4 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 local ARC_EID = Mod.EID_Support
 local Item = Mod.Item
 
@@ -58,7 +58,7 @@ return function(modifiers)
 			Name = "绞丝糖",
 			Description = {
 				"{{WebHeart}} 排空角色的红心, 并生成网心, 至少生成3个",
-				"#{{Slow}} 5%概率发射减速四重泪弹",--quad-splitting stands for "四重泪弹" (quadruple tears like Mutant Spider) or "一分为四的泪弹" (1 tear split into 4 like Cricket's Body)?
+				"#{{Slow}} 5%概率发射减速四重泪弹", --quad-splitting stands for "四重泪弹" (quadruple tears like Mutant Spider) or "一分为四的泪弹" (1 tear split into 4 like Cricket's Body)?
 				"#{{Luck}} 幸运20: 100%"
 			}
 		},
@@ -131,7 +131,7 @@ return function(modifiers)
 			}
 		},
 		[Item.GEPTAMERON.ID] = {
-			Name = "七室谈",--The name is printed as Getameron instead of Geptameron
+			Name = "七室谈", --The name is printed as Getameron instead of Geptameron
 			Description = {
 				"基于计数器触发效果:",
 				"#{{1}} 揭示{{SecretRoom}}{{SuperSecretRoom}} 并使用{{Collectible" ..

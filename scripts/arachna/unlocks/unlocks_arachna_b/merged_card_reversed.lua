@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local MERGED_CARD_REVERSED = {}
 
-ARACHNAMOD.Card.MERGED_CARD_REVERSED = MERGED_CARD_REVERSED
+ArachnaMod.Card.MERGED_CARD_REVERSED = MERGED_CARD_REVERSED
 
 MERGED_CARD_REVERSED.ID = Isaac.GetCardIdByName("Merged Card?")
 MERGED_CARD_REVERSED.SFX = Isaac.GetSoundIdByName("Merged Card?")
@@ -110,7 +110,7 @@ MERGED_CARD_REVERSED.CARD_EFFECTS = {
 	end,
 	[Card.CARD_REVERSE_WHEEL_OF_FORTUNE] = function(player, rng)
 		local itemId = MERGED_CARD_REVERSED.REVERSE_FORTUNE_DICE
-		[rng:RandomInt(#MERGED_CARD_REVERSED.REVERSE_FORTUNE_DICE) + 1]
+			[rng:RandomInt(#MERGED_CARD_REVERSED.REVERSE_FORTUNE_DICE) + 1]
 		player:UseActiveItem(itemId, UseFlag.USE_NOANIM, -1)
 	end,
 	[Card.CARD_REVERSE_STRENGTH] = function(player, rng)
@@ -440,7 +440,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, MERGED_CARD_
 function MERGED_CARD_REVERSED:SpawnReverseExplosion(player, rng, radius)
 	local room = Mod.Room()
 	local pos = room:GetClampedPosition(Isaac.GetRandomPosition(), -40)
-	local topLeftIndex =  room:GetGridIndex(pos + Vector(-radius, 0))
+	local topLeftIndex = room:GetGridIndex(pos + Vector(-radius, 0))
 	local topRightIndex = room:GetGridIndex(pos + Vector(radius, 0))
 	local length = topRightIndex - topLeftIndex
 	local width = room:GetGridWidth()

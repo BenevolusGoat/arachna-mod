@@ -1,10 +1,10 @@
 --#region Variables
 
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local BEST_BUD_BALL = {}
 
-ARACHNAMOD.Item.BEST_BUD_BALL = BEST_BUD_BALL
+ArachnaMod.Item.BEST_BUD_BALL = BEST_BUD_BALL
 
 BEST_BUD_BALL.ID = Isaac.GetItemIdByName("Best Bud Ball")
 BEST_BUD_BALL.EFFECT = Isaac.GetEntityVariantByName("Best Bud Ball")
@@ -47,7 +47,7 @@ ThrowableItemLib:RegisterThrowableItem({
 		BEST_BUD_BALL:FireBall(player.Position, Mod:AddTearVelocity(vect, 15, player), player)
 		Mod.sfxman:Play(BEST_BUD_BALL.SFX.THROW, 1, 2, false, 0.8)
 	end,
-	LiftFn = function (player, continued, slot, mimic)
+	LiftFn = function(player, continued, slot, mimic)
 		Mod.sfxman:Play(BEST_BUD_BALL.SFX.RAISE, 1, 2, false, 0.8)
 	end
 })
@@ -87,8 +87,8 @@ end
 function BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 	local data = Mod:GetData(ball)
 	local maxHpChance = Mod.math.max(0, (1.25 - (npc.MaxHitPoints / 600)) * 0.5) --+46% chance at 200 max HP, +29% at 400 max hp, and +12.5% at 600 max hp
-	local hpChance = (1 - (npc.HitPoints / npc.MaxHitPoints)) * 0.50 --Up to +50% capture chance based on health %
-	local luck = Mod:Clamp(player.Luck * 0.025, 0, 0.5) --+2.5% per luck, up to 50%
+	local hpChance = (1 - (npc.HitPoints / npc.MaxHitPoints)) * 0.50          --Up to +50% capture chance based on health %
+	local luck = Mod:Clamp(player.Luck * 0.025, 0, 0.5)                       --+2.5% per luck, up to 50%
 	local roll = player:GetCollectibleRNG(BEST_BUD_BALL.ID):RandomFloat()
 	local chance = 0.01 + maxHpChance + hpChance + luck
 
@@ -133,7 +133,7 @@ end
 ---@param pos Vector
 ---@param player EntityPlayer
 function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		local data = Mod:TryGetData(npc)
 		if data
 			and data.BestBudBall
@@ -143,7 +143,7 @@ function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
 			npc:Remove()
 			Mod.Spawn.Poof01(3, npc.Position)
 		end
-	end, nil, nil, nil, {Inverse = true})
+	end, nil, nil, nil, { Inverse = true })
 	local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, player, cfg.Subtype, Mod:Random())
 	npc.MaxHitPoints = cfg.MaxHitPoints
 	npc.HitPoints = cfg.HitPoints
@@ -162,8 +162,8 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 	local sprite = ball:GetSprite()
 	local data = Mod:GetData(ball)
 	if ball.PositionOffset.Y < 0 then
-		ball.PositionOffset = ball.PositionOffset + Vector(0, 1.1^ball.FrameCount)
-		ball.Velocity = ball.Velocity - ball.Velocity:Resized(0.075 * 1.1^ball.FrameCount)
+		ball.PositionOffset = ball.PositionOffset + Vector(0, 1.1 ^ ball.FrameCount)
+		ball.Velocity = ball.Velocity - ball.Velocity:Resized(0.075 * 1.1 ^ ball.FrameCount)
 	elseif not data.BallStationary then
 		sprite:SetFrame(4)
 		sprite:Stop()
@@ -174,7 +174,7 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 		ball:SetTimeout(30)
 	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER and ball.SpawnerEntity and data.CaptureSuccess then
 		local spawner = ball.SpawnerEntity
-		Mod.Foreach.PlayerInRadius(ball.Position, ball.Size, function (player, index)
+		Mod.Foreach.PlayerInRadius(ball.Position, ball.Size, function(player, index)
 			if spawner and Mod:IsSameEntity(spawner, player) then
 				for i = ActiveSlot.SLOT_PRIMARY, ActiveSlot.SLOT_POCKET do
 					local itemId = player:GetActiveItem(i)
@@ -208,12 +208,12 @@ function BEST_BUD_BALL:SearchForEnemies(ball, player)
 	if data.QueueCapture then
 		return
 	end
-	Mod.Foreach.NPCInRadius(ball.Position, ball.Size, function (npc, index)
+	Mod.Foreach.NPCInRadius(ball.Position, ball.Size, function(npc, index)
 		if BEST_BUD_BALL:CanCaptureEnemy(npc) then
 			BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 			return true
 		end
-	end, nil, nil, {UseEnemySearchParams = true})
+	end, nil, nil, { UseEnemySearchParams = true })
 end
 
 ---@param ball EntityEffect
@@ -280,7 +280,7 @@ Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, BEST_BUD_BALL.StopCaptureDamage
 --#region Update boss pos on new room
 
 function BEST_BUD_BALL:FixPosOnNewRoom()
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		local data = Mod:TryGetData(npc)
 		if data and data.BestBudBall then
 			npc.Position = Isaac.GetPlayer().Position
@@ -295,7 +295,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, BEST_BUD_BALL.FixPosOnNewRoom)
 --#region Save and restore bosses as charmed ones aren't normally persistent
 
 function BEST_BUD_BALL:SaveBossOnGamExit()
-	Mod.Foreach.NPC(function (npc, index)
+	Mod.Foreach.NPC(function(npc, index)
 		local data = Mod:TryGetData(npc)
 		if data and data.BestBudBall then
 			local player = npc.SpawnerEntity and npc.SpawnerEntity:ToPlayer()
@@ -303,7 +303,7 @@ function BEST_BUD_BALL:SaveBossOnGamExit()
 				BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player)
 			end
 		end
-	end, nil, nil, nil, {Inverse = true})
+	end, nil, nil, nil, { Inverse = true })
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, BEST_BUD_BALL.SaveBossOnGamExit)
@@ -311,7 +311,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, BEST_BUD_BALL.SaveBossOnGamExit)
 ---@param isContinued boolean
 function BEST_BUD_BALL:RestoreBossOnGameContinue(isContinued)
 	if not isContinued then return end
-	Mod.Foreach.Player(function (player, index)
+	Mod.Foreach.Player(function(player, index)
 		local run_save = Mod.SaveManager.GetRunSave(player)
 		if run_save.BestBudBallNPC then
 			BEST_BUD_BALL:SpawnFriendlyBoss(run_save.BestBudBallNPC, player.Position, player)
@@ -330,7 +330,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, BEST_BUD_BALL.RestoreBossOnGa
 ---@param slot ActiveSlot
 function BEST_BUD_BALL:AdjustCropOffset(player, slot, offset, alpha, scale, chargebarOffset)
 	local crop = Mod.SaveManager.GetRunSave(player).BestBudBallNPC ~= nil and 32 or 0
-	return {CropOffset = Vector(crop, 0)}
+	return { CropOffset = Vector(crop, 0) }
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_PLAYERHUD_RENDER_ACTIVE_ITEM, BEST_BUD_BALL.AdjustCropOffset, BEST_BUD_BALL.ID)

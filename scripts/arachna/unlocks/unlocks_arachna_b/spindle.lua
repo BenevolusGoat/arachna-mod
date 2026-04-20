@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local SPINDLE = {}
 
-ARACHNAMOD.Trinket.SPINDLE = SPINDLE
+ArachnaMod.Trinket.SPINDLE = SPINDLE
 
 SPINDLE.ID = Isaac.GetTrinketIdByName("Spindle")
 

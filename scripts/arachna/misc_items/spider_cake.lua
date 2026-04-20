@@ -1,8 +1,8 @@
-local Mod = ARACHNAMOD
+local Mod = ArachnaMod
 
 local SPIDER_CAKE = {}
 
-ARACHNAMOD.Item.SPIDER_CAKE = SPIDER_CAKE
+ArachnaMod.Item.SPIDER_CAKE = SPIDER_CAKE
 
 SPIDER_CAKE.ID = Isaac.GetItemIdByName("Spider Cake")
 
@@ -19,7 +19,7 @@ local ends = {
 	["9"] = "th",
 }
 
-local UPLOAD_DATE = os.date("!*t", os.time({year = 2022, month = 4, day = 29}))
+local UPLOAD_DATE = os.date("!*t", os.time({ year = 2022, month = 4, day = 29 }))
 
 function SPIDER_CAKE:ShouldSpawnCake()
 	local anniversarySetting = Mod.GetSetting(Mod.Setting.AnniversaryOverride)
@@ -28,7 +28,7 @@ function SPIDER_CAKE:ShouldSpawnCake()
 	elseif anniversarySetting == 2 then
 		return false
 	else
-		return ARACHNAMOD.FLAGS.Anniversary
+		return ArachnaMod.FLAGS.Anniversary
 	end
 end
 
@@ -64,7 +64,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, SPIDER_CAKE.OnGameStart)
 function SPIDER_CAKE:UpdateDescription(title, subtitle, isSticky, isCurseDisplay)
 	if title == "Spider Cake" and subtitle == "Happy Arachniversary!" then
 		local yearDiff = tostring(SPIDER_CAKE:GetYearDifference())
-		local desc = "Happy " .. yearDiff .. ends[string.sub(yearDiff,string.len(yearDiff))] .. " Arachniversary!"
+		local desc = "Happy " .. yearDiff .. ends[string.sub(yearDiff, string.len(yearDiff))] .. " Arachniversary!"
 		local hud = Mod.Game:GetHUD()
 		hud:ShowItemText("Spider Cake", desc, false, true)
 		return false
