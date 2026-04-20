@@ -36,7 +36,7 @@ function ARACHNOLOGY_101:OnUse(item, rng, player)
 		--15% chance to spawn 4-8 blue spiders
 	elseif reward == ARACHNOLOGY_101.REWARD.BLUE_SPIDERS then
 		local spiderCount = rng:RandomInt(5) + 4
-		local spiderColor = isJudasBirthright and Mod.Entities.COLORED_SPIDERS.SpiderSubtype.WRATH or 0
+		local spiderColor = isJudasBirthright and Mod.Entities.COLORED_SPIDERS.SpiderSubtype.WAR or 0
 		Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, player.Position, spiderCount, nil, nil, nil, spiderColor)
 		Mod.sfxman:Play(SoundEffect.SOUND_SPIDER_SPIT_ROAR, 1, 0, false, 1)
 	end

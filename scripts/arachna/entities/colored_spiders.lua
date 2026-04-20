@@ -13,7 +13,7 @@ end
 ---@enum ColoredSpiderSubtype
 COLORED_SPIDERS.SpiderSubtype = {
 	NORMAL = 0,
-	WRATH = getSub("Wrath"),
+	WAR = getSub("Wrath"),
 	PESTILENCE = getSub("Pestilence"),
 	FAMINE = getSub("Famine"),
 	DEATH = getSub("Death"),
@@ -27,7 +27,7 @@ COLORED_SPIDERS.SpiderSubtype = {
 }
 
 COLORED_SPIDERS.SpiderColors = {
-	[COLORED_SPIDERS.SpiderSubtype.WRATH] = Color(1, 1, 0, 1, 0.49, 0, 0),
+	[COLORED_SPIDERS.SpiderSubtype.WAR] = Color(1, 1, 0, 1, 0.49, 0, 0),
 	[COLORED_SPIDERS.SpiderSubtype.PESTILENCE] = Color(1, 1, 0, 1, 0, 0.31, 0),
 	[COLORED_SPIDERS.SpiderSubtype.FAMINE] = Color(0.8, 0.8, 0, 1, 0.31, 0.22, 0),
 	[COLORED_SPIDERS.SpiderSubtype.DEATH] = Color(0, 0, 0, 1, 0, 0, 0),
@@ -46,7 +46,7 @@ COLORED_SPIDERS.ShinySubtypes = Mod:Set({
 COLORED_SPIDERS.COLORED_SPIDER_CHANCE = 0.35
 
 local WOP = WeightedOutcomePicker()
-WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 2)
+WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WAR, 2)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE, 5)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE, 5)
 WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH, 4)
@@ -59,7 +59,7 @@ WOP:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.ICE, 3)
 --For legacy gameplay
 local WOP_LEGACY = WeightedOutcomePicker()
 WOP_LEGACY:AddOutcomeWeight(0, 25)
-WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH, 4)
+WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WAR, 4)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE, 5)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE, 5)
 WOP_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH, 5)
@@ -77,7 +77,7 @@ for _, wopOutcome in ipairs(WOP_LEGACY:GetOutcomes()) do
 	end
 end
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 4)
-WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WRATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
+WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.WAR + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 2)
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.PESTILENCE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.FAMINE + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
 WOP_BIG_LEGACY:AddOutcomeWeight(COLORED_SPIDERS.SpiderSubtype.DEATH + COLORED_SPIDERS.SpiderSubtype.BIG_FLAG, 3)
@@ -93,7 +93,7 @@ COLORED_SPIDERS.WOP_BIG = WOP_BIG_LEGACY
 --#region Load Spiders
 
 local spiders = {
-	"spider_wrath",
+	"spider_war",
 	"spider_pestilence",
 	"spider_famine",
 	"spider_death",

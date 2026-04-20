@@ -159,7 +159,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 	local SpiderSubType = Mod.Entities.COLORED_SPIDERS.SpiderSubtype
 	Mod:DebugLog("Activated egg effect", spiderColor)
 	local damage = source.Entity.CollisionDamage
-	if spiderColor == SpiderSubType.WRATH then
+	if spiderColor == SpiderSubType.WAR then
 		if player then
 			local tearParams = player:GetTearHitParams(WeaponType.WEAPON_BOMBS, 1, 1, source.Entity:ToTear())
 			local color = Mod.Entities.SPIDER_EGG:GetEggColor(source.Entity.SubType)

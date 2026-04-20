@@ -184,7 +184,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, ARACHNAS_SPOOL.OnWebInit, ARAC
 function ARACHNAS_SPOOL:UniqueWebEffects(web, npc, source)
 	local SpiderSubType = Mod.Entities.COLORED_SPIDERS.SpiderSubtype
 	local damage = source.Entity and source.Entity:ToPlayer() and source.Entity:ToPlayer().Damage or 3.5
-	if Mod:GetData(web).JudasBirthright or web.SubType == SpiderSubType.WRATH then
+	if Mod:GetData(web).JudasBirthright or web.SubType == SpiderSubType.WAR then
 		npc:AddBurn(source, 30, damage)
 	end
 	if web.SubType == SpiderSubType.PESTILENCE then

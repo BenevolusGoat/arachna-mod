@@ -26,7 +26,7 @@ SPIDER_EGG.EggFlag = {
 }
 
 SPIDER_EGG.EggColors = {
-	[COLORED_SPIDERS.SpiderSubtype.WRATH] = Color(1, 1, 1, 1, 0, 0, 0, 1, 0.1, 0, 1),
+	[COLORED_SPIDERS.SpiderSubtype.WAR] = Color(1, 1, 1, 1, 0, 0, 0, 1, 0.1, 0, 1),
 	[COLORED_SPIDERS.SpiderSubtype.PESTILENCE] = Color(1, 1, 1, 1, 0, 0, 0, 0.2, 0.75, 0.2, 1),
 	[COLORED_SPIDERS.SpiderSubtype.FAMINE] = Color(1, 1, 1, 1, 0, 0, 0, 0.5, 0.5, 0, 1),
 	[COLORED_SPIDERS.SpiderSubtype.DEATH] = Color(1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0.9),

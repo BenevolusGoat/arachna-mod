@@ -22,4 +22,5 @@ local function postEnemyTakeDmgFromSpider(_, ent, amount, flags, spider, countdo
 	Mod.Game:BombExplosionEffects(ent.Position, damage, tearParams.TearFlags, color, player, radius)
 end
 
-Mod:AddCallback(Mod.ModCallbacks.POST_ENEMY_TAKE_DMG_FROM_SPIDER, postEnemyTakeDmgFromSpider, COLORED_SPIDERS.SpiderSubtype.WRATH)
+Mod:AddCallback(Mod.ModCallbacks.POST_ENEMY_TAKE_DMG_FROM_SPIDER, postEnemyTakeDmgFromSpider,
+COLORED_SPIDERS.SpiderSubtype.WAR)

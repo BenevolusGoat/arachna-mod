@@ -25,7 +25,7 @@
     </entity>
 
 	<!-- Colored Spiders -->
-	<entity id="3" variant="73" subtype="1" name="Arachna Spider (Wrath)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
+	<entity id="3" variant="73" subtype="1" name="Arachna Spider (War)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
 		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="11">
     </entity>
 	<entity id="3" variant="73" subtype="2" name="Arachna Spider (Pestilence)" anm2path="familiars/colorspiders/familiar_soc.anm2" tags="cansacrifice spider"
@@ -56,7 +56,7 @@
 	<entity id="3" variant="73" subtype="10" name="Arachna Spider (Big)" anm2path="familiars/colorspiders/bluespider_big.anm2" tags="cansacrifice spider"
 		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
-	<entity id="3" variant="73" subtype="11" name="Arachna Spider (Wrath Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
+	<entity id="3" variant="73" subtype="11" name="Arachna Spider (War Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
 		collisionInterval="14" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="17">
     </entity>
 	<entity id="3" variant="73" subtype="12" name="Arachna Spider (Pestilence Big)" anm2path="familiars/colorspiders/familiar_soc_big.anm2" tags="cansacrifice spider"
