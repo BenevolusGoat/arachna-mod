@@ -77,6 +77,7 @@ end
 ---@param ent Entity
 function BEST_BUD_BALL:CanCaptureEnemy(ent)
 	return ent:IsBoss()
+		and not ent:ToDelirium()
 		and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
 end
 

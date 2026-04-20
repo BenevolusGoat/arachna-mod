@@ -31,6 +31,17 @@ function MERGED_CARD:DisplayRoomType(...)
 	Mod.Level():UpdateVisibility()
 end
 
+---@param card Card
+---@param player? EntityPlayer
+---@param rng? RNG
+function MERGED_CARD:TriggerEffect(card, player, rng)
+	if MERGED_CARD.CARD_EFFECTS[card] then
+		player = player or Isaac.GetPlayer()
+		rng = rng or player:GetCardRNG(MERGED_CARD.ID)
+		MERGED_CARD.CARD_EFFECTS[card](player, rng)
+	end
+end
+
 --#endregion
 
 --#region Effects
@@ -187,17 +198,6 @@ MERGED_CARD.CARD_EFFECTS = {
 --#endregion
 
 --#region On Use
-
----@param card Card
----@param player? EntityPlayer
----@param rng? RNG
-function MERGED_CARD:TriggerEffect(card, player, rng)
-	if MERGED_CARD.CARD_EFFECTS[card] then
-		player = player or Isaac.GetPlayer()
-		rng = rng or player:GetCardRNG(MERGED_CARD.ID)
-		MERGED_CARD.CARD_EFFECTS[card](player, rng)
-	end
-end
 
 ---@param card Card
 ---@param player EntityPlayer

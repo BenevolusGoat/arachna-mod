@@ -47,6 +47,17 @@ function MERGED_CARD_REVERSED:IsValidPassive(historyItem)
 		and Mod.ItemConfig:GetCollectible(historyItem:GetItemID()).Type ~= ItemType.ITEM_ACTIVE
 end
 
+---@param card Card
+---@param player? EntityPlayer
+---@param rng? RNG
+function MERGED_CARD_REVERSED:TriggerEffect(card, player, rng)
+	if MERGED_CARD_REVERSED.CARD_EFFECTS[card] then
+		player = player or Isaac.GetPlayer()
+		rng = rng or player:GetCardRNG(MERGED_CARD_REVERSED.ID)
+		MERGED_CARD_REVERSED.CARD_EFFECTS[card](player, rng)
+	end
+end
+
 --#endregion
 
 --#region Effects
@@ -67,7 +78,7 @@ MERGED_CARD_REVERSED.CARD_EFFECTS = {
 	[Card.CARD_REVERSE_EMPRESS] = function(player, rng)
 		player:UseCard(Card.CARD_STRENGTH, UseFlag.USE_NOANIM | UseFlag.USE_NOANNOUNCER)
 		player:GetEffects():RemoveCollectibleEffect(CollectibleType.COLLECTIBLE_MAGIC_MUSHROOM, -1)
-		player:AddNullItemEffect(MERGED_CARD_REVERSED.REVERSE_EMPRESS_NULL_ITEM)
+		player:AddNullItemEffect(MERGED_CARD_REVERSED.REVERSE_EMPRESS_NULL_ITEM, true)
 	end,
 	[Card.CARD_REVERSE_EMPEROR] = function(player, rng)
 		MERGED_CARD_REVERSED:HandleReverseEmperor(rng)
@@ -448,17 +459,6 @@ end
 --#endregion
 
 --#region On Use
-
----@param card Card
----@param player? EntityPlayer
----@param rng? RNG
-function MERGED_CARD_REVERSED:TriggerEffect(card, player, rng)
-	if MERGED_CARD_REVERSED.CARD_EFFECTS[card] then
-		player = player or Isaac.GetPlayer()
-		rng = rng or player:GetCardRNG(MERGED_CARD_REVERSED.ID)
-		MERGED_CARD_REVERSED.CARD_EFFECTS[card](player, rng)
-	end
-end
 
 ---@param card Card
 ---@param player EntityPlayer

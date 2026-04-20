@@ -53,14 +53,15 @@ local overrideMusic = false
 ---@param historyItem HistoryItem
 function TESTAMENT:IsValidTestamentItem(historyItem)
 	local item = historyItem:GetItemID()
+	local itemConfig = Mod.ItemConfig:GetCollectible(historyItem:GetItemID())
 	return not historyItem:IsTrinket()
-		and historyItem:GetTime() > 0
 		and item ~= TESTAMENT.ID
-		and not Mod.ItemConfig:GetCollectible(historyItem:GetItemID()):HasTags(ItemConfig.TAG_QUEST)
+		and itemConfig.Type ~= ItemType.ITEM_ACTIVE
+		and not itemConfig:HasTags(ItemConfig.TAG_QUEST)
 end
 
 ---@param player EntityPlayer
-function TESTAMENT:CanUseItem(player)
+function TESTAMENT:CanUseTestament(player)
 	if Mod.Game:AchievementUnlocksDisallowed() then
 		return false
 	end
@@ -74,7 +75,10 @@ function TESTAMENT:CanUseItem(player)
 	end
 	blacklist[TESTAMENT.ID] = true
 	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
-		if TESTAMENT:IsValidTestamentItem(historyItem) and not blacklist[historyItem:GetItemID()] then
+		local item = historyItem:GetItemID()
+		if TESTAMENT:IsValidTestamentItem(historyItem)
+			and not blacklist[item]
+		then
 			return true
 		end
 	end
@@ -94,10 +98,12 @@ function TESTAMENT:CopyPlayerInventory(player)
 	local hasItem = {}
 	local item_list = {}
 	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
-		local itemId = historyItem:GetItemID()
-		if TESTAMENT:IsValidTestamentItem(historyItem) and not hasItem[itemId] then
-			Mod.Insert(item_list, itemId)
-			hasItem[itemId] = true
+		local item = historyItem:GetItemID()
+		if TESTAMENT:IsValidTestamentItem(historyItem)
+			and not hasItem[item]
+		then
+			Mod.Insert(item_list, item)
+			hasItem[item] = true
 		end
 	end
 	Mod.SaveManager.GetFloorSave().TestamentInventory = item_list
@@ -170,7 +176,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, TESTAMENT.PreUseItem, TESTAMENT.ID
 ---@param rng RNG
 ---@param player EntityPlayer
 function TESTAMENT:OnUse(itemId, rng, player)
-	local canUse = TESTAMENT:CanUseItem(player)
+	local canUse = TESTAMENT:CanUseTestament(player)
 	if not canUse then
 		local spawnPos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 		Mod.Spawn.Collectible(CollectibleType.COLLECTIBLE_EDENS_BLESSING, spawnPos, player, rng:Next())
@@ -531,7 +537,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, TESTAMENT.EmergencyExit)
 
 --#endregion
 
--- SHADER FUNCTIONALITY (tysm brakedude)
+--#region Shader functionality (tysm brakedude)
 local function GetPlayerPosition(player)
 	return Isaac.WorldToScreen(player.Position + Vector(0, -10))
 end
@@ -569,10 +575,7 @@ local function testamentShader(_, shaderName)
 
 		if Game():GetNumPlayers() > 1 then
 			params.PlayerNum = Game():GetNumPlayers()
-			local players = {}
-			for i = 1, Game():GetNumPlayers() - 1 do
-				table.insert(players, Isaac.GetPlayer(i))
-			end
+			local players = PlayerManager.GetPlayers()
 			table.sort(players, function(a, b)
 				return a.Parent == nil and a.Variant == 0 and (b.Parent ~= nil or b.Variant == 1)
 			end)

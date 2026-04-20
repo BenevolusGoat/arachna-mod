@@ -1,6 +1,7 @@
 <costumes anm2root="gfx/characters/">
 	<costume anm2path="character_arachna_head.anm2" id="0" type="none" />
 	<costume anm2path="character_arachna_b_head.anm2" id="1" type="none" />
+	<costume anm2path="n_reverse_empress_mergedcard.anm2" id="2" type="none" />
 	<costume anm2path="arachna_pog.anm2" priority="900" type="none" />
 	<costume anm2path="arachna_pog_b.anm2" priority="900" type="none" />
 	<costume anm2path="arachna_ugh.anm2" priority="900" type="none" />
@@ -14,4 +15,5 @@
 	<costume anm2path="costume_spidercake.anm2" type="passive" id="13" hasSkinAlt="true" />
 	<costume anm2path="costume_candyfloss.anm2" type="passive" id="15" />
 	<costume anm2path="costume_shoebox.anm2" type="passive" id="17" />
+
 </costumes>

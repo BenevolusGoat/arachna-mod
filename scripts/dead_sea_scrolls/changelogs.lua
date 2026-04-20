@@ -48,7 +48,7 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
 
-#2.0.0 (??/??/2026)
+#2.0.0 (04/292026)
 
 ## Major Mod Rewrite
 

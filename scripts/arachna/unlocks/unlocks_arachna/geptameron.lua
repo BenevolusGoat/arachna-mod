@@ -118,17 +118,14 @@ function GEPTAMERON:ActivateEffect(player, week)
 		local effects = Mod.Room():GetEffects()
 		effects:AddNullEffect(GEPTAMERON.TUESDAY_NULL_ITEM)
 	elseif week == GEPTAMERON.WeekEffect.WEDNESDAY then
-		local rng = player:GetCollectibleRNG(GEPTAMERON.ID)
 		local source = EntityRef(player)
-		if rng:RandomFloat() < 0.5 then
-			Mod.Foreach.NPC(function (npc, index)
-				npc:AddCharmed(source, GEPTAMERON.CHARM_DURATION)
-			end, nil, nil, nil, {UseEnemySearchParams = true, NoCollision = true})
-		else
-			Mod.Foreach.NPC(function (npc, index)
+		Mod.Foreach.NPC(function (npc, index)
+			if index % 2 == 0 then
 				StatusEffectLibrary:AddStatusEffect(npc, GEPTAMERON.STATUS_LOCUST, -1, source)
-			end, nil, nil, nil, {UseEnemySearchParams = true, NoCollision = true})
-		end
+			else
+				npc:AddCharmed(source, GEPTAMERON.CHARM_DURATION)
+			end
+		end, nil, nil, nil, {UseEnemySearchParams = true, NoCollision = true})
 	elseif week == GEPTAMERON.WeekEffect.THURSDAY then
 		player:GetEffects():AddCollectibleEffect(CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL, true, 2)
 		player:AddCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE, true)

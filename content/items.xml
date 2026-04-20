@@ -31,7 +31,7 @@
 	<null name="arachnids grip orbitals" persistent="true" cache="familiars"/>
 	<null name="geptameron tuesday" cooldown="300"/>
 	<null name="geptameron saturday" cooldown="300"/>
-	<null name="reversed merged card empress" effecttears="0.75" effectspeed="-0.05"/>
+	<null name="reversed merged card empress" id="2" effecttears="0.75" effectspeed="-0.05"/>
 	<null name="reversed merged card lovers" persistent="true" effectdamage="0.25"/>
 	<null name="reversed merged card chariot" persistent="true" cache="speed firedelay" cooldown="300"/>
 	<null name="reversed merged card hanged man" persistent="true" effectdamagemult="1.5" cooldown="900"/>
