@@ -6,20 +6,24 @@ local ARACHNA = {
 		en_us = "Arachna's"
 	},
 	PickupQuote = {
-		en_us = ""
+		en_us = "Infested!"
 	},
 	AccurateBlurb = {
-		en_us = ""
+		en_us = "Eggs and bosses spawn spiders"
 	},
 	EIDDesc = {
-		en_us = ""
+		en_us = "Spider Eggs will occasionally spit out friendly spiders"
+		.. "#Webbed bosses will occasionally spit out friendly spiders depending on their web charge. More charge = higher spawnrate"
 	},
 	SpriteName = "gfx/items/trinket/birthcake_arachna.png"
 }
 
 local ARACHNA_B = {
+	Title = {
+		en_us = "The Wretched's"
+	},
 	Name = {
-		en_us = "Arachna's"
+		en_us = "Tainted Arachna's"
 	},
 	PickupQuote = {
 		en_us = ""

@@ -283,7 +283,7 @@ local arachnaDssDirectory = {
 			BREAK_LINE,
 			{str = "- character gameplay rework", nosel = true},
 			{str = "- deadseascrolls menu", nosel = true},
-			{str = "- 4 new items to the boss pool", nosel = true},
+			{str = "- 5 new items and 1 new card", nosel = true},
 			{str = "- quality of life improvements", nosel = true},
 			{str = "- unquantifiable amount of bug fixes", nosel = true},
 			BREAK_LINE,
