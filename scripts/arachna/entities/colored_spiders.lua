@@ -13,7 +13,7 @@ end
 ---@enum ColoredSpiderSubtype
 COLORED_SPIDERS.SpiderSubtype = {
 	NORMAL = 0,
-	WAR = getSub("Wrath"),
+	WAR = getSub("War"),
 	PESTILENCE = getSub("Pestilence"),
 	FAMINE = getSub("Famine"),
 	DEATH = getSub("Death"),
