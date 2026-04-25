@@ -201,5 +201,14 @@ return function(modifiers)
 				"#!!! Only one boss can be active at a time"
 			}
 		},
+		[Item.ARACHNOLOGY_101.ID] = {
+			Name = "Arachnology 101",
+			Description = {
+				"Grants one of the following rewards:",
+				"#A spider facet",
+				"#{{WebHeart}} A Web Heart",
+				"#{{AracBlueSpider}} Several blue spiders"
+			}
+		}
 	}
 end
