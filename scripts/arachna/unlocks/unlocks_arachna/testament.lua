@@ -489,7 +489,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, TESTAMENT.OnGameStart)
 --#region Override music
 
 function TESTAMENT:UpdateMusic()
-	if TESTAMENT:IsInTestamentRoom() or overrideMusic then
+	if Isaac.IsInGame() and TESTAMENT:IsInTestamentRoom() or overrideMusic then
 		return Music.MUSIC_DARK_CLOSET
 	end
 end
