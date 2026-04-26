@@ -1,12 +1,6 @@
 <data>
     <group Name="Hearts">
-        <entity ID="5" Group="Hearts" Image="arachna/webheart.png" Kind="Arachna" Name="Web Heart" Variant="2000" Subtype="0" />
-        <entity ID="5" Group="Hearts" Image="arachna/webheart-double.png" Kind="Arachna" Name="Web Heart (double)" Variant="2002" Subtype="0" />
-    </group>
-    <group Name="Cards">
-        <entity ID="5" Group="Cards" Image="arachna/mergedcard.png" Kind="Arachna" Name="Merged Card" Variant="300" Subtype="2001" />
-    </group>
-    <group Name="Runes">
-        <entity ID="5" Group="Runes" Image="arachna/arachna-soul.png" Kind="Arachna" Name="Soul of Arachna" Variant="300" Subtype="2000" />
+        <entity ID="5" Group="Hearts" Image="arachna/webheart.png" Kind="Arachna" Name="Web Heart" Variant="10" Subtype="2000" />
+        <entity ID="5" Group="Hearts" Image="arachna/webheart-double.png" Kind="Arachna" Name="Web Heart (double)" Variant="10" Subtype="2001" />
     </group>
 </data>
