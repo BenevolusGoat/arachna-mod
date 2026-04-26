@@ -150,7 +150,7 @@ local function pickupReplacement(_, pickup, variant, subtype, requestedVariant, 
 				Mod:DebugLog("Roll failed for replacement")
 			end
 			--Only override if it's tied to an achievement specifically
-		elseif type(replacement_info.Achievement) == "string"
+		elseif type(replacement_info.Achievement) == "number"
 			---@diagnostic disable-next-line: param-type-mismatch
 			and not Isaac.GetPersistentGameData():Unlocked(replacement_info.Achievement)
 			and replacement_info.NewVariant == variant
@@ -218,7 +218,7 @@ local function entityReplacement(_, entType, variant, subtype, gridIndex, seed)
 				Mod:DebugLog("Roll failed for replacement")
 			end
 			--Only override if it's tied to an achievement specifically
-		elseif type(replacement_info.Achievement) == "string"
+		elseif type(replacement_info.Achievement) == "number"
 			---@diagnostic disable-next-line: param-type-mismatch
 			and not Isaac.GetPersistentGameData():Unlocked(replacement_info.Achievement)
 			and replacement_info.NewType == entType
