@@ -26,13 +26,13 @@ local ARACHNA_B = {
 		en_us = "Tainted Arachna's"
 	},
 	PickupQuote = {
-		en_us = ""
+		en_us = "Ensnare Aggression UP!"
 	},
 	AccurateBlurb = {
-		en_us = ""
+		en_us = "Double-tap is faster and shoots tears"
 	},
 	EIDDesc = {
-		en_us = ""
+		en_us = "Double-tap"
 	},
 	SpriteName = "gfx/items/trinkets/birthcake_arachna_b.png"
 }
