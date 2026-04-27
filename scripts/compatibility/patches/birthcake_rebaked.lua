@@ -1,18 +1,8 @@
 local Mod = ArachnaMod
 local loader = Mod.PatchesLoader
 
-local ARACHNA
-ARACHNA = {
-	Name = {
-		en_us = "Arachna's"
-	},
-	PickupQuote = {
-		en_us = "Infested!"
-	},
-	AccurateBlurb = {
-		en_us = "Eggs and bosses spawn spiders"
-	},
-	EIDDesc = {
+local modifiers = {
+	[Mod.PlayerType.ARACHNA] = {
 		_modifier = function(descObj, str, noMultStr, multStr)
 			local player = Mod.EID_Support:ClosestPlayerTo(descObj.Entity)
 			local mult = Mod.EID_Support:TrinketMulti(player, descObj.ObjSubType)
@@ -25,33 +15,9 @@ ARACHNA = {
 			end
 			return str
 		end,
-		en_us = {
-			function(descObj)
-				return ARACHNA.EIDDesc._modifier(descObj,
-					"Spider Eggs spawn %s every 2 seconds"
-					 .. "#Webbed bosses spawn %s every second",
-				"a friendly spider", "%s friendly spiders")
-			end
-		}
+		_sprite = "gfx/items/trinkets/birthcake_arachna.png"
 	},
-	SpriteName = "gfx/items/trinkets/birthcake_arachna.png"
-}
-
-local ARACHNA_B
-ARACHNA_B = {
-	Title = {
-		en_us = "The Wretched's"
-	},
-	Name = {
-		en_us = "Tainted Arachna's"
-	},
-	PickupQuote = {
-		en_us = "Ensnare Aggression UP!"
-	},
-	AccurateBlurb = {
-		en_us = "Double-tap is faster and shoots tears"
-	},
-	EIDDesc = {
+	[Mod.PlayerType.ARACHNA_B] = {
 		_modifier = function(descObj, str, faster)
 			local player = Mod.EID_Support:ClosestPlayerTo(descObj.Entity)
 			local mult = Mod.EID_Support:TrinketMulti(player, descObj.ObjSubType)
@@ -63,32 +29,42 @@ ARACHNA_B = {
 			end
 			return str .. "% " .. faster
 		end,
-		en_us = {
-			function(descObj)
-				return ARACHNA_B.EIDDesc._modifier(descObj,
-					"Double-tap attack is %s",
-					"faster"
-				)
-			end,
-			"# Double-tap attack shoots extra tears around you that can sometimes be {{Collectible" .. CollectibleType.COLLECTIBLE_PARASITOID .. "}} egg sacks",
-			"#{{Luck}} 50% chance at 5 luck"
-		}
+		_sprite = "gfx/items/trinkets/birthcake_arachna_b.png"
 	},
-	SpriteName = "gfx/items/trinkets/birthcake_arachna_b.png"
 }
+
+local descriptions = {
+	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_birthcakes.birthcakes_en_us")(modifiers),
+	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_birthcakes.birthcakes_zh_cn")(modifiers),
+}
+
+local allDescData = {}
+for lang, desc in pairs(descriptions) do
+	for playerType, data in pairs(desc) do
+		allDescData[playerType] = allDescData[playerType] or {}
+		for key, val in pairs(data) do
+			allDescData[playerType][key] = allDescData[playerType][key] or {}
+			allDescData[playerType][key][lang] = allDescData[playerType][key][lang] or {}
+			Mod:AddToDictionary(allDescData[playerType][key], {[lang] = val})
+			if modifiers[playerType] and key == "EIDDesc" then
+				Mod:AddToDictionary(allDescData[playerType][key], modifiers[playerType])
+			end
+		end
+	end
+end
 
 local function birthcakePatch()
 	local api = BirthcakeRebaked.API
-	api:AddBirthcakePickupText(Mod.PlayerType.ARACHNA, ARACHNA.PickupQuote, ARACHNA.Name)
-	api:AddAccurateBlurbcake(Mod.PlayerType.ARACHNA, ARACHNA.AccurateBlurb)
-	api:AddBirthcakeSprite(Mod.PlayerType.ARACHNA, { SpritePath = ARACHNA.SpriteName })
-	api:AddEIDDescription(Mod.PlayerType.ARACHNA, ARACHNA.EIDDesc)
-
-	api:AddTaintedBirthcakePickupText(Mod.PlayerType.ARACHNA_B, ARACHNA_B.PickupQuote, Mod.PlayerType.ARACHNA,
-		ARACHNA_B.Name, ARACHNA_B.Title)
-	api:AddAccurateBlurbcake(Mod.PlayerType.ARACHNA_B, ARACHNA_B.AccurateBlurb)
-	api:AddBirthcakeSprite(Mod.PlayerType.ARACHNA_B, { SpritePath = ARACHNA_B.SpriteName })
-	api:AddEIDDescription(Mod.PlayerType.ARACHNA_B, ARACHNA_B.EIDDesc)
+	for playerType, data in pairs(allDescData) do
+		if data.Title then
+			api:AddTaintedBirthcakePickupText(playerType, data.PickupQuote, Mod.PlayerType.ARACHNA, data.Name, data.Title)
+		else
+			api:AddBirthcakePickupText(playerType, data.PickupQuote, data.Name)
+		end
+		api:AddAccurateBlurbcake(playerType, data.AccurateBlurb)
+		api:AddBirthcakeSprite(playerType, { SpritePath = data.EIDDesc._sprite })
+		api:AddEIDDescription(playerType, data.EIDDesc)
+	end
 end
 
 loader:RegisterPatch("BirthcakeRebaked", birthcakePatch)
