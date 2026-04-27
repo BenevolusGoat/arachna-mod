@@ -82,6 +82,35 @@ function ARACHNA_B:RechargeDoubleTap(player)
 	data.TArachnaClothCooldown = nil
 end
 
+---@param luck number
+local function parasitoidChance(luck)
+	return Mod.math.min(1 / (7 - luck), 0.5)
+end
+
+local NUM_TEARS = 6
+
+---@param player EntityPlayer
+function ARACHNA_B:BirthcakeSpread(player)
+	local luck = player.Luck
+	for i = 1, NUM_TEARS do
+		local dir = (360 / NUM_TEARS) * i
+		for j = 1, 3 do
+			local eggChance = parasitoidChance(luck)
+			local isEgg = Mod:RandomNum() < eggChance
+			local variant = isEgg and TearVariant.EGG or TearVariant.BLUE
+			local rotateVariant = Mod:RandomNum(-15, 15)
+			local speedVariance = Mod:RandomNum(-3, 3)
+			local vel = Vector.FromAngle(dir):Resized(10)
+			vel = vel + Vector(speedVariance, speedVariance)
+			vel = vel:Rotated(rotateVariant)
+			local tearFlags = isEgg and TearFlags.TEAR_EGG or nil
+			local tear = Mod.Spawn.Tear(variant, player.Position, vel, tearFlags, player, Mod.GENERIC_RNG:Next())
+			tear.FallingSpeed = tear.FallingSpeed * 15
+			tear.FallingAcceleration = tear.FallingAcceleration + 1
+		end
+	end
+end
+
 ---@param player EntityPlayer
 function ARACHNA_B:DoubleTapCloth(player)
 	if not ARACHNA_B:IsArachnaB(player) then return end
@@ -95,7 +124,13 @@ function ARACHNA_B:DoubleTapCloth(player)
 	end
 	if Mod:HasDoubleTapped(player) then
 		player:UseActiveItem(Mod.Item.DIVINE_CLOTH.ID, UseFlag.USE_NOANIM, -1)
-		data.TArachnaClothCooldown = ARACHNA_B.DIVINE_CLOTH_COOLDOWN
+		local cooldown = ARACHNA_B.DIVINE_CLOTH_COOLDOWN
+		if BirthcakeRebaked and BirthcakeRebaked:PlayerTypeHasBirthcake(player, Mod.PlayerType.ARACHNA_B) then
+			local mult = player:GetTrinketMultiplier(BirthcakeRebaked.Birthcake.ID) - 1
+			cooldown = cooldown - (cooldown * (0.33 + (0.15 * mult))) -- ~4 seconds
+			ARACHNA_B:BirthcakeSpread(player)
+		end
+		data.TArachnaClothCooldown = cooldown
 	end
 end
 

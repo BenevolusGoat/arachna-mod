@@ -77,8 +77,14 @@ end
 ---@param source EntityRef
 ---@param duration? integer
 function ARACHNAS_SPOOL:ApplyWebbed(npc, source, duration)
-	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration or 2, source, nil,
-		{ OriginalMass = npc.Mass })
+	local data = { OriginalMass = npc.Mass }
+	if npc:IsBoss() and BirthcakeRebaked and source.Entity then
+		local player = source.Entity:ToPlayer()
+		if player and BirthcakeRebaked:PlayerTypeHasBirthcake(player, Mod.PlayerType.ARACHNA) then
+			data.BirthcakeBoss = true
+		end
+	end
+	return StatusEffectLibrary:AddStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED, duration or 2, source, nil, data)
 end
 
 --#endregion
@@ -523,6 +529,16 @@ StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.POST_
 ---@param ent Entity
 function ARACHNAS_SPOOL:WebbedUpdate(ent)
 	local speed = ent:IsBoss() and 0.75 or 0.5
+	local statusEffectData = StatusEffectLibrary:GetStatusEffectData(ent, ARACHNAS_SPOOL.STATUS_WEBBED)
+	if statusEffectData
+		and statusEffectData.CustomData.BirthcakeBoss
+		and ent.FrameCount % 30 == 0
+	then
+		local player = statusEffectData.Source.Entity and statusEffectData.Source.Entity:ToPlayer()
+		if player then
+			Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, ent.Position, player:GetTrinketMultiplier(BirthcakeRebaked.Birthcake.ID))
+		end
+	end
 	if ent:GetSpeedMultiplier() < speed then return end
 	ent:SetSpeedMultiplier(speed)
 end

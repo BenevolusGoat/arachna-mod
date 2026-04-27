@@ -210,6 +210,13 @@ function SPIDER_EGG:OnInit(egg)
 	if egg.Variant == SPIDER_EGG.ID_SMALL then
 		Mod:GetData(egg).EggFlags = SPIDER_EGG.EggFlag.SMALL
 	end
+	local player = egg.SpawnerEntity and egg.SpawnerEntity:ToPlayer()
+	if BirthcakeRebaked
+		and player
+		and BirthcakeRebaked:PlayerTypeHasBirthcake(player, Mod.PlayerType.ARACHNA)
+	then
+		Mod:GetData(egg).BirthcakeEgg = true
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, SPIDER_EGG.OnInit, SPIDER_EGG.ID)
@@ -320,6 +327,13 @@ function SPIDER_EGG:OnUpdate(egg)
 		sprite:Play("Idle")
 	end
 	local data = Mod:GetData(egg)
+
+	if sprite:IsPlaying("Idle") and data.BirthcakeEgg and egg.FrameCount % 60 == 0 then
+		local player = egg.SpawnerEntity and egg.SpawnerEntity:ToPlayer()
+		if player then
+			SPIDER_EGG:SpawnSpiderBurst(player, egg.Position, player:GetTrinketMultiplier(BirthcakeRebaked.Birthcake.ID), nil, data.EggFlags)
+		end
+	end
 
 	if sprite:IsPlaying("Idle")
 		and not SPIDER_EGG.NoAutoHatch
