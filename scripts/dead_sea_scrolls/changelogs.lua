@@ -115,7 +115,7 @@ Web Hearts:
 - Bone and Eternal Hearts are allowed to be gained again through items or other means. Their pickup equivalent are still converted into Web Hearts
 - Arachna and Tainted Arachna's Web Hearts are sorted before soul hearts, similarly to heart containers
 - One Web Heart can tank any amount of damage, similarly to Bone Hearts
-- Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all Web Hearts
+- Web Hearts only affect devil deal chance/Perfection on Arachna and Tainted Arachna instead of all characters
 - Inherent poison tears now work on all weapon types
 - Added interaction with Potato Peeler to have Web Hearts act as a valid substitute for Red Heart Containers on Arachna only
 
@@ -123,14 +123,14 @@ Arachna's Spool/Divine Cloth:
 * Doubled hitsphere size of Arachna's Spool tear
 * Arachna's Spool's web reduces knockback to enemies, making it easier to keep them Webbed
 * Arachna's Spool's web no longer affects enemies that are above pits
-* If Arachna's Spool's tear kills an enemy, it counts as them being Webbed and will spawn a spider
+* If Arachna's Spool's tear kills an enemy, it counts as them being Webbed and will spawn a Spider Egg
 * Increased recharge time of Arachna's Spool and Divine Cloth to 6 seconds (from 3 seconds)
-* Removed stage multiplier and Web Heart interaction on how many spiders spawned from spider eggs
+* Removed stage multiplier and Web Heart interaction on how many spiders spawned from Spider Eggs
 * Bosses are no longer immune to the slowing effect by the Webbed status, but aren't slowed as much as a regular slowing effect
 * Increased Divine Cloth's radius to match Tainted Arachna's old birthright radius
 * Divine Cloth's swirl follows Isaac, which helps with affecting enemies Isaac is moving towards
 * Dealing damage to bosses with Webbed or Spider Bite will charge a meter above their head. When the meter is filled, it resets and spawns friendly spiders or a spider egg, depending on which status they have. Friendly spiders do not contribute to the meter
-* Spider Eggs now explode on challenge/boss rush wave clears
+* Spider Eggs now hatch on challenge/boss rush wave clears
 * Enemies that previously did not drop spider eggs on death now drop a single friendly spider
 * Webbed Bosses can now drop a Spider Egg on death. 50% of the spawned spiders will be big spiders
 * Updated chance logic for spawning special and big spiders. Instead of one massive weighted table, there will be a static chance for spiders to become colored, which when pulls from a weighted table of colors, and a static chance for them to become big
@@ -172,9 +172,8 @@ Other:
 ## VISUAL CHANGES
 - All new achievement page sprites by damagaz
 - Divine Cloth's "Spider Bite" status (now renamed to Ensnared) has a new icon to differenciate it from the Webbed status from Arachna's Spool
-- Size and sprite of webbed enemies now scale with the enemy's size
+- Size and sprite of the spider web on Webbed enemies now scale with the enemy's size
 - Rainbow and Golden Spiders now change the color of their glow to match their own color
-- Changed poison tears from Arachnid's Grip to be colored green
 - Arachna and Tainted Arachna's portraits no longer shake in the boss vs. and stage transition screens
 - Changed the floor web from Arachna's Spool to render below grid entities, similarly to creep
 - Arachna and Tainted Arachna have the same laser color as the Spider Bite item
@@ -189,7 +188,7 @@ Other:
 
 ## MOD COMPATIBILITY
 - Fixed Tarnished Keeper from Epiphany not being able to pick up the orbitals from Arachnid's Grip
-- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs, Specialist Dance, The Future
+- Added compatibility for the following mods: MinimapAPI, Ugh for Bad Items, Unique Minisaacs, Specialist Dance, The Future, Birthcake: Rebaked
 - Updated compatibility for the following mods: Time Machine PLUS, Library Expanded
 - Tarnished Keeper from Epiphany is now accounted for as a Keeper character to turn Web Hearts into blue spiders
 - Added compatibility for Throwing Bag from Epiphany. Many of Arachna's items can be bagged for specific types of bags
@@ -207,7 +206,7 @@ Important changes for modders to be aware of for updating compatibility with Ara
 - Web Heart's pickup variant is now a heart (variant 10) rather than their own unique variant
 - Best Bud Ball's effect variant is now a unique number instead of being a subtype of Friendly Ball
 - The pool of items for Spider Beggar to pay out with is now an actual item pool thanks to REPENTOGON, named "spiderBeggar"
-- Completion marks and achievements for Arachna MOD's content are now deleted when the save file is deleted
+- Filenames for sprites with multiple words changed to use underscores instead of dashes
 - "Spiderboi (beggar)" renamed to "Spider Beggar"
 - "Testament" renamed to "The Testament"
 - "Sprindle" renamed to "Spindle"]])
