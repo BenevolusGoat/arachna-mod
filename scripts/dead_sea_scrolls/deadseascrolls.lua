@@ -222,7 +222,7 @@ local arachnaDssDirectory = {
 			BREAK_LINE,
 			BREAK_LINE,
 			{str = "translators", fsize = 3, tooltip = GenerateTooltip("translations created for external item descriptions")},
-			{str = "rvsty", fsize = 2, tooltip = GenerateTooltip("v1.0 russian translations. v2.0 ukrainian translations")},
+			{str = "rvsty", fsize = 2, tooltip = GenerateTooltip("v1.0 russian translations")},
 			{str = "oucalgarlin", fsize = 2, tooltip = GenerateTooltip("v2.0 chinese translations")},
 			{str = "Saurtya", fsize = 2, tooltip = GenerateTooltip("v1.0 chinese translations")},
 			{str = "wons", fsize = 2, tooltip = GenerateTooltip("polish translations")},

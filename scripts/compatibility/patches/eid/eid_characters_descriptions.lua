@@ -6,7 +6,7 @@ local modifiers = {}
 
 local descriptions = {
 	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_en_us")(modifiers),
-	pl = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_pl")(modifiers),
+	--pl = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_pl")(modifiers),
 	ru = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_ru")(modifiers),
 	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_zh_cn")(modifiers),
 	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_characters.characters_ko_kr")(modifiers),
