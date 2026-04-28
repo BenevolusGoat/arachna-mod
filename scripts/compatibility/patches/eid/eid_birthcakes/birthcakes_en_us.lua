@@ -11,7 +11,7 @@ return function(modifiers)
 					return modifiers[Mod.PlayerType.ARACHNA]._modifier(descObj,
 						"Spider Eggs spawn %s every 2 seconds"
 						.. "#Webbed bosses spawn %s every second",
-					"a friendly spider", "a friendly spider", "%s friendly spiders", "%s friendly spiders")
+					"a friendly spider", "%s friendly spiders")
 				end
 			},
 		},

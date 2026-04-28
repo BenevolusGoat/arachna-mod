@@ -11,7 +11,7 @@ return function(modifiers)
 					return modifiers[Mod.PlayerType.ARACHNA]._modifier(descObj,
 					"蜘蛛卵每2秒会生成 %s "
 					.. "#蛛网缠身的敌人每秒会生成 %s ",
-					"1个友好蜘蛛", "1个友好蜘蛛", "%s 个友好蜘蛛", "%s 个友好蜘蛛")
+					"1个友好蜘蛛", "%s 个友好蜘蛛")
 				end
 			}
         },
@@ -23,8 +23,7 @@ return function(modifiers)
             EIDDesc = {
 				function(descObj)
 					return modifiers[Mod.PlayerType.ARACHNA_B]._modifier(descObj,
-						"双击攻击 %s",
-						"加快"
+						"双击攻击 %s 加快"
 				)
 				end,
 				"# 双击攻击键会额外发射一圈泪弹, 有概率发射{{Collectible" .. CollectibleType.COLLECTIBLE_PARASITOID .. "}} 蛛卵",

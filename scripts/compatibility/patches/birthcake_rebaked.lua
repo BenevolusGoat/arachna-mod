@@ -3,15 +3,15 @@ local loader = Mod.PatchesLoader
 
 local modifiers = {
 	[Mod.PlayerType.ARACHNA] = {
-		_modifier = function(descObj, str, noMult1, noMult2, mult1, mult2)
+		_modifier = function(descObj, str, noMultStr, multStr)
 			local player = Mod.EID_Support:ClosestPlayerTo(descObj.Entity)
 			local mult = Mod.EID_Support:TrinketMulti(player, descObj.ObjSubType)
 			if mult > 1 then
 				local multStr = "{{ColorGold}}" .. mult .. "{{CR}}"
-				str = string.format(str, mult1, mult2)
+				str = string.format(str, multStr, multStr)
 				str = string.format(str, multStr, multStr)
 			else
-				str = string.format(str, noMult1, noMult2)
+				str = string.format(str, noMultStr, noMultStr)
 			end
 			return str
 		end,
@@ -71,6 +71,17 @@ local function birthcakePatch()
 		api:AddBirthcakeSprite(playerType, { SpritePath = data.EIDDesc._sprite })
 		api:AddEIDDescription(playerType, data.EIDDesc)
 	end
+
+	local function reverseUkrainianOrder(_, _, name)
+		local lang = BirthcakeRebaked:GetLanguage()
+		if lang == "uk_ua" then
+			name = string.gsub(name, BirthcakeRebaked.BirthcakeOneLiners.CAKE[lang] .. " ", "")
+			return name .. " " .. BirthcakeRebaked.BirthcakeOneLiners.CAKE[lang]
+		end
+	end
+
+	Mod:AddCallback(BirthcakeRebaked.ModCallbacks.GET_BIRTHCAKE_ITEMTEXT_NAME, reverseUkrainianOrder, Mod.PlayerType.ARACHNA)
+	Mod:AddCallback(BirthcakeRebaked.ModCallbacks.GET_BIRTHCAKE_ITEMTEXT_NAME, reverseUkrainianOrder, Mod.PlayerType.ARACHNA_B)
 end
 
 loader:RegisterPatch("BirthcakeRebaked", birthcakePatch)
