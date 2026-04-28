@@ -23,8 +23,7 @@ return function(modifiers)
 			EIDDesc = {
 				function(descObj)
 					return modifiers[Mod.PlayerType.ARACHNA_B]._modifier(descObj,
-						"Атака на двойной клик %s",
-						"быстрее"
+						"Атака на двойной клик %s быстрее"
 					)
 				end,
 				"# Атака на двойной клик выстреливает дополнительными слезами вокруг игрока, которые иногда могут быть {{Collectible" .. CollectibleType.COLLECTIBLE_PARASITOID .. "}} коконами",
