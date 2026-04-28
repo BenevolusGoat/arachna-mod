@@ -11,7 +11,7 @@ return function(modifiers)
 					return modifiers[Mod.PlayerType.ARACHNA]._modifier(descObj,
 						"Павучі Кокони створюють %s кожні 2 секунди"
 						.. "#Спіймані в павутиння боси - %s кожну секунду",
-					"дружній павук", "%s дружніх павуків")
+					"дружній павук", "дружній павук", "%s дружніх павуків", "%s дружніх павуків")
 				end
 			},
 		},
@@ -23,8 +23,7 @@ return function(modifiers)
 			EIDDesc = {
 				function(descObj)
 					return modifiers[Mod.PlayerType.ARACHNA_B]._modifier(descObj,
-						"Додаткова атака тепер %s",
-						"швидше"
+						"Додаткова атака тепер %s швидше"
 					)
 				end,
 				"# Атака від подвійного натискання кнопки вистрілює додатковими сльозами навколо гравця, які інколи можуть мати ефект предмету {{Collectible" .. CollectibleType.COLLECTIBLE_PARASITOID .. "}}",

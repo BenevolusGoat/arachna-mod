@@ -3,31 +3,31 @@ local loader = Mod.PatchesLoader
 
 local modifiers = {
 	[Mod.PlayerType.ARACHNA] = {
-		_modifier = function(descObj, str, noMultStr, multStr)
+		_modifier = function(descObj, str, noMult1, noMult2, mult1, mult2)
 			local player = Mod.EID_Support:ClosestPlayerTo(descObj.Entity)
 			local mult = Mod.EID_Support:TrinketMulti(player, descObj.ObjSubType)
 			if mult > 1 then
-				mult = "{{ColorGold}}" .. mult .. "{{CR}}"
+				local multStr = "{{ColorGold}}" .. mult .. "{{CR}}"
+				str = string.format(str, mult1, mult2)
 				str = string.format(str, multStr, multStr)
-				str = string.format(str, mult, mult)
 			else
-				str = string.format(str, noMultStr, noMultStr)
+				str = string.format(str, noMult1, noMult2)
 			end
 			return str
 		end,
 		_sprite = "gfx/items/trinkets/birthcake_arachna.png"
 	},
 	[Mod.PlayerType.ARACHNA_B] = {
-		_modifier = function(descObj, str, faster)
+		_modifier = function(descObj, str)
 			local player = Mod.EID_Support:ClosestPlayerTo(descObj.Entity)
 			local mult = Mod.EID_Support:TrinketMulti(player, descObj.ObjSubType)
 			local chance = math.floor((0.33 + (0.15 * (mult - 1))) * 100)
 			if mult > 1 then
-				str = string.format(str, "{{ColorGold}}" .. chance .. "{{CR}}")
+				str = string.format(str, "{{ColorGold}}" .. chance .. "%{{CR}} ")
 			else
-				str = string.format(str, chance)
+				str = string.format(str, chance .. "%")
 			end
-			return str .. "% " .. faster
+			return str
 		end,
 		_sprite = "gfx/items/trinkets/birthcake_arachna_b.png"
 	},
