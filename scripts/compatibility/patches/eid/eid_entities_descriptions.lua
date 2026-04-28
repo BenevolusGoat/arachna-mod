@@ -6,13 +6,18 @@ local DD = ARC_EID.DynamicDescriptions
 local modifiers = {
 }
 
-local descriptions = {
-	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_entities.entities_en_us")(modifiers),
-	--pl = Mod.Include("scripts.compatibility.patches.eid.eid_entities.entities_pl")(modifiers),
-	ru = Mod.Include("scripts.compatibility.patches.eid.eid_entities.entities_ru")(modifiers),
-	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_entities.entities_zh_cn")(modifiers),
-	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_entities.entities_ko_kr")(modifiers),
+local path = "scripts.compatibility.patches.eid.eid_entities.entities_"
+local languages = {
+	"en_us",
+	"ru",
+	"zh_cn",
+	"ko_kr",
+	"uk_ua"
 }
+local descriptions = {}
+for _, language in ipairs(languages) do
+	descriptions[language] = Mod.Include(path .. language)(modifiers)
+end
 
 local allDescData = {}
 for lang, desc in pairs(descriptions) do

@@ -180,7 +180,7 @@ Other:
 - Moved Geptameron's day of the week counter to the active item sprite with a new look
 
 ## EID CHANGES
-- Created all new English descriptions from scratch, which have been translated into Korean, Russian, and Chinese. You can go to the GitHub repository and make a fork in order to submit a PR if you wish to contribute more languages.
+- Created all new English descriptions from scratch, which have been translated into Korean, Ukrainian, Russian, and Chinese. You can go to the GitHub repository and make a fork in order to submit a PR if you wish to contribute more languages.
 - Fixed White String's description incorrectly mentioning it increased Web Heart chances. Spindle now correctly mentions this effect
 - Added mod icon
 - Moved Merged Card's description into a unique "TAB description", where you can expand the list of effects separated by pages

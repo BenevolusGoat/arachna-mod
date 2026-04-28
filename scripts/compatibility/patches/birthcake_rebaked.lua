@@ -33,10 +33,16 @@ local modifiers = {
 	},
 }
 
-local descriptions = {
-	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_birthcakes.birthcakes_en_us")(modifiers),
-	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_birthcakes.birthcakes_zh_cn")(modifiers),
+local path = "scripts.compatibility.patches.eid.eid_birthcakes.birthcakes_"
+local languages = {
+	"en_us",
+	"zh_cn",
+	"uk_ua"
 }
+local descriptions = {}
+for _, language in ipairs(languages) do
+	descriptions[language] = Mod.Include(path .. language)(modifiers)
+end
 
 local allDescData = {}
 for lang, desc in pairs(descriptions) do

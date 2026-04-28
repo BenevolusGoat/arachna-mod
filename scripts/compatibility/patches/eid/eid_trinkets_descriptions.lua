@@ -16,13 +16,18 @@ local modifiers = {
 	}
 }
 
-local descriptions = {
-	en_us = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_en_us")(modifiers),
-	--pl = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_pl")(modifiers),
-	ru = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_ru")(modifiers),
-	zh_cn = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_zh_cn")(modifiers),
-	ko_kr = Mod.Include("scripts.compatibility.patches.eid.eid_trinkets.trinkets_ko_kr")(modifiers),
+local path = "scripts.compatibility.patches.eid.eid_trinkets.trinkets_"
+local languages = {
+	"en_us",
+	"ru",
+	"zh_cn",
+	"ko_kr",
+	"uk_ua"
 }
+local descriptions = {}
+for _, language in ipairs(languages) do
+	descriptions[language] = Mod.Include(path .. language)(modifiers)
+end
 
 EID:addGoldenTrinketTable(Trinket.WHITE_STRING.ID, { t = { 1 } })
 EID:addGoldenTrinketTable(Trinket.INFESTED_PENNY.ID, { t = { 20 }, mults = { 1.9, 2.8 } })
