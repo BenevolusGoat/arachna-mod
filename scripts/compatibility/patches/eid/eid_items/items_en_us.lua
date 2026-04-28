@@ -131,7 +131,7 @@ return function(modifiers)
 			}
 		},
 		[Item.GEPTAMERON.ID] = {
-			Name = "Getameron",
+			Name = "Geptameron",
 			Description = {
 				"Triggers effect based on counter:",
 				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" ..
