@@ -36,8 +36,10 @@ local modifiers = {
 local path = "scripts.compatibility.patches.eid.eid_birthcakes.birthcakes_"
 local languages = {
 	"en_us",
+	"ru",
 	"zh_cn",
-	"uk_ua"
+	"uk_ua",
+	"pl"
 }
 local descriptions = {}
 for _, language in ipairs(languages) do
