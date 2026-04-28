@@ -5,24 +5,26 @@ return function()
 		[Mod.PlayerType.ARACHNA] = {
 			Name = "Arachna",
 			Description = {
-				"Can't have Red Hearts",
-				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
-				"#Not affected by cobwebs",
-				"#{{Poison}} 25% chance to shoot poison tears",
-				"#Spiders hatched from spider eggs can be {{ColorRainbow}}special{{CR}}, having unique effects",
+				"Nie może mieć czerwonych serc",
+				"#{{WebHeart}} Zwiększanie maks. zdrowia zamiast kontynerów dają niciane serca",
+				"#Nie jest spowalniana przez pajęczyny",
+				"#{{Poison}} 25% szans by wystrzelić trujące łzy",
+				"#Pająki wykluwane z pajęczych jaj mogą być {{ColorRainbow}}specjalne{{CR}}, z unikalnymi efektami",
 			}
 		},
 		[Mod.PlayerType.ARACHNA_B] = {
-			Name = "Tainted Arachna",
+			Name = "Skażona Arachna",
 			Description = {
-				"Can't have Red Hearts",
-				"#{{WebHeart}} Health ups grant Web Hearts, which can substitute for heart containers",
-				"#Not affected by cobwebs",
+				"Nie może mieć czerwonych serc",
+				"#{{WebHeart}} Zwiększanie maks. zdrowia zamiast kontynerów dają niciane serca",
+				"#Nie jest spowalniana przez pajęczyny",
 				"#{{Poison}} 25% chance to shoot poison tears",
-				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} Double-tapping a fire key {{StatusSpiderBite}} ensnares enemies in a radius and deals 0.5x damage",
-				"#{{StatusSpiderBite}} Ensnaring shares all the attributes of being {{StatusWebbed}} webbed",
-				"#↓ Smaller spider eggs",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
+				"#↓ Mniejsze pajęcze jaja",
+				"#{{Collectible" ..
+				Mod.Item.DIVINE_CLOTH.ID ..
+				"}} Wciśnij przycisk ataku 2 razy {{StatusSpiderBite}} uplątuje pobliskich pzrzeciników i zadaje 0.5x obrażeń",
+				"#{{StatusSpiderBite}} Uplątanie ma takei same efekty co bycie w {{StatusWebbed}} sieci",
+				"#{{StatusSpiderBite}} Jaja mogą być {{ColorRainbow}}specjalne{{CR}}, które upuszczają specjalne pająki",
 			}
 		},
 	}

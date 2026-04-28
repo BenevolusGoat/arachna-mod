@@ -5,7 +5,7 @@ local ARC_EID = Mod.EID_Support
 local path = "scripts.compatibility.patches.eid.eid_extras.extras_"
 local languages = {
 	"en_us",
-	"zh_cn",
+	"zh_cn"
 }
 local descriptions = {}
 for _, language in ipairs(languages) do

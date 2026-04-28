@@ -5,198 +5,198 @@ local Item = Mod.Item
 return function(modifiers)
 	return {
 		[Item.SPIDER_CAKE.ID] = {
-			Name = "Spider Cake",
+			Name = "Pajęcze ciasto",
 			Description = {
-				"{{WebHeart}} Spawns 1 Web Heart",
-				"#Grants {{Collectible" .. CollectibleType.COLLECTIBLE_MYSTERY_GIFT .. "}} Mystery Gift",
+				"{{WebHeart}} pojawia 1 niciane serce",
+				"#Gwarantuje {{Collectible" .. CollectibleType.COLLECTIBLE_MYSTERY_GIFT .. "}} Prezent Niespodzianke",
 				function(descObj)
 					local years = Item.SPIDER_CAKE:GetYearDifference()
-					return string.format("#%s years since mod release!", years)
+					return string.format("#% lat minęło od wydania moda!", years)
 				end,
 				function(descObj)
 					local stats = modifiers[Item.SPIDER_CAKE.ID]._modifier(descObj)
-					return "#↑ {{Speed}} +" .. stats.Speed .. " Speed"
-						.. "#↑ {{Tears}} +" .. stats.Tears .. " Tears"
-						.. "#↑ {{Damage}} +" .. stats.Damage .. " Damage"
-						.. "#↑ {{Range}} +" .. stats.Range .. " Range"
-						.. "#↑ {{Shotspeed}} +" .. stats.ShotSpeed .. " Shot speed"
-						.. "#↑ {{Luck}} +" .. stats.Luck .. " Luck"
+					return "#↑ {{Speed}} +" .. stats.Speed .. " Prędkość"
+						.. "#↑ {{Tears}} +" .. stats.Tears .. " Łzy"
+						.. "#↑ {{Damage}} +" .. stats.Damage .. " Obrażenia"
+						.. "#↑ {{Range}} +" .. stats.Range .. " Zasięg"
+						.. "#↑ {{Shotspeed}} +" .. stats.ShotSpeed .. " Prędkość strzału"
+						.. "#↑ {{Luck}} +" .. stats.Luck .. " Szczęście"
 				end
 			},
 			FallbackDescription = {
-				"{{WebHeart}} Spawns 1 Web Heart",
-				"#Grants {{Collectible" .. CollectibleType.COLLECTIBLE_MYSTERY_GIFT .. "}}",
-				"#↑ All stats up, based on how many years passed since mod release"
+				"{{WebHeart}} pojawia 1 niciane sercet",
+				"#Gwarantuje  {{Collectible" .. CollectibleType.COLLECTIBLE_MYSTERY_GIFT .. "}}",
+				"#↑ Wszystkie statystyki idą w górę, na podstawie ile lat minęło od wydania moda"
 			}
 		},
 		[Item.SPIDER_DONUT.ID] = {
-			Name = "Spider Donut",
+			Name = "Pajęczy pączek",
 			Description = {
-				"{{WebHeart}} +1 Web Heart",
-				"#↑ {{Damage}} +0.69 Damage",
-				"#{{AracBlueSpider}} Spawns 2-3 big purple spiders"
+				"{{WebHeart}} +1 niciane serce",
+				"#↑ {{Damage}} +0.69 Obrażeń",
+				"#{{AracBlueSpider}} Pojawia 2-3 duże, fioletowe pająki"
 			}
 		},
 		[Item.OLD_SHOEBOX.ID] = {
-			Name = "Old Shoebox",
+			Name = "Stare pudełko po butach",
 			Description = {
-				"{{WebHeart}} Spawns 1 Web Heart",
-				"#↑ {{Speed}} +0.15 Speed",
-				"#↑ {{Tears}} +0.33 Tears",
-				"#{{AracBlueSpider}} Spawns 7-14 blue spiders"
+				"{{WebHeart}} pojawia +1 niciane sercet",
+				"#↑ {{Speed}} +0.15 Prędkość",
+				"#↑ {{Tears}} +0.33 Łzy",
+				"#{{AracBlueSpider}} Pojawia 7-14 niebieskich pająków"
 			}
 		},
 		[Item.GUMMY_SPIDERS.ID] = {
-			Name = "Gummy Spiders",
+			Name = "Żelki pająki",
 			Description = {
-				"{{WebHeart}} +2 Web Hearts",
-				"#↑ {{Tears}} +0.61 Tears",
-				"#{{AracBlueSpider}} Spawns several {{ColorRainbow}}special{{CR}} friendly spiders"
+				"{{WebHeart}} +2 Niciane serce",
+				"#↑ {{Tears}} +0.61 Łzy",
+				"#{{AracBlueSpider}} Pojawia kilka {{ColorRainbow}}specjalnych{{CR}} przyjaznych pająków"
 			}
 		},
 		[Item.CANDY_FLOSS.ID] = {
-			Name = "Candy Floss",
+			Name = "Wata Cukrowa",
 			Description = {
-				"{{WebHeart}} Drains all of Isaac's red health in exchange for spawning Web Hearts, spawning 3 at minimum",
-				"#{{Slow}} 5% chance to shoot slowing and quad-splitting tears",
-				"#{{Luck}} 100% chance at 20 luck"
+				"{{WebHeart}} Zeruje czerwone serca izaaka, pojawiając za to niciane serca, 3 minimum",
+				"#{{Slow}} 5% szans by wystrzelić spowalniający, rozbijające się łzy",
+				"#{{Luck}} 100% szans z 20 szczęścia"
 			}
 		},
 		[Item.ARACHNAS_SPOOL.ID] = {
-			Name = "Arachna's Spool",
+			Name = "Szpula Arachny",
 			Description = {
-				"{{Throwable}} Throws a spool projectile that leaves a large spider web",
-				"#{{StatusWebbed}} Enemies on the web are {{Slow}} slowed, receive less knockback, and drop a spider egg on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
-				"#{{BossRoom}} Damaging webbed bosses charges a meter. When filled, spawns several friendly spiders"
+				"{{Throwable}} Rzuć szpulę która zostawia dużą pajęczyne",
+				"#{{StatusWebbed}} Przeciwnicy na pajęczyni są {{Slow}} spowolnenie, są mniej odpychani, i zostawiają pajęcze jaja po śmierci",
+				"#{{AracBlueSpider}} Jaja wyklują się po ukończeniu pokoju, zostawiając niebieskie pająki",
+				"#{{BossRoom}} Ranienie bossów którzy stoją na pajęczynie wypełnia pasek, gdy jest pełny, pojawią się przyjazne pająki"
 			},
 			BookOfBelial = {
-				"Spool projectile and spider web inflict {{Burning}} Burn on enemies"
+				"Szpula i pajęczyny będą się {{Burning}} palić"
 			}
 		},
 		[Item.DIVINE_CLOTH.ID] = {
-			Name = "Divine Cloth",
+			Name = "Niebiański Jedwab",
 			Description = {
-				"{{StatusSpiderBite}} Ensnares enemies and deals 0.5x Isaac's damage to surrounding enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop small spider eggs on death",
-				"#{{AracBlueSpider}} Spider Eggs hatch on room clear, spawning several friendly spiders",
-				"#{{StatusSpiderBite}} Eggs can be {{ColorRainbow}}special{{CR}}, dropping special spiders",
-				"#{{BossRoom}} Damaging ensnared bosses charges a meter. When filled, spawns a spider egg"
+				"{{StatusSpiderBite}} Uwiązuje przeciwników i zadaje 0.5x obrażeń Izaaka wokół przeciwników. Przeciwnicy są {{Slow}} spowolnieni, otrzymują mniej odpychu, oraz zostawiają pajęcze jaja po śmierci",
+				"#{{AracBlueSpider}} Jaja wyklują się po ukończeniu pokoju, zostawiając niebieskie pająki",
+				"#{{StatusSpiderBite}} Jaja mogą być {{ColorRainbow}}specjalne{{CR}}, z których wyklują się wyjątkowe pająki",
+				"#{{BossRoom}} Ranienie uwiązanych przeciwników wypełnia pasek, gdy jest pełny, pojawia pajęcze jaja"
 			},
 			BookOfBelial = {
-				"Inflicts {{Burning}} Burn on nearby enemies"
+				"{{Burning}} podpala pobliskich przeciwników"
 			}
 		},
 		[Item.EGG_TOSS.ID] = {
-			Name = "Egg Toss",
+			Name = "Rzut jajem",
 			Description = {
-				"{{Throwable}} Grab and throw spider eggs",
-				"#{{AracBlueSpider}} Hatches spiders as normal and triggers {{ColorRainbow}}special{{CR}} color-specific effects when the egg hits something",
-				"#↑ Hitting an enemy with an egg may spawn more and larger spiders",
+				"{{Throwable}} Złap i rzuć pajęcze jaja",
+				"#{{AracBlueSpider}} Wykluwa pajęcze jaja normalnie i aktywuje efekty {{ColorRainbow}}specjalnych{{CR}} kolorowych jaj, gdy to jajo coś uderzy",
+				"#↑ Jeśli jajo uderzy przeciwnika, może pojawić więcej oraz większe pająki",
 			}
 		},
 		[Item.YARN.ID] = {
-			Name = "The Yarn",
+			Name = "Kłębek nici",
 			Description = {
-				"Blocks projectiles",
-				"#Zaps nearby enemies with electricity",
-				"#{{WebHeart}} Spawns 1 Web Heart every 4 rooms"
+				"Blokuje pociski",
+				"#Kopie bliskich przeciwników prądem",
+				"#{{WebHeart}} Pojawia niciane serce co 4 pokoje"
 			}
 		},
 		[Item.ARACHNIDS_GRIP.ID] = {
-			Name = "Arachnid's Grip",
+			Name = "Chwyt Pajęczaka",
 			Description = {
-				"{{Poison}} 25% chance to shoot poison tears",
-				"#Enemies may drop a spider egg pickup on death that grant a fragile orbital on pickup",
+				"{{Poison}} 25% szans by wystrzelić trującą łzą",
+				"#Przeciwnicy mogą upuszczać pajęcze jaja po śmierci oraz gwarantować kruchego orbitala po podniesieniu",
 				"#Orbital may break when blocking projectiles or dealing damage, spawning a {{AracBlueSpider}} blue spider",
-			},
+			}
 		},
 		[Item.YARN_HEART.ID] = {
-			Name = "Yarn Heart",
+			Name = "Serce z przędzy",
 			Description = {
-				"{{WebHeart}} +1 Web Heart"
+				"{{WebHeart}} +1 Niciane serce"
 			}
 		},
 		[Item.MECHANICAL_EYE.ID] = {
-			Name = "Mechanical Eye",
+			Name = "Mechaniczne oko",
 			Description = {
 				"Orbital",
-				"#Blocks projectiles",
-				"#Displays a random active item with the same amount of maximum charges as Isaac's current active item",
-				"#Using an active item will also use the displayed item",
-				"#Displayed item rerolls when entering a new room or using an active item"
+				"#Blokuje pociski",
+				"#Wyświelta losowy item aktywny, który ma taką samą ilość ładunków co ma przedmiot aktywny Izaaka",
+				"#Używanie item aktywnego także aktywuje efektu wyświetlanego przedmiotu",
+				"#Wyświetlany item jest rerollowany po zmianie pokoju lub użyciu przedmiotu aktywnego"
 			},
 			BFFS = {
-				"Triggers the effect twice, like {{Collectible" ..
-				CollectibleType.COLLECTIBLE_CAR_BATTERY .. "}} Car Battery"
+				"Aktywuje efekt 2 razy, podobnie {{Collectible" ..
+				CollectibleType.COLLECTIBLE_CAR_BATTERY .. "}} Baterii samochodowej"
 			}
 		},
 		[Item.GEPTAMERON.ID] = {
-			Name = "Getameron",
+			Name = "Geptameron",
 			Description = {
-				"Triggers effect based on counter:",
-				"#{{1}} Reveals {{SecretRoom}}{{SuperSecretRoom}} and uses {{Collectible" ..
+				"Aktywuje efekt bazowany na liczniku:",
+				"#{{1}} Ujawnia lokacje {{SecretRoom}}{{SuperSecretRoom}} oraz aktywuje efekt {{Collectible" ..
 				CollectibleType.COLLECTIBLE_DADS_KEY .. "}}",
-				"#{{2}} Spawns temporary friendly dead Isaacs. May leave 1 {{RottenHeart}} on death",
-				"#{{3}} All enemies are either {{Charm}} charmed or spawn 3 {{Trinket" ..
-				TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} locusts on death",
-				"#{{4}} {{Timer}} For the room: Gain 2 {{Collectible" ..
-				CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} and a {{HolyMantleSmall}} mantle shield",
-				"#{{5}} All enemies drop {{Coin}} disappearing coins on death",
-				"#{{6}} Fires missiles in random locations for 10 seconds",
-				"#{{7}} 1-3 enemies drop a random disappearing pickup on death, which passes the mark to another enemy"
+				"#{{2}} Przywołuje tymczasowych, przyjaznych, martwych Izaaków. Mogą upuścić {{RottenHeart}} po śmierci",
+				"#{{3}} Wszyscy przeciwnicy są {{Charm}} zauroczeni lub upuszczają 3 {{Trinket" ..
+				TrinketType.TRINKET_LOCUST_OF_WRATH .. "}} szarańcze po śmierci",
+				"#{{4}} {{Timer}} Na okres jednego pokoju: Otrzymasz 2 {{Collectible" ..
+				CollectibleType.COLLECTIBLE_GUARDIAN_ANGEL .. "}} i {{HolyMantleSmall}} święte tarcze",
+				"#{{5}} Wszyscy przeciwnicy upuszczają {{Coin}} znikające monety po śmierci",
+				"#{{6}} Wystrzeli pociski w losowe miejsce na 10 sekund", --Fires missiles in random locations for 10 seconds
+				"#{{7}} 1-3 przeciwników zostawiają znikające monety po śmierci , potem przekazują efekt innemu przeciwnikowi"
 			}
 		},
 		[Item.GLASSES_3D.ID] = {
-			Name = "3D Glasses",
+			Name = "Okulary 3D",
 			Description = {
-				"5% chance to shoot \"3D\" tears, which split an enemy into 2 friendly versions of itself on hit",
-				"#{{Luck}} 25% chance at 20 luck",
-				"#These friendly enemies take no damage, but disappear on room clear",
+				"5% szans by wystrzelic łzę \"3D\", które po uderzeniu przeciwnika, zamienia go w 2 przyjazne jego kopie",
+				"#{{Luck}} 25% szans z 20 szczęścia",
+				"#Ci przyjaźni przeciwnicy nie otrzymują obrażeń, ale znikają po wyczyszczeniu pokoju",
 			}
 		},
 		[Item.MUTAGEN.ID] = {
 			Name = "Mutagen",
 			Description = {
-				"↑ {{Damage}} +1 Damage",
-				"#{{AracBlueSpider}} 20% chance to spawn 3-5 {{ColorRainbow}}special{{CR}} friendly spiders when entering a new room",
-				"#{{AracBlueSpider}} All spiders spawned outside of spider eggs have a chance to be {{ColorRainbow}}special{{CR}}"
+				"↑ {{Damage}} +1 Obrażeń",
+				"#{{AracBlueSpider}} 20% szans by pojawić 3-5 {{ColorRainbow}}specjalne{{CR}} przyjaznego pająki po wejściu do nowego pokoju",
+				"#{{AracBlueSpider}} Wszystkie pająki poza tych z pajęczych jaj mogą mieć {{ColorRainbow}}specjalne{{CR}} efekty"
 			}
 		},
 		[Item.TESTAMENT.ID] = {
-			Name = "The Testament",
+			Name = "Testament",
 			Description = {
-				"Teleports Isaac to a floor that contains all his current items",
-				"#Choosing an item from this floor teleports Isaac back to the room he came from",
-				"#The chosen item will appear at the start of the next run",
-				"#Having no items will spawn {{Collectible" ..
-				CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} Eden's Blessing instead"
+				"Teleportuje izaaka do piętra z kopiami jego przedmiotów",
+				"#Po wybraniu przedmiotu z tego piętra, Izaak wróci tam, skąd przybył",
+				"#Wybraniu przedmiot pojawi się na początku nastepnęgo podejścia",
+				"#Nie posiadanie żadnego przedmiotu pojawi {{Collectible" ..
+				CollectibleType.COLLECTIBLE_EDENS_BLESSING .. "}} Błogosłowianie Edena"
 			}
 		},
 		[Item.LIL_ARACHNA.ID] = {
-			Name = "Lil Arachna",
+			Name = "Mała Arachna",
 			Description = {
-				"{{Slow}} Shoots slowing and quad-split tears",
-				"#Deals 3.5 damage per tear",
-				"#{{AracBlueSpider}} 25% chance for tears to {{StatusSpiderBite}} ensnare enemies. Enemies are {{Slow}} slowed, receive less knockback, and drop a colored spider egg on death that burst into friendly spiders"
+				"{{Slow}} Strzela spowalniające, rozbryzgujące się łzy",
+				"#Łzy zadają 3.5 obrażeń",
+				"#{{AracBlueSpider}} 25% szans na to by łzy {{StatusSpiderBite}} uwiązały przeciwników. Przeciwnicy są {{Slow}} spowolnieni, otrzymują są mniej odpychani, oraz upuszczają kolorowe pajęcze jaja po śmierci które wykluwają się w przyjazne pająki"
 			},
 		},
 		[Item.DADS_NEWSPAPER.ID] = {
-			Name = "Dad's Newspaper",
+			Name = "Gazeta Taty",
 			Description = {
-				"Isaac holds a newspaper in front of him",
-				"#Double-tap shoot to swing",
-				"#{{Confusion}} Deals moderate damage and inflicts confusion on hit",
-				"#Instantly kills fly and spider enemies"
+				"Izaak trzyma przy sobie gazetę",
+				"#Wciśnij przycisk ataku 2 razy by nią machnąć",
+				"#{{Confusion}} Zadaje przeciętne obrażenia oraz ogłusza przeciwników",
+				"#Zabija odrazu pająki i muchy"
 			}
 		},
 		[Item.BEST_BUD_BALL.ID] = {
-			Name = "Best Bud Ball",
+			Name = "Kula Krzepkiego Kumpla",
 			Description = {
-				"{{Throwable}} Can be thrown at bosses in an attempt to capture them",
-				"#{{LuckSmall}} Chances of catching scales with boss' health and Isaac's luck",
-				"#{{Friendly}} Using the item after successfully capturing a boss spawns the capture as a friendly companion",
-				"#Walking over the ball after a capture instantly recharges the item",
-				"#!!! Only one boss can be active at a time"
+				"{{Throwable}} Można nią rzucić w bossów, aby spróbować ich złapać",
+				"#{{LuckSmall}} Szansa na złapanie skaluje się z zdrowiem bossa, oraz szczęściem Izaaka",
+				"#{{Friendly}} Użyciue przedmiotu po złapaniu bossa przywołuje jego przyjazną wersję",
+				"#Nadepnięcie kuli automatycznie ją ładuje",
+				"#!!! Tylko jeden boss może być aktywny naraz"
 			}
 		},
 	}

@@ -22,7 +22,8 @@ local languages = {
 	"ru",
 	"zh_cn",
 	"ko_kr",
-	"uk_ua"
+	"uk_ua",
+	"pl"
 }
 local descriptions = {}
 for _, language in ipairs(languages) do

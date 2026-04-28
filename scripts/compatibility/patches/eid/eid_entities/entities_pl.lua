@@ -5,17 +5,17 @@ return function(modifiers)
 		[EntityType.ENTITY_PICKUP] = {
 			[PickupVariant.PICKUP_HEART] = {
 				[Mod.Pickup.WEB_HEART.ID] = {
-					Name = "Web Heart {{WebHeart}}",
+					Name = "Niciane serce {{WebHeart}}",
 					Description = {
-						"{{WebHeart}} +1 Web Heart",
-						"#{{AracBlueSpider}} Web Hearts deplete in one hit, spawning 2-6 blue spiders"
+						"{{WebHeart}} +1 Niciane serce",
+						"#{{AracBlueSpider}} Niciane serca niszczą się przy jednym uderzeniu, pojawia 2-6 pająków",
 					}
 				},
 				[Mod.Pickup.WEB_HEART.ID_DOUBLE] = {
-					Name = "Double Web Heart {{WebHeart}}",
+					Name = "Podwójne Niciane Serce {{WebHeart}}",
 					Description = {
-						"{{WebHeart}} +2 Web Hearts",
-						"#{{AracBlueSpider}} Web Hearts deplete in one hit, spawning 2-6 blue spiders"
+						"{{WebHeart}} +2 Niciane serce",
+						"#{{AracBlueSpider}} Niciane serca niszczą się przy jednym uderzeniu, pojawia 2-6 pająków",
 					}
 				},
 			},
@@ -23,13 +23,13 @@ return function(modifiers)
 		[EntityType.ENTITY_SLOT] = {
 			[Mod.Slot.SPIDER_BEGGAR.ID] = {
 				[0] = {
-					Name = "Spider Beggar",
+					Name = "Pajęczy Żebrak",
 					Description = {
-						"{{Coin}} Donating coins to the beggar may reward one of the following:",
-						"#{{WebHeart}} 1 Web Heart",
-						"#{{Charm}} A random friendly spider companion",
-						"#{{ItemPoolSpiderBeggar}} A random collectible from the Spider Beggar item pool",
-						"#Beggar will disappear after paying out with a collectible"
+						"{{Coin}} Donacja jednej monety może dać jedną rzecz z tej listy:",
+						"#{{WebHeart}} 1 niciane serce",
+						"#{{Charm}} Losowego pajęczego kompana",
+						"#{{ItemPoolSpiderBeggar}} Losowy przedmiot z puli pajęczego żebraka",
+						"#Żebrak zniknie po oddaniu przedmiotu"
 					}
 				}
 			},

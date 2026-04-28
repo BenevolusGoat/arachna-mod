@@ -4,25 +4,25 @@ local Trinket = Mod.Trinket
 return function(modifiers)
 	return {
 		[Trinket.INFESTED_PENNY.ID] = {
-			Name = "Infested Penny",
+			Name = "Skłębiona moneta",
 			Description = {
-				"{{AracBlueSpider}} Picking up a coin spawns a blue spider",
-				"#{{WebHeart}} Additional 20% chance to spawn a Web Heart",
-				"#Higher chance from nickels and dimes"
+				"{{AracBlueSpider}} Za każdą podniesioną monetę, pojawia się przyjazny pająk",
+				"#{{WebHeart}} 5% szans na pojawieniu się nitkowych serc",
+				"#Szansa jest większa jeśli podniesione są piątaki i dziesiątaki"
 			},
 		},
 		[Trinket.SPINDLE.ID] = {
-			Name = "Spindle",
+			Name = "Wrzeciono",
 			Description = {
-				"{{StatusSpiderBite}} Touching enemies ensnares them, {{slow}} slowing them and spawning Spider Eggs on death",
-				"#Spider Eggs drop {{ColorRainbow}}special{{CR}} friendly spiders on room clear",
-				"#{{WebHeart}} Increases spawn chance of Web Hearts by 10%"
+				"{{StatusSpiderBite}} Dotykanie przeciwników infekuje je pajęczym ugryzieniem, po śmierci upuszczają pajęcze jaja",
+				"#{{Timer}} Pajęcze jaja nic nie zostawiają po 16 sekundach lub {{ColorRainbow}}specjalne{{CR}} przyjazne pająki po przejściu pokoju",
+				"#{{WebHeart}} Zwiększa szansa na pojawienie się nitkowych serc o +10%"
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {
-			Name = "White String",
+			Name = "Biała nić",
 			Description = {
-				"{{WebHeart}} Entering a new floor grants +1 Web Heart"
+				"{{WebHeart}} Po wejściu na nowe piętro otrzymujesz +1 Nitkowe serce"
 			}
 		},
 	}
