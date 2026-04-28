@@ -17,12 +17,7 @@ return function(modifiers)
 				"{{StatusWebbed}} 적과 접촉하면 5초간 해당 적을 거미줄로 옭아맵니다.",
 				"#{{StatusWebbed}} 옭아매인 적은 {{Slow}} 둔화되고 받는 넉백이 감소하며 사망 시 거미 알집을 생성합니다.",
 				"#{{AracBlueSpider}} 거미 알집은 방 클리어 시 터지며 파란 아군 거미를 여러 마리 소환합니다.",
-				"#{{WebHeart}} 거미줄 하트 생성 확률 +10%",
-				function(descObj)
-					return modifiers[Trinket.SPINDLE.ID]._modifier(descObj,
-						"#{{Collectible" .. CollectibleType.COLLECTIBLE_MIDAS_TOUCH .. "}} 알집이 황금 거미를 생성하는 {{ColorGold}}황금 알집{{CR}}이 됩니다."
-					)
-				end
+				"#{{WebHeart}} 거미줄 하트 생성 확률 +10%"
 			}
 		},
 		[Trinket.WHITE_STRING.ID] = {

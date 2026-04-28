@@ -5,8 +5,9 @@ return function(modifiers)
 		[Mod.Card.SOUL_OF_ARACHNA.ID] = {
 			Name = "Душа Арахны",
 			Description = {
-				"{{StatusSpiderBite}} Опутывает всех врагов, замедляя их и превращая в паучьи яйца при смерти",
-				"#{{StatusSpiderBite}} Яйца могут быть {{ColorRainbow}}особыми{{CR}}, создающими особых пауков",
+				"{{StatusWebbed}} Ловит всех врагов в паутину на 10 секунд",
+				"#{{StatusWebbed}} Враги {{Slow}} замедлены, получают меньше отбрасывания и создают Паучий Кокон при смерти",
+				"#{{AracBlueSpider}} При зачистке комнаты Паучие Коконы вылупляются, создавая несколько синих пауков",
 			}
 		},
 		[Mod.Card.MERGED_CARD.ID] = {
@@ -33,7 +34,7 @@ return function(modifiers)
 						.. "#{{Card" .. Card.CARD_JUSTICE .. "}} Создаёт 2 любых предмета из следующих: {{Coin}} монета, {{Key}} ключ, {{Bomb}} бомба или {{Heart}} сердце"
 						.. "#{{Card" ..
 						Card.CARD_HERMIT .. "}} Использует {{Collectible" .. CollectibleType.COLLECTIBLE_KEEPERS_BOX .. "}} Коробок Хранителя"
-						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Использует {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Переносной Автомат 5 раза",
+						.. "#{{Card" .. Card.CARD_WHEEL_OF_FORTUNE .. "}} Использует {{Collectible" .. CollectibleType.COLLECTIBLE_PORTABLE_SLOT .. "}} Переносной Автомат 5 раз",
 
 						"#{{Card" .. Card.CARD_STRENGTH .. "}} {{Timer}} Эффект {{Collectible" .. CollectibleType.COLLECTIBLE_ODD_MUSHROOM_LARGE .. "}} Странного Гриба на комнату"
 						.. "#{{Card" .. Card.CARD_HANGED_MAN .. "}} Разрушает все камни и заполняет все ямы в комнате"
@@ -88,7 +89,7 @@ return function(modifiers)
 
 						"#{{Card" .. Card.CARD_REVERSE_TOWER .. "}} Создаёт несколько случайных камней и препятствий"
 						.. "#{{Card" .. Card.CARD_REVERSE_STARS .. "}} Удаляет самый старый пассивный артефакт (не стартовый) и создаёт 1 случайный артефакт из пула текущей комнаты"
-						.. "#{{Card" .. Card.CARD_REVERSE_MOON .. "}} Создаёт {{Card" .. Card.CARD_CRACKED_KEY .. "}} Треснувший Ключи и показывает на карте {{UltraSecretRoom}} Ультра-секретную комнату",
+						.. "#{{Card" .. Card.CARD_REVERSE_MOON .. "}} Создаёт {{Card" .. Card.CARD_CRACKED_KEY .. "}} Треснувший Ключ и показывает на карте {{UltraSecretRoom}} Ультра-секретную комнату",
 
 						"#{{Card" ..
 						Card.CARD_REVERSE_SUN ..
