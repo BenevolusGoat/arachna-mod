@@ -21,6 +21,9 @@ function GOLDEN_SHOPKEEPER:KeeperInit(npc)
 			npc.SubType = rng:RandomInt(GOLDEN_SHOPKEEPER.SPRITES_NUM) + 1
 		end
 		sprite:ReplaceSpritesheet(1, "gfx/effects/goldenshopkeepers/shopkeeper-" .. tostring(npc.SubType) .. ".png", true)
+		local bombcrater = Mod.Spawn.Effect(EffectVariant.BOMB_CRATER, 0, npc.Position, nil, npc)
+		bombcrater.Color = Color(0.9, 0.8, 0, 1, 0.8, 0.7, 0)
+		bombcrater:Update()
 		local run_save = Mod.SaveManager.GetRunSave(npc)
 		if not run_save.GoldenKeeperMaxHits then
 			run_save.GoldenKeeperMaxHits = Mod:RandomNum(GOLDEN_SHOPKEEPER.MIN_BOMBS, GOLDEN_SHOPKEEPER.MAX_BOMBS, npc:GetDropRNG())
@@ -52,6 +55,28 @@ function GOLDEN_SHOPKEEPER:OnDamageEffect(npc)
 	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8)
 end
 
+---@param npc EntityNPC
+function GOLDEN_SHOPKEEPER:OnDeath(npc)
+	local rng = npc:GetDropRNG()
+	npc:GetSprite():Play("Break")
+	if Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
+		and rng:RandomFloat() < GOLDEN_SHOPKEEPER.GOLD_TRINKET_CHANCE
+	then
+		Mod.Spawn.Trinket(Mod.Game:GetItemPool():GetTrinket() + TrinketType.TRINKET_GOLDEN_FLAG, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng), npc, rng:Next())
+	else
+		local coinAmount = Mod:RandomNum(3, 5, rng)
+		for _ = 1, coinAmount do
+			Mod.Spawn.Coin(CoinSubType.COIN_PENNY, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng))
+		end
+	end
+	npc:GetSprite():Play("Break")
+	Mod.sfxman:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY, 0.8)
+	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8)
+	Mod.Game:SpawnParticles(npc.Position, EffectVariant.COIN_PARTICLE, Mod:RandomNum(7, 14), 4)
+	Mod.Game:ShakeScreen(8)
+	Mod.Game:GetLevel():SetStateFlag(LevelStateFlag.STATE_SHOPKEEPER_KILLED_LVL, true)
+end
+
 ---@param ent Entity
 ---@param amount number
 ---@param flags DamageFlag
@@ -70,24 +95,7 @@ function GOLDEN_SHOPKEEPER:ShopkeeperTakeDamage(ent, amount, flags, source, coun
 			Mod:DebugLog(run_save.GoldenKeeperHits, "hit(s) remaining")
 			return { Damage = 0, DamageFlags = flags | DamageFlag.DAMAGE_COUNTDOWN, DamageCountdown = 20 }
 		else
-			local rng = npc:GetDropRNG()
-			npc:GetSprite():Play("Break")
-			if Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
-				and rng:RandomFloat() < GOLDEN_SHOPKEEPER.GOLD_TRINKET_CHANCE
-			then
-				Mod.Spawn.Trinket(Mod.Game:GetItemPool():GetTrinket() + TrinketType.TRINKET_GOLDEN_FLAG, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng), npc, rng:Next())
-			else
-				local coinAmount = Mod:RandomNum(3, 5, rng)
-				for _ = 1, coinAmount do
-					Mod.Spawn.Coin(CoinSubType.COIN_PENNY, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng))
-				end
-			end
-			npc:GetSprite():Play("Break")
-			Mod.sfxman:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY, 0.8)
-			Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8)
-			Mod.Game:SpawnParticles(npc.Position, EffectVariant.COIN_PARTICLE, Mod:RandomNum(7, 14), 4)
-			Mod.Game:ShakeScreen(8)
-			Mod.Game:GetLevel():SetStateFlag(LevelStateFlag.STATE_SHOPKEEPER_KILLED_LVL, true)
+			GOLDEN_SHOPKEEPER:OnDeath(npc)
 			return false
 		end
 	end
