@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>Arachna</name>
-    <directory>arachnamod</directory>
-    <id>2801120315</id>
-    <description>Become the lord of the spiders with Arachna, a new character that revolves around the web and spiders. Arachna starts with a new item in her pocket - Arachna's Spool. She can throw it at enemies to create web, that slows them down and turns them into spider eggs when they die. Spider eggs burst into friendly spiders upon clearing a room or a greed mode wave. Arachna can't have red health and instead gains Web Hearts - a new heart type. They are easier to break than any kind of regular hearts, but they release spiders upon being broken and for Arachna, they increase the amount of spiders you can get from the eggs. Tainted version provides pretty similar, but yet different gameplay, with it's own advantages and disadvantages.
+    <name>[RGON+] Arachna (25+ Unlocks!) | Update 2.0: Woven Anew!</name>
+    <directory>arachna-mod</directory>
+    <id>3716302651</id>
+    <description>[img]https://i.imgur.com/FEz0EkS.gif[/img]
+Become the lord of the spiders with [b]Arachna[/b] - a new character, that revolves around web and spiders. Now back with full [b]Repentance+[/b] and [url=https://repentogon.com/]REPENTOGON[/url] support! 
+[b]Arachna[/b] starts with a new item in her pocket active - [b]Arachna's Spool[/b]. She can throw it at enemies to create web that slows them down and turns them into spider eggs, that burst into a bunch of colorful spiders when you finish the room! 
+[b]Create your very own spider army[/b] to turn a once hostile basement into a park for your insectoid pals!
+[img]https://i.imgur.com/bTv2nlz.png[/img]
+• [b]Arachna[/b] - a unique spider-based character, and her Tainted counterpart (which [b]plays a lot different in 2.0![/b]).
+• [b]New heart type:[/b] Web Hearts.
+• [b]20[/b] new items.
+• [b]3[/b] new trinkets.
+• [b]3[/b] consumables.
+• [b]New shopkeeper type![/b]
+• [b]A new beggar.[/b]
+• [b]20[/b] new friendly spider variants!
+• [b]Tons[/b] of item costumes.
+• And [b][i]...secrets?[/i][/b] Nah, there aren't any!
 
-[h1] Features [/h1] 
-- Arachna - a unique spider-based character, and her Tainted counterpart
-- New heart type: Web Hearts
-- 10+ new items
-- 3 new trinkets
-- 2 consumables
-- New shopkeeper type! 
-- A new beggar
-- 20 new friendly spider variants!
-- Tons of item costumes
-
-Information about all unlocks and their effect can be found [url=https://docs.google.com/spreadsheets/d/1iZZFLBBqV5QGxs80Hfibto56f_5d7odU2OHq6QDP2lI/edit?usp=sharing]here[/url] 
-Also if you know Russian, you can check [url=https://moddingofisaac.fandom.com/ru/wiki/Arachna]this fan-made wiki[/url]
-
-[h1] Contributors [/h1]
-- UnknownTheHero - major playtesting
-- Quartz - amazing portrait sprites
-- BrakeDude - coded in proper web heart rendering
-- [url=https://twitter.com/ShaPatSmith]ShaPatSmith[/url] - voiceover for collectibles
-- wons - playtesting, sprites for several costumes
-- SteamJek - did mod cover art as a commision
-
-[h1] Mod Compatibility [/h1]
-- Paper achievement animations and better active visuals with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2704939039]GiantBook API[/url] ([b]Highly recommended to use[/b])
-- Content desctiptions with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=836319872]EID[/url] with support of English (made by me), Chinese (made by 汐何/Saurtya), Russian (made by me) and Polish (made by wons) languages
-- Pog animations with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2490515687]POG for Good Items[/url]
-- [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2828005404]Yeah, I Read Books (Modded)[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2825955822]MORE books resprites[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2828474490]MORE unique coins[/url]
-
-PS: In case you don't want to unlock everything yourself but still want to experience all the mod's content, here are some of the commands that would help you. Just drop them into your debug console and enjoy the result.
-&quot;arachnaMod unlocktainted&quot;
-&quot;arachnaMod unlockall&quot;
-&quot;arachnaMod lockall&quot;</description>
-    <version>1.22</version>
+If you'd like to know more details about mod's contents, feel free to visit [url=https://moddingofisaac.wiki.gg/wiki/Arachna]an official wiki[/url].
+[img]https://i.imgur.com/TO2ZLyT.png[/img]
+Arachna is [b]compatible with most of your favorite mods[/b] like [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2575911103]Specialist[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3012430463]Epiphany[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2851063440]Fiend Folio[/url] and others! More detailed list can be found [url=https://moddingofisaac.wiki.gg/wiki/Arachna/Mod_Compatibility]here[/url] or in the in-game [b]Dead Sea Scolls[/b] menu (press [b]&quot;C&quot;[/b] in the starting room to open it).
+[img]https://i.imgur.com/hTblSRx.png[/img]
+Version 2.0 was brought to you by [b]Benny[/b], who did majority of the code work here, while I ([b]rvsty[/b], solo dev of 1.0 version) was mostly responsible for graphics and game design this time. 
+Additionally, here is a list of people who also contributed to the mod's development in one or another way:
+• [b]BrakeDude[/b] - Coded in Web Hearts in v1.0 and helped with some small things in code for v2.0.
+• [b]UnknownTheHero[/b], [b]RackJet[/b], People of [b]Benny's Barn Discord server[/b] - Playtesting.
+• [b]Quartz[/b], [b]damagazz[/b], [b]ferpe[/b] - Barious spritework.
+• [b]wons[/b] - Several costume sprites, playtesting, Polish EID translation.
+• [url=https://x.com/ZVetaji6]zvetaji6[/url] - 3D animation.
+• [b]Connor (+his wife)[/b] - A lot of help regarding Specialist compatibility.
+• [b]oucalgarlin[/b], [b]Saurtya[/b], [b]jaro7126[/b], [b]Nebuka[/b] - Various EID translations.
+• [b]cadetpirx[/b] - Idea of a certain new consumable.
+• [url=https://twitter.com/ShaPatSmith]ShaPatSmith[/url] - Voiceover for collectibles.
+• [b]SteamJek[/b], [b]Picsel[/b] - mod cover art as a commission.
+[img]https://i.imgur.com/MfGJVqX.png[/img]
+[b]P.S.[/b]: Legacy edition of the mod for [b]regular Repentance[/b] is avaible [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2801120315] here[/url], or, if you're playing on unofficial version of the game, [b][url=https://github.com/BenevolusGoat/arachna-mod/tree/legacy]here[/url][/b].</description>
+    <version>2.1</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
     <tag id="Active Items"/>
     <tag id="Trinkets"/>
+    <tag id="Pills"/>
     <tag id="Cards"/>
     <tag id="Pickups"/>
     <tag id="Player Characters"/>
     <tag id="Familiars"/>
-    <tag id="Babies"/>
-    <tag id="Rooms"/>
+    <tag id="Graphics"/>
+    <tag id="Shaders"/>
+    <tag id="Sound Effects"/>
 </metadata>
