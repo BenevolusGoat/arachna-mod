@@ -87,13 +87,16 @@ local rootCommand = "arachnaMod"
 
 ---@type {[1]: string, [2]: string}[]
 local commands = {
-	{ "unlocktainted",  "Unlocks Tainted Arachna" },
-	{ "unlockall",      "Unlocks all mod achievements" },
-	{ "lockall",        "Locks all mod achievements" },
-	{ "setmark",        "Args: <string completiontype> <int value>. Updates a completion mark for Arachna" },
-	{ "setmarktainted", "Args: <string completiontype> <int value>. Updates a completion mark for Tainted Arachna" },
-	{ "seteggtimeout",  "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders" },
-	{ "stopegghatch",   "Stop spider eggs from auto-hatching" },
+	{ "unlocktainted",     "Unlocks Tainted Arachna" },
+	{ "unlockall",         "Unlocks all mod achievements" },
+	{ "lockall",           "Locks all mod achievements" },
+	{ "setmark",           "Args: <string completiontype> <int value>. Updates a completion mark for Arachna" },
+	{ "setmarktainted",    "Args: <string completiontype> <int value>. Updates a completion mark for Tainted Arachna" },
+	{ "seteggtimeout",     "Args: <float timeout>. Sets how long spider eggs last before bursting without any spiders" },
+	{ "clearmarks",        "Clears all completion marks on Arachna" },
+	{ "clearmarkstainted", "Clears all completion marks on Tainted Arachna" },
+	{ "wipesave",          "Clears all completion marks on both Arachnas and locks all achievements" },
+	{ "stopegghatch",      "Stop spider eggs from auto-hatching" },
 }
 
 local helpText = {
@@ -135,6 +138,20 @@ local commandFuncs = {
 	["setmarktainted"] = function(args)
 		return setMarkCommand(Mod.PlayerType.ARACHNA_B, args)
 	end,
+	["clearmarks"] = function(args)
+		Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA)
+		return true
+	end,
+	["clearmarkstainted"] = function(args)
+		Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA_B)
+		return true
+	end,
+	["wipesave"] = function(args)
+		Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA)
+		Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA_B)
+		manageAchievements(false)
+		return "Save successfully wiped!"
+	end,
 	["seteggtimeout"] = setEggTimeout,
 	["stopegghatch"] = function()
 		Mod.Entities.SPIDER_EGG.NoAutoHatch = not Mod.Entities.SPIDER_EGG.NoAutoHatch
@@ -165,20 +182,28 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 	for _, commandTable in ipairs(commands) do
 		local strStart, strEnd = string.find(params, commandTable[1])
 		if strStart and strEnd then
-			local args = string.len(commandTable[1]) < string.len(params) and
-				string.gsub(params, commandTable[1] .. " ", "") or ""
-			local returnPrint = commandFuncs[commandTable[1]](args)
-			if type(returnPrint) == "string" then
-				Mod:Log(returnPrint)
-				return
-			elseif returnPrint == true then
-				Mod:Log("Ran command successfully!")
-				return
-			else
-				Mod:Log("Failed to run command!")
+			local hasArgs = string.sub(params, strEnd + 1, strEnd + 1) == " "
+			local command = string.sub(params, strStart, strEnd + 1)
+			print(command, hasArgs)
+			if hasArgs and command == commandTable[1] .. " "
+				or not hasArgs and command == commandTable[1]
+			then
+				local args = string.len(commandTable[1]) < string.len(params) and
+					string.gsub(params, commandTable[1] .. " ", "") or ""
+				local returnPrint = commandFuncs[commandTable[1]](args)
+				if type(returnPrint) == "string" then
+					Mod:Log(returnPrint)
+					return
+				elseif returnPrint == true then
+					Mod:Log("Ran command successfully!")
+					return
+				else
+					Mod:Log("Failed to run command!")
+				end
 			end
 		end
 	end
+	Mod:Log("Failed to find valid command!")
 end)
 
 Mod:AddCallback(ModCallbacks.MC_CONSOLE_AUTOCOMPLETE, function(command, params)
