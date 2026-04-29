@@ -9,11 +9,11 @@ local modifiers = {
 		_modifier = function()
 			local yearDiff = Item.SPIDER_CAKE:GetYearDifference()
 			local stats = {
-				Damage = 1,
+				Damage = 0.5,
 				Tears = 0.33,
 				Speed = 0.12,
-				Range = 1, --(technically 40)
-				ShotSpeed = 0.12,
+				Range = 0.75,
+				ShotSpeed = 0.08,
 				Luck = 1
 			}
 			for statName, statNum in pairs(stats) do

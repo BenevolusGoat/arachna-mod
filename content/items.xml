@@ -16,7 +16,7 @@
 	<active id="11" name="Geptameron" description="Ever changing holy tome" achievement="Geptameron" gfx="geptameron.png" maxcharges="4" tags="book offensive" quality="3" />
 	<passive id="12" name="3D Glasses" description="I'm seeing double..." achievement="3D Glasses" gfx="3d_glasses.png"  tags="offensive summonable" quality="2"/>
 	<!-- v2.0 -->
-	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider_cake.png" hidden="true" tags="quest noeden" quality="4" effectspeed="0.12" effectflattears="0.33" effectflatdamage="1" effectrange="40" effectshotspeed="0.12" effectluck="1" />
+	<passive id="13" name="Spider Cake" description="Happy Arachniversary!" gfx="spider_cake.png" hidden="true" tags="quest noeden" quality="4" effectspeed="0.12" effectflattears="0.33" effectflatdamage="0.5" effectrange="30" effectshotspeed="0.08" effectluck="1" />
 	<passive id="14" name="Spider Donut" description="HP Up?" achievement="Web Hearts" gfx="spider_donut.png" damage="0.69" tags="offensive summonable" quality="2"/>
 	<passive id="15" name="Candy Floss" description="But it doesn't taste sweet..." achievement="Web Hearts" gfx="candy_floss.png" tags="offensive summonable" quality="2" cache="tearcolor"/>
 	<passive id="16" name="Gummy Spiders" description="Tasty and Colourful!" achievement="Web Hearts" gfx="gummy_spiders.png" tears="0.61" tags="offensive summonable" quality="2"/>
