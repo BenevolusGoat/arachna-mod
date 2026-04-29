@@ -1,4 +1,4 @@
-local Mod = ArachnaMod
+local Mod = ARACHNAMOD
 local ARC_EID = Mod.EID_Support
 local Item = Mod.Item
 
@@ -58,7 +58,7 @@ return function(modifiers)
 			Name = "绞丝糖",
 			Description = {
 				"{{WebHeart}} 排空角色的红心, 并生成网心, 至少生成3个",
-				"#{{Slow}} 5%概率发射减速四重泪弹",--quad-splitting stands for "四重泪弹" (quadruple tears like Mutant Spider) or "一分为四的泪弹" (1 tear split into 4 like Cricket's Body)?
+				"#{{Slow}} 5%概率发射命中后一分为四的减速泪弹",
 				"#{{Luck}} 幸运20: 100%"
 			}
 		},
@@ -77,7 +77,7 @@ return function(modifiers)
 		[Item.DIVINE_CLOTH.ID] = {
 			Name = "神圣织网",
 			Description = {
-				"{{StatusSpiderBite}} 网捕敌人, 并对附近的敌人造成50%角色伤害. 敌人将被{{Slow}}减速, 受到更少的击退, 死亡后生成蜘蛛卵",
+				"{{StatusSpiderBite}} 网捕附近的敌人, 对其造成50%角色伤害. 敌人将被{{Slow}}减速, 受到更少的击退, 死亡后生成蜘蛛卵",
 				"#{{AracBlueSpider}} 蜘蛛卵会在清理房间后孵化, 生成数个友好蜘蛛",
 				"#{{StatusSpiderBite}} 蜘蛛卵可以变为{{ColorRainbow}}特殊蛛卵{{CR}}, 并孵化对应颜色的特殊蜘蛛",
 				"#{{BossRoom}} 伤害被网捕的头目会积攒一个充能条, 蓄满后生成蜘蛛卵"
@@ -123,7 +123,7 @@ return function(modifiers)
 				"#阻挡敌弹",
 				"#展示一个随机的主动道具, 其拥有与角色当前持有的主动道具相同的最大充能",
 				"#使用主动道具时同时触发展示的道具",
-				"#使用主动道具/进入新房间后, 改变展示的道具"
+				"#使用主动道具/进入未探索的房间后, 改变展示的道具"
 			},
 			BFFS = {
 				"展示的道具会触发两次, 类似{{Collectible" ..
@@ -131,7 +131,7 @@ return function(modifiers)
 			}
 		},
 		[Item.GEPTAMERON.ID] = {
-			Name = "七室谈",--The name is printed as Getameron instead of Geptameron
+			Name = "七室谈",
 			Description = {
 				"基于计数器触发效果:",
 				"#{{1}} 揭示{{SecretRoom}}{{SuperSecretRoom}} 并使用{{Collectible" ..
@@ -175,7 +175,7 @@ return function(modifiers)
 		[Item.LIL_ARACHNA.ID] = {
 			Name = "阿拉克娜宝宝",
 			Description = {
-				"{{Slow}} 发射减速四重泪弹",
+				"{{Slow}} 发射命中后一分为四的减速泪弹",
 				"#每发泪弹伤害为3.5",
 				"#{{AracBlueSpider}} 其泪弹有概率对敌人施加蛛网缠身",
 				"#{{StatusWebbed}} 被蛛网缠身的敌人会被{{Slow}}减速, 受到更少的击退, 死亡后生成一个蜘蛛卵",
@@ -205,7 +205,7 @@ return function(modifiers)
 			Name = "蛛学网101",
 			Description = {
 				"获得下述之一:",
-				"#一个蜘蛛结构物品",--Not 100% sure about spider facet's translation
+				"#一个蜘蛛相关的小知识",
 				"#{{WebHeart}} 1个网心",
 				"#{{AracBlueSpider}} 数个蓝蜘蛛"
 			}

@@ -1,4 +1,4 @@
-local Mod = ArachnaMod
+local Mod = ARACHNAMOD
 
 return function()
 	return {
@@ -6,7 +6,7 @@ return function()
 			Name = "阿拉克娜",
 			Description = {
 				"无法拾取红心",
-				"#{{WebHeart}} 生命上升的效果会提供{{ColorObjName}}网心{{CR}}, 可以作为心之容器使用",
+				"#{{WebHeart}} 生命上升的效果会提供{{ColorObjName}}网心{{CR}}, 网心会被视作她的心之容器",
 				"#免疫蛛网",
 				"#{{Poison}} 25%概率发射毒性泪弹",
 				"#蜘蛛卵生成的蜘蛛可能会变为效果各异的{{ColorRainbow}}特殊蜘蛛{{CR}}",
@@ -16,7 +16,7 @@ return function()
 			Name = "堕化阿拉克娜",
 			Description = {
 				"无法拾取红心",
-				"#{{WebHeart}} 生命上升的效果会提供{{ColorObjName}}网心{{CR}}, 可以作为心之容器使用",
+				"#{{WebHeart}} 生命上升的效果会提供{{ColorObjName}}网心{{CR}}, 网心会被视作她的心之容器",
 				"#免疫蛛网",
 				"#{{Poison}} 25%概率发射毒性泪弹",
 				"#{{Collectible" .. Mod.Item.DIVINE_CLOTH.ID .. "}} 双击攻击键{{StatusSpiderBite}}网捕一定范围内的敌人并造成50%伤害",

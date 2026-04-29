@@ -23,7 +23,7 @@ return function(modifiers)
             EIDDesc = {
 				function(descObj)
 					return modifiers[Mod.PlayerType.ARACHNA_B]._modifier(descObj,
-						"双击攻击 %s 加快"
+						"双击攻击的冷却加快 %s"
 				)
 				end,
 				"# 双击攻击键会额外发射一圈泪弹, 有概率发射{{Collectible" .. CollectibleType.COLLECTIBLE_PARASITOID .. "}} 蛛卵",
