@@ -211,15 +211,3 @@ Mod:AddCallback(ModCallbacks.MC_CONSOLE_AUTOCOMPLETE, function(command, params)
 end, rootCommand)
 
 --#endregion
-
---#region Wipe save
-
-function ArachnaMod:WipeSave()
-	Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA)
-	Isaac.ClearCompletionMarks(Mod.PlayerType.ARACHNA_B)
-	manageAchievements(false)
-end
-
-Mod:AddCallback(Mod.SaveManager.SaveCallbacks.POST_DATA_DELETE, ArachnaMod.WipeSave)
-
---#endregion

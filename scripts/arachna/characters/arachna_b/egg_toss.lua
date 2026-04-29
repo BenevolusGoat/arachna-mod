@@ -111,21 +111,17 @@ function EGG_TOSS:MarkNearestEgg(player)
 	if not player:HasCollectible(EGG_TOSS.ID) then return end
 	local closestEgg
 	Mod.Foreach.EffectInRadius(player.Position, EGG_TOSS.GRAB_RANGE, function(egg, index)
-		if egg:GetSprite():IsPlaying("Idle") then
-			if not closestEgg
-				or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
-			then
-				closestEgg = egg
-			end
+		if not closestEgg
+			or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
+		then
+			closestEgg = egg
 		end
 	end, Mod.Entities.SPIDER_EGG.ID_SMALL, nil, nil, true)
 	Mod.Foreach.EffectInRadius(player.Position, EGG_TOSS.GRAB_RANGE, function(egg, index)
-		if egg:GetSprite():IsPlaying("Idle") then
-			if not closestEgg
-				or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
-			then
-				closestEgg = egg
-			end
+		if not closestEgg
+			or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
+		then
+			closestEgg = egg
 		end
 	end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
 	local data = Mod:GetData(player)
