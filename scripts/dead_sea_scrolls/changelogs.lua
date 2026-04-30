@@ -51,6 +51,7 @@ DeadSeaScrollsMenu.AddChangelog(
 #2.0.1 (XX/XX/2026)
 - Fixed Mechanical Eye causing an error when using an active item that it shouldn't generate a valid active item with
 - Implemented the patented "shader crash fix"
+- Fixed Infested Penny not being able to spawn Web Hearts
 
 #2.0.0 (04/292026)
 
