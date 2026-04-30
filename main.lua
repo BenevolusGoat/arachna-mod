@@ -3,7 +3,7 @@ InputHelper = include("scripts/helpers/vendor/inputhelper")
 ---@class ModReference
 _G.ArachnaMod = RegisterMod("Arachna Mod", 1)
 
-ArachnaMod.Version = "2.0.0"
+ArachnaMod.Version = "2.0.1"
 
 local Mod = ArachnaMod
 
@@ -28,6 +28,13 @@ ArachnaMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 			DeadSeaScrollsMenu.QueueMenuOpen("Arachna", "rgonpopup", 0, true)
 		end
 		Mod.ShowNewPopup = nil
+	end
+end)
+
+-- shader crash fix by AgentCucco
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function()
+	if #Isaac.FindByType(EntityType.ENTITY_PLAYER) == 0 then
+		Isaac.ExecuteCommand("reloadshaders")
 	end
 end)
 
@@ -319,6 +326,7 @@ function ArachnaMod:HandleDoubleTap(player)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, Mod.HandleDoubleTap)
+
 
 --!End of file
 

@@ -146,7 +146,7 @@ function MECHANICAL_EYE:OnFamiliarInit(familiar)
 	familiar:AddToOrbit(8)
 	local familiar_run_save = Mod.SaveManager.GetRunSave(familiar)
 	local sprite = familiar:GetSprite()
-	if familiar_run_save.MechanicalActive then
+	if familiar_run_save.MechanicalActive and MECHANICAL_EYE:HasValidActive(familiar.Player) then
 		local data = Mod:GetData(familiar)
 		local player = familiar.Player
 		data.MechEyeCurReferenceActive = player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)
@@ -207,10 +207,10 @@ Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, MECHANICAL_EYE.OnFamiliarUpdate
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
 function MECHANICAL_EYE:PostDischarge(itemId, removed, player, slot)
-	if slot ~= ActiveSlot.SLOT_PRIMARY then return end
+	if slot ~= ActiveSlot.SLOT_PRIMARY or not MECHANICAL_EYE:IsValidItem(Mod.ItemConfig:GetCollectible(itemId)) then return end
 	Mod.Foreach.Familiar(function(familiar, index)
 		local familiar_run_save = Mod.SaveManager.GetRunSave(familiar)
-		local generatedItem = familiar_run_save.MechanicalActive
+		local generatedItem = familiar_run_save.MechanicalActive or CollectibleType.COLLECTIBLE_POOP
 
 		player:UseActiveItem(generatedItem, UseFlag.USE_NOANIM, -1)
 		if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
