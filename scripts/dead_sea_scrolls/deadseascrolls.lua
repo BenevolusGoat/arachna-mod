@@ -300,13 +300,13 @@ local arachnaDssDirectory = {
 		title = "arachna",
 		fsize = 1,
 		buttons = GenerateNoSelDescription(
-            {str = "repentogon+ required", nosel = true, fsize = 2},
+            {str = "repentogon required", nosel = true, fsize = 2},
             BREAK_LINE,
-			"the arachna mod has updated to v2.0 and now requires repentogon on repentance+ to function!",
+			"this 2.0 version of the arachna mod requires repentogon on repentance+ to function!",
 			BREAK_LINE,
 			"ensure you have the official repentance+ dlc installed and enabled and the latest version of repentogon from repentogon.com",
 			BREAK_LINE,
-			"if you wish to downgrade, please check the workshop description for more information",
+			"if you wish to downgrade, please check the workshop description for the legacy version instead",
 			BREAK_LINE,
 			{
 				str = "i understand",

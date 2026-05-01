@@ -48,6 +48,25 @@ if not REPENTOGON or not REPENTANCE_PLUS then
 	print(msg)
 	Isaac.DebugString(msg)
 	Mod.ShowNewPopup = true
+
+	local function testamentShader(_, shaderName)
+		if shaderName == "DarkRoomArachna" then
+			return {
+				PlayerPos1 = { 0, 0 },
+				PlayerPos2 = { 0, 0 },
+				PlayerPos3 = { 0, 0 },
+				PlayerPos4 = { 0, 0 },
+				PlayerPos5 = { 0, 0 },
+				PlayerPos6 = { 0, 0 },
+				PlayerPos7 = { 0, 0 },
+				PlayerPos8 = { 0, 0 },
+				Strength = 0,
+				Saturation = 1,
+				PlayerNum = 1,
+			}
+		end
+	end
+	Mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, testamentShader)
 	return
 end
 

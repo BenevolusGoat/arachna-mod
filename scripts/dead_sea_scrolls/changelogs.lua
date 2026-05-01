@@ -48,12 +48,13 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
 
-#2.0.1 (XX/XX/2026)
+#2.0.1 (05/01/2026)
 - Fixed Mechanical Eye causing an error when using an active item that it shouldn't generate a valid active item with
 - Implemented the patented "shader crash fix"
 - Fixed Infested Penny not being able to spawn Web Hearts
+- Fixed the screen going berserk if Arachna was launched without REPENTOGON on Repentance+ or failed to fully load
 
-#2.0.0 (04/292026)
+#2.0.0 (04/29/2026)
 
 ## Major Mod Rewrite
 

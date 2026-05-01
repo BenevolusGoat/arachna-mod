@@ -2642,8 +2642,9 @@ return function(DSSModName, DSSCoreVersion, MenuProvider)
 			for _, entity in pairs(Isaac.GetRoomEntities()) do
 				if (entity:IsActiveEnemy() and not entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY))
 					or entity.Type == EntityType.ENTITY_PROJECTILE
-					and not ArachnaMod:HasBitFlags(entity:ToProjectile().ProjectileFlags, ProjectileFlags.CANT_HIT_PLAYER)
-					or entity.Type == EntityType.ENTITY_BOMB then
+					and entity:ToProjectile().ProjectileFlags & ProjectileFlags.CANT_HIT_PLAYER == 0
+					or entity.Type == EntityType.ENTITY_BOMB
+				then
 					roomHasDanger = true
 					break
 				end
