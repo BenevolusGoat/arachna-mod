@@ -48,6 +48,10 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
 
+#2.0.2 (05/01/2026)
+- Removed shaders
+- Replaced The Testament room shader with room darkness
+
 #2.0.1 (05/01/2026)
 - Fixed Mechanical Eye causing an error when using an active item that it shouldn't generate a valid active item with
 - Implemented the patented "shader crash fix"

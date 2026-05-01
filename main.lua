@@ -3,7 +3,7 @@ InputHelper = include("scripts/helpers/vendor/inputhelper")
 ---@class ModReference
 _G.ArachnaMod = RegisterMod("Arachna Mod", 1)
 
-ArachnaMod.Version = "2.0.1"
+ArachnaMod.Version = "2.0.2"
 
 local Mod = ArachnaMod
 
@@ -31,13 +31,6 @@ ArachnaMod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	end
 end)
 
--- shader crash fix by AgentCucco
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function()
-	if #Isaac.FindByType(EntityType.ENTITY_PLAYER) == 0 then
-		Isaac.ExecuteCommand("reloadshaders")
-	end
-end)
-
 include("scripts.arachna.core.save_upgrade")
 include("scripts.dead_sea_scrolls.deadseascrolls")
 include("scripts.arachna.core.customhealthapi.core")
@@ -49,24 +42,6 @@ if not REPENTOGON or not REPENTANCE_PLUS then
 	Isaac.DebugString(msg)
 	Mod.ShowNewPopup = true
 
-	local function testamentShader(_, shaderName)
-		if shaderName == "DarkRoomArachna" then
-			return {
-				PlayerPos1 = { 0, 0 },
-				PlayerPos2 = { 0, 0 },
-				PlayerPos3 = { 0, 0 },
-				PlayerPos4 = { 0, 0 },
-				PlayerPos5 = { 0, 0 },
-				PlayerPos6 = { 0, 0 },
-				PlayerPos7 = { 0, 0 },
-				PlayerPos8 = { 0, 0 },
-				Strength = 0,
-				Saturation = 1,
-				PlayerNum = 1,
-			}
-		end
-	end
-	Mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, testamentShader)
 	return
 end
 

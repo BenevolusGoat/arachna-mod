@@ -28,7 +28,7 @@ Arachna is [b]compatible with most of your favorite mods[/b] like [url=https://s
 Version 2.0 was brought to you by [b]Benny[/b], who did majority of the code work here, while I ([b]rvsty[/b], solo dev of 1.0 version) was mostly responsible for graphics and game design this time. 
 Additionally, here is a list of people who also contributed to the mod's development in one or another way:
 [list]
-[*][b]BrakeDude[/b] - Coded in Web Hearts in v1.0 and helped with some small things in code for v2.0.
+[*][b]BrakeDude[/b] - Coded in Web Hearts in v1.0.
 [*][b]UnknownTheHero[/b], [b]RackJet[/b], People of [b]Benny's Barn Discord server[/b] - Playtesting.
 [*][b]Quartz[/b], [b]ferpe[/b] - Various spritework.
 [*][b]damagazz[/b] - Achievement sprite art, Birthcake sprites
@@ -43,7 +43,7 @@ Additionally, here is a list of people who also contributed to the mod's develop
 [img]https://i.imgur.com/MfGJVqX.png[/img]
 [b]P.S.[/b]: Legacy edition of the mod for [b]regular Repentance[/b] is avaible [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2801120315] here[/url], or, if you're playing on unofficial version of the game, [b][url=https://github.com/BenevolusGoat/arachna-mod/tree/legacy]here[/url][/b].
 [b]P.P.S.[/b]: In case you can't play the mod off Steam for some reason, copy of the [b]current version[/b] is available [url=https://github.com/BenevolusGoat/arachna-mod]here[/url].</description>
-    <version>2.5</version>
+    <version>2.6</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
@@ -55,6 +55,5 @@ Additionally, here is a list of people who also contributed to the mod's develop
     <tag id="Player Characters"/>
     <tag id="Familiars"/>
     <tag id="Graphics"/>
-    <tag id="Shaders"/>
     <tag id="Sound Effects"/>
 </metadata>
