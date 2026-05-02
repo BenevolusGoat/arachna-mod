@@ -135,7 +135,7 @@ function DADS_NEWSPAPER:PostPlayerUpdate(player)
 	effect.Position = player.Position + vec:Rotated(-90):Resized(-15)
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, DADS_NEWSPAPER.PostPlayerUpdate, PlayerVariant.PLAYER)
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, DADS_NEWSPAPER.PostPlayerUpdate)
 
 --#endregion
 

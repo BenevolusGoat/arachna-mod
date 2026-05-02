@@ -149,7 +149,7 @@ function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
 	npc.HitPoints = cfg.HitPoints
 	npc:AddCharmed(EntityRef(player), -1)
 	---@diagnostic disable-next-line: param-type-mismatch
-	npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL)
+	npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP)
 	Mod:GetData(npc).BestBudBall = true
 end
 

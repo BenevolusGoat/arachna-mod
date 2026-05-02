@@ -47,6 +47,14 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
+#2.1.0 (05/XX/2026)
+- Fixed Dad's Newspaper not working on Found Soul
+- Fixed the first 2/3 soul hearts on Arachna/Tainted Arachna being converted into web hearts when exiting and continuing a run if you had less web hearts than you started the run with
+- Found Soul can no longer use The Testament
+- Fixed an issue with multiple players using The Testament causing you to teleport to The Testament dimension even when normally not allowed.
+- Fixed a mod incompatibility with Fiend Folio that caused health ups to not grant web hearts
+- Fixed a mod incompatibility with Fiend Folio where Evil Beggar would treat the web hearts as two soul hearts and take away both
+- Arachna now has a override for EntityPlayer:GetEffectiveMaxHearts to serve a similar relationship with bone hearts
 
 #2.0.2 (05/01/2026)
 - Removed shaders

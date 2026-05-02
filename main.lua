@@ -1,9 +1,9 @@
-InputHelper = include("scripts/helpers/vendor/inputhelper")
+--InputHelper = include("scripts/helpers/vendor/inputhelper")
 
 ---@class ModReference
 _G.ArachnaMod = RegisterMod("Arachna Mod", 1)
 
-ArachnaMod.Version = "2.0.2"
+ArachnaMod.Version = "2.1.0"
 
 local Mod = ArachnaMod
 

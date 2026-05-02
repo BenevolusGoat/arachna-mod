@@ -3,7 +3,6 @@
 local Mod = ArachnaMod
 
 local TESTAMENT = {}
-local enableTestamentShader = false --self explanatory. CircleSize in shader file used to be 110
 
 ArachnaMod.Item.TESTAMENT = TESTAMENT
 
@@ -151,7 +150,6 @@ function TESTAMENT:TeleportToTestamentRoom()
 	Isaac.ExecuteCommand("goto s.sacrifice.20000")
 	musicman:Play(Music.MUSIC_DARK_CLOSET, 1)
 	musicman:UpdateVolume()
-	enableTestamentShader = true
 end
 
 --#endregion
@@ -175,16 +173,21 @@ Mod:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, TESTAMENT.PreUseItem, TESTAMENT.ID
 ---@param itemId CollectibleType
 ---@param rng RNG
 ---@param player EntityPlayer
-function TESTAMENT:OnUse(itemId, rng, player)
+---@param flags UseFlag
+function TESTAMENT:OnUse(itemId, rng, player, flags)
+	if Mod:HasBitFlags(flags, UseFlag.USE_CARBATTERY)
+		or player.Variant == PlayerVariant.FOUND_SOUL
+	then
+		return
+	end
 	local canUse = TESTAMENT:CanUseTestament(player)
 	if not canUse then
 		local spawnPos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 		Mod.Spawn.Collectible(CollectibleType.COLLECTIBLE_EDENS_BLESSING, spawnPos, player, rng:Next())
 		player:AnimateHappy()
-		doNotTeleport = true
+		Mod:GetData(player).IgnoreTestamentSpawn = true
 		player:GetEffects():RemoveCollectibleEffect(itemId, -1)
 	else
-		doNotTeleport = false
 		Mod.Foreach.Player(function(_player, index)
 			TESTAMENT:AnimateTestamentTeleport(_player)
 		end)
@@ -203,8 +206,9 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, TESTAMENT.OnUse, TESTAMENT.ID)
 ---@param player EntityPlayer
 ---@param itemConfigItem ItemConfigItem
 function TESTAMENT:TeleportOnPlayerEffectEnd(player, itemConfigItem)
-	if doNotTeleport then
-		doNotTeleport = false
+	local data = Mod:GetData(player)
+	if data.IgnoreTestamentSpawn then
+		data.IgnoreTestamentSpawn = nil
 		return
 	end
 	local floor_save = Mod.SaveManager.GetFloorSave()

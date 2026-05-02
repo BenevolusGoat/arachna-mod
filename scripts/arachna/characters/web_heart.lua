@@ -91,7 +91,26 @@ end
 
 --#endregion
 
+--#region Overrides
+
+local CHAPIGetEffectiveHearts = CustomHealthAPI.Helper.HookFunctions.GetEffectiveMaxHearts
+---@param player EntityPlayer
+function CustomHealthAPI.Helper.HookFunctions.GetEffectiveMaxHearts(player)
+	if Mod:IsAnyArachna(player) and not CustomHealthAPI.Helper.PlayerIsIgnored(player) then
+		return WEB_HEART:GetWebHearts(player) * 2
+	end
+	return CHAPIGetEffectiveHearts(player)
+end
+
+--#endregion
+
 --#region CustomHealthAPI
+
+CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_ADD_HEALTH, 0, function (player, key, hp)
+	if Mod:IsAnyArachna(player) and key == "EMPTY_HEART" then
+		return WEB_HEART.KEY, hp
+	end
+end)
 
 CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.PRE_RENDER_HEART, 0,
 	function(player, index, health)
@@ -281,7 +300,6 @@ local ACTIVE_FORCE_USE = Mod:Set({
 local function canForceActiveItem(player)
 	return WEB_HEART:GetWebHearts(player) > 0
 		and Mod:IsAnyArachna(player)
-		and player:GetMaxHearts() == 0
 end
 
 ---@param player EntityPlayer

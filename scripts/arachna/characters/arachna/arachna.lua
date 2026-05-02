@@ -1,6 +1,7 @@
 --#region Variables
 
 local Mod = ArachnaMod
+local WEB_HEART = Mod.Pickup.WEB_HEART
 
 local ARACHNA = {}
 
@@ -16,7 +17,7 @@ ARACHNA.SFX_HURT_RARE = Isaac.GetSoundIdByName("Arachna Hurt (Rare)")
 ARACHNA.SFX_DEATH_RARE = Isaac.GetSoundIdByName("Arachna Death (Rare)")
 ARACHNA.RARE_SFX_CHANCE = 0.05
 
-CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = Mod.Pickup.WEB_HEART.KEY
+CustomHealthAPI.PersistentData.CharactersThatConvertMaxHealth[Mod.PlayerType.ARACHNA] = WEB_HEART.KEY
 CustomHealthAPI.PersistentData.CharactersThatCantHaveRedHealth[Mod.PlayerType.ARACHNA] = true
 
 ARACHNA.TearVariantSpritesheetPath = "gfx/projectiles/"
@@ -44,6 +45,22 @@ end
 function ARACHNA:ArachnaHasBirthright(player)
 	return ARACHNA:IsArachna(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
+
+--#endregion
+
+--#region Web Hearts
+
+---@param player EntityPlayer
+function ARACHNA:StartingWebHearts(player)
+	local playerType = player:GetPlayerType()
+	if playerType == Mod.PlayerType.ARACHNA then
+		WEB_HEART:AddWebHearts(player, 2)
+	elseif playerType == Mod.PlayerType.ARACHNA_B then
+		WEB_HEART:AddWebHearts(player, 3)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PLAYER_INIT_POST_LEVEL_INIT_STATS, ARACHNA.StartingWebHearts)
 
 --#endregion
 
