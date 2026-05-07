@@ -3,7 +3,7 @@
 ---@class ModReference
 _G.ArachnaMod = RegisterMod("Arachna Mod", 1)
 
-ArachnaMod.Version = "2.1.0"
+ArachnaMod.Version = "2.0.3"
 
 local Mod = ArachnaMod
 

@@ -235,7 +235,9 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 				player:AnimateHappy()
 				ball.Timeout = -1
 			else
-				player:AnimateSad()
+				if player then
+					player:AnimateSad()
+				end
 				BEST_BUD_BALL:FailReleaseEnemy(npc, ball)
 			end
 		end
