@@ -34,6 +34,7 @@ end)
 include("scripts.arachna.core.save_upgrade")
 include("scripts.dead_sea_scrolls.deadseascrolls")
 include("scripts.arachna.core.customhealthapi.core")
+Mod.SaveManager.InitCHAPI(CustomHealthAPI)
 
 if not REPENTOGON or not REPENTANCE_PLUS then
 	local msg =
