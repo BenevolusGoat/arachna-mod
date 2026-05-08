@@ -52,6 +52,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed web hearts reverting to soul hearts when exiting and continuing if you had no other mods with CHAPI that handled save data
 - Fixed an issue where the "Death Card" sound effect from the brief static transition in The Testament dimension would play for a brief moment before stopping
 - Fixed Mechanical Eye able to have its selected item constantly rerolled when swapping actives with Schoolbag
+- Removed Spider Cake setting from DSS. Admittedly, you can just spawn it through the debug console
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper spawn chance reduced to 7.5% (from 20%)

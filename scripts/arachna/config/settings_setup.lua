@@ -13,12 +13,6 @@ SettingsHelper.AddChoiceSetting(Mod.Setting.DoubletapFrameWindow,
 SettingsHelper.AddBooleanSetting(Mod.Setting.GeptameronGiantbook, "Have the giantbook for Geptameron appear on use?",
 	true)
 
-SettingsHelper.AddChoiceSetting(Mod.Setting.AnniversaryOverride, "Override the check for spawning Spider Cake?", {
-	"Spawn on anniversary",
-	"Always disabled",
-	"Always enabled"
-}, 1)
-
 SettingsHelper.AddBooleanSetting(Mod.Setting.LegacyGameplay,
 	"Change Arachna and Tainted Arachna gameplay to before the v2.0 update? (Requires run restart)", false)
 

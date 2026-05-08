@@ -21,17 +21,6 @@ local ends = {
 
 local UPLOAD_DATE = os.date("!*t", os.time({ year = 2022, month = 4, day = 29 }))
 
-function SPIDER_CAKE:ShouldSpawnCake()
-	local anniversarySetting = Mod.GetSetting(Mod.Setting.AnniversaryOverride)
-	if anniversarySetting == 3 then
-		return true
-	elseif anniversarySetting == 2 then
-		return false
-	else
-		return ArachnaMod.FLAGS.Anniversary
-	end
-end
-
 function SPIDER_CAKE:GetYearDifference()
 	local curDate = os.date("!*t")
 	local curDotY = curDate.yday
@@ -48,7 +37,7 @@ function SPIDER_CAKE:OnGameStart(isContinued)
 	local player = Isaac.GetPlayer()
 	if not isContinued
 		and Mod:IsAnyArachna(player)
-		and SPIDER_CAKE:ShouldSpawnCake()
+		and ArachnaMod.FLAGS.Anniversary
 	then
 		local itemPos = Mod.Room():FindFreePickupSpawnPosition(Vector(140, 240))
 		Mod.Spawn.Collectible(SPIDER_CAKE.ID, itemPos, player, player:GetCollectibleRNG(SPIDER_CAKE.ID):Next())
