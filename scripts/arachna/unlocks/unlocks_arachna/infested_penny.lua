@@ -1,4 +1,5 @@
 local Mod = ArachnaMod
+local persistentGameData = Isaac.GetPersistentGameData()
 
 local INFESTED_PENNY = {}
 
@@ -27,7 +28,7 @@ function INFESTED_PENNY:OnCoinCollision(coin, collider)
 		local rng = player:GetTrinketRNG(INFESTED_PENNY.ID)
 		local chance = getWebHeartChance(coin:GetCoinValue(), player:GetTrinketMultiplier(INFESTED_PENNY.ID))
 
-		if rng:RandomFloat() < chance then
+		if persistentGameData:Unlocked(Mod.Pickup.WEB_HEART.ACHIEVEMENT) and rng:RandomFloat() < chance then
 			local pos = Mod.Room():FindFreePickupSpawnPosition(coin.Position)
 			Mod.Spawn.Heart(Mod.Pickup.WEB_HEART.ID, pos, nil, player, coin.DropSeed)
 		end

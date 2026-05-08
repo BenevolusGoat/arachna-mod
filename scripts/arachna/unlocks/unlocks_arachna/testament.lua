@@ -140,8 +140,8 @@ function TESTAMENT:UpdateDoorGraphic(door)
 end
 
 local function playStatic()
-	Mod.sfxman:Play(SoundEffect.SOUND_DEATH_CARD, 0, 2)
 	Mod.Game:ShowHallucination(5, 0)
+	Mod.sfxman:Stop(SoundEffect.SOUND_DEATH_CARD)
 	Mod.sfxman:Play(SoundEffect.SOUND_STATIC, 0.8)
 end
 

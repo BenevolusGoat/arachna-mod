@@ -3,6 +3,40 @@ local game = Game()
 local Spawn = {}
 local max = math.max
 local min = math.min
+local persistentGameData = Isaac.GetPersistentGameData()
+
+local PickupUnlocks = {
+	[PickupVariant.PICKUP_HEART] = {
+		[HeartSubType.HEART_GOLDEN] = function() return persistentGameData:Unlocked(Achievement.GOLDEN_HEARTS) end
+	},
+	[PickupVariant.PICKUP_BOMB] = {
+		[BombSubType.BOMB_GOLDEN] = function() return persistentGameData:Unlocked(Achievement.GOLD_BOMB) end
+	},
+	[PickupVariant.PICKUP_KEY] = {
+		[KeySubType.KEY_CHARGED] = function() return persistentGameData:Unlocked(Achievement.CHARGED_KEY) end
+	},
+	[PickupVariant.PICKUP_COIN] = {
+		[CoinSubType.COIN_LUCKYPENNY] = function() return persistentGameData:Unlocked(Achievement.LUCKY_PENNIES) end,
+		[CoinSubType.COIN_STICKYNICKEL] = function() return persistentGameData:Unlocked(Achievement.STICKY_NICKELS) end,
+		[CoinSubType.COIN_GOLDEN] = function() return persistentGameData:Unlocked(Achievement.GOLDEN_PENNY) end
+	},
+	[PickupVariant.PICKUP_LIL_BATTERY] = {
+		[BatterySubType.BATTERY_MICRO] = function() return persistentGameData:Unlocked(Achievement.EVERYTHING_IS_TERRIBLE) end,
+		[BatterySubType.BATTERY_GOLDEN] = function() return persistentGameData:Unlocked(Achievement.GOLDEN_BATTERY) end
+	},
+	[PickupVariant.PICKUP_PILL] = {
+		[PillColor.PILL_GOLD] = function() return persistentGameData:Unlocked(Achievement.GOLDEN_PILLS) end,
+		[PillColor.PILL_GIANT_FLAG] = function() return persistentGameData:Unlocked(Achievement.HORSE_PILLS) end
+	},
+	[PickupVariant.PICKUP_TRINKET] = {
+		[TrinketType.TRINKET_GOLDEN_FLAG] = function() return persistentGameData:Unlocked(Achievement.GOLDEN_TRINKET) end
+	},
+	[PickupVariant.PICKUP_WOODENCHEST] = function() return persistentGameData:Unlocked(Achievement.WOODEN_CHEST) and PickupVariant.PICKUP_WOODENCHEST or PickupVariant.PICKUP_CHEST end,
+	[PickupVariant.PICKUP_MEGACHEST] = function() return persistentGameData:Unlocked(Achievement.MEGA_CHEST) and PickupVariant.PICKUP_MEGACHEST or PickupVariant.PICKUP_LOCKEDCHEST end,
+	[PickupVariant.PICKUP_GRAB_BAG] = {
+		[SackSubType.SACK_BLACK] = function() return persistentGameData:Unlocked(Achievement.BLACK_SACK) end
+	}
+}
 
 local function randomSeed()
 	return max(Random(), 1) -- seed being 0 causes a crash
@@ -40,8 +74,47 @@ end
 ---@alias VectorOrNil Vector | nil
 ---@alias TearFlagsOrNil TearFlags | nil
 
+---@param variant PickupVariant
+---@param subtype integer
+---@return PickupVariant, integer
+local function checkPickupUnlocks(variant, subtype)
+	local isUnlocked
+	if variant == PickupVariant.PICKUP_TRINKET and subtype & TrinketType.TRINKET_GOLDEN_FLAG == TrinketType.TRINKET_GOLDEN_FLAG then
+		isUnlocked = PickupUnlocks[PickupVariant.PICKUP_TRINKET][TrinketType.TRINKET_GOLDEN_FLAG]()
+		if not isUnlocked then
+			return variant, subtype & ~TrinketType.TRINKET_GOLDEN_FLAG
+		else
+			return variant, subtype
+		end
+	elseif variant == PickupVariant.PICKUP_PILL and subtype & PillColor.PILL_GIANT_FLAG == PillColor.PILL_GIANT_FLAG then
+		isUnlocked = PickupUnlocks[PickupVariant.PICKUP_PILL][PillColor.PILL_GIANT_FLAG]()
+		if not isUnlocked then
+			return variant, subtype & ~PillColor.PILL_GIANT_FLAG
+		else
+			return variant, subtype
+		end
+	else
+		local pickupTable = PickupUnlocks[variant]
+		if type(pickupTable) == "function" then
+			isUnlocked = pickupTable()
+		elseif type(pickupTable) == "table" then
+			local subtypeTable = pickupTable[subtype]
+			if subtypeTable then
+				isUnlocked = pickupTable[subtype]()
+			end
+		end
+	end
+	if type(isUnlocked) == "number" then
+		return isUnlocked, subtype
+	elseif type(isUnlocked) == "boolean" and not isUnlocked then
+		return variant, 0
+	end
+	return variant, subtype
+end
+
 ---@type fun(variant: PickupVariant, subtype: integer, position: Vector, velocity: VectorOrNil, spawner: EntityOrNil, seed: IntOrNil): EntityPickup
 local function spawnPickup(variant, subtype, position, velocity, spawner, seed)
+	variant, subtype = checkPickupUnlocks(variant, subtype)
 	local pickup =  game:Spawn(
 		EntityType.ENTITY_PICKUP, variant,
 		position, velocity or Vector.Zero,
@@ -165,8 +238,20 @@ function Spawn.Familiar(variant, subtype, position, velocity, spawner, seed)
 	return familiar
 end
 
+local SlotUnlocks = {
+	[SlotVariant.CRANE_GAME] = function() return persistentGameData:Unlocked(Achievement.CRANE_GAME) and SlotVariant.CRANE_GAME or SlotVariant.SLOT_MACHINE end,
+	[SlotVariant.ROTTEN_BEGGAR] = function() return persistentGameData:Unlocked(Achievement.ROTTEN_BEGGAR) and SlotVariant.ROTTEN_BEGGAR or SlotVariant.KEY_MASTER end,
+	[SlotVariant.HELL_GAME] = function() return persistentGameData:Unlocked(Achievement.HELL_GAME) and SlotVariant.HELL_GAME or SlotVariant.DEVIL_BEGGAR end,
+}
+
 ---@type fun(slotVariant: SlotVariant, position: Vector, spawner: EntityOrNil, seed: IntOrNil): EntitySlot
 function Spawn.Slot(slotVariant, position, spawner, seed)
+	if slotVariant == SlotVariant.CONFESSIONAL and not persistentGameData:Unlocked(Achievement.CONFESSIONAL) then
+		---@diagnostic disable-next-line: return-type-mismatch
+		return Spawn.Heart(HeartSubType.HEART_SOUL, position, nil, spawner, seed)
+	elseif SlotUnlocks[slotVariant] then
+		slotVariant = SlotUnlocks[slotVariant]()
+	end
 	local slot = game:Spawn(
 		EntityType.ENTITY_SLOT, slotVariant,
 		position, Vector.Zero,
