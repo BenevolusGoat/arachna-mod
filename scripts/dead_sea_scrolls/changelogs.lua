@@ -51,10 +51,12 @@ DeadSeaScrollsMenu.AddChangelog(
 ## GENERAL ADJUSTMENTS/BUG FIXES
 - Fixed web hearts reverting to soul hearts when exiting and continuing if you had no other mods with CHAPI that handled save data
 - Fixed an issue where the "Death Card" sound effect from the brief static transition in The Testament dimension would play for a brief moment before stopping
+- Fixed Mechanical Eye able to have its selected item constantly rerolled when swapping actives with Schoolbag
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper spawn chance reduced to 7.5% (from 20%)
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
+- Added Clicker and Magic Skin to Mechanical Eye's blacklist
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul

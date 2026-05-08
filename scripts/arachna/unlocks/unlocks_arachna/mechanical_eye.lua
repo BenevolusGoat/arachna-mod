@@ -27,7 +27,9 @@ MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST = {
 	CollectibleType.COLLECTIBLE_RED_KEY,
 	CollectibleType.COLLECTIBLE_D4,
 	CollectibleType.COLLECTIBLE_D100,
-	CollectibleType.COLLECTIBLE_GLASS_CANNON
+	CollectibleType.COLLECTIBLE_GLASS_CANNON,
+	CollectibleType.COLLECTIBLE_CLICKER,
+	CollectibleType.COLLECTIBLE_MAGIC_SKIN
 }
 
 for _, itemID in ipairs(MECHANICAL_EYE.ACTIVE_GENERATE_BLACKLIST) do
@@ -98,7 +100,11 @@ function MECHANICAL_EYE:UpdateActiveGraphic(familiar, filePath)
 end
 
 ---@param familiar EntityFamiliar
-function MECHANICAL_EYE:GenerateActiveCopy(familiar)
+---@param advanceRNG? boolean @default: `true`
+function MECHANICAL_EYE:GenerateActiveCopy(familiar, advanceRNG)
+	if advanceRNG == nil then
+		advanceRNG = true
+	end
 	if not next(activeList) then
 		MECHANICAL_EYE:GenerateActiveChargeList()
 	end
@@ -124,8 +130,12 @@ function MECHANICAL_EYE:GenerateActiveCopy(familiar)
 		end
 	until chargeRef == 0 or #chargeList > 0
 	local data = Mod:GetData(familiar)
-	local rng = player:GetCollectibleRNG(MECHANICAL_EYE.ID)
-	local item = #chargeList > 0 and chargeList[rng:RandomInt(#chargeList) + 1] or CollectibleType.COLLECTIBLE_POOP
+	local rng = familiar:GetDropRNG()
+	if advanceRNG then
+		rng:Next()
+	end
+	local chosenItem = rng:PhantomInt(#chargeList) + 1
+	local item = #chargeList > 0 and chargeList[chosenItem] or CollectibleType.COLLECTIBLE_POOP
 	local familiar_run_save = Mod.SaveManager.GetRunSave(familiar)
 	familiar_run_save.MechanicalActive = item
 	local itemConfig = Mod.ItemConfig:GetCollectible(item)
@@ -184,7 +194,7 @@ function MECHANICAL_EYE:OnFamiliarUpdate(familiar)
 				or (data.MechEyeCurReferenceCharge or 0) ~= getChargeReference(player))
 		)
 	then
-		MECHANICAL_EYE:GenerateActiveCopy(familiar)
+		MECHANICAL_EYE:GenerateActiveCopy(familiar, false)
 	end
 
 	if sprite:IsFinished("Closing") then
