@@ -1,4 +1,5 @@
 local Mod = ArachnaMod
+local persistGameData = Isaac.GetPersistentGameData()
 
 local GOLDEN_SHOPKEEPER = {}
 
@@ -7,10 +8,21 @@ ArachnaMod.Entities.GOLDEN_SHOPKEEPER = GOLDEN_SHOPKEEPER
 GOLDEN_SHOPKEEPER.ID = Isaac.GetEntityVariantByName("Golden Shopkeeper")
 
 GOLDEN_SHOPKEEPER.SPRITES_NUM = 16
-GOLDEN_SHOPKEEPER.MIN_BOMBS = 3
-GOLDEN_SHOPKEEPER.MAX_BOMBS = 5
+GOLDEN_SHOPKEEPER.MIN_BOMBS = 2
+GOLDEN_SHOPKEEPER.MAX_BOMBS = 4
 GOLDEN_SHOPKEEPER.REPLACEMENT_CHANCE = 0.075
-GOLDEN_SHOPKEEPER.GOLD_TRINKET_CHANCE = 0.05
+
+GOLDEN_SHOPKEEPER.RewardType = {
+	GOLDEN_TRINKET = 1,
+	COUNTERFEIT_PENNY = 2,
+	GOLDEN_SPIDERS = 3,
+	MIDAS_TOUCH = 4
+}
+local WOP = WeightedOutcomePicker()
+WOP:AddOutcomeFloat(GOLDEN_SHOPKEEPER.RewardType.GOLDEN_TRINKET, 0.1) --10%
+WOP:AddOutcomeFloat(GOLDEN_SHOPKEEPER.RewardType.COUNTERFEIT_PENNY, 0.56) --56%
+WOP:AddOutcomeFloat(GOLDEN_SHOPKEEPER.RewardType.GOLDEN_SPIDERS, 0.33) --33%
+WOP:AddOutcomeFloat(GOLDEN_SHOPKEEPER.RewardType.MIDAS_TOUCH, 0.01) --1%
 
 ---@param npc EntityNPC
 function GOLDEN_SHOPKEEPER:KeeperInit(npc)
@@ -49,25 +61,56 @@ Mod:AddCallback(ModCallbacks.MC_NPC_UPDATE, GOLDEN_SHOPKEEPER.UpdateAnimation, E
 
 ---@param npc EntityNPC
 function GOLDEN_SHOPKEEPER:OnDamageEffect(npc)
-	Mod.Spawn.Coin(CoinSubType.COIN_PENNY, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, npc:GetDropRNG(), 0))
+	local rng = npc:GetDropRNG()
+	local coinAmount = Mod:RandomNum(1, 2, rng)
+	for _ = 1, coinAmount do
+		Mod.Spawn.Coin(CoinSubType.COIN_PENNY, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng), npc)
+	end
 	npc:GetSprite():Play("Bomb", true)
 	Mod.Game:SpawnParticles(npc.Position, EffectVariant.COIN_PARTICLE, Mod:RandomNum(7, 14), 4)
 	Mod.sfxman:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 0.8)
+end
+
+---@param rng RNG
+function GOLDEN_SHOPKEEPER:GetExtraReward(rng)
+	local reward = WOP:PickOutcome(rng)
+	if reward == GOLDEN_SHOPKEEPER.RewardType.GOLDEN_TRINKET
+		and persistGameData:Unlocked(Achievement.GOLDEN_TRINKET)
+	then
+		return {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, Mod.Game:GetItemPool():GetTrinket() + TrinketType.TRINKET_GOLDEN_FLAG}
+	elseif reward == GOLDEN_SHOPKEEPER.RewardType.COUNTERFEIT_PENNY
+		and persistGameData:Unlocked(Achievement.COUNTERFEIT_PENNY)
+	then
+		local run_save = Mod.SaveManager.GetRunSave()
+		if not run_save.SpawnedCounterfeitPenny then
+			run_save.SpawnedCounterfeitPenny = true
+			return {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, TrinketType.TRINKET_COUNTERFEIT_PENNY}
+		end
+	elseif reward == GOLDEN_SHOPKEEPER.RewardType.GOLDEN_SPIDERS then
+		return {EntityType.ENTITY_FAMILIAR, FamiliarVariant.BLUE_SPIDER, Mod.Entities.COLORED_SPIDERS.SpiderSubtype.GOLDEN}
+	elseif reward == GOLDEN_SHOPKEEPER.RewardType.MIDAS_TOUCH then
+		return {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_MIDAS_TOUCH}
+	end
+	return {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, 0}
 end
 
 ---@param npc EntityNPC
 function GOLDEN_SHOPKEEPER:OnDeath(npc)
 	local rng = npc:GetDropRNG()
 	npc:GetSprite():Play("Break")
-	if Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
-		and rng:RandomFloat() < GOLDEN_SHOPKEEPER.GOLD_TRINKET_CHANCE
-	then
-		Mod.Spawn.Trinket(Mod.Game:GetItemPool():GetTrinket() + TrinketType.TRINKET_GOLDEN_FLAG, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng), npc, rng:Next())
-	else
-		local coinAmount = Mod:RandomNum(3, 5, rng)
-		for _ = 1, coinAmount do
-			Mod.Spawn.Coin(CoinSubType.COIN_PENNY, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng))
+	local coinAmount = Mod:RandomNum(3, 5, rng)
+	for _ = 1, coinAmount do
+		Mod.Spawn.Coin(0, npc.Position, EntityPickup.GetRandomPickupVelocity(npc.Position, rng), npc)
+	end
+	local extraReward = GOLDEN_SHOPKEEPER:GetExtraReward(rng)
+	if extraReward[1] == EntityType.ENTITY_FAMILIAR then
+		for i = 1, 2 do
+			Mod.Entities.COLORED_SPIDERS:ThrowFriendlySpider(Isaac.GetPlayer(), extraReward[3], npc.Position)
 		end
+	else
+		local pos = Mod.Room():FindFreePickupSpawnPosition(npc.Position)
+		local vel = extraReward[2] == PickupVariant.PICKUP_COIN and EntityPickup.GetRandomPickupVelocity(npc.Position, rng) or Vector.Zero
+		Mod.Game:Spawn(extraReward[1], extraReward[2], pos, vel, npc, extraReward[3], rng:Next())
 	end
 	npc:GetSprite():Play("Break")
 	Mod.sfxman:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY, 0.8)

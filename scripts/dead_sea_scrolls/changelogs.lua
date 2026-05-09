@@ -56,7 +56,12 @@ DeadSeaScrollsMenu.AddChangelog(
 - Added Spider Opacity setting. 100% by default. Lower setting to make spider familiars as Arachna or Tainted Arachna more transparent
 
 ## GAMEPLAY ADJUSTMENTS
-- Golden Shopkeeper spawn chance reduced to 7.5% (from 20%)
+- Golden Shopkeeper changes:
+- Reduced spawn chance to 7.5% (from 20%)
+- Reduced number of bombs needed to break it to a range of 2 to 4 (from 3 to 5)
+- Changed number of spawned pennies from hurting it to a range of 1 to 2 instead of always 1
+- Changed the 3 to 5 coins spawned from breaking it to be random coins instead of always pennies
+- Replaced the 5% chance for a golden trinket instead of coins upon breaking it with a range of extra rewards that spawn alongside the coins
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
 
