@@ -5,5 +5,6 @@ ArachnaMod.Setting = {
 	GeptameronGiantbook = "Geptameron Giantbook",
 	DoubletapFrameWindow = "Frame Window for Double Tap Actions",
 	LegacyGameplay = "Legacy Character Gameplay",
-	SpiderFacts = "Fun"
+	SpiderFacts = "Fun",
+	SpiderOpacity = "Opacity of spider familiars"
 }

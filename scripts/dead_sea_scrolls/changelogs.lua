@@ -53,6 +53,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed an issue where the "Death Card" sound effect from the brief static transition in The Testament dimension would play for a brief moment before stopping
 - Fixed Mechanical Eye able to have its selected item constantly rerolled when swapping actives with Schoolbag
 - Removed Spider Cake setting from DSS. Admittedly, you can just spawn it through the debug console
+- Added Spider Opacity setting. 100% by default. Lower setting to make spider familiars as Arachna or Tainted Arachna more transparent
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper spawn chance reduced to 7.5% (from 20%)

@@ -192,6 +192,7 @@ function COLORED_SPIDERS:ThrowFriendlySpider(player, subtype, pos, distOrTarget)
 	if subtype == 0 then return spider end
 	spider.SubType = subtype
 	COLORED_SPIDERS:OnSpiderInit(spider)
+	COLORED_SPIDERS:AdjustSpiderOpacity(spider)
 	return spider
 end
 
@@ -233,6 +234,17 @@ function COLORED_SPIDERS:OnSpiderInit(spider)
 end
 
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, COLORED_SPIDERS.OnSpiderInit, FamiliarVariant.BLUE_SPIDER)
+
+---@param spider EntityFamiliar
+function COLORED_SPIDERS:AdjustSpiderOpacity(spider)
+	local player = spider.Player
+	if Mod:IsAnyArachna(player) then
+		local opacityMult = Mod.GetSetting(Mod.Setting.SpiderOpacity)
+		spider:GetSprite().Color.A = opacityMult / 10
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_FAMILIAR_INIT, CallbackPriority.LATE, COLORED_SPIDERS.AdjustSpiderOpacity)
 
 --#endregion
 
