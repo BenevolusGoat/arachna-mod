@@ -64,6 +64,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Replaced the 5% chance for a golden trinket instead of coins upon breaking it with a range of extra rewards that spawn alongside the coins
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
+- The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul

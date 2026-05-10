@@ -67,10 +67,16 @@ end
 
 ---How much damage is required in order to fill the chargebar on a boss to spawn a Spider Egg
 ---...this is literally just the Stage HP formula don't @ me
-function ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
+---@param npc EntityNPC
+function ARACHNAS_SPOOL:GetBossChargeDamageThreshold(npc)
 	local stage = Mod.Level():GetStage()
 	local stageModifier = Mod.math.min(4, stage) + 0.8 * stage
-	return ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD + stageModifier * ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE
+	local armor = npc:GetShieldStrength()
+	local armorModifier = 1
+	if armor > 0 then
+		armorModifier = 1 + (armor / 75)
+	end
+	return ARACHNAS_SPOOL.BOSS_CHARGE_DMG_THRESHOLD + stageModifier * ARACHNAS_SPOOL.BOSS_CHARGE_DMG_STAGE * armorModifier
 end
 
 ---@param npc EntityNPC
@@ -347,69 +353,57 @@ Mod:AddCallback(DeliriumCallbacks.POST_TRANSFORMATION, ARACHNAS_SPOOL.NPCMorph)
 --#region Webbed Boss Chargebar
 
 ---@param ent Entity
----@param amount number
----@param flags DamageFlag
----@param source EntityRef
----@param countdown integer
-function ARACHNAS_SPOOL:BossChargebar(ent, amount, flags, source, countdown)
-	if Mod:IsLegacyGameplayEnabled() then
+function ARACHNAS_SPOOL:BossChargebar(ent)
+	local npc = ent:ToNPC()
+	if not npc or Mod:IsLegacyGameplayEnabled() or not npc:IsBoss() then
 		return
 	end
-	local npc = ent:ToNPC()
-	if npc and npc:IsBoss() then
-		local hasWebbed = StatusEffectLibrary:HasStatusEffect(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
-		if not hasWebbed then
-			return
-		end
-		local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
-		if GetPtrHash(parent) ~= GetPtrHash(npc)
-			or (
-				source.Type == EntityType.ENTITY_FAMILIAR
-				and source.Variant == FamiliarVariant.BLUE_SPIDER
-			) then
-			return
-		end
-		local player = Mod:TryGetPlayer(source, { LoopSpawnerEnt = true })
-		if not player then return end
-		local data = Mod:GetData(parent)
-		if not data.SpiderBossChargeSprite then
-			data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
-		end
-		if not data.SpiderBossChargeDMGNeeded then
-			data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold()
-		end
-		if Mod:HasBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION) then
-			amount = amount / 2
-		end
-		local armor = npc:GetShieldStrength()
-		if armor > 0 then
-			--damage per hit
-			local dph = npc.MaxHitPoints / armor / 4
-			amount = Mod.math.min(amount, dph)
-		end
-		Mod:DebugLog("Boss Egg Progress:", "Room Frame", Mod.Room():GetFrameCount(), "Charge",
-			"+" .. Mod.math.floor((amount / data.SpiderBossChargeDMGNeeded) * 100) .. "%")
-		data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
+	local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
+	if GetPtrHash(parent) ~= GetPtrHash(npc) then
+		return
+	end
+	local statusEffectData = StatusEffectLibrary:GetStatusEffectData(npc, ARACHNAS_SPOOL.STATUS_WEBBED)
+	---@cast statusEffectData StatusEffectData
+	local player = Mod:TryGetPlayer(statusEffectData.Source, { LoopSpawnerEnt = true })
+	if not player then return end
+	local data = Mod:GetData(parent)
+	if not data.SpiderBossChargeSprite then
+		data.SpiderBossChargeSprite = Sprite("gfx/ui_arachna_chargebar_boss.anm2", true)
+	end
+	if not data.SpiderBossChargeDMGNeeded then
+		data.SpiderBossChargeDMGNeeded = ARACHNAS_SPOOL:GetBossChargeDamageThreshold(npc)
+	end
+	if not data.BossHealth or data.BossHealth <= npc.HitPoints then
+		data.BossHealth = npc.HitPoints
+		return
+	end
 
-		if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
-			if StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
-				local dist = player.Position:Distance(npc.Position)
-				local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(
-					-45, 45))
-				local tear = Mod.Item.EGG_TOSS:FireEgg(npc.Position, vel, player, npc)
-				tear.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-			else
-				local rng = ent:GetDropRNG()
-				local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng)
-				local dist = npc.Size + 80
-				Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, npc.Position, spiderCount, dist, nil, true)
-			end
-			data.SpiderBossCharge = 0
+	local amount = data.BossHealth - npc.HitPoints
+	data.BossHealth = npc.HitPoints
+
+	Mod:DebugLog("Boss Egg Progress:", "Ent Frame", npc.FrameCount, "Charge",
+		"+" .. Mod.math.floor((amount / data.SpiderBossChargeDMGNeeded) * 100) .. "%")
+	data.SpiderBossCharge = (data.SpiderBossCharge or 0) + amount
+
+	if data.SpiderBossCharge > data.SpiderBossChargeDMGNeeded then
+		if StatusEffectLibrary:HasStatusEffect(npc, Mod.Item.DIVINE_CLOTH.STATUS_BITTEN) then
+			local dist = player.Position:Distance(npc.Position)
+			local vel = (player.Position - npc.Position):Resized(Mod.math.floor(dist / 20)):Rotated(Mod:RandomNum(
+				-45, 45))
+			local tear = Mod.Item.EGG_TOSS:FireEgg(npc.Position, vel, player, npc)
+			tear.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+		else
+			local rng = npc:GetDropRNG()
+			local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng)
+			local dist = npc.Size + 80
+			Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, npc.Position, spiderCount, dist, nil, true)
 		end
+		data.SpiderBossCharge = 0
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, ARACHNAS_SPOOL.BossChargebar)
+StatusEffectLibrary.Callbacks.AddCallback(StatusEffectLibrary.Callbacks.ID.ENTITY_STATUS_EFFECT_UPDATE,
+	ARACHNAS_SPOOL.BossChargebar, ARACHNAS_SPOOL.STATUS_WEBBED)
 
 ---@param npc EntityNPC
 ---@param offset Vector
