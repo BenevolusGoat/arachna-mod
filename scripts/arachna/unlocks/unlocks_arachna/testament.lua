@@ -41,7 +41,6 @@ TESTAMENT.PEDESTAL_POSITIONS = {
 
 local testamentRoomIndex = 0
 local lastDir = Direction.NO_DIRECTION
-local doNotTeleport = false
 local musicman = MusicManager()
 local overrideMusic = false
 
@@ -185,14 +184,18 @@ function TESTAMENT:OnUse(itemId, rng, player, flags)
 		local spawnPos = Mod.Room():FindFreePickupSpawnPosition(player.Position, 40)
 		Mod.Spawn.Collectible(CollectibleType.COLLECTIBLE_EDENS_BLESSING, spawnPos, player, rng:Next())
 		player:AnimateHappy()
-		Mod:GetData(player).IgnoreTestamentSpawn = true
-		player:GetEffects():RemoveCollectibleEffect(itemId, -1)
 	else
+		local effects = Mod.Room():GetEffects()
+		if effects:HasCollectibleEffect(TESTAMENT.ID) then
+			return false
+		end
 		Mod.Foreach.Player(function(_player, index)
 			TESTAMENT:AnimateTestamentTeleport(_player)
 		end)
 		TESTAMENT:CopyPlayerInventory(player)
 		lastDir = Direction.NO_DIRECTION
+		effects:AddCollectibleEffect(TESTAMENT.ID)
+		Mod.SaveManager.GetFloorSave(player).TestamentPlayer = true
 	end
 	return { Discharge = true, Remove = true, ShowAnim = false }
 end
@@ -201,22 +204,38 @@ Mod:AddCallback(ModCallbacks.MC_USE_ITEM, TESTAMENT.OnUse, TESTAMENT.ID)
 
 --#endregion
 
---#region Trigger Teleport to Dimension
+--#region Going in/out of dimension
 
----@param player EntityPlayer
----@param itemConfigItem ItemConfigItem
-function TESTAMENT:TeleportOnPlayerEffectEnd(player, itemConfigItem)
-	local data = Mod:GetData(player)
-	if data.IgnoreTestamentSpawn then
-		data.IgnoreTestamentSpawn = nil
-		return
+function TESTAMENT:SleepPlayersNearEndOfEffect()
+	if TESTAMENT:IsInTestamentRoom() then
+		local effects = Mod.Room():GetEffects()
+		local effect = effects:GetCollectibleEffect(TESTAMENT.ID)
+		if effect and effect.Cooldown == TESTAMENT.IMMOBILE_DURATION then
+			Mod.Foreach.Player(function(player, index)
+				TESTAMENT:AnimateTestamentTeleport(player)
+			end)
+		end
 	end
-	local floor_save = Mod.SaveManager.GetFloorSave()
-	floor_save.TestamentRoomIndex = Mod.Level():GetCurrentRoomIndex()
-	TESTAMENT:TeleportToTestamentRoom()
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_EFFECT_REMOVED, TESTAMENT.TeleportOnPlayerEffectEnd, TESTAMENT_CONFIG)
+Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, TESTAMENT.SleepPlayersNearEndOfEffect)
+
+---@param itemConfigItem ItemConfigItem
+function TESTAMENT:TriggerDimensionTeleport(itemConfigItem)
+	local floor_save = Mod.SaveManager.GetFloorSave()
+	if TESTAMENT:IsInTestamentRoom() then
+		testamentRoomIndex = 0
+		lastDir = Direction.NO_DIRECTION
+		local roomIndex = floor_save.TestamentRoomIndex or Mod.Level():GetStartingRoomIndex()
+		Mod.Game:StartRoomTransition(roomIndex, Direction.NO_DIRECTION, RoomTransitionAnim.FADE)
+		playStatic()
+	else
+		floor_save.TestamentRoomIndex = Mod.Level():GetCurrentRoomIndex()
+		TESTAMENT:TeleportToTestamentRoom()
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_ROOM_TRIGGER_EFFECT_REMOVED, TESTAMENT.TriggerDimensionTeleport, TESTAMENT_CONFIG)
 
 --#endregion
 
@@ -266,43 +285,44 @@ end
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, TESTAMENT.RemoveReplacerEffect, TESTAMENT.REPLACER_VAR)
 
 function TESTAMENT:PostEnterTestamentRoom()
-	if TESTAMENT:IsInTestamentRoom() then
-		Mod:DebugLog("Testament: Handling doors and removing ladders")
-		--Remove ladders
-		for _, ent in pairs(Isaac.FindByType(1000, 156, -1, false, false)) do
-			ent:Remove()
-		end
-		local curInventoryIndex = (TESTAMENT.ITEMS_PER_ROOM * testamentRoomIndex) + 1
-		local nextIndexSet = curInventoryIndex + TESTAMENT.ITEMS_PER_ROOM
-		local inventory = Mod.SaveManager.GetFloorSave().TestamentInventory
-		local level = Mod.Level()
-		local oppositeDoorSlot = level.EnterDoor == DoorSlot.DOWN0 and DoorSlot.UP0 or DoorSlot.DOWN0
-		Mod.sfxman:Play(SoundEffect.SOUND_UNLOCK00, 0)
-		--This function reopens doors already previously removed. Create both and then remove/update them
-		level:MakeRedRoomDoor(GridRooms.ROOM_DEBUG_IDX, oppositeDoorSlot)
-		Mod.Foreach.Door(function(door, doorSlot)
-			local name = doorSlot == DoorSlot.DOWN0 and "DOWN" or "UP"
-			if doorSlot == DoorSlot.DOWN0 and not (inventory[nextIndexSet])
-				or doorSlot == DoorSlot.UP0 and testamentRoomIndex == 0
-			then
-				Mod:DebugLog("Testament: Removing door", name)
-				Mod.Room():RemoveDoor(doorSlot)
-			else
-				Mod:DebugLog("Testament: Updating graphic of door", name)
-				TESTAMENT:UpdateDoorGraphic(door)
-			end
-		end)
-		Mod.Foreach.Player(function(player, index)
-			if lastDir == Direction.UP then
-				player.Position = Vector(320, 400)
-			elseif lastDir == Direction.NO_DIRECTION then
-				player.Position = Vector(320, 280)
-			elseif lastDir == Direction.DOWN then
-				player.Position = Vector(320, 160)
-			end
-		end)
-		overrideMusic = false
+	if not TESTAMENT:IsInTestamentRoom() then
+		return
 	end
+	Mod:DebugLog("Testament: Handling doors and removing ladders")
+	--Remove ladders
+	for _, ent in pairs(Isaac.FindByType(1000, 156, -1, false, false)) do
+		ent:Remove()
+	end
+	local curInventoryIndex = (TESTAMENT.ITEMS_PER_ROOM * testamentRoomIndex) + 1
+	local nextIndexSet = curInventoryIndex + TESTAMENT.ITEMS_PER_ROOM
+	local inventory = Mod.SaveManager.GetFloorSave().TestamentInventory
+	local level = Mod.Level()
+	local oppositeDoorSlot = level.EnterDoor == DoorSlot.DOWN0 and DoorSlot.UP0 or DoorSlot.DOWN0
+	Mod.sfxman:Play(SoundEffect.SOUND_UNLOCK00, 0)
+	--This function reopens doors already previously removed. Create both and then remove/update them
+	level:MakeRedRoomDoor(GridRooms.ROOM_DEBUG_IDX, oppositeDoorSlot)
+	Mod.Foreach.Door(function(door, doorSlot)
+		local name = doorSlot == DoorSlot.DOWN0 and "DOWN" or "UP"
+		if doorSlot == DoorSlot.DOWN0 and not (inventory[nextIndexSet])
+			or doorSlot == DoorSlot.UP0 and testamentRoomIndex == 0
+		then
+			Mod:DebugLog("Testament: Removing door", name)
+			Mod.Room():RemoveDoor(doorSlot)
+		else
+			Mod:DebugLog("Testament: Updating graphic of door", name)
+			TESTAMENT:UpdateDoorGraphic(door)
+		end
+	end)
+	Mod.Foreach.Player(function(player, index)
+		if lastDir == Direction.UP then
+			player.Position = Vector(320, 400)
+		elseif lastDir == Direction.NO_DIRECTION then
+			player.Position = Vector(320, 280)
+		elseif lastDir == Direction.DOWN then
+			player.Position = Vector(320, 160)
+		end
+	end)
+	overrideMusic = false
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, TESTAMENT.PostEnterTestamentRoom)
@@ -337,37 +357,6 @@ function TESTAMENT:PreExitRoom(player, newLevel)
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_ROOM_EXIT, TESTAMENT.PreExitRoom)
-
---#endregion
-
---#region Exiting Dimension
-
-function TESTAMENT:SleepPlayersNearEndOfEffect()
-	if TESTAMENT:IsInTestamentRoom() then
-		local effects = Mod.Room():GetEffects()
-		local effect = effects:GetCollectibleEffect(TESTAMENT.ID)
-		if effect and effect.Cooldown == TESTAMENT.IMMOBILE_DURATION then
-			Mod.Foreach.Player(function(player, index)
-				TESTAMENT:AnimateTestamentTeleport(player)
-			end)
-		end
-	end
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, TESTAMENT.SleepPlayersNearEndOfEffect)
-
----@param itemConfigItem ItemConfigItem
-function TESTAMENT:ReturnToRegularDimension(itemConfigItem)
-	testamentRoomIndex = 0
-	lastDir = Direction.NO_DIRECTION
-	local roomIndex = Mod.SaveManager.GetFloorSave().TestamentRoomIndex
-		or Mod.Level():GetStartingRoomIndex()
-	Mod.Game:StartRoomTransition(roomIndex, Direction.NO_DIRECTION, RoomTransitionAnim.FADE)
-	playStatic()
-	enableTestamentShader = false
-end
-
-Mod:AddCallback(ModCallbacks.MC_POST_ROOM_TRIGGER_EFFECT_REMOVED, TESTAMENT.ReturnToRegularDimension, TESTAMENT_CONFIG)
 
 --#endregion
 
@@ -414,6 +403,10 @@ function TESTAMENT:OnTestamentPedestalCollision(pedestal, collider)
 		and player:IsExtraAnimationFinished()
 		and player.ItemHoldCooldown == 0
 	then
+		local floor_save = Mod.SaveManager.TryGetFloorSave(player)
+		if not floor_save or not floor_save.TestamentPlayer then
+			return
+		end
 		local item = pedestal.SubType
 		local effects = Mod.Room():GetEffects()
 		if TESTAMENT:IsInTestamentRoom() then
@@ -433,6 +426,7 @@ function TESTAMENT:OnTestamentPedestalCollision(pedestal, collider)
 				Mod.Room():RemoveDoor(doorSlot)
 			end)
 		end
+		floor_save.TestamentPlayer = nil
 		local itemConfigItem = Mod.ItemConfig:GetCollectible(item)
 		player:AnimateCollectible(item)
 		player:RemoveCollectible(item)
@@ -523,6 +517,16 @@ function TESTAMENT:EmergencyExit()
 			return true
 		end) or false
 		if hasDoor then return end
+		local hasPlayer = false
+		hasPlayer = Mod.Foreach.Player(function (player, index)
+			local floor_save = Mod.SaveManager.TryGetFloorSave(player)
+			if floor_save and floor_save.TestamentPlayer then
+				return true
+			end
+		end) or false
+		if hasPlayer then return end
+		local centerPos = room:GetCenterPos()
+		Mod.Game:Spawn(EntityType.ENTITY_SHOPKEEPER, 2, centerPos, Vector.Zero, nil, 0, Mod:Random())
 		Mod:DebugLog("Pedestals missing! Initiating emergency exit.")
 		local effects = room:GetEffects()
 		effects:AddCollectibleEffect(TESTAMENT.ID)

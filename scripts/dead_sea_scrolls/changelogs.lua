@@ -55,6 +55,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Removed Spider Cake setting from DSS. Admittedly, you can just spawn it through the debug console
 - Added Spider Opacity setting. 100% by default. Lower setting to make spider familiars as Arachna or Tainted Arachna more transparent
 - Fixed being able to unlock Spindle and Soul of Arachna earlier than intended
+- Fixed players other than the one who activated The Testament able to interact with the items in The Testament dimension
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
