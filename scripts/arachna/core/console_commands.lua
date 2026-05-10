@@ -184,7 +184,7 @@ Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd, params)
 		if strStart and strEnd then
 			local hasArgs = string.sub(params, strEnd + 1, strEnd + 1) == " "
 			local command = string.sub(params, strStart, strEnd + 1)
-			print(command, hasArgs)
+
 			if hasArgs and command == commandTable[1] .. " "
 				or not hasArgs and command == commandTable[1]
 			then

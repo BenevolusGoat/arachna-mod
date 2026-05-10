@@ -14,8 +14,7 @@ ArachnaMod.PlayerTypeToCompletionTable = {}
 
 ---@enum ArachnaCompletionType
 ArachnaMod.CompletionType = {
-	TAINTED = 15,
-	ALL = 16
+	ALL = 18
 }
 
 --#region Arachna
@@ -50,7 +49,7 @@ ArachnaMod.CompletionMarkToAchievement.ARACHNA = {
 	[CompletionType.DELIRIUM] = Mod.Item.MUTAGEN.ACHIEVEMENT,
 	[CompletionType.MOTHER] = Mod.Item.YARN_HEART.ACHIEVEMENT,
 	[CompletionType.BEAST] = Mod.Item.TESTAMENT.ACHIEVEMENT,
-	[Mod.CompletionType.TAINTED] = Mod.Character.ARACHNA_B.ACHIEVEMENT,
+	[CompletionType.TAINTED] = Mod.Character.ARACHNA_B.ACHIEVEMENT,
 	[Mod.CompletionType.ALL] = Mod.Item.LIL_ARACHNA.ACHIEVEMENT
 }
 ArachnaMod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA] = Mod.CompletionMarkToAchievement.ARACHNA
@@ -68,13 +67,13 @@ ArachnaMod.Item.DADS_NEWSPAPER.ACHIEVEMENT = achievement("Dad's Newspaper")
 ArachnaMod.Item.BEST_BUD_BALL.ACHIEVEMENT = achievement("Best Bud Ball")
 
 ArachnaMod.CompletionMarkToAchievement.ARACHNA_B = {
-	[TaintedMarksGroup.SOULSTONE] = Mod.Card.SOUL_OF_ARACHNA.ACHIEVEMENT,
-	[TaintedMarksGroup.POLAROID_NEGATIVE] = Mod.Trinket.SPINDLE.ACHIEVEMENT,
 	[CompletionType.MEGA_SATAN] = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT,
 	[CompletionType.ULTRA_GREEDIER] = Mod.Card.MERGED_CARD.ACHIEVEMENT,
 	[CompletionType.DELIRIUM] = Mod.Item.DIVINE_CLOTH.ACHIEVEMENT,
 	[CompletionType.MOTHER] = Mod.Item.DADS_NEWSPAPER.ACHIEVEMENT,
-	[CompletionType.BEAST] = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT
+	[CompletionType.BEAST] = Mod.Item.BEST_BUD_BALL.ACHIEVEMENT,
+	[CompletionType.TAINTED_GROUP1] = Mod.Card.SOUL_OF_ARACHNA.ACHIEVEMENT,
+	[CompletionType.TAINTED_GROUP2] = Mod.Trinket.SPINDLE.ACHIEVEMENT,
 }
 ArachnaMod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA_B] = Mod.CompletionMarkToAchievement.ARACHNA_B
 

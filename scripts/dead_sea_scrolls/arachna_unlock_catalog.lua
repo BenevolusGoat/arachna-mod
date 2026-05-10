@@ -16,13 +16,10 @@ ArachnaMod.UnlockStrings = {
 	[CompletionType.DELIRIUM] = "Unlocked by defeating Delirium as %s.",
 	[CompletionType.MOTHER] = "Unlocked by defeating Mother as %s.",
 	[CompletionType.BEAST] = "Unlocked by defeating The Beast as %s.",
-	[Mod.CompletionType.TAINTED] = "Use the Red Key to open the hidden closet in Home as %s.",
+	[CompletionType.TAINTED] = "Use the Red Key to open the hidden closet in Home as %s.",
+	[CompletionType.TAINTED_GROUP1] = "Unlocked by defeating Isaac, ???, Satan, and the Lamb as %s.",
+	[CompletionType.TAINTED_GROUP2] = "Unlocked by defeating Hush and Boss Rush as %s.",
 	[Mod.CompletionType.ALL] = "Unlocked by obtaining every other unlock for %s.",
-}
-
-ArachnaMod.TaintedUnlockStrings = {
-	[TaintedMarksGroup.POLAROID_NEGATIVE] = "Unlocked by defeating Isaac, ???, Satan, and the Lamb as %s.",
-	[TaintedMarksGroup.SOULSTONE] = "Unlocked by defeating Hush and Boss Rush as %s.",
 }
 
 local playerTypeToGroup = {
@@ -39,18 +36,16 @@ return function(DSSUnlockManager)
 		local xmlData = XMLData.GetEntryById(XMLNode.ACHIEVEMENT, achievement)
 		local achievementName = xmlData.name
 		local desc
-		if groupName == "arachna" and completionType == Mod.CompletionType.TAINTED then
+		if groupName == "arachna" and completionType == CompletionType.TAINTED then
 			desc = ArachnaMod.UnlockStrings[completionType]:format(groupName)
 			groupName = "tainted arachna"
-		elseif groupName == "tainted arachna" and (completionType == TaintedMarksGroup.POLAROID_NEGATIVE or completionType == TaintedMarksGroup.SOULSTONE) then
-			desc = ArachnaMod.TaintedUnlockStrings[completionType]:format(groupName)
 		else
 			desc = ArachnaMod.UnlockStrings[completionType]:format(groupName)
 		end
 
 		return {
 			Name = achievementName:lower(),
-			ForCharacter = completionType == Mod.CompletionType.TAINTED,
+			ForCharacter = completionType == CompletionType.TAINTED,
 			Priority = completionType,
 			Unlockable = {
 				Group = groupName,
