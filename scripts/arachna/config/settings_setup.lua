@@ -24,3 +24,11 @@ SettingsHelper.AddBooleanSetting(Mod.Setting.LegacyGameplay,
 SettingsHelper.AddBooleanSetting(Mod.Setting.SpiderFacts, "..?", false)
 
 SettingsHelper.AddChoiceSetting(Mod.Setting.SpiderOpacity, "Opacity of all spider familiars for Arachna and Tainted Arachna", opacityOptions, 10)
+
+SettingsHelper.AddChoiceSetting(Mod.Setting.EggTossIndicator, "Change the indicator for the closest spider egg in range with Egg Toss",
+	{
+		"Nothing",
+		"Border"
+	},
+	1
+)

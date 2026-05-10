@@ -1,4 +1,7 @@
+--#region Variables
+
 local Mod = ArachnaMod
+local SPIDER_EGG = Mod.Entities.SPIDER_EGG
 
 local EGG_TOSS = {}
 
@@ -12,10 +15,40 @@ EGG_TOSS.GRAB_RANGE = 40
 EGG_TOSS.THROWN_EGG_RADIUS = 80 --Range of AOE effects
 EGG_TOSS.MAX_BIRTHRIGHT_WEB_COUNT = 3
 
+---@type {[integer]: boolean}
+local selectedEggs = {}
+
+--#endregion
+
+--#region Helpers
+
 ---@param player EntityPlayer
 function EGG_TOSS:GetEggTearDamage(player)
 	return player.Damage * 2 + (Mod.Level():GetStage() * 0.5)
 end
+
+---@param player EntityPlayer
+---@return Entity
+local function tryGetTarget(player)
+	local data = Mod:GetData(player)
+	---@type EntityPtr
+	local closestEgg = data.ClosestEgg
+	return closestEgg and closestEgg.Ref
+end
+
+---@param player EntityPlayer
+local function tryRemoveTarget(player)
+	local closestEgg = tryGetTarget(player)
+	if closestEgg then
+		local data = Mod:GetData(player)
+		selectedEggs[GetPtrHash(closestEgg)] = nil
+		data.ClosestEgg = nil
+	end
+end
+
+--#endregion
+
+--#region Throwing egg
 
 ---@param pos Vector
 ---@param vel Vector
@@ -34,7 +67,7 @@ function EGG_TOSS:FireEgg(pos, vel, player, spawner)
 	if spawner and spawner:ToNPC() then
 		eggTear.SubType = Mod.Entities.COLORED_SPIDERS:GetRandomSpiderSubtype(true)
 		tearData.EggOnLandPlayer = EntityPtr(player)
-		tearData.EggFlags = Mod.Entities.SPIDER_EGG.EggFlag.SMALL | Mod.Entities.SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE
+		tearData.EggFlags = SPIDER_EGG.EggFlag.SMALL | SPIDER_EGG.EggFlag.NO_INSTANT_EXPLODE
 	elseif spawner and spawner:ToPlayer() then
 		if data.HeldEggColor then
 			tearData.EggFlags = data.HeldEggFlags
@@ -43,10 +76,10 @@ function EGG_TOSS:FireEgg(pos, vel, player, spawner)
 			data.HeldEggColor = nil
 		end
 	end
-	local isSmall = tearData.EggFlags and Mod:HasBitFlags(tearData.EggFlags, Mod.Entities.SPIDER_EGG.EggFlag.SMALL) or false
+	local isSmall = tearData.EggFlags and Mod:HasBitFlags(tearData.EggFlags, SPIDER_EGG.EggFlag.SMALL) or false
 	local animationSize = isSmall and "4" or "5"
 	eggTear:GetSprite():Play("Stone" .. animationSize .. "Move")
-	local color = Mod.Entities.SPIDER_EGG:GetEggColor(eggTear.SubType)
+	local color = SPIDER_EGG:GetEggColor(eggTear.SubType)
 	if color then
 		eggTear.Color = color
 	end
@@ -82,12 +115,12 @@ ThrowableItemLib:RegisterThrowableItem({
 		local spiderColor = data.HeldEggColor
 		local sprite = player:GetHeldSprite()
 		sprite:Load("gfx/002.027_egg tear.anm2", true)
-		local isSmall = Mod:HasBitFlags(data.HeldEggFlags, Mod.Entities.SPIDER_EGG.EggFlag.SMALL)
+		local isSmall = Mod:HasBitFlags(data.HeldEggFlags, SPIDER_EGG.EggFlag.SMALL)
 		local animationSize = isSmall and "4" or "5"
 		sprite:Play("Stone" .. animationSize .. "Idle")
 		sprite.Offset = Vector(0, -10)
 		Mod.sfxman:Play(EGG_TOSS.SFX_LIFT, 1, 2, false, 1 + 0.1 * math.random(-1, 1))
-		local color = Mod.Entities.SPIDER_EGG:GetEggColor(spiderColor)
+		local color = SPIDER_EGG:GetEggColor(spiderColor)
 		if color then
 			sprite.Color = color
 		end
@@ -106,9 +139,18 @@ ThrowableItemLib:RegisterThrowableItem({
 	end
 })
 
+--#endregion
+
+--#region Search for closest egg
+
 ---@param player EntityPlayer
 function EGG_TOSS:MarkNearestEgg(player)
-	if not player:HasCollectible(EGG_TOSS.ID) then return end
+	if not player:HasCollectible(EGG_TOSS.ID)
+		or ThrowableItemLib.Utility:IsItemLifted(player)
+	then
+		tryRemoveTarget(player)
+		return
+	end
 	local closestEgg
 	Mod.Foreach.EffectInRadius(player.Position, EGG_TOSS.GRAB_RANGE, function(egg, index)
 		if not closestEgg
@@ -116,27 +158,74 @@ function EGG_TOSS:MarkNearestEgg(player)
 		then
 			closestEgg = egg
 		end
-	end, Mod.Entities.SPIDER_EGG.ID_SMALL, nil, nil, true)
+	end, SPIDER_EGG.ID_SMALL, nil, nil, true)
 	Mod.Foreach.EffectInRadius(player.Position, EGG_TOSS.GRAB_RANGE, function(egg, index)
 		if not closestEgg
 			or egg.Position:DistanceSquared(player.Position) < closestEgg.Position:DistanceSquared(player.Position)
 		then
 			closestEgg = egg
 		end
-	end, Mod.Entities.SPIDER_EGG.ID, nil, nil, true)
+	end, SPIDER_EGG.ID, nil, nil, true)
+	if not closestEgg then
+		tryRemoveTarget(player)
+		return
+	end
 	local data = Mod:GetData(player)
-	if closestEgg then
-		if not data.ClosestEgg then
-			data.ClosestEgg = EntityPtr(closestEgg)
-		elseif not data.ClosestEgg.Ref or not Mod:IsSameEntity(data.ClosestEgg.Ref, closestEgg) then
-			data.ClosestEgg:SetReference(closestEgg)
+	local lastTargetedEgg = tryGetTarget(player)
+	if not lastTargetedEgg then
+		data.ClosestEgg = EntityPtr(closestEgg)
+		if Mod.GetSetting(Mod.Setting.EggTossIndicator) > 1 then
+			selectedEggs[GetPtrHash(closestEgg)] = true
 		end
-	else
-		data.ClosestEgg = nil
+		lastTargetedEgg = closestEgg
+	end
+	if GetPtrHash(closestEgg) ~= GetPtrHash(lastTargetedEgg) then
+		data.ClosestEgg:SetReference(closestEgg)
+		if Mod.GetSetting(Mod.Setting.EggTossIndicator) > 1 then
+			selectedEggs[GetPtrHash(closestEgg)] = true
+			selectedEggs[GetPtrHash(lastTargetedEgg)] = nil
+		end
 	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, EGG_TOSS.MarkNearestEgg)
+
+--#endregion
+
+--#region Egg highlights
+
+function EGG_TOSS:ResetOnNewRoom()
+	Mod:ClearTable(selectedEggs)
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, EGG_TOSS.ResetOnNewRoom)
+
+---@param egg EntityEffect
+---@param offset Vector
+function EGG_TOSS:EggTargetPreRender(egg, offset)
+	local data = Mod:GetData(egg)
+	if data.EggRender then return end
+	if selectedEggs[GetPtrHash(egg)] then
+		data.EggRender = true
+		local color = egg.Color
+		egg.Color = Color(1, 1, 1, 1, 1, 1, 1)
+		egg:Render(Vector(1, 1))
+		egg:Render(Vector(-1, 1))
+		egg:Render(Vector(1, -1))
+		egg:Render(Vector(-1, -1))
+		data.EggRender = false
+		egg.Color = color
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, CallbackPriority.LATE, EGG_TOSS.EggTargetPreRender,
+	SPIDER_EGG.ID)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, CallbackPriority.LATE, EGG_TOSS.EggTargetPreRender,
+	SPIDER_EGG.ID_SMALL)
+
+--#endregion
+
+--#region Egg effects
 
 ---@param player? EntityPlayer
 local function getNecroDamage(player)
@@ -158,7 +247,7 @@ function EGG_TOSS:EggOnDestroyEffect(spiderColor, ent, player, source, playerSou
 	if spiderColor == SpiderSubType.WAR then
 		if player then
 			local tearParams = player:GetTearHitParams(WeaponType.WEAPON_BOMBS, 1, 1, source.Entity:ToTear())
-			local color = Mod.Entities.SPIDER_EGG:GetEggColor(source.Entity.SubType)
+			local color = SPIDER_EGG:GetEggColor(source.Entity.SubType)
 			Mod.Game:BombExplosionEffects(source.Position, 60, tearParams.TearFlags, color, player, 0.5)
 		else
 			Isaac.Explode(source.Position, source.Entity, damage)
@@ -256,6 +345,10 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, EGG_TOSS.OnEggDamage)
 
+--#endregion
+
+--#region Rainbow egg
+
 ---@param player EntityPlayer
 function EGG_TOSS:RainbowColorHold(player)
 	local data = Mod:GetData(player)
@@ -281,6 +374,10 @@ function EGG_TOSS:RainbowColorTear(tear)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, EGG_TOSS.RainbowColorTear, EGG_TOSS.TEAR)
+
+--#endregion
+
+--#region Birthright web
 
 ---@param player EntityPlayer
 ---@param spiderColor ColoredSpiderSubtype
@@ -311,6 +408,10 @@ function EGG_TOSS:SpawnMiniWeb(player, spiderColor, pos)
 	web:SetSize(web.Size / 2, Vector.One, 8)
 end
 
+--#endregion
+
+--#region On egg death
+
 ---@param tear EntityTear
 function EGG_TOSS:OnEggDeath(tear)
 	local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
@@ -318,10 +419,10 @@ function EGG_TOSS:OnEggDeath(tear)
 	local poof = Mod.Spawn.Effect(EffectVariant.TEAR_POOF_A, 0, tear.Position)
 	local data = Mod:TryGetData(tear)
 	local poofColor = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
-	local color = Mod.Entities.SPIDER_EGG:GetEggColor(tear.SubType)
+	local color = SPIDER_EGG:GetEggColor(tear.SubType)
 	local eggFlags = data and data.EggFlags or 0
 	---@cast eggFlags SpiderEggFlag
-	local SPIDER_EGG = Mod.Entities.SPIDER_EGG
+	local SPIDER_EGG = SPIDER_EGG
 
 	poof.Color = Color(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5)
 	Mod.sfxman:Play(SoundEffect.SOUND_BOIL_HATCH)
@@ -334,7 +435,7 @@ function EGG_TOSS:OnEggDeath(tear)
 		else
 			eggFlags = Mod:AddBitFlags(eggFlags, SPIDER_EGG.EggFlag.THROWN_HIT)
 		end
-		local spiderCount = Mod.Entities.SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
+		local spiderCount = SPIDER_EGG:GetSpiderCount(player, rng, eggFlags)
 
 		if tear.SubType == Mod.Entities.COLORED_SPIDERS.SpiderSubtype.CONQUEST then
 			spiderCount = Mod.math.ceil(spiderCount * 1.5)
@@ -342,7 +443,7 @@ function EGG_TOSS:OnEggDeath(tear)
 		if color then
 			poofColor = color
 		end
-		Mod.Entities.SPIDER_EGG:SpawnSpiderBurst(player, tear.Position, spiderCount, nil, eggFlags, false, tear.SubType)
+		SPIDER_EGG:SpawnSpiderBurst(player, tear.Position, spiderCount, nil, eggFlags, false, tear.SubType)
 		if Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
 			EGG_TOSS:SpawnMiniWeb(player, tear.SubType, tear.Position)
 		end
@@ -356,3 +457,5 @@ function EGG_TOSS:OnEggDeath(tear)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_TEAR_DEATH, EGG_TOSS.OnEggDeath, EGG_TOSS.TEAR)
+
+--#endregion

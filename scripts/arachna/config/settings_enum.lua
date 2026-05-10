@@ -6,5 +6,6 @@ ArachnaMod.Setting = {
 	DoubletapFrameWindow = "Frame Window for Double Tap Actions",
 	LegacyGameplay = "Legacy Character Gameplay",
 	SpiderFacts = "Fun",
-	SpiderOpacity = "Opacity of spider familiars"
+	SpiderOpacity = "Opacity of spider familiars",
+	EggTossIndicator = "Indicate closest egg with Egg Toss"
 }
