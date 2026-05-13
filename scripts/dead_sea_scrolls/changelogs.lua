@@ -56,6 +56,8 @@ DeadSeaScrollsMenu.AddChangelog(
 - Added Spider Opacity setting. 100% by default. Lower setting to make spider familiars as Arachna or Tainted Arachna more transparent
 - Fixed being able to unlock Spindle and Soul of Arachna earlier than intended
 - Fixed players other than the one who activated The Testament able to interact with the items in The Testament dimension
+- Fixed Best Bud Ball + Rag Man's Head spawning Raglings
+- Fixed Best Bud Ball not working properly with segmented enemies, only capturing a singular segment
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
@@ -67,6 +69,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
 - The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
+- Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms. This effectively covers the majority of Repentance bosses as a result
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul

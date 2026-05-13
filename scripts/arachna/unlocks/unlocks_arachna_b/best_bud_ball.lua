@@ -31,11 +31,10 @@ BEST_BUD_BALL.BLACKLISTED_BOSSES = Mod:Set({
 	EntityType.ENTITY_BEAST, --+Ultra Horsemen
 })
 
----@class BestBudBallNPC
+---@class BestBudBallData
 ---@field Type EntityType
 ---@field Variant integer
 ---@field Subtype integer
----@field ChampionColor ChampionColor
 ---@field MaxHitPoints integer
 ---@field HitPoints integer
 
@@ -67,9 +66,9 @@ function BEST_BUD_BALL:FireBall(pos, vel, spawner)
 	local player = spawner and spawner:ToPlayer()
 	if player then
 		local run_save = Mod.SaveManager.GetRunSave(player)
-		if run_save.BestBudBallNPC then
-			Mod:GetData(ball).ReleaseNpcCfg = Mod:CopyTable(run_save.BestBudBallNPC)
-			run_save.BestBudBallNPC = nil
+		if run_save.BestBudBallNPCs then
+			Mod:GetData(ball).ReleaseNpcCfgs = Mod:CopyTable(run_save.BestBudBallNPCs)
+			run_save.BestBudBallNPCs = nil
 		end
 	end
 end
@@ -79,6 +78,40 @@ function BEST_BUD_BALL:CanCaptureEnemy(ent)
 	return ent:IsBoss()
 		and not ent:ToDelirium()
 		and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
+		and not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM)
+end
+
+---Returns the entire enemy in order
+---@param npc EntityNPC
+function BEST_BUD_BALL:GetEntireMonster(npc)
+	local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
+	if not parent.Child then
+		return {EntityPtr(npc)}
+	end
+	local monsters = {}
+	local currentEnt = parent.Child
+	local children = {}
+	local entHash = GetPtrHash(parent)
+	while currentEnt.Child
+		and currentEnt.Child:ToNPC()
+		and StatusEffectLibrary.Utils.IsInParentChildChain(currentEnt.Child)
+		and not children[entHash]
+	do
+		Mod:GetData(currentEnt).BestBudBallCaptured = true
+		Mod.Insert(monsters, EntityPtr(currentEnt))
+		currentEnt = currentEnt.Child
+		entHash = GetPtrHash(currentEnt)
+	end
+
+	if currentEnt.Parent
+		and currentEnt.Parent:ToNPC()
+		and StatusEffectLibrary.Utils.IsInParentChildChain(currentEnt)
+		and not children[entHash]
+	then
+		Mod.Insert(monsters, EntityPtr(currentEnt))
+		Mod:GetData(currentEnt).BestBudBallCaptured = true
+	end
+	return monsters
 end
 
 ---@param npc EntityNPC
@@ -92,65 +125,104 @@ function BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 	local roll = player:GetCollectibleRNG(BEST_BUD_BALL.ID):RandomFloat()
 	local chance = 0.01 + maxHpChance + hpChance + luck
 
-	Mod:GetData(npc).BestBudBallCaptured = true
-	data.QueueCapture = EntityPtr(npc)
+	data.QueueCapture = BEST_BUD_BALL:GetEntireMonster(npc)
+	Mod:DebugLog(npc.Type .. "." .. npc.Variant .. "." .. npc.SubType, "queued for capture.", #data.QueueCapture, "segments contained")
 
-	if roll < chance then
+	if roll < chance or Mod:HasBitFlags(Mod.Game:GetDebugFlags(), DebugFlag.INFINITE_ITEM_CHARGES) then
 		data.CaptureSuccess = true
 	end
 end
 
----@param npc EntityNPC
+---@param npcs EntityNPC[]
 ---@param player EntityPlayer
 ---@param initialCapture? boolean
-function BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player, initialCapture)
-	npc:Remove()
+function BEST_BUD_BALL:CaptureAndSaveEnemies(npcs, player, initialCapture)
 	local run_save = Mod.SaveManager.GetRunSave(player)
-	run_save.BestBudBallNPC = {
-		Type = npc.Type,
-		Variant = npc.Variant,
-		Subtype = npc.SubType,
-		ChampionColor = npc:GetChampionColorIdx(),
-		MaxHitPoints = npc.MaxHitPoints,
-		HitPoints = initialCapture and npc.MaxHitPoints or npc.HitPoints
-	}
+	run_save.BestBudBallNPCs = {}
+	for _, npc in ipairs(npcs) do
+		Mod.Insert(run_save.BestBudBallNPCs, {
+			Type = npc.Type,
+			Variant = npc.Variant,
+			Subtype = npc.SubType,
+			MaxHitPoints = npc.MaxHitPoints,
+			HitPoints = initialCapture and npc.MaxHitPoints or npc.HitPoints
+		})
+		npc:Remove()
+	end
 end
 
----@param npc EntityNPC
+---@param npcs EntityNPC[]
 ---@param ball EntityEffect
-function BEST_BUD_BALL:FailReleaseEnemy(npc, ball)
-	npc.Position = ball.Position
-	npc.Visible = true
-	npc:ClearEntityFlags(EntityFlag.FLAG_FREEZE | EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS)
-	npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
-	npc:SetColor(Color(1, 1, 1, 1, 1, 1, 1), 15, 10, true, false)
+function BEST_BUD_BALL:FailReleaseEnemies(npcs, ball)
+	Mod:DebugLog("Capture failed. Releasing", #npcs, "segments")
+	for _, npc in ipairs(npcs) do
+		npc.Position = ball.Position
+		npc.Visible = true
+		npc:ClearEntityFlags(EntityFlag.FLAG_FREEZE | EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS)
+		npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
+		npc:SetColor(Color(1, 1, 1, 1, 1, 1, 1), 15, 10, true, false)
+		Mod:GetData(npc).BestBudBallCaptured = nil
+	end
 	Mod.Game:SpawnParticles(ball.Position, EffectVariant.TOOTH_PARTICLE, 6, 4)
 	Mod.sfxman:Play(SoundEffect.SOUND_CHAIN_BREAK)
 	ball:Remove()
 end
 
----@param cfg BestBudBallNPC
+---@param npc EntityNPC
+function BEST_BUD_BALL:IsCapturedBoss(npc)
+	local data = Mod:TryGetData(npc)
+	return data and data.BestBudBall
+end
+
+---@param cfgs BestBudBallData[]
 ---@param pos Vector
----@param player EntityPlayer
-function BEST_BUD_BALL:SpawnFriendlyBoss(cfg, pos, player)
+---@param spawner Entity
+---@return EntityNPC[]
+function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 	Mod.Foreach.NPC(function(npc, index)
-		local data = Mod:TryGetData(npc)
-		if data
-			and data.BestBudBall
+		if BEST_BUD_BALL:IsCapturedBoss(npc)
 			and npc.SpawnerEntity
-			and Mod:IsSameEntity(npc.SpawnerEntity, player)
+			and Mod:IsSameEntity(npc.SpawnerEntity, spawner)
 		then
 			npc:Remove()
 			Mod.Spawn.Poof01(3, npc.Position)
 		end
 	end, nil, nil, nil, { Inverse = true })
-	local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, player, cfg.Subtype, Mod:Random())
-	npc.MaxHitPoints = cfg.MaxHitPoints
-	npc.HitPoints = cfg.HitPoints
-	npc:AddCharmed(EntityRef(player), -1)
-	---@diagnostic disable-next-line: param-type-mismatch
-	npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP)
-	Mod:GetData(npc).BestBudBall = true
+	Mod:DebugLog("Attempting release of", #cfgs, "boss segment(s)")
+	local bosses = {}
+	for i, cfg in ipairs(cfgs) do
+		local npc = Mod.Game:Spawn(cfg.Type, cfg.Variant, pos, Vector.Zero, spawner, cfg.Subtype, Mod:Random()):ToNPC()
+		---@cast npc EntityNPC
+		Mod:DebugLog("Spawned", npc.Type .. "." .. npc.Variant .. "." .. npc.SubType .. ".")
+		npc.MaxHitPoints = cfg.MaxHitPoints
+		npc.HitPoints = cfg.HitPoints
+		npc.SpawnerType = cfg.Type --So that Champions/certain bosses with multiple of the boss don't spawn (Sister Vis, Red Champion Monstro, etc)
+		npc:AddCharmed(EntityRef(spawner), -1)
+		---@diagnostic disable-next-line: param-type-mismatch
+		npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP | EntityFlag.FLAG_NO_DEATH_TRIGGER)
+		Mod:GetData(npc).BestBudBall = true
+		Mod.Insert(bosses, npc)
+		if #cfgs > 1 and i == 1 then
+			local bossCount = #Isaac.FindByType(cfg.Type, cfg.Variant, cfg.Subtype)
+			npc:Update()
+			local spawnedBosses = Isaac.FindByType(cfg.Type, cfg.Variant, cfg.Subtype)
+			--Bosses like Pin will automatically spawn the rest of their segments. Don't bother spawning the rest, as it causes complications otherwise.
+			if bossCount < #spawnedBosses then
+				Mod:DebugLog("Count difference of", bossCount, "and", #spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
+				for _, boss in ipairs(spawnedBosses) do
+					if boss.FrameCount == 0 and boss:HasCommonParentWithEntity(npc) and not Mod:IsSameEntity(npc, boss) then
+						boss:ClearEntityFlags(EntityFlag.FLAG_CHARM, EntityFlag.FLAG_FRIENDLY)
+						boss:AddCharmed(EntityRef(spawner), -1)
+						boss:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP)
+						Mod:GetData(boss).BestBudBall = true
+						Mod.Insert(bosses, boss:ToNPC())
+					end
+				end
+				return bosses
+			end
+		end
+	end
+	return bosses
 end
 
 --#endregion
@@ -220,33 +292,45 @@ end
 function BEST_BUD_BALL:OnBallUpdate(ball)
 	local data = Mod:GetData(ball)
 	local player = ball.SpawnerEntity and ball.SpawnerEntity:ToPlayer()
-	local npc = data.QueueCapture and data.QueueCapture.Ref and data.QueueCapture.Ref:ToNPC()
 
 	BEST_BUD_BALL:UpdatePosition(ball)
 
-	if npc then
-		npc:AddEntityFlags(EntityFlag.FLAG_FREEZE | EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS)
-		npc.Visible = false
-		npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+	if data.QueueCapture and #data.QueueCapture > 0 then
+		local bosses = data.QueueCapture
+		for i = #bosses, 1, -1 do
+			local npc = bosses[i].Ref
+			if not npc or not npc:Exists() then
+				table.remove(bosses, i)
+			elseif npc and npc:Exists() then
+				npc.Position = ball.Position
+				npc:AddEntityFlags(EntityFlag.FLAG_FREEZE | EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS)
+				npc.Visible = false
+				npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+			end
+		end
 		if ball.Timeout == 0 then
-			Mod:GetData(npc).BestBudBallCaptured = nil
+			local npcs = {}
+			for _, ptr in ipairs(bosses) do
+				Mod.Insert(npcs, ptr.Ref:ToNPC())
+			end
 			if data.CaptureSuccess and player then
-				BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player, true)
+				Mod:DebugLog("Capture success. Storing", #npcs, "segments")
+				BEST_BUD_BALL:CaptureAndSaveEnemies(npcs, player, true)
 				player:AnimateHappy()
 				ball.Timeout = -1
 			else
 				if player then
 					player:AnimateSad()
 				end
-				BEST_BUD_BALL:FailReleaseEnemy(npc, ball)
+				BEST_BUD_BALL:FailReleaseEnemies(npcs, ball)
 			end
 		end
 	end
 
 	if ball.Timeout == 0 then
-		local cfg = Mod:GetData(ball).ReleaseNpcCfg
+		local cfg = Mod:GetData(ball).ReleaseNpcCfgs
 		if cfg and player then
-			BEST_BUD_BALL:SpawnFriendlyBoss(cfg, ball.Position, player)
+			BEST_BUD_BALL:SpawnFriendlyBosses(cfg, ball.Position, player)
 		end
 		Mod.Spawn.Poof01(1, ball.Position, ball)
 		ball:Remove()
@@ -268,6 +352,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, BEST_BUD_BALL.OnBallUpdate, 
 
 --#region Captured enemies immune to damage and collision
 
+---@param source EntityRef
 function BEST_BUD_BALL:StopCaptureDamage(ent, amount, flags, source)
 	local npc = ent:ToNPC()
 	local data = npc and Mod:TryGetData(npc)
@@ -284,9 +369,14 @@ Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, BEST_BUD_BALL.StopCaptureDamage
 
 function BEST_BUD_BALL:FixPosOnNewRoom()
 	Mod.Foreach.NPC(function(npc, index)
-		local data = Mod:TryGetData(npc)
-		if data and data.BestBudBall then
-			npc.Position = Isaac.GetPlayer().Position
+		if BEST_BUD_BALL:IsCapturedBoss(npc) then
+			local room = Mod.Room()
+			if npc.Mass >= 100 then
+				npc.Position = room:GetCenterPos()
+			else
+				npc.Position = Isaac.GetPlayer().Position
+			end
+			npc.Position = room:GetClampedPosition(npc.Position, npc.Size)
 		end
 	end)
 end
@@ -297,28 +387,35 @@ Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, BEST_BUD_BALL.FixPosOnNewRoom)
 
 --#region Save and restore bosses as charmed ones aren't normally persistent
 
-function BEST_BUD_BALL:SaveBossOnGamExit()
+function BEST_BUD_BALL:SaveBossOnGameExit(shouldSave)
+	if not shouldSave then return end
+	local playerToNpcs = {}
 	Mod.Foreach.NPC(function(npc, index)
-		local data = Mod:TryGetData(npc)
-		if data and data.BestBudBall then
+		if BEST_BUD_BALL:IsCapturedBoss(npc) then
 			local player = npc.SpawnerEntity and npc.SpawnerEntity:ToPlayer()
 			if player then
-				BEST_BUD_BALL:CaptureAndSaveEnemy(npc, player)
+				local playerIndex = player:GetPlayerIndex()
+				playerToNpcs[playerIndex] = playerToNpcs[playerIndex] or {}
+				Mod.Insert(playerToNpcs[playerIndex], npc)
 			end
 		end
 	end, nil, nil, nil, { Inverse = true })
+	for pIndex, npcs in pairs(playerToNpcs) do
+		Mod:DebugLog("Storing", #npcs, "segments", "for player", pIndex, "on game exit")
+		BEST_BUD_BALL:CaptureAndSaveEnemies(npcs, Isaac.GetPlayer(pIndex))
+	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, BEST_BUD_BALL.SaveBossOnGamExit)
+Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, BEST_BUD_BALL.SaveBossOnGameExit)
 
 ---@param isContinued boolean
 function BEST_BUD_BALL:RestoreBossOnGameContinue(isContinued)
 	if not isContinued then return end
 	Mod.Foreach.Player(function(player, index)
 		local run_save = Mod.SaveManager.GetRunSave(player)
-		if run_save.BestBudBallNPC then
-			BEST_BUD_BALL:SpawnFriendlyBoss(run_save.BestBudBallNPC, player.Position, player)
-			run_save.BestBudBallNPC = nil
+		if run_save.BestBudBallNPCs then
+			BEST_BUD_BALL:SpawnFriendlyBosses(run_save.BestBudBallNPCs, player.Position, player)
+			run_save.BestBudBallNPCs = nil
 		end
 	end)
 end
@@ -332,10 +429,27 @@ Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, BEST_BUD_BALL.RestoreBossOnGa
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
 function BEST_BUD_BALL:AdjustCropOffset(player, slot, offset, alpha, scale, chargebarOffset)
-	local crop = Mod.SaveManager.GetRunSave(player).BestBudBallNPC ~= nil and 32 or 0
+	local crop = Mod.SaveManager.GetRunSave(player).BestBudBallNPCs ~= nil and 32 or 0
 	return { CropOffset = Vector(crop, 0) }
 end
 
 Mod:AddCallback(ModCallbacks.MC_PRE_PLAYERHUD_RENDER_ACTIVE_ITEM, BEST_BUD_BALL.AdjustCropOffset, BEST_BUD_BALL.ID)
+
+--#endregion
+
+--#region Rag Man patch (lol)
+
+---@param npc EntityNPC
+function BEST_BUD_BALL:StopRaglingSpawn(npc)
+	if BEST_BUD_BALL:IsCapturedBoss(npc)
+		and npc.State == NpcState.STATE_IDLE
+		and npc.StateFrame == npc.I1
+	then
+		npc:Kill()
+		return true
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_NPC_UPDATE, BEST_BUD_BALL.StopRaglingSpawn, EntityType.ENTITY_RAG_MAN)
 
 --#endregion
