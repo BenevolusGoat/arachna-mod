@@ -466,3 +466,24 @@ end
 Mod:AddCallback(ModCallbacks.MC_PRE_NPC_UPDATE, BEST_BUD_BALL.StopRaglingSpawn, EntityType.ENTITY_RAG_MAN)
 
 --#endregion
+
+--#region Prevent health drain
+
+--Counteracts the health drain as part of "persistent" bosses because of Delirious' rework in Repentance+
+function BEST_BUD_BALL:StopHealthDrain()
+	local frameCount = Mod.Game:GetFrameCount()
+	Mod.Foreach.NPC(function (npc, index)
+		if frameCount % 15 == 0
+			and npc:IsBoss()
+			and BEST_BUD_BALL:IsCapturedBoss(npc)
+			and npc.HitPoints > 0
+			and npc:HasEntityFlags(EntityFlag.FLAG_PERSISTENT)
+		then
+			npc.HitPoints = npc.HitPoints + 0.25
+		end
+	end)
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, BEST_BUD_BALL.StopHealthDrain)
+
+--#endregion

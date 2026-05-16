@@ -70,7 +70,8 @@ DeadSeaScrollsMenu.AddChangelog(
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
 - The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
-- Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms. This effectively covers the majority of Repentance bosses as a result
+- Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms
+- Friendly bosses captured with Best Bud Ball no longer have their health drain over time
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul
