@@ -74,11 +74,12 @@ function BEST_BUD_BALL:FireBall(pos, vel, spawner)
 end
 
 ---@param ent Entity
-function BEST_BUD_BALL:CanCaptureEnemy(ent)
+function BEST_BUD_BALL:CanCaptureMonster(ent)
 	return ent:IsBoss()
 		and not ent:ToDelirium()
 		and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
 		and not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM)
+		and not ent:IsInvincible()
 end
 
 ---Returns the entire enemy in order
@@ -244,7 +245,10 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 		Mod.sfxman:Play(BEST_BUD_BALL.SFX.LAND, 1, 2, false, 0.8)
 		data.BallStationary = true
 		ball:SetTimeout(30)
-	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER and ball.SpawnerEntity and data.CaptureSuccess then
+	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER
+			and ball.SpawnerEntity
+			and (data.CaptureSuccess or data.BlockedCapture)
+		then
 		local spawner = ball.SpawnerEntity
 		Mod.Foreach.PlayerInRadius(ball.Position, ball.Size, function(player, index)
 			if spawner and Mod:IsSameEntity(spawner, player) then
@@ -277,13 +281,22 @@ end
 ---@param player EntityPlayer
 function BEST_BUD_BALL:SearchForEnemies(ball, player)
 	local data = Mod:GetData(ball)
-	if data.QueueCapture then
+	if data.QueueCapture or data.BlockedCapture then
 		return
 	end
 	Mod.Foreach.NPCInRadius(ball.Position, ball.Size, function(npc, index)
-		if BEST_BUD_BALL:CanCaptureEnemy(npc) then
+		if BEST_BUD_BALL:CanCaptureMonster(npc) then
 			BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 			return true
+		else
+			data.BlockedCapture = true
+			local c = npc.Color
+			npc:SetColor(Color(c.R, c.G, c.B, c.A, 0.8), 15, 10, true, false)
+			Mod.sfxman:Play(SoundEffect.SOUND_THUMBS_DOWN)
+			local pos = ball.Position + (npc.Position - ball.Position):Resized(ball.Size)
+			local impact = Mod.Spawn.Effect(EffectVariant.IMPACT, 0, pos)
+			impact.PositionOffset = ball.PositionOffset
+			ball.Velocity = ball.Velocity:Rotated(180 + Mod:RandomNum(-45, 45))
 		end
 	end, nil, nil, { UseEnemySearchParams = true })
 end
@@ -295,7 +308,7 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 
 	BEST_BUD_BALL:UpdatePosition(ball)
 
-	if data.QueueCapture and #data.QueueCapture > 0 then
+	if data.QueueCapture and #data.QueueCapture > 0 and not data.BlockedCapture then
 		local bosses = data.QueueCapture
 		for i = #bosses, 1, -1 do
 			local npc = bosses[i].Ref
@@ -327,7 +340,7 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 		end
 	end
 
-	if ball.Timeout == 0 then
+	if ball.Timeout == 0 and not data.BlockedCapture then
 		local cfg = Mod:GetData(ball).ReleaseNpcCfgs
 		if cfg and player then
 			BEST_BUD_BALL:SpawnFriendlyBosses(cfg, ball.Position, player)

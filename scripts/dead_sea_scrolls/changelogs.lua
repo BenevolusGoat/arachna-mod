@@ -47,7 +47,7 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
-#2.0.4 (XX/XX/2026)
+#2.1.0 (XX/XX/2026)
 ## GENERAL ADJUSTMENTS/BUG FIXES
 - Fixed web hearts reverting to soul hearts when exiting and continuing if you had no other mods with CHAPI that handled save data
 - Fixed an issue where the "Death Card" sound effect from the brief static transition in The Testament dimension would play for a brief moment before stopping
@@ -58,6 +58,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed players other than the one who activated The Testament able to interact with the items in The Testament dimension
 - Fixed Best Bud Ball + Rag Man's Head spawning Raglings
 - Fixed Best Bud Ball not working properly with segmented enemies, only capturing a singular segment
+- Added feedback to monsters that cannot be captured with Best Bud Ball
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
