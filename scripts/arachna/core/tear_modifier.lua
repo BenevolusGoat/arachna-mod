@@ -3,7 +3,7 @@ local modInitial = "ARC_"
 local game = Mod.Game
 
 local function getData(ent)
-	return ent:GetData()
+	return Mod:GetData(ent)
 end
 
 ---@class TearModifier
