@@ -138,10 +138,6 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 	local duration = DIVINE_CLOTH.BITE_DURATION
 	local player = web.SpawnerEntity and web.SpawnerEntity:ToPlayer()
 
-	if web:GetSprite():IsFinished("Poof") then
-		web:Remove()
-	end
-
 	if not player then return end
 
 	if Mod:IsLegacyGameplayEnabled() and Mod.Character.ARACHNA_B:ArachnaBHasBirthright(player) then
@@ -162,7 +158,25 @@ function DIVINE_CLOTH:BiteEnemiesInEffectRadius(web)
 			end
 		end
 		DIVINE_CLOTH:ApplyBitten(npc, source, duration)
-	end, nil, nil, { UseEnemySearchParams = true })
+	end, nil, nil, { UseEnemySearchParams = true, ShouldCache = true })
+	Mod.Foreach.NPCInRadius(web.Position, web.Size, function (npc, index)
+		local ptrHash = GetPtrHash(npc)
+		if not data.HitList[ptrHash] and (npc.Type == EntityType.ENTITY_FIREPLACE or npc.Type == EntityType.ENTITY_MOVABLE_TNT) then
+			npc:TakeDamage(5, 0, source, 0)
+			data.HitList[ptrHash] = true
+		end
+	end)
+	data.HitListGrid = data.HitListGrid or {}
+	Mod.Foreach.GridInRadius(web.Position, web.Size, function (gridEnt, gridIndex)
+		if not data.HitListGrid[gridIndex] then
+			gridEnt:Hurt(1)
+			data.HitListGrid[gridIndex] = true
+		end
+	end, GridEntityType.GRID_POOP)
+
+	if web:GetSprite():IsFinished("Poof") then
+		web:Remove()
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, DIVINE_CLOTH.BiteEnemiesInEffectRadius, DIVINE_CLOTH.DIVINE_WEB_VAR)
