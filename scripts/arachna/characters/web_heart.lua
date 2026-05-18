@@ -242,6 +242,7 @@ function WEB_HEART:ForceReplaceHearts(pickup, variant, subtype, requestedVariant
 	if variant == PickupVariant.PICKUP_HEART
 		and WEB_HEART.HeartsToReplace[subtype]
 		and Mod:EveryoneIsArachna()
+		and requestedSubtype == 0
 	then
 		local rng = pickup:GetDropRNG()
 		Mod:DebugLog("Force-replaced heart subtype", subtype, "with Web Heart")

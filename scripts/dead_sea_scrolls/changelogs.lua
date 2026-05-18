@@ -77,6 +77,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
 - Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms
 - Divine Cloth (also Tainted Arachna's double-tap) now damages poops, fireplaces, and Moveable TNT
+- Non-random eternal, bone, and rotten heart spawns, such as from items or consumables, are no longer replaced with web hearts while playing as Arachna
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul
