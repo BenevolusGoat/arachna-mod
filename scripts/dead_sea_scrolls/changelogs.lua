@@ -64,6 +64,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Gurdy and similar bosses being forced to their initial spawn position in every room. They now spawn on Isaac's position upon room enter as expected
 - Fixed Divine Cloth applying damage/status effect to already hit enemies a second time at the very end of its animation
 - Fixed Gummy Spiders, Old Shoebox, Candy Floss, and Spider Donut triggering its on-pickup effects when recollected through methods such as inventory rerolls or Tainted Isaac
+- Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
