@@ -29,6 +29,7 @@ BEST_BUD_BALL.BLACKLISTED_BOSSES = Mod:Set({
 	EntityType.ENTITY_MOTHER,
 	EntityType.ENTITY_DOGMA,
 	EntityType.ENTITY_BEAST, --+Ultra Horsemen
+	EntityType.ENTITY_MASK_OF_INFAMY --Temporary until I feel like making a patch
 })
 
 ---@class BestBudBallData
@@ -74,18 +75,29 @@ function BEST_BUD_BALL:FireBall(pos, vel, spawner)
 end
 
 ---@param ent Entity
-function BEST_BUD_BALL:CanCaptureMonster(ent)
-	return ent:IsBoss()
+---@param allowFriendly? boolean
+function BEST_BUD_BALL:CanCaptureMonster(ent, allowFriendly)
+	local defaultCheck = ent:IsBoss()
 		and not ent:ToDelirium()
 		and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
 		and not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM)
 		and not ent:IsInvincible()
+		and ent:IsActiveEnemy(false)
+		and (allowFriendly or not ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY))
+	if defaultCheck then
+		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CAN_CAPTURE_BOSS, ent.Type, ent)
+		if result == false then
+			return result
+		end
+	end
+	return defaultCheck
 end
 
 ---Returns the entire enemy in order
 ---@param npc EntityNPC
 function BEST_BUD_BALL:GetEntireMonster(npc)
 	local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
+	Mod:GetData(parent).BestBudBallCaptured = true
 	if not parent.Child then
 		return {EntityPtr(parent)}
 	end
@@ -97,6 +109,7 @@ function BEST_BUD_BALL:GetEntireMonster(npc)
 		and currentEnt.Child:ToNPC()
 		and StatusEffectLibrary.Utils.IsInParentChildChain(currentEnt.Child)
 		and not children[entHash]
+		and BEST_BUD_BALL:CanCaptureMonster(currentEnt.Child)
 	do
 		Mod:GetData(currentEnt).BestBudBallCaptured = true
 		Mod.Insert(monsters, EntityPtr(currentEnt))
@@ -108,10 +121,12 @@ function BEST_BUD_BALL:GetEntireMonster(npc)
 		and currentEnt.Parent:ToNPC()
 		and StatusEffectLibrary.Utils.IsInParentChildChain(currentEnt)
 		and not children[entHash]
+		and BEST_BUD_BALL:CanCaptureMonster(currentEnt)
 	then
 		Mod.Insert(monsters, EntityPtr(currentEnt))
 		Mod:GetData(currentEnt).BestBudBallCaptured = true
 	end
+
 	return monsters
 end
 
@@ -208,15 +223,18 @@ function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 		BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
 		Mod.Insert(bosses, npc)
 		if #cfgs > 1 and i == 1 then
-			local bossCount = #Isaac.FindByType(cfg.Type, cfg.Variant, cfg.Subtype)
+			local bossCount = Isaac.CountEntities(npc)
 			npc:Update()
-			local spawnedBosses = Isaac.FindByType(cfg.Type, cfg.Variant, cfg.Subtype)
+			local spawnedBosses = Isaac.CountEntities(npc)
 			--Bosses like Pin will automatically spawn the rest of their segments. Don't bother spawning the rest, as it causes complications otherwise.
-			if bossCount < #spawnedBosses then
-				Mod:DebugLog("Count difference of", bossCount, "and", #spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
-				for _, boss in ipairs(spawnedBosses) do
-					if boss.FrameCount == 0 and boss:HasCommonParentWithEntity(npc) and not Mod:IsSameEntity(npc, boss) then
-						boss:ClearEntityFlags(EntityFlag.FLAG_CHARM | EntityFlag.FLAG_FRIENDLY)
+			if bossCount < spawnedBosses then
+				Mod:DebugLog("Count difference of", bossCount, "and", spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
+				for _, boss in ipairs(Isaac.GetRoomEntities()) do
+					if boss.FrameCount == 0
+						and boss:HasCommonParentWithEntity(npc)
+						and not Mod:IsSameEntity(npc, boss)
+						and boss:IsBoss()
+					then
 						BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
 						Mod.Insert(bosses, boss:ToNPC())
 					end
@@ -290,7 +308,7 @@ function BEST_BUD_BALL:SearchForEnemies(ball, player)
 		if BEST_BUD_BALL:CanCaptureMonster(npc) then
 			BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 			return true
-		else
+		elseif not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) and npc:IsActiveEnemy(false) then
 			data.BlockedCapture = true
 			local c = npc.Color
 			npc:SetColor(Color(c.R, c.G, c.B, c.A, 0.8), 15, 10, true, false)
@@ -300,7 +318,7 @@ function BEST_BUD_BALL:SearchForEnemies(ball, player)
 			impact.PositionOffset = ball.PositionOffset
 			ball.Velocity = ball.Velocity:Rotated(180 + Mod:RandomNum(-45, 45))
 		end
-	end, nil, nil, { UseEnemySearchParams = true })
+	end)
 end
 
 ---@param ball EntityEffect
@@ -406,7 +424,7 @@ function BEST_BUD_BALL:SaveBossOnGameExit(shouldSave)
 	if not shouldSave then return end
 	local playerToNpcs = {}
 	Mod.Foreach.NPC(function(npc, index)
-		if BEST_BUD_BALL:IsCapturedBoss(npc) then
+		if BEST_BUD_BALL:IsCapturedBoss(npc) and BEST_BUD_BALL:CanCaptureMonster(npc, true) then
 			local player = npc.SpawnerEntity and npc.SpawnerEntity:ToPlayer()
 			if player then
 				local playerIndex = player:GetPlayerIndex()
@@ -415,7 +433,20 @@ function BEST_BUD_BALL:SaveBossOnGameExit(shouldSave)
 			end
 		end
 	end, nil, nil, nil, { Inverse = true })
+	--Gemini Cord, Blighted Ovum Baby, etc
+	Mod.Foreach.NPC(function (npc, index)
+		if npc.Parent
+			and BEST_BUD_BALL:IsCapturedBoss(npc.Parent)
+			and not BEST_BUD_BALL:CanCaptureMonster(npc, true)
+		then
+			npc:ClearEntityFlags(EntityFlag.FLAG_FRIENDLY | EntityFlag.FLAG_CHARM)
+			npc:Remove()
+		end
+	end, nil, nil, nil, {Inverse = true})
 	for pIndex, npcs in pairs(playerToNpcs) do
+		table.sort(npcs, function (a, b)
+			return a.Variant < b.Variant
+		end)
 		Mod:DebugLog("Storing", #npcs, "segments", "for player", pIndex, "on game exit")
 		BEST_BUD_BALL:CaptureAndSaveEnemies(npcs, Isaac.GetPlayer(pIndex))
 	end
@@ -504,6 +535,47 @@ function BEST_BUD_BALL:PinIsStupid(ent, amount, flags, source, countdown)
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, CallbackPriority.IMPORTANT, BEST_BUD_BALL.PinIsStupid, EntityType.ENTITY_PIN)
+
+--#endregion
+
+--#region Gemini patch
+
+---@param npc EntityNPC
+function BEST_BUD_BALL:GeminiChain(npc)
+	if npc.Variant ~= 20 then return end
+	if npc.Parent then
+		local data = Mod:TryGetData(npc.Parent)
+		if data and (data.BestBudBallCaptured or data.BestBudBall) then
+			local chainData = Mod:GetData(npc)
+			if not chainData.GeminiChain then
+				chainData.GeminiChain = true
+			end
+			if data.BestBudBallCaptured then
+				return false
+			end
+		end
+	else
+		local chainData = Mod:TryGetData(npc)
+		if chainData and chainData.GeminiChain then
+			npc:Remove()
+			return false
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_NPC_RENDER, BEST_BUD_BALL.GeminiChain, EntityType.ENTITY_GEMINI)
+
+--#endregion
+
+--#region Big Horn patch
+
+function BEST_BUD_BALL:StopBigHornHandCapture(ent)
+	if ent.Variant ~= 0 then
+		return false
+	end
+end
+
+Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.StopBigHornHandCapture, EntityType.ENTITY_BIG_HORN)
 
 --#endregion
 

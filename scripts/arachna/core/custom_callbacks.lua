@@ -14,7 +14,10 @@ ArachnaMod.ModCallbacks = {
 	POST_ENEMY_TAKE_DMG_FROM_SPIDER = "ARACHNA_POST_ENEMY_TAKE_DMG_FROM_SPIDER",
 
 	--(EntityFamiliar Spider): Optional Arg: ColoredSpiderSubtype - Called on MC_FAMILIAR_UPDATE for colored spiders.
-	COLORED_SPIDER_UPDATE = "ARACHNA_COLORED_SPIDER_UPDATE"
+	COLORED_SPIDER_UPDATE = "ARACHNA_COLORED_SPIDER_UPDATE",
+
+	--(Entity Boss): Optional Arg: EntityType - Called when Best Bud Ball attempts to capture a boss that otherwise meets all requirements. Return false to prevent capture
+	CAN_CAPTURE_BOSS = "ARACHNA_CAN_CAPTURE_BOSS"
 }
 
 local function postBombExplode(_, bomb)
