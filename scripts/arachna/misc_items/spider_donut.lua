@@ -10,6 +10,7 @@ SPIDER_DONUT.ID = Isaac.GetItemIdByName("Spider Donut")
 ---@param itemId CollectibleType
 ---@param firstTime boolean
 function SPIDER_DONUT:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
+	if not firstTime then return end
 	local COLORED_SPIDERS = Mod.Entities.COLORED_SPIDERS
 	local rng = player:GetCollectibleRNG(itemId)
 	Mod.Pickup.WEB_HEART:AddWebHearts(player, 1)

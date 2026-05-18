@@ -69,6 +69,7 @@ Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, CANDY_FLOSS.ApplyTearH
 ---@param itemId CollectibleType
 ---@param firstTime boolean
 function CANDY_FLOSS:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
+	if not firstTime then return end
 	local webHeartCount = 0
 	local redHearts = player:GetHearts() - Mod.math.floor(player:GetRottenHearts() / 2)
 	local healthType = player:GetHealthType()

@@ -10,6 +10,7 @@ GUMMY_SPIDERS.ID = Isaac.GetItemIdByName("Gummy Spiders")
 ---@param itemId CollectibleType
 ---@param firstTime boolean
 function GUMMY_SPIDERS:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, player)
+	if not firstTime then return end
 	local rng = player:GetCollectibleRNG(itemId)
 	Mod.Pickup.WEB_HEART:AddWebHearts(player, 2)
 	for _ = 1, Mod:RandomNum(4, 8, rng) do
