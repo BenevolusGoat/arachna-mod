@@ -59,6 +59,9 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Best Bud Ball + Rag Man's Head spawning Raglings
 - Fixed Best Bud Ball not working properly with segmented enemies, only capturing a singular segment
 - Added feedback to monsters that cannot be captured with Best Bud Ball
+- Fixed being able to capture bosses with a thrown Best Bud Ball that had a boss contained in it, overwriting the previously captured boss
+- Fixed bosses spawned by other bosses (Fistula, Dangle from Brownie, Chub from The Matriarch, etc) not being marked as Best Bud Ball captures
+- Fixed Gurdy and similar bosses being forced to their initial spawn position in every room. They now spawn on Isaac's position upon room enter as expected
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
@@ -71,7 +74,6 @@ DeadSeaScrollsMenu.AddChangelog(
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
 - The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
 - Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms
-- Friendly bosses captured with Best Bud Ball no longer have their health drain over time
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul

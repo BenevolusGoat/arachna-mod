@@ -87,12 +87,12 @@ end
 function BEST_BUD_BALL:GetEntireMonster(npc)
 	local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
 	if not parent.Child then
-		return {EntityPtr(npc)}
+		return {EntityPtr(parent)}
 	end
-	local monsters = {}
+	local monsters = {EntityPtr(parent)}
 	local currentEnt = parent.Child
 	local children = {}
-	local entHash = GetPtrHash(parent)
+	local entHash = GetPtrHash(currentEnt)
 	while currentEnt.Child
 		and currentEnt.Child:ToNPC()
 		and StatusEffectLibrary.Utils.IsInParentChildChain(currentEnt.Child)
@@ -169,10 +169,20 @@ function BEST_BUD_BALL:FailReleaseEnemies(npcs, ball)
 	ball:Remove()
 end
 
----@param npc EntityNPC
-function BEST_BUD_BALL:IsCapturedBoss(npc)
-	local data = Mod:TryGetData(npc)
+---@param ent Entity
+function BEST_BUD_BALL:IsCapturedBoss(ent)
+	local data = Mod:TryGetData(ent)
 	return data and data.BestBudBall
+end
+
+---@param npc EntityNPC
+---@param spawner Entity
+function BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
+	npc:AddCharmed(EntityRef(spawner), -1)
+	---@diagnostic disable-next-line: param-type-mismatch
+	npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP | EntityFlag.FLAG_NO_DEATH_TRIGGER)
+	Mod:GetData(npc).BestBudBall = true
+	npc.SpawnerEntity = spawner
 end
 
 ---@param cfgs BestBudBallData[]
@@ -181,12 +191,9 @@ end
 ---@return EntityNPC[]
 function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 	Mod.Foreach.NPC(function(npc, index)
-		if BEST_BUD_BALL:IsCapturedBoss(npc)
-			and npc.SpawnerEntity
-			and Mod:IsSameEntity(npc.SpawnerEntity, spawner)
-		then
+		if BEST_BUD_BALL:IsCapturedBoss(npc) then
+			Mod.Spawn.Poof01(0, npc.Position)
 			npc:Remove()
-			Mod.Spawn.Poof01(3, npc.Position)
 		end
 	end, nil, nil, nil, { Inverse = true })
 	Mod:DebugLog("Attempting release of", #cfgs, "boss segment(s)")
@@ -198,10 +205,7 @@ function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 		npc.MaxHitPoints = cfg.MaxHitPoints
 		npc.HitPoints = cfg.HitPoints
 		npc.SpawnerType = cfg.Type --So that Champions/certain bosses with multiple of the boss don't spawn (Sister Vis, Red Champion Monstro, etc)
-		npc:AddCharmed(EntityRef(spawner), -1)
-		---@diagnostic disable-next-line: param-type-mismatch
-		npc:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP | EntityFlag.FLAG_NO_DEATH_TRIGGER)
-		Mod:GetData(npc).BestBudBall = true
+		BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
 		Mod.Insert(bosses, npc)
 		if #cfgs > 1 and i == 1 then
 			local bossCount = #Isaac.FindByType(cfg.Type, cfg.Variant, cfg.Subtype)
@@ -212,10 +216,8 @@ function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 				Mod:DebugLog("Count difference of", bossCount, "and", #spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
 				for _, boss in ipairs(spawnedBosses) do
 					if boss.FrameCount == 0 and boss:HasCommonParentWithEntity(npc) and not Mod:IsSameEntity(npc, boss) then
-						boss:ClearEntityFlags(EntityFlag.FLAG_CHARM, EntityFlag.FLAG_FRIENDLY)
-						boss:AddCharmed(EntityRef(spawner), -1)
-						boss:AddEntityFlags(EntityFlag.FLAG_PERSISTENT | EntityFlag.FLAG_FRIENDLY_BALL | EntityFlag.FLAG_DONT_COUNT_BOSS_HP)
-						Mod:GetData(boss).BestBudBall = true
+						boss:ClearEntityFlags(EntityFlag.FLAG_CHARM | EntityFlag.FLAG_FRIENDLY)
+						BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
 						Mod.Insert(bosses, boss:ToNPC())
 					end
 				end
@@ -281,7 +283,7 @@ end
 ---@param player EntityPlayer
 function BEST_BUD_BALL:SearchForEnemies(ball, player)
 	local data = Mod:GetData(ball)
-	if data.QueueCapture or data.BlockedCapture then
+	if data.QueueCapture or data.BlockedCapture or data.ReleaseNpcCfgs then
 		return
 	end
 	Mod.Foreach.NPCInRadius(ball.Position, ball.Size, function(npc, index)
@@ -341,7 +343,7 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 	end
 
 	if ball.Timeout == 0 and not data.BlockedCapture then
-		local cfg = Mod:GetData(ball).ReleaseNpcCfgs
+		local cfg = data.ReleaseNpcCfgs
 		if cfg and player then
 			BEST_BUD_BALL:SpawnFriendlyBosses(cfg, ball.Position, player)
 		end
@@ -384,12 +386,12 @@ function BEST_BUD_BALL:FixPosOnNewRoom()
 	Mod.Foreach.NPC(function(npc, index)
 		if BEST_BUD_BALL:IsCapturedBoss(npc) then
 			local room = Mod.Room()
+			npc.Position = Isaac.GetPlayer().Position
+			npc.Position = room:GetClampedPosition(Isaac.GetPlayer().Position, npc.Size)
+
 			if npc.Mass >= 100 then
-				npc.Position = room:GetCenterPos()
-			else
-				npc.Position = Isaac.GetPlayer().Position
+				npc.TargetPosition = npc.Position
 			end
-			npc.Position = room:GetClampedPosition(npc.Position, npc.Size)
 		end
 	end)
 end
@@ -450,7 +452,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_PLAYERHUD_RENDER_ACTIVE_ITEM, BEST_BUD_BALL.
 
 --#endregion
 
---#region Rag Man patch (lol)
+--#region Rag Man patch
 
 ---@param npc EntityNPC
 function BEST_BUD_BALL:StopRaglingSpawn(npc)
@@ -467,10 +469,10 @@ Mod:AddCallback(ModCallbacks.MC_PRE_NPC_UPDATE, BEST_BUD_BALL.StopRaglingSpawn, 
 
 --#endregion
 
---#region Prevent health drain
+--#region Pin patch
 
 --Counteracts the health drain as part of "persistent" bosses because of Delirious' rework in Repentance+
-function BEST_BUD_BALL:StopHealthDrain()
+--[[ function BEST_BUD_BALL:StopHealthDrain()
 	local frameCount = Mod.Game:GetFrameCount()
 	Mod.Foreach.NPC(function (npc, index)
 		if frameCount % 15 == 0
@@ -484,6 +486,48 @@ function BEST_BUD_BALL:StopHealthDrain()
 	end)
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, BEST_BUD_BALL.StopHealthDrain)
+Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, BEST_BUD_BALL.StopHealthDrain) ]]
+
+---The health drain counts as damage for pin's other segments for whatever reason, causing it to flash. This prevents it best I can
+---@param ent Entity
+---@param source EntityRef
+function BEST_BUD_BALL:PinIsStupid(ent, amount, flags, source, countdown)
+	if BEST_BUD_BALL:IsCapturedBoss(ent)
+		and ent:HasEntityFlags(EntityFlag.FLAG_PERSISTENT)
+		and source.Type == EntityType.ENTITY_PIN
+		and Mod:HasBitFlags(flags, EntityFlag.FLAG_RENDER_WALL) --Doesn't make sense but its the flag used when damaging other segments
+		and amount == 0.25
+		and ent.HitPoints > 0
+	then
+		return false
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, CallbackPriority.IMPORTANT, BEST_BUD_BALL.PinIsStupid, EntityType.ENTITY_PIN)
+
+--#endregion
+
+--#region Patch for on-death spawns
+
+---@param npc EntityNPC
+function BEST_BUD_BALL:MarkFriendlyBossSpawns(npc)
+	if npc.SpawnerEntity
+		and npc:IsBoss()
+		and BEST_BUD_BALL:IsCapturedBoss(npc.SpawnerEntity)
+	then
+		BEST_BUD_BALL:MakeBossFriendly(npc, npc.SpawnerEntity.SpawnerEntity)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, BEST_BUD_BALL.MarkFriendlyBossSpawns)
+
+---@param npc EntityNPC
+function BEST_BUD_BALL:MarkFriendlyBossMorphs(npc, type, var, sub)
+	if BEST_BUD_BALL:IsCapturedBoss(npc) then
+		BEST_BUD_BALL:MakeBossFriendly(npc, npc.SpawnerEntity)
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_NPC_MORPH, BEST_BUD_BALL.MarkFriendlyBossMorphs)
 
 --#endregion
