@@ -437,6 +437,7 @@ function WEB_HEART:OnDevilDealCollision(pickup, collider)
 		and player:CanPickupItem()
 		and player.ItemHoldCooldown == 0
 		and player:IsExtraAnimationFinished()
+		and not player:HasInstantDeathCurse()
 	then
 		WEB_HEART:TryPayWebHeartPrice(pickup, player)
 	end

@@ -65,6 +65,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Divine Cloth applying damage/status effect to already hit enemies a second time at the very end of its animation
 - Fixed Gummy Spiders, Old Shoebox, Candy Floss, and Spider Donut triggering its on-pickup effects when recollected through methods such as inventory rerolls or Tainted Isaac
 - Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag
+- Fixed Arachna bypassing devil deal mechanics from the Lost Curse form while having web hearts
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
