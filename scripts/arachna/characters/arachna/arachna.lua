@@ -63,6 +63,20 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_PLAYER_INIT_POST_LEVEL_INIT_STATS, ARACHNA.StartingWebHearts)
 
+---@param player EntityPlayer
+CustomHealthAPI.Library.AddCallback(Mod.CHAPI_ID, CustomHealthAPI.Enums.Callbacks.POST_PLAYER_GENESIS, 0, function (player)
+	if Mod:IsAnyArachna(player) then
+		local playerType = player:GetPlayerType()
+		if playerType == Mod.PlayerType.ARACHNA then
+			player:AddSoulHearts(-4)
+			WEB_HEART:AddWebHearts(player, 2)
+		elseif playerType == Mod.PlayerType.ARACHNA_B then
+			player:AddSoulHearts(-6)
+			WEB_HEART:AddWebHearts(player, 3)
+		end
+	end
+end)
+
 --#endregion
 
 --#region Tear sprite
