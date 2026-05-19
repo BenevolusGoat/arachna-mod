@@ -85,10 +85,10 @@
     </entity>
 
 	<!-- Pickups -->
-	<entity id="5" variant="10" name="Web Heart" anm2path="web_heart_pickup.anm2" subtype="2000"
+	<entity id="5" variant="10" name="Web Heart" anm2path="web_heart_pickup.anm2" subtype="2000" bagofcrafting="soulheart"
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
 	</entity>
-	<entity id="5" variant="10" name="Web Heart (Double)" anm2path="web_heart_pickup_double.anm2" subtype="2001"
+	<entity id="5" variant="10" name="Web Heart (Double)" anm2path="web_heart_pickup_double.anm2" subtype="2001" bagofcrafting="soulheart soulheart"
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
 	</entity>
 	<entity id="5" variant="300" name="Soul of Arachna" anm2path="arachna_soul.anm2" subtype="2000"
@@ -100,7 +100,7 @@
 	<entity id="5" variant="300" name="Merged Card?" anm2path="card_merged_reverse.anm2" subtype="2002"
 		collisionMass="3" collisionRadius="12" friction="1"  numGridCollisionPoints="24" shadowSize="16">
 	</entity>
-	<entity id="5" variant="2003" name="Spider Egg (pickup)" anm2path="spider_egg_pickup.anm2"
+	<entity id="5" variant="2003" name="Spider Egg (pickup)" anm2path="spider_egg_pickup.anm2" boomerang="true" meleecollide="true"
 		collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="17">
 	</entity>
 

@@ -68,6 +68,8 @@ DeadSeaScrollsMenu.AddChangelog(
 - Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag
 - Fixed Arachna bypassing devil deal mechanics from the Lost Curse form while having web hearts
 - Fixed Dead Cat removing all soul hearts off of Arachna
+- Web heart pickup counts as a soul heart for Bag of Crafting, while the double web heart pickup counts as two soul hearts. Previously both counted as a single red heart
+- The Spider Egg pickup from Arachnid's Grip can now be collected with The Boomerang and melee weapons
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
