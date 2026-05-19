@@ -78,7 +78,7 @@ function GOLDEN_SHOPKEEPER:GetExtraReward(rng)
 	if reward == GOLDEN_SHOPKEEPER.RewardType.GOLDEN_TRINKET
 		and persistGameData:Unlocked(Achievement.GOLDEN_TRINKET)
 	then
-		return {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, Mod.Game:GetItemPool():GetTrinket() + TrinketType.TRINKET_GOLDEN_FLAG}
+		return {EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, Mod.Game:GetItemPool():GetTrinket() | TrinketType.TRINKET_GOLDEN_FLAG}
 	elseif reward == GOLDEN_SHOPKEEPER.RewardType.COUNTERFEIT_PENNY
 		and persistGameData:Unlocked(Achievement.COUNTERFEIT_PENNY)
 	then
