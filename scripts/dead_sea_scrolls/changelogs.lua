@@ -67,6 +67,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Gummy Spiders, Old Shoebox, Candy Floss, and Spider Donut triggering its on-pickup effects when recollected through methods such as inventory rerolls or Tainted Isaac
 - Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag
 - Fixed Arachna bypassing devil deal mechanics from the Lost Curse form while having web hearts
+- Fixed being able to
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
@@ -82,6 +83,8 @@ DeadSeaScrollsMenu.AddChangelog(
 - Divine Cloth (also Tainted Arachna's double-tap) now damages poops, fireplaces, and Moveable TNT
 - Non-random eternal, bone, and rotten heart spawns, such as from items or consumables, are no longer replaced with web hearts while playing as Arachna
 - Added Hush to Best Bud Ball's blacklist (forgot to list it)
+- Shockwaves, Mom's Foot, and other sources of damage that are listed as a "crush" damage type can now damage Golden Shopkeepers
+- Mama Mega instantly destroys Golden Shopkeepers
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul

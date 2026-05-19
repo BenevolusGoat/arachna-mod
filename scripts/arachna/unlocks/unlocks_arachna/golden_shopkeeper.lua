@@ -42,6 +42,7 @@ function GOLDEN_SHOPKEEPER:KeeperInit(npc)
 			run_save.GoldenKeeperHits = run_save.GoldenKeeperMaxHits
 			Mod:DebugLog("Golden Shopkeeper hits initialized. Needs", run_save.GoldenKeeperMaxHits, "hits to destroy")
 		end
+		npc:AddEntityFlags(EntityFlag.FLAG_NO_FLASH_ON_DAMAGE)
 	end
 end
 
@@ -129,15 +130,19 @@ function GOLDEN_SHOPKEEPER:ShopkeeperTakeDamage(ent, amount, flags, source, coun
 	if ent.Variant == GOLDEN_SHOPKEEPER.ID then
 		local npc = ent:ToNPC() ---@cast npc EntityNPC
 		local run_save = Mod.SaveManager.GetRunSave(npc)
-		if not Mod:HasBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION) or npc:GetDamageCountdown() > 0 then
+		if not Mod:HasAnyBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION | DamageFlag.DAMAGE_CRUSH) or npc:GetDamageCountdown() > 0 then
 			return false
 		end
 		if run_save.GoldenKeeperHits and run_save.GoldenKeeperHits > 1 then
 			run_save.GoldenKeeperHits = run_save.GoldenKeeperHits - 1
 			GOLDEN_SHOPKEEPER:OnDamageEffect(npc)
 			Mod:DebugLog(run_save.GoldenKeeperHits, "hit(s) remaining")
-			return { Damage = 0, DamageFlags = flags | DamageFlag.DAMAGE_COUNTDOWN, DamageCountdown = 20 }
-		else
+			local dmgCountdown = 20
+			if Mod:HasBitFlags(flags, DamageFlag.DAMAGE_EXPLOSION | DamageFlag.DAMAGE_CRUSH) then
+				dmgCountdown = 0
+			end
+			return { Damage = 0, DamageFlags = flags | DamageFlag.DAMAGE_COUNTDOWN, DamageCountdown = dmgCountdown }
+		elseif not ent:GetSprite():IsPlaying("Break") then
 			GOLDEN_SHOPKEEPER:OnDeath(npc)
 			return false
 		end
