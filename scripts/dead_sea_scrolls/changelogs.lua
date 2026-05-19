@@ -67,7 +67,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Gummy Spiders, Old Shoebox, Candy Floss, and Spider Donut triggering its on-pickup effects when recollected through methods such as inventory rerolls or Tainted Isaac
 - Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag
 - Fixed Arachna bypassing devil deal mechanics from the Lost Curse form while having web hearts
-- Fixed being able to
+- Fixed Dead Cat removing all soul hearts off of Arachna
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
