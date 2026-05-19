@@ -36,6 +36,17 @@ function COLORED_SPIDERS:SpawnSparkle(pos, spawner)
 	goldenShine.SpriteScale = goldenShine.SpriteScale * (Mod:RandomNum(4, 8) / 10)
 	goldenShine:GetSprite().PlaybackSpeed = 1.2
 	goldenShine:SetTimeout(12)
+	if spawner
+		and spawner.Type == EntityType.ENTITY_FAMILIAR
+		and spawner.Variant == FamiliarVariant.BLUE_SPIDER
+	then
+		local spider = spawner:ToFamiliar() ---@cast spider EntityFamiliar
+		local player = spider.Player
+		if Mod:IsAnyArachna(player) then
+			local opacityMult = Mod.GetSetting(Mod.Setting.SpiderOpacity)
+			goldenShine:GetSprite().Color.A = opacityMult / 10
+		end
+	end
 	local glow = Mod.Spawn.Effect(EffectVariant.LIGHT, 0, goldenShine.Position, nil, spawner)
 	glow.SpriteScale = glow.SpriteScale / 4
 	glow:SetTimeout(12)
