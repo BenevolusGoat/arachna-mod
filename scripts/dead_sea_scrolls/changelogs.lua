@@ -76,6 +76,8 @@ DeadSeaScrollsMenu.AddChangelog(
 - Changed number of spawned pennies from hurting it to a range of 1 to 2 instead of always 1
 - Changed the 3 to 5 coins spawned from breaking it to be random coins instead of always pennies
 - Replaced the 5% chance for a golden trinket instead of coins upon breaking it with a range of extra rewards that spawn alongside the coins
+- Can now be damaged by shockwaves, Mom's Foot, and other sources of damage that have the "crush" damage type
+- Mama Mega instantly destroys it
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
 - The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
@@ -83,8 +85,6 @@ DeadSeaScrollsMenu.AddChangelog(
 - Divine Cloth (also Tainted Arachna's double-tap) now damages poops, fireplaces, and Moveable TNT
 - Non-random eternal, bone, and rotten heart spawns, such as from items or consumables, are no longer replaced with web hearts while playing as Arachna
 - Added Hush to Best Bud Ball's blacklist (forgot to list it)
-- Shockwaves, Mom's Foot, and other sources of damage that are listed as a "crush" damage type can now damage Golden Shopkeepers
-- Mama Mega instantly destroys Golden Shopkeepers
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul
