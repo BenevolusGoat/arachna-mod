@@ -59,9 +59,10 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Best Bud Ball + Rag Man's Head spawning Raglings
 - Fixed Best Bud Ball not working properly with segmented enemies, only capturing a singular segment
 - Added feedback to monsters that cannot be captured with Best Bud Ball
-- Fixed being able to capture bosses with a thrown Best Bud Ball that had a boss contained in it, overwriting the previously captured boss
+- Fixed being able to capture bosses with Best Bud Ball that would otherwise have released a previously captured boss
 - Fixed bosses spawned by other bosses (Fistula, Dangle from Brownie, Chub from The Matriarch, etc) not being marked as Best Bud Ball captures
 - Fixed Gurdy and similar bosses being forced to their initial spawn position in every room. They now spawn on Isaac's position upon room enter as expected
+- Fixed Big Horn's hands being captureable
 - Fixed Divine Cloth applying damage/status effect to already hit enemies a second time at the very end of its animation
 - Fixed Gummy Spiders, Old Shoebox, Candy Floss, and Spider Donut triggering its on-pickup effects when recollected through methods such as inventory rerolls or Tainted Isaac
 - Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag
@@ -80,6 +81,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms
 - Divine Cloth (also Tainted Arachna's double-tap) now damages poops, fireplaces, and Moveable TNT
 - Non-random eternal, bone, and rotten heart spawns, such as from items or consumables, are no longer replaced with web hearts while playing as Arachna
+- Added Hush to Best Bud Ball's blacklist (forgot to list it)
 
 #2.0.3 (05/06/2026)
 - Fixed Dad's Newspaper not working on Found Soul

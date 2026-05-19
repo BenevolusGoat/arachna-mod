@@ -244,7 +244,7 @@ function COLORED_SPIDERS:AdjustSpiderOpacity(spider)
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_FAMILIAR_INIT, CallbackPriority.LATE, COLORED_SPIDERS.AdjustSpiderOpacity)
+Mod:AddPriorityCallback(ModCallbacks.MC_FAMILIAR_UPDATE, CallbackPriority.LATE, COLORED_SPIDERS.AdjustSpiderOpacity, FamiliarVariant.BLUE_SPIDER)
 
 --#endregion
 

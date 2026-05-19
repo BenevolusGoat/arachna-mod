@@ -28,6 +28,7 @@ BEST_BUD_BALL.BLACKLISTED_BOSSES = Mod:Set({
 	EntityType.ENTITY_ULTRA_GREED, --+Ultra Greedier
 	EntityType.ENTITY_MOTHER,
 	EntityType.ENTITY_DOGMA,
+	EntityType.ENTITY_HUSH,
 	EntityType.ENTITY_BEAST, --+Ultra Horsemen
 	EntityType.ENTITY_MASK_OF_INFAMY --Temporary until I feel like making a patch
 })
@@ -97,6 +98,7 @@ end
 ---@param npc EntityNPC
 function BEST_BUD_BALL:GetEntireMonster(npc)
 	local parent = StatusEffectLibrary.Utils.GetLastParent(npc)
+	if not BEST_BUD_BALL:CanCaptureMonster(parent) then return end
 	Mod:GetData(parent).BestBudBallCaptured = true
 	if not parent.Child then
 		return {EntityPtr(parent)}
@@ -140,13 +142,16 @@ function BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 	local luck = Mod:Clamp(player.Luck * 0.025, 0, 0.5)                       --+2.5% per luck, up to 50%
 	local roll = player:GetCollectibleRNG(BEST_BUD_BALL.ID):RandomFloat()
 	local chance = 0.01 + maxHpChance + hpChance + luck
-
-	data.QueueCapture = BEST_BUD_BALL:GetEntireMonster(npc)
+	local monsters = BEST_BUD_BALL:GetEntireMonster(npc)
+	if not monsters then return false end
+	data.QueueCapture = monsters
 	Mod:DebugLog(npc.Type .. "." .. npc.Variant .. "." .. npc.SubType, "queued for capture.", #data.QueueCapture, "segments contained")
 
 	if roll < chance or Mod:HasBitFlags(Mod.Game:GetDebugFlags(), DebugFlag.INFINITE_ITEM_CHARGES) then
 		data.CaptureSuccess = true
+		return true
 	end
+	return false
 end
 
 ---@param npcs EntityNPC[]
@@ -223,13 +228,13 @@ function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 		BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
 		Mod.Insert(bosses, npc)
 		if #cfgs > 1 and i == 1 then
-			local bossCount = Isaac.CountEntities(npc)
+			local bossCount = #Isaac.GetRoomEntities()
 			npc:Update()
-			local spawnedBosses = Isaac.CountEntities(npc)
+			local spawnedBosses = Isaac.GetRoomEntities()
 			--Bosses like Pin will automatically spawn the rest of their segments. Don't bother spawning the rest, as it causes complications otherwise.
-			if bossCount < spawnedBosses then
-				Mod:DebugLog("Count difference of", bossCount, "and", spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
-				for _, boss in ipairs(Isaac.GetRoomEntities()) do
+			if bossCount < #spawnedBosses then
+				Mod:DebugLog("Count difference of", bossCount, "and", #spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
+				for _, boss in ipairs(spawnedBosses) do
 					if boss.FrameCount == 0
 						and boss:HasCommonParentWithEntity(npc)
 						and not Mod:IsSameEntity(npc, boss)
@@ -305,10 +310,11 @@ function BEST_BUD_BALL:SearchForEnemies(ball, player)
 		return
 	end
 	Mod.Foreach.NPCInRadius(ball.Position, ball.Size, function(npc, index)
+		local captureSuccess = false
 		if BEST_BUD_BALL:CanCaptureMonster(npc) then
-			BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
-			return true
-		elseif not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) and npc:IsActiveEnemy(false) then
+			captureSuccess = BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
+		end
+		if not captureSuccess and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) and npc:IsActiveEnemy(false) then
 			data.BlockedCapture = true
 			local c = npc.Color
 			npc:SetColor(Color(c.R, c.G, c.B, c.A, 0.8), 15, 10, true, false)
