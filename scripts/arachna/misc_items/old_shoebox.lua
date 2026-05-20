@@ -5,7 +5,7 @@ local OLD_SHOEBOX = {}
 ArachnaMod.Item.OLD_SHOEBOX = OLD_SHOEBOX
 
 OLD_SHOEBOX.ID = Isaac.GetItemIdByName("Old Shoebox")
-OLD_SHOEBOX.SPIDER_CHANCE = 1 --Idea from dima
+OLD_SHOEBOX.SPIDER_CHANCE = 1/10000 --Idea from dima
 
 ---@param player EntityPlayer
 ---@param itemId CollectibleType
@@ -19,7 +19,7 @@ function OLD_SHOEBOX:OnCollectibleAdd(itemId, charge, firstTime, slot, varData, 
 	if rng:RandomFloat() < OLD_SHOEBOX.SPIDER_CHANCE then
 		--Delayed so that spiders spawn if a new room is entered and because AnimateSad anim doesn't play if collecting from pedestal otherwise
 		Mod:DelayOneFrame(function()
-			for i = 1, 15 do
+			for _ = 1, Mod:RandomNum(7, 14, rng) do
 				local dist = 80
 				---@cast dist number
 				local targetPos = Isaac.GetFreeNearPosition(player.Position + Vector(dist, 0):Rotated(Mod:RandomNum(360)), 0)
