@@ -81,7 +81,7 @@ function BEST_BUD_BALL:CanCaptureMonster(ent, allowFriendly)
 	local defaultCheck = ent:IsBoss()
 		and not ent:ToDelirium()
 		and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
-		and not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM)
+		--and not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM)
 		and not ent:IsInvincible()
 		and ent:IsActiveEnemy(false)
 		and (allowFriendly or not ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY))
