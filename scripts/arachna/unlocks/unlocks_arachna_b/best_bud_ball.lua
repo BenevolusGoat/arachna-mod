@@ -30,7 +30,19 @@ BEST_BUD_BALL.BLACKLISTED_BOSSES = Mod:Set({
 	EntityType.ENTITY_DOGMA,
 	EntityType.ENTITY_HUSH,
 	EntityType.ENTITY_BEAST, --+Ultra Horsemen
-	EntityType.ENTITY_MASK_OF_INFAMY --Temporary until I feel like making a patch
+	EntityType.ENTITY_MASK_OF_INFAMY, --Temporary until I feel like making a patch
+	EntityType.ENTITY_MAMA_GURDY,
+	EntityType.ENTITY_URIEL,
+	EntityType.ENTITY_GABRIEL
+})
+
+--Overrides blacklist and nodelirium tag. Does not override mod callback and other default checks
+BEST_BUD_BALL.WHITELISTED_BOSSES = Mod:Set({
+	EntityType.ENTITY_LIL_BLUB,
+	EntityType.ENTITY_RAINMAKER,
+	EntityType.ENTITY_SINGE,
+	EntityType.ENTITY_SCOURGE,
+	EntityType.ENTITY_TURDLET
 })
 
 ---@class BestBudBallData
@@ -80,18 +92,19 @@ end
 function BEST_BUD_BALL:CanCaptureMonster(ent, allowFriendly)
 	local defaultCheck = ent:IsBoss()
 		and not ent:ToDelirium()
-		and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
-		--and not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM)
 		and not ent:IsInvincible()
 		and ent:IsActiveEnemy(false)
 		and (allowFriendly or not ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY))
-	if defaultCheck then
-		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CAN_CAPTURE_BOSS, ent.Type, ent)
-		if result == false then
-			return result
-		end
+	if not defaultCheck then return false end
+
+	local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CAN_CAPTURE_BOSS, ent.Type, ent)
+	if type(result) == "boolean" then
+		return result
 	end
-	return defaultCheck
+	if BEST_BUD_BALL.WHITELISTED_BOSSES[ent.Type] then
+		return true
+	end
+	return --[[ not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM) and ]] not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
 end
 
 ---Returns the entire enemy in order
@@ -228,13 +241,24 @@ function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 		BEST_BUD_BALL:MakeBossFriendly(npc, spawner)
 		Mod.Insert(bosses, npc)
 		if #cfgs > 1 and i == 1 then
-			local bossCount = #Isaac.GetRoomEntities()
+			local bossCount = 0
+			for _, ent in ipairs(Isaac.GetRoomEntities()) do
+				if ent:IsBoss() then
+					bossCount = bossCount + 1
+				end
+			end
 			npc:Update()
-			local spawnedBosses = Isaac.GetRoomEntities()
+			local newEntities = Isaac.GetRoomEntities()
+			local newBossCount = 0
+			for _, ent in ipairs(newEntities) do
+				if ent:IsBoss() then
+					newBossCount = newBossCount + 1
+				end
+			end
 			--Bosses like Pin will automatically spawn the rest of their segments. Don't bother spawning the rest, as it causes complications otherwise.
-			if bossCount < #spawnedBosses then
-				Mod:DebugLog("Count difference of", bossCount, "and", #spawnedBosses, "after update. Segments spawn automatically, ignore remaining spawns")
-				for _, boss in ipairs(spawnedBosses) do
+			if bossCount < newBossCount then
+				Mod:DebugLog("Count difference of", bossCount, "and", #newBossCount, "after update. Segments spawn automatically, ignore remaining spawns")
+				for _, boss in ipairs(newEntities) do
 					if boss.FrameCount == 0
 						and boss:HasCommonParentWithEntity(npc)
 						and not Mod:IsSameEntity(npc, boss)
@@ -271,9 +295,9 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 		data.BallStationary = true
 		ball:SetTimeout(30)
 	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER
-			and ball.SpawnerEntity
-			and (data.CaptureSuccess or data.BlockedCapture)
-		then
+		and ball.SpawnerEntity
+		and (data.CaptureSuccess or data.BlockedCapture)
+	then
 		local spawner = ball.SpawnerEntity
 		Mod.Foreach.PlayerInRadius(ball.Position, ball.Size, function(player, index)
 			if spawner and Mod:IsSameEntity(spawner, player) then
@@ -573,7 +597,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_NPC_RENDER, BEST_BUD_BALL.GeminiChain, Entit
 
 --#endregion
 
---#region Big Horn patch
+--#region Override capture checks
 
 function BEST_BUD_BALL:StopBigHornHandCapture(ent)
 	if ent.Variant ~= 0 then
@@ -582,6 +606,25 @@ function BEST_BUD_BALL:StopBigHornHandCapture(ent)
 end
 
 Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.StopBigHornHandCapture, EntityType.ENTITY_BIG_HORN)
+
+function BEST_BUD_BALL:StopFallenSatanCapture(ent)
+	if ent.Variant == 0
+		and Mod.Room():GetType() == RoomType.ROOM_BOSS
+		and Mod.Level():GetCurrentRoomDesc().Data.Subtype == BossType.SATAN
+	then
+		return false
+	end
+end
+
+Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.StopFallenSatanCapture, EntityType.ENTITY_FALLEN)
+
+--For Tuff Twins and The Shell that normally contain nodelirium tag
+function BEST_BUD_BALL:CanCaptureLarryAndHollowVariants(ent)
+	return true
+end
+
+Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.CanCaptureLarryAndHollowVariants, EntityType.ENTITY_LARRYJR)
+Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.CanCaptureLarryAndHollowVariants, EntityType.ENTITY_LARRYJR)
 
 --#endregion
 
