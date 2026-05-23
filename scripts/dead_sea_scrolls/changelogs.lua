@@ -62,7 +62,9 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed being able to capture bosses with Best Bud Ball that would otherwise have released a previously captured boss
 - Fixed bosses spawned by other bosses (Fistula, Dangle from Brownie, Chub from The Matriarch, etc) not being marked as Best Bud Ball captures
 - Fixed Gurdy and similar bosses being forced to their initial spawn position in every room. They now spawn on Isaac's position upon room enter as expected
-- Fixed Big Horn's hands being captureable
+- Blocked Big Horn's hands from being captureable
+- Blocked Conquest's clones from being captureable
+- Fixed being able to collect Best Bud Ball if it was set to successfully capture the boss it contained in the 1 second delay before it stores the boss and removes it from the room
 - Fixed Divine Cloth applying damage/status effect to already hit enemies a second time at the very end of its animation
 - Fixed Gummy Spiders, Old Shoebox, Candy Floss, and Spider Donut triggering its on-pickup effects when recollected through methods such as inventory rerolls or Tainted Isaac
 - Updated ThrowableItemLib, fixing the issue of being unable to use any actives in the secondary pocket active slot, primarily used for Dice Bag

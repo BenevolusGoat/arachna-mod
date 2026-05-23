@@ -45,6 +45,15 @@ BEST_BUD_BALL.WHITELISTED_BOSSES = Mod:Set({
 	EntityType.ENTITY_TURDLET
 })
 
+BEST_BUD_BALL.CaptureState = {
+	NONE = 0, --Ball being thrown and not interacting with enemies
+	CONTAINED_SUCCESS = 1, --Contained a boss and will successfully capture
+	CONTAINED_FAIL = 2, --Contained a boss and will release it unfriendly
+	CONTAINED_BLOCKED = 3, --Failed to contain the enemy and was deflected
+	CAPTURED_IDLE = 4, --Successfully captured a boss and awaiting pickup
+	RELEASE = 5, --Set to release a previously captured boss
+}
+
 ---@class BestBudBallData
 ---@field Type EntityType
 ---@field Variant integer
@@ -160,11 +169,7 @@ function BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
 	data.QueueCapture = monsters
 	Mod:DebugLog(npc.Type .. "." .. npc.Variant .. "." .. npc.SubType, "queued for capture.", #data.QueueCapture, "segments contained")
 
-	if roll < chance or Mod:HasBitFlags(Mod.Game:GetDebugFlags(), DebugFlag.INFINITE_ITEM_CHARGES) then
-		data.CaptureSuccess = true
-		return true
-	end
-	return false
+	return roll < chance or Mod:HasBitFlags(Mod.Game:GetDebugFlags(), DebugFlag.INFINITE_ITEM_CHARGES)
 end
 
 ---@param npcs EntityNPC[]
@@ -296,7 +301,10 @@ function BEST_BUD_BALL:UpdatePosition(ball)
 		ball:SetTimeout(30)
 	elseif ball.SpawnerType == EntityType.ENTITY_PLAYER
 		and ball.SpawnerEntity
-		and (data.CaptureSuccess or data.BlockedCapture)
+		and (
+			ball.State == BEST_BUD_BALL.CaptureState.CAPTURED_IDLE
+			or ball.State == BEST_BUD_BALL.CaptureState.CONTAINED_BLOCKED
+		)
 	then
 		local spawner = ball.SpawnerEntity
 		Mod.Foreach.PlayerInRadius(ball.Position, ball.Size, function(player, index)
@@ -329,17 +337,20 @@ end
 ---@param ball EntityEffect
 ---@param player EntityPlayer
 function BEST_BUD_BALL:SearchForEnemies(ball, player)
-	local data = Mod:GetData(ball)
-	if data.QueueCapture or data.BlockedCapture or data.ReleaseNpcCfgs then
+	if ball.State ~= BEST_BUD_BALL.CaptureState.NONE then
 		return
 	end
 	Mod.Foreach.NPCInRadius(ball.Position, ball.Size, function(npc, index)
 		local captureSuccess = false
 		if BEST_BUD_BALL:CanCaptureMonster(npc) then
 			captureSuccess = BEST_BUD_BALL:TryCaptureEnemy(npc, player, ball)
-		end
-		if not captureSuccess and not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) and npc:IsActiveEnemy(false) then
-			data.BlockedCapture = true
+			if captureSuccess then
+				ball.State = BEST_BUD_BALL.CaptureState.CONTAINED_SUCCESS
+			else
+				ball.State = BEST_BUD_BALL.CaptureState.CONTAINED_FAIL
+			end
+		elseif not npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) and npc:IsActiveEnemy(false) then
+			ball.State = BEST_BUD_BALL.CaptureState.CONTAINED_BLOCKED
 			local c = npc.Color
 			npc:SetColor(Color(c.R, c.G, c.B, c.A, 0.8), 15, 10, true, false)
 			Mod.sfxman:Play(SoundEffect.SOUND_THUMBS_DOWN)
@@ -358,7 +369,11 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 
 	BEST_BUD_BALL:UpdatePosition(ball)
 
-	if data.QueueCapture and #data.QueueCapture > 0 and not data.BlockedCapture then
+	if data.ReleaseNpcCfgs then
+		ball.State = BEST_BUD_BALL.CaptureState.RELEASE
+	end
+
+	if data.QueueCapture and #data.QueueCapture > 0 then
 		local bosses = data.QueueCapture
 		for i = #bosses, 1, -1 do
 			local npc = bosses[i].Ref
@@ -371,33 +386,35 @@ function BEST_BUD_BALL:OnBallUpdate(ball)
 				npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
 			end
 		end
-		if ball.Timeout == 0 then
-			local npcs = {}
-			for _, ptr in ipairs(bosses) do
-				Mod.Insert(npcs, ptr.Ref:ToNPC())
-			end
-			if data.CaptureSuccess and player then
-				Mod:DebugLog("Capture success. Storing", #npcs, "segments")
-				BEST_BUD_BALL:CaptureAndSaveEnemies(npcs, player, true)
-				player:AnimateHappy()
-				ball.Timeout = -1
-			else
-				if player then
-					player:AnimateSad()
-				end
-				BEST_BUD_BALL:FailReleaseEnemies(npcs, ball)
-			end
-		end
 	end
 
-	if ball.Timeout == 0 and not data.BlockedCapture then
-		local cfg = data.ReleaseNpcCfgs
-		if cfg and player then
-			BEST_BUD_BALL:SpawnFriendlyBosses(cfg, ball.Position, player)
+	if ball.Timeout == 0 then
+		local npcs = {}
+		for _, ptr in ipairs(data.QueueCapture or {}) do
+			Mod.Insert(npcs, ptr.Ref:ToNPC())
 		end
-		Mod.Spawn.Poof01(1, ball.Position, ball)
-		ball:Remove()
-		return
+		if ball.State == BEST_BUD_BALL.CaptureState.CONTAINED_SUCCESS and player and #npcs > 0 then
+			Mod:DebugLog("Capture success. Storing", #npcs, "segments")
+			BEST_BUD_BALL:CaptureAndSaveEnemies(npcs, player, true)
+			player:AnimateHappy()
+			ball.Timeout = -1
+			ball.State = BEST_BUD_BALL.CaptureState.CAPTURED_IDLE
+		elseif ball.State == BEST_BUD_BALL.CaptureState.CONTAINED_FAIL then
+			if player then
+				player:AnimateSad()
+			end
+			BEST_BUD_BALL:FailReleaseEnemies(npcs, ball)
+		elseif ball.State == BEST_BUD_BALL.CaptureState.RELEASE then
+			local cfg = data.ReleaseNpcCfgs
+			if cfg and player then
+				BEST_BUD_BALL:SpawnFriendlyBosses(cfg, ball.Position, player)
+			end
+			Mod.Spawn.Poof01(1, ball.Position, ball)
+			ball:Remove()
+		elseif ball.State == BEST_BUD_BALL.CaptureState.NONE then
+			Mod.Spawn.Poof01(1, ball.Position, ball)
+			ball:Remove()
+		end
 	end
 
 	if data.BallStationary then return end
@@ -606,6 +623,14 @@ function BEST_BUD_BALL:StopBigHornHandCapture(ent)
 end
 
 Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.StopBigHornHandCapture, EntityType.ENTITY_BIG_HORN)
+
+function BEST_BUD_BALL:StopConquestCloneCapture(ent)
+	if ent.Variant == 1 and ent.Parent then
+		return false
+	end
+end
+
+Mod:AddCallback(Mod.ModCallbacks.CAN_CAPTURE_BOSS, BEST_BUD_BALL.StopConquestCloneCapture, EntityType.ENTITY_WAR)
 
 function BEST_BUD_BALL:StopFallenSatanCapture(ent)
 	if ent.Variant == 0
