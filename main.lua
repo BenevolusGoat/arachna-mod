@@ -320,7 +320,7 @@ function ArachnaMod:HandleDoubleTap(player)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, Mod.HandleDoubleTap)
+Mod:AddPriorityCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, CallbackPriority.IMPORTANT, Mod.HandleDoubleTap)
 
 
 --!End of file
