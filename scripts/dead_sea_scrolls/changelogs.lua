@@ -47,13 +47,14 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
-#2.1.0 (XX/XX/2026)
+#2.1.0 (06/01/2026)
 ## GENERAL ADJUSTMENTS/BUG FIXES
 - Fixed web hearts reverting to soul hearts when exiting and continuing if you had no other mods with CHAPI that handled save data
 - Fixed an issue where the "Death Card" sound effect from the brief static transition in The Testament dimension would play for a brief moment before stopping
 - Fixed Mechanical Eye able to have its selected item constantly rerolled when swapping actives with Schoolbag
 - Removed Spider Cake setting from DSS. Admittedly, you can just spawn it through the debug console
 - Added Spider Opacity setting. 100% by default. Lower setting to make spider familiars as Arachna or Tainted Arachna more transparent
+- Added Egg Toss highlight option. Disabled by default, with currently one option: Border. Will highlight the egg nearest to Tainted Arachna that she will pick up when using Egg Toss
 - Fixed being able to unlock Spindle and Soul of Arachna earlier than intended
 - Fixed players other than the one who activated The Testament able to interact with the items in The Testament dimension
 - Fixed Best Bud Ball + Rag Man's Head spawning Raglings
@@ -72,6 +73,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Fixed Dead Cat removing all soul hearts off of Arachna
 - Web heart pickup counts as a soul heart for Bag of Crafting, while the double web heart pickup counts as two soul hearts. Previously both counted as a single red heart
 - The Spider Egg pickup from Arachnid's Grip can now be collected with The Boomerang and melee weapons
+- Fixed issues with entity-specific data not being properly cleared, resulting in increasing likelihood of crashes or certain attributes carrying over to new entities the longer your game session lasted
 
 ## GAMEPLAY ADJUSTMENTS
 - Golden Shopkeeper changes:
@@ -85,7 +87,7 @@ DeadSeaScrollsMenu.AddChangelog(
 - Infested Penny now checks if you have web hearts unlocked to have the chance of spawning them
 - Added Clicker and Magic Skin to Mechanical Eye's blacklist
 - The spider egg boss chargebar now fills based on the actual damage dealt to the boss, rather than reducing the raw damage dealt per instance of damage. It requires more damage to be filled than normal for bosses with armor
-- Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms
+- Best Bud Ball can no longer capture enemies with the "nodelirium" tag, as they're not intended to work outside of their boss rooms, with some currently implemented exceptions. These include Lil Blub, Rainmaker, Singe, Scourge, and Turdlet.
 - Divine Cloth (also Tainted Arachna's double-tap) now damages poops, fireplaces, and Moveable TNT
 - Non-random eternal, bone, and rotten heart spawns, such as from items or consumables, are no longer replaced with web hearts while playing as Arachna
 - Added Hush to Best Bud Ball's blacklist (forgot to list it)

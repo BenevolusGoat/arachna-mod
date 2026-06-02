@@ -113,7 +113,7 @@ function BEST_BUD_BALL:CanCaptureMonster(ent, allowFriendly)
 	if BEST_BUD_BALL.WHITELISTED_BOSSES[ent.Type] then
 		return true
 	end
-	return --[[ not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM) and ]] not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
+	return not ent:GetEntityConfigEntity():HasEntityTags(EntityTag.NODELIRIUM) and not BEST_BUD_BALL.BLACKLISTED_BOSSES[ent.Type]
 end
 
 ---Returns the entire enemy in order
