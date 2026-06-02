@@ -209,10 +209,10 @@ function EGG_TOSS:EggTargetPreRender(egg, offset)
 		data.EggRender = true
 		local color = egg.Color
 		egg.Color = Color(1, 1, 1, 1, 1, 1, 1)
-		egg:Render(Vector(1, 1))
-		egg:Render(Vector(-1, 1))
-		egg:Render(Vector(1, -1))
-		egg:Render(Vector(-1, -1))
+		egg:Render(offset + Vector(1, 1))
+		egg:Render(offset + Vector(-1, 1))
+		egg:Render(offset + Vector(1, -1))
+		egg:Render(offset + Vector(-1, -1))
 		data.EggRender = false
 		egg.Color = color
 	end
