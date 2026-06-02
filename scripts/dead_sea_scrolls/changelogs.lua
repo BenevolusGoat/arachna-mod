@@ -47,6 +47,11 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
+#2.1.0a (06/01/2026)
+- Mod in the mod list renamed to "Arachna 2.0" for simplicity
+- Fixed an error with the debug log when capturing any bosses that automatically spawn other parts of themselves, such as Gemini or Pin
+- Removed Singe and Scourge from the "nodelirium" tag whitelist
+
 #2.1.0 (06/01/2026)
 ## GENERAL ADJUSTMENTS/BUG FIXES
 - Fixed web hearts reverting to soul hearts when exiting and continuing if you had no other mods with CHAPI that handled save data
