@@ -47,6 +47,9 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
+#2.1.1 (06/??/2026)
+- Fix Egg Toss border outline not rendering correctly in rooms larger than 1x1. Also no longer renders in reflections
+
 #2.1.0a (06/01/2026)
 - Mod in the mod list renamed to "Arachna 2.0" for simplicity
 - Fixed an error with the debug log when capturing any bosses that automatically spawn other parts of themselves, such as Gemini or Pin

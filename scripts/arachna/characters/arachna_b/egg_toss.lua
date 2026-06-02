@@ -204,7 +204,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, EGG_TOSS.ResetOnNewRoom)
 ---@param offset Vector
 function EGG_TOSS:EggTargetPreRender(egg, offset)
 	local data = Mod:GetData(egg)
-	if data.EggRender then return end
+	if data.EggRender or Mod.Room():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then return end
 	if selectedEggs[GetPtrHash(egg)] then
 		data.EggRender = true
 		local color = egg.Color
