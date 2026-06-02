@@ -262,7 +262,7 @@ function BEST_BUD_BALL:SpawnFriendlyBosses(cfgs, pos, spawner)
 			end
 			--Bosses like Pin will automatically spawn the rest of their segments. Don't bother spawning the rest, as it causes complications otherwise.
 			if bossCount < newBossCount then
-				Mod:DebugLog("Count difference of", bossCount, "and", #newBossCount, "after update. Segments spawn automatically, ignore remaining spawns")
+				Mod:DebugLog("Count difference of", bossCount, "and", newBossCount, "after update. Segments spawn automatically, ignore remaining spawns")
 				for _, boss in ipairs(newEntities) do
 					if boss.FrameCount == 0
 						and boss:HasCommonParentWithEntity(npc)
