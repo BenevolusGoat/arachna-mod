@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>[RGON+] Arachna (25+ Unlocks!) | Update 2.0: Woven Anew!</name>
-    <directory>arachna-mod</directory>
-    <id>3716302651</id>
-    <description>[img]https://i.imgur.com/FEz0EkS.gif[/img]
+	<name>Arachna Mod 2.0</name>
+	<directory>arachna-mod</directory>
+	<id>3716302651</id>
+	<description>[img]https://i.imgur.com/FEz0EkS.gif[/img]
 Become the lord of the spiders with [b]Arachna[/b] - a new character, that revolves around web and spiders. Now back with full [b]Repentance+[/b] and [url=https://repentogon.com/]REPENTOGON[/url] support! 
 [b]Arachna[/b] starts with a new item in her pocket active - [b]Arachna's Spool[/b]. She can throw it at enemies to create web that slows them down and turns them into spider eggs, that burst into a bunch of colorful spiders when you finish the room! 
 [b]Create your very own spider army[/b] to turn a once hostile basement into a park for your insectoid pals!
@@ -33,28 +33,26 @@ Additionally, here is a list of people who also contributed to the mod's develop
 [*][b]UnknownTheHero[/b], [b]RackJet[/b], People of [b]Benny's Barn Discord server[/b] - Playtesting.
 [*][b]Quartz[/b], [b]ferpe[/b] - Various spritework.
 [*][b]damagazz[/b] - Achievement sprite art, Birthcake sprites
-[*][b]wons[/b] - Several costume sprites, playtesting, Polish EID translation.
-[*][url=https://x.com/ZVetaji6]zvetaji6[/url] - 3D animation.
+[*][b]wons[/b] - Several costume sprites, playtesting, Polish EID translation. [*][url=https://x.com/ZVetaji6]zvetaji6[/url] - 3D animation.
 [*][b]Connor (+his wife)[/b] - A lot of help regarding Specialist compatibility.
 [*][b]oucalgarlin[/b], [b]Saurtya[/b], [b]jaro7126[/b], [b]Nebuka[/b] - Various EID translations.
-[*][b]cadetpirx[/b] - Idea of a certain new consumable.
-[*][url=https://twitter.com/ShaPatSmith]ShaPatSmith[/url] - Voiceover for collectibles.
+[*][b]cadetpirx[/b] - Idea of a certain new consumable. [*][url=https://twitter.com/ShaPatSmith]ShaPatSmith[/url] - Voiceover for collectibles.
 [*][b]SteamJek[/b], [b]Picsel[/b] - mod cover art as a commission.
 [/list]
 [img]https://i.imgur.com/MfGJVqX.png[/img]
 [b]P.S.[/b]: Legacy edition of the mod for [b]regular Repentance[/b] is avaible [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2801120315] here[/url], or, if you're playing on unofficial version of the game, [url=https://github.com/BenevolusGoat/arachna-mod/tree/legacy]here[/url].
 [b]P.P.S.[/b]: In case you can't play the mod off Steam for some reason, copy of the [b]current version[/b] is available [url=https://github.com/BenevolusGoat/arachna-mod]here[/url].</description>
-    <version>2.9</version>
-    <visibility>Public</visibility>
-    <tag id="Lua"/>
-    <tag id="Items"/>
-    <tag id="Active Items"/>
-    <tag id="Trinkets"/>
-    <tag id="Pills"/>
-    <tag id="Cards"/>
-    <tag id="Pickups"/>
-    <tag id="Player Characters"/>
-    <tag id="Familiars"/>
-    <tag id="Graphics"/>
-    <tag id="Sound Effects"/>
+	<version>2.9</version>
+	<visibility>Public</visibility>
+	<tag id="Lua"/>
+	<tag id="Items"/>
+	<tag id="Active Items"/>
+	<tag id="Trinkets"/>
+	<tag id="Pills"/>
+	<tag id="Cards"/>
+	<tag id="Pickups"/>
+	<tag id="Player Characters"/>
+	<tag id="Familiars"/>
+	<tag id="Graphics"/>
+	<tag id="Sound Effects"/>
 </metadata>
