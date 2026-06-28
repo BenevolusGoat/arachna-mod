@@ -47,8 +47,9 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
-#2.1.1 (06/??/2026)
+#2.1.1 (06/27/2026)
 - Fix Egg Toss border outline not rendering correctly in rooms larger than 1x1. Also no longer renders in reflections
+- Fix a rare crash with the save manager that only happens to some people when starting a run
 
 #2.1.0a (06/01/2026)
 - Mod in the mod list renamed to "Arachna 2.0" for simplicity
