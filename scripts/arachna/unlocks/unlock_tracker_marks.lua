@@ -15,11 +15,11 @@ function ArachnaMod:GetAchievement(playerType, completionType)
 			)
 			and Isaac.AllTaintedCompletion(playerType, TaintedMarksGroup.POLAROID_NEGATIVE) > 0
 		then
-			return completionTable[TaintedMarksGroup.POLAROID_NEGATIVE]
+			return completionTable[CompletionType.TAINTED_GROUP2]
 		elseif (completionType == CompletionType.BOSS_RUSH or completionType == CompletionType.HUSH)
 			and Isaac.AllTaintedCompletion(playerType, TaintedMarksGroup.SOULSTONE) > 0
 		then
-			return completionTable[TaintedMarksGroup.SOULSTONE]
+			return completionTable[CompletionType.TAINTED_GROUP1]
 		elseif completionTable[completionType] then
 			return completionTable[completionType]
 		end

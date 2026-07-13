@@ -47,6 +47,10 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Arachna",
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
+#2.1.2 (07/13/2026)
+- Fix not being able to unlock Soul of Arachna or Spindle
+- Fix MinimapAPI compatibility erroring and thus never loading
+
 #2.1.1 (06/27/2026)
 - Fix Egg Toss border outline not rendering correctly in rooms larger than 1x1. Also no longer renders in reflections
 - Fix a rare crash with the save manager that only happens to some people when starting a run
