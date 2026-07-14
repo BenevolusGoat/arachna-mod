@@ -41,7 +41,7 @@ function ArachnaMod:TransferMarksToREPENTOGON(saveData)
 		end
 		for completionType, achievement in pairs(Mod.CompletionMarkToAchievement.ARACHNA) do
 			if completionType == Mod.CompletionType.ALL and Isaac.AllMarksFilled(Mod.PlayerType.ARACHNA) == 2
-				or completionType < Mod.CompletionType.TAINTED and Isaac.GetCompletionMark(Mod.PlayerType.ARACHNA, completionType) > 0
+				or completionType < CompletionType.TAINTED and Isaac.GetCompletionMark(Mod.PlayerType.ARACHNA, completionType) > 0
 			then
 				Mod:DebugLog("Unlocked Normal-Side Achievement", achievement)
 				Isaac.GetPersistentGameData():TryUnlock(achievement, true)
