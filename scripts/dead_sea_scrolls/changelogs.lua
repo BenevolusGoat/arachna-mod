@@ -48,7 +48,7 @@ DeadSeaScrollsMenu.AddChangelog(
 	"Version 2",
 	WrapPatchNotes([[MM/DD/YYYY
 #2.1.2 (07/13/2026)
-- Fix not being able to unlock Soul of Arachna or Spindle
+- Fix not being able to unlock Tainted Arachna, Soul of Arachna or Spindle
 - Fix MinimapAPI compatibility erroring and thus never loading
 
 #2.1.1 (06/27/2026)
